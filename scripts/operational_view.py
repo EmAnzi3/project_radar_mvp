@@ -54,6 +54,19 @@ def clean_text(value) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+
+
+def field(record, name: str, default=None):
+    """
+    Accessor robusto:
+    - dataclass / oggetto: getattr
+    - dict: get
+    """
+    if isinstance(record, dict):
+        return record.get(name, default)
+    return getattr(record, name, default)
+
+
 def contains_any(text: str, keywords: list[str]) -> bool:
     return any(k in text for k in keywords)
 
@@ -62,19 +75,19 @@ def record_text(record) -> str:
     return " ".join(
         clean_text(x).lower()
         for x in [
-            getattr(record, "title", None),
-            getattr(record, "description", None),
-            getattr(record, "category", None),
-            getattr(record, "sector", None),
-            getattr(record, "client", None),
-            getattr(record, "ai_notes", None),
+            field(record, "title"),
+            field(record, "description"),
+            field(record, "category"),
+            field(record, "sector"),
+            field(record, "client"),
+            field(record, "ai_notes"),
         ]
         if x
     )
 
 
 def extract_year_decision(record) -> Optional[int]:
-    notes = clean_text(getattr(record, "ai_notes", None))
+    notes = clean_text(field(record, "ai_notes"))
     match = re.search(r"Anno decisione:\s*(\d{4})", notes, flags=re.IGNORECASE)
 
     if not match:
@@ -88,7 +101,7 @@ def extract_year_decision(record) -> Optional[int]:
 
 def assign_alayan_segments(record) -> tuple[str, list[str]]:
     text = record_text(record)
-    category = clean_text(getattr(record, "category", None)).lower()
+    category = clean_text(field(record, "category")).lower()
 
     matches: set[str] = set()
 
@@ -216,7 +229,7 @@ def is_local_public_client(client) -> bool:
 
 def is_macro_national_project(record) -> bool:
     text = record_text(record)
-    value = getattr(record, "estimated_value_eur", None) or 0
+    value = field(record, "estimated_value_eur") or 0
 
     macro_terms = [
         "autostrada", "autostradale", "ferrovia", "ferroviario",
@@ -292,14 +305,14 @@ def operational_score(record) -> tuple[int, str, list[str], Optional[int], bool]
     year = extract_year_decision(record)
     macro = is_macro_national_project(record)
 
-    value = getattr(record, "estimated_value_eur", None) or 0
+    value = field(record, "estimated_value_eur") or 0
     score = 0
 
     score += ALAYAN_SEGMENT_WEIGHTS.get(primary_segment, -10)
     score += value_score(value)
     score += year_score(year)
 
-    client = clean_text(getattr(record, "client", None)).upper()
+    client = clean_text(field(record, "client")).upper()
 
     if is_local_public_client(client):
         if client.startswith("COMUNE"):
@@ -313,29 +326,29 @@ def operational_score(record) -> tuple[int, str, list[str], Optional[int], bool]
         else:
             score += 8
 
-    municipality = clean_text(getattr(record, "municipality", None)).upper()
+    municipality = clean_text(field(record, "municipality")).upper()
 
     if municipality and municipality not in {"TUTTI", "TUTTE", "VARI", "DIVERSI"}:
         score += 10
     else:
         score -= 12
 
-    status = clean_text(getattr(record, "status", None)).upper()
+    status = clean_text(field(record, "status")).upper()
 
     if "CHIUSO" in status or "REVOCATO" in status or "CANCELLATO" in status:
         score -= 40
     elif "ATTIVO" in status:
         score += 8
 
-    if clean_text(getattr(record, "category", None)) == "Altro":
+    if clean_text(field(record, "category")) == "Altro":
         score -= 10
 
     if macro:
         score -= 25
 
-    if getattr(record, "cup", None):
+    if field(record, "cup"):
         score += 2
-    if getattr(record, "source_url", None):
+    if field(record, "source_url"):
         score += 2
 
     return max(0, min(100, score)), primary_segment, segment_tags, year, macro
@@ -352,6 +365,8 @@ def txt(value) -> str:
 
 
 def record_to_dict(record) -> dict:
+    if isinstance(record, dict):
+        return dict(record)
     try:
         return asdict(record)
     except TypeError:
@@ -380,7 +395,7 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
             "segment_tags": segment_tags,
             "year_decision": year,
             "macro_project": macro,
-            "value_band": value_band(getattr(record, "estimated_value_eur", None)),
+            "value_band": value_band(field(record, "estimated_value_eur")),
         })
 
     enriched.sort(
@@ -424,14 +439,14 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
                 "year_decision": item["year_decision"],
                 "value_band": item["value_band"],
                 "cup": getattr(r, "cup", None),
-                "title": getattr(r, "title", None),
-                "category": getattr(r, "category", None),
-                "region": getattr(r, "region", None),
-                "province": getattr(r, "province", None),
-                "municipality": getattr(r, "municipality", None),
-                "value_eur": getattr(r, "estimated_value_eur", None),
-                "client": getattr(r, "client", None),
-                "source_url": getattr(r, "source_url", None),
+                "title": field(r, "title"),
+                "category": field(r, "category"),
+                "region": field(r, "region"),
+                "province": field(r, "province"),
+                "municipality": field(r, "municipality"),
+                "value_eur": field(r, "estimated_value_eur"),
+                "client": field(r, "client"),
+                "source_url": field(r, "source_url"),
             })
 
     by_segment = {}
@@ -448,7 +463,7 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
         })
 
         by_segment[segment]["count"] += 1
-        by_segment[segment]["total_value_eur"] += getattr(r, "estimated_value_eur", None) or 0
+        by_segment[segment]["total_value_eur"] += field(r, "estimated_value_eur") or 0
         by_segment[segment]["avg_score"] += item["operational_score"]
 
     segment_rows = []
@@ -509,20 +524,20 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
         <tr>
           <td class="score">{item["operational_score"]}</td>
           <td>
-            <strong>{txt(getattr(r, "title", ""))}</strong>
-            <div class="desc">{txt(getattr(r, "description", ""))}</div>
+            <strong>{txt(field(r, "title", ""))}</strong>
+            <div class="desc">{txt(field(r, "description", ""))}</div>
           </td>
           <td>{txt(item["primary_segment"])}</td>
-          <td>{txt(getattr(r, "category", ""))}</td>
-          <td>{txt(getattr(r, "region", ""))}</td>
-          <td>{txt(getattr(r, "province", ""))}</td>
-          <td>{txt(getattr(r, "municipality", ""))}</td>
+          <td>{txt(field(r, "category", ""))}</td>
+          <td>{txt(field(r, "region", ""))}</td>
+          <td>{txt(field(r, "province", ""))}</td>
+          <td>{txt(field(r, "municipality", ""))}</td>
           <td>{txt(item["year_decision"])}</td>
           <td>{txt(item["value_band"])}</td>
-          <td>{money(getattr(r, "estimated_value_eur", None))}</td>
-          <td>{txt(getattr(r, "client", ""))}</td>
-          <td>{txt(getattr(r, "cup", ""))}</td>
-          <td><a href="{txt(getattr(r, "source_url", ""))}" target="_blank">Fonte</a></td>
+          <td>{money(field(r, "estimated_value_eur"))}</td>
+          <td>{txt(field(r, "client", ""))}</td>
+          <td>{txt(field(r, "cup", ""))}</td>
+          <td><a href="{txt(field(r, "source_url", ""))}" target="_blank">Fonte</a></td>
         </tr>
         """)
 
