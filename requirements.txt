@@ -7,3 +7,4 @@ sqlalchemy
 pydantic
 jinja2
 rapidfuzz
+duckdb
