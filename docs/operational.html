@@ -3,117 +3,3791 @@
 <head>
   <meta charset="utf-8">
   <title>Project Radar MVP - Vista operativa</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 24px;
-      background: #f6f7f9;
-      color: #1f2933;
-    }
-    h1 {
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      color: #617083;
-      margin-bottom: 16px;
-    }
-    .meta {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-      color: #4b5563;
-      font-size: 14px;
-    }
-    .pill {
-      background: white;
-      border: 1px solid #e5e7eb;
-      padding: 8px 10px;
-      border-radius: 999px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    }
-    .table-wrap {
-      overflow-x: auto;
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-radius: 12px;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      min-width: 1650px;
-      background: white;
-    }
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-      font-size: 14px;
-      vertical-align: top;
-    }
-    th {
-      background: #111827;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tr:hover {
-      background: #f3f4f6;
-    }
-    .score {
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .desc {
-      color: #4b5563;
-      font-size: 12px;
-      margin-top: 5px;
-      max-width: 520px;
-      max-height: 62px;
-      overflow: hidden;
-    }
-    a {
-      color: #0f766e;
-      font-weight: bold;
-      text-decoration: none;
-    }
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f6f7f9; color: #1f2933; }
+    h1 { margin-bottom: 4px; }
+    .subtitle { color: #617083; margin-bottom: 16px; }
+    .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; color: #4b5563; font-size: 14px; }
+    .pill { background: white; border: 1px solid #e5e7eb; padding: 8px 10px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .table-wrap { overflow-x: auto; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1550px; background: white; }
+    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #111827; color: white; position: sticky; top: 0; z-index: 1; }
+    tr:hover { background: #f3f4f6; }
+    .score { font-weight: bold; font-size: 18px; }
+    .desc { color: #4b5563; font-size: 12px; margin-top: 5px; max-width: 520px; max-height: 62px; overflow: hidden; }
+    a { color: #0f766e; font-weight: bold; text-decoration: none; }
   </style>
 </head>
 <body>
   <h1>Project Radar MVP - Vista operativa</h1>
-  <div class="subtitle">Shortlist commerciale basata sui segmenti Alayan</div>
-
+  <div class="subtitle">Shortlist commerciale derivata dai report OpenCUP e dai segmenti Alayan</div>
   <div class="meta">
-    <div class="pill">Input candidati: 177486</div>
-    <div class="pill">Candidati operativi: 0</div>
-    <div class="pill">Record mostrati: 0</div>
-    <div class="pill">Macro-progetti esclusi da questa vista</div>
+    <div class="pill">Input rows: 3240</div>
+    <div class="pill">Deduplicati: 2043</div>
+    <div class="pill">Candidati operativi: 1355</div>
+    <div class="pill">Record mostrati: 250</div>
   </div>
-
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Score operativo</th>
-          <th>Progetto</th>
-          <th>Segmento Alayan</th>
-          <th>Categoria progetto</th>
-          <th>Regione</th>
-          <th>Prov.</th>
-          <th>Comune</th>
-          <th>Anno</th>
-          <th>Fascia valore</th>
-          <th>Valore</th>
-          <th>Committente</th>
-          <th>CUP</th>
-          <th>Fonte</th>
+          <th>Score operativo</th><th>Progetto</th><th>Segmento Alayan</th><th>Categoria progetto</th>
+          <th>Regione</th><th>Prov.</th><th>Comune</th><th>Fascia valore</th><th>Valore</th>
+          <th>Committente</th><th>CUP</th><th>Fonte</th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE DEL NUOVO POLO SCOLASTICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>MONTEGIORGIO</td>
+          <td>5M - 20M</td>
+          <td>19.493.048 €</td>
+          <td>COMUNE DI MONTEGIORGIO - AP -</td>
+          <td>E83H18000390001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E83H18000390001" target="_blank">Fonte</a></td>
+        </tr>
         
-      </tbody>
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PARCO DELLE MURA URBANE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>19.100.000 €</td>
+          <td>COMUNE DI PISTOIA - PT -</td>
+          <td>C53D21001130005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C53D21001130005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>AMPLIAMENTO VIA ISONZO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>PALESTRINA</td>
+          <td>5M - 20M</td>
+          <td>18.961.000 €</td>
+          <td>COMUNE DI PALESTRINA - RM -</td>
+          <td>H93G08000110004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H93G08000110004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>MONASTERO DEL PALAZZO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>SPOLETO</td>
+          <td>5M - 20M</td>
+          <td>18.817.708 €</td>
+          <td>COMUNE DI SPOLETO - PG -</td>
+          <td>B32C21001400001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B32C21001400001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>LAVORI COMPLETAMENTO VIA FLORA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>CISTERNA DI LATINA</td>
+          <td>5M - 20M</td>
+          <td>18.672.020 €</td>
+          <td>COMUNE DI CISTERNA DI LATINA - LT -</td>
+          <td>C58C12000040004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C58C12000040004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>ALLOGGI SOCIETÀ PISTOIESE EDILIZIA SOCIALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>18.500.000 €</td>
+          <td>COMUNE DI PISTOIA - PT -</td>
+          <td>C57H21000340009</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C57H21000340009" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>MONASTERO DELLA STELLA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>SPOLETO</td>
+          <td>5M - 20M</td>
+          <td>18.479.904 €</td>
+          <td>COMUNE DI SPOLETO - PG -</td>
+          <td>B32C21001390001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B32C21001390001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CAMPUS LANCIANO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CASTELRAIMONDO</td>
+          <td>5M - 20M</td>
+          <td>18.150.000 €</td>
+          <td>COMUNE DI CASTELRAIMONDO - MC -</td>
+          <td>F31B21002400001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F31B21002400001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PROGETTO DI REALIZZAZIONE DI UN SISTEMA INFORMATIVO WIRELEES PER LA COPERTURA INTERNET DELLE PRINCIPALI PIAZZE DEL QUARTIERE CAMPOLONIANO.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>18.150.000 €</td>
+          <td>COMUNE DI RIETI - RI -</td>
+          <td>F13D11000400005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F13D11000400005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>TEATRO MANZONI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>17.614.000 €</td>
+          <td>COMUNE DI PISTOIA - PT -</td>
+          <td>C59F24000110005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C59F24000110005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EX CASERMA LUPI DI TOSCANA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>17.493.074 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H14E21000080005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14E21000080005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>POLO SCIENTIFICO TECNOLOGICO E CULTURALE COMPLESSO SANTANGELO MAGNO  ALA NORD</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>ASCOLI PICENO</td>
+          <td>ASCOLI PICENO</td>
+          <td>5M - 20M</td>
+          <td>17.113.866 €</td>
+          <td>COMUNE DI ASCOLI PICENO - AP -</td>
+          <td>C35F21000380001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C35F21000380001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA SECONDARIA DI I° GRADO GHIBERTI E IMPIANTO SPORTIVO GEODETICA LEGNAIA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>17.000.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H11B21001880001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H11B21001880001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE IMPIANTO DI CLIMATIZZAZIONE E RISCALDAMENTO ASILO NIDO A. SABIN</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>ACQUALAGNA</td>
+          <td>5M - 20M</td>
+          <td>16.982.400 €</td>
+          <td>COMUNE DI ACQUALAGNA - PESARO E URBINO -</td>
+          <td>I95E22000210005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I95E22000210005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COSTRUZIONE NUOVO EDIFICIO PER SCUOLA PRIMARIA E SECONDARIA 1° GRADO NEL CAPOLUOGO DI PECCIOLI.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>PISA</td>
+          <td>PECCIOLI</td>
+          <td>5M - 20M</td>
+          <td>16.700.000 €</td>
+          <td>COMUNE DI PECCIOLI - PISA -</td>
+          <td>D48E18000060002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D48E18000060002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>1 BRETELLA DA VIA PANCALDUCCI A VIA ZORLI E PACE 2 RESTAURO POZZO DEL MERCATO 3 REALIZZAZIONE PARCHEGGI 4 COSTRUZIONE EDIFICIO ALLOGGI ERP 5 CONSOLIDAMENTO MURO CONTRO-TERRA VIA PANTALEONI E ADEGUAMENTO VIA ZORLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Infrastrutture / parcheggi</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>16.605.154 €</td>
+          <td>COMUNE DI MACERATA - MC -</td>
+          <td>I81B21000520001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I81B21000520001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>STADIO DEL NUOTO A IOLO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>16.000.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C35B22000140005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C35B22000140005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>LAVORI REALIZZAZIONE NUOVA CASA DI RIPOSO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CIVITANOVA MARCHE</td>
+          <td>5M - 20M</td>
+          <td>16.000.000 €</td>
+          <td>COMUNE DI CIVITANOVA MARCHE - MC -</td>
+          <td>E75E23000020001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E75E23000020001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PISCINA COMUNALE DI IOLO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>16.000.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C31B21000620004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C31B21000620004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE DI UN POLO SCOLASTICO UNICO IN LOCALITÀ PILOZZO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>MONTE PORZIO CATONE</td>
+          <td>5M - 20M</td>
+          <td>15.961.206 €</td>
+          <td>COMUNE DI MONTE PORZIO CATONE - RM -</td>
+          <td>H88D20000370001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H88D20000370001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>OPERE DI URBANIZZAZIONE - URBANIZZAZIONE PRIMARIA, RETI TECNOLOGICHE ED OPERE CONNESSE RETI (IDRICA, FOGNARIA,ELETTRICA, TELEFONICA, INTERNET E GAS) PIAZZE, SLARGHI E SPAZI APERTI AD USO PUBBLICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>USSITA</td>
+          <td>5M - 20M</td>
+          <td>15.950.743 €</td>
+          <td>COMUNE DI USSITA - MC -</td>
+          <td>C57H21002530005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C57H21002530005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SISMA 2016 - COMPLESSO EX ISTITUTO DI FARMACOLOGIA E EX ISTITUTO DI BIOLOGIA DESTINATO AD OSPITARE ASSOCIAZIONI SPIN-OFF CON ANNESSA SALA POLIVALENTE DELL&#x27;EX CHIESA DI SAN GIOVANNI DECOLLATO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CAMERINO</td>
+          <td>5M - 20M</td>
+          <td>15.900.000 €</td>
+          <td>COMUNE DI CAMERINO - MC -</td>
+          <td>E17D21000020001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E17D21000020001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>IMPIANTI DI ILLUMINAZIONE PUBBLICA E SEMAFORICI PER REALIZZAZIONE E GESTIONE DI INFRASTRUTTURE FINALIZZATE ALLEROGAZIONE DI SERVIZI SMART CITY</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>PIETRASANTA</td>
+          <td>5M - 20M</td>
+          <td>15.656.992 €</td>
+          <td>COMUNE DI PIETRASANTA - LU -</td>
+          <td>G41G22000010005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G41G22000010005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE IMMOBILE ERP VIA FELICE FERRI - VIA PRINCIPE AMEDEO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>FRASCATI</td>
+          <td>5M - 20M</td>
+          <td>15.600.000 €</td>
+          <td>COMUNE DI FRASCATI - ROMA -</td>
+          <td>I18I21000790006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I18I21000790006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>LAVORI DI REALIZZAZIONE DI UN NUOVO CAMPUS SCOLASTICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>SAN FELICE CIRCEO</td>
+          <td>5M - 20M</td>
+          <td>15.589.091 €</td>
+          <td>COMUNE DI SAN FELICE CIRCEO - LATINA -</td>
+          <td>F78E18000370006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F78E18000370006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE, EFFICIENTAMENTO ENERGETICO E GESTIONE DEGLI IMPIANTI DI PUBBLICA ILLUMINAZIONE DEL COMUNE DI CAPANNORI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>CAPANNORI</td>
+          <td>5M - 20M</td>
+          <td>15.570.400 €</td>
+          <td>COMUNE DI CAPANNORI - LU -</td>
+          <td>G54H25000340002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G54H25000340002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPENDIO SAN BENEDETTO - EX OSPEDALE PSICHIATRICO DI PESARO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>PESARO</td>
+          <td>5M - 20M</td>
+          <td>15.250.000 €</td>
+          <td>COMUNE DI PESARO - PS -</td>
+          <td>D73D21000360005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D73D21000360005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE DEL CENTRO FIERE DI VILLA POTENZA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>15.176.200 €</td>
+          <td>COMUNE DI MACERATA - MC -</td>
+          <td>I83D16000840005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I83D16000840005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>QUADRO STRATEGICO ED OPERATIVO URBANISTICO E PAESAGGISTICO PER IL RECUPERO L&#x27;ACCESSIBILITA&#x27; E LA VALORIZZAZIONE NELL&#x27;AMBITO TERRITORIALE DELL&#x27;ECOSISTEMA DELLE MARCITE DI NORCIA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>NORCIA</td>
+          <td>5M - 20M</td>
+          <td>15.070.000 €</td>
+          <td>COMUNE DI NORCIA - PG -</td>
+          <td>F59J21003190006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F59J21003190006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE DEL CENTRO STORICO DI URBINO E FRAZIONE DI CANAVACCIO CON IL RIUTILIZZO DI AREA INDUSTRIALE DA DESTINARE A SPAZI PER ISTRUZIONE, CULTURA, ALLOGGI POPOLARI E SPAZI SOCIALI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>URBINO</td>
+          <td>5M - 20M</td>
+          <td>15.000.150 €</td>
+          <td>COMUNE DI URBINO - PESARO E URBINO -</td>
+          <td>B36G21002600001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B36G21002600001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>QUALITÀ DELL&#x27;ABITARE - RIQUALIFICAZIONE DEL QUARTIERE CITTÀ GIARDINO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI RIETI - RI -</td>
+          <td>F13D21002220001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F13D21002220001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>AREA DENOMINATA EX COLONIA VERCELLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>CARRARA</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI CARRARA - MASSA-CARRARA -</td>
+          <td>F83D21000790001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F83D21000790001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE DI INTERVENTI DI BIOARCHITETTURA PER LA RIQUALIFICAZIONE DEL LOTTO 46, 47 E 49 DELLATER,LA REALIZZAZIONE DI UN PARCO DINAMICO A SERVIZIO DEI LOTTI 46 E 47 DELLATER,LA DEMOLIZIONE E RICOSTRUZIONE DELLEDIFICIO EX ICOS</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B29J21000680001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B29J21000680001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PORTO CANALE SULLA FOSSA TRAIANEA - DARSENA E VIALE TRAIANO, FIUMICINO (RM)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>FIUMICINO</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI FIUMICINO - ROMA -</td>
+          <td>F17B25000130007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F17B25000130007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CREAZIONE AREA PEDONALE I PIAZZA DELLE LIBERTÀ</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>GAETA</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI GAETA - LATINA -</td>
+          <td>B99J18002540004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B99J18002540004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PLESSO SCOLASTICO PER LA SEDE UNICA DELLISTITUTO COMPRENSIVO STATALE SASSOFERRATO E GENGA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>ANCONA</td>
+          <td>SASSOFERRATO</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI SASSOFERRATO - AN -</td>
+          <td>E98E18000050002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E98E18000050002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>DECRETO INTERMINISTERIALE N. 395/2020: PIANO SULLA RIGENERAZIONE URBANA E LA QUALITÀ DELLABITARE. PROGRAMMA INNOVATIVO NAZIONALE PER LA QUALITÀ DELLABITARE. APPROVAZIONE PROPOSTA PROGETTUALE GRUBER SOCIAL HOUSING TERNI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>TERNI</td>
+          <td>TERNI</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI TERNI - TR -</td>
+          <td>F43D20003590001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F43D20003590001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>1 EX DISPENSARIO SAGRINI 2 ROTATORIE TRA V. VELINI P.ZZA VITTORIA E V. ROMA 3 P.ZZA GARIBALDI E MACALLÈ 4 V. TRENTO 5 MONUMENTO ALLA RESISTENZA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>14.965.576 €</td>
+          <td>COMUNE DI MACERATA - MC -</td>
+          <td>I81B21000600001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I81B21000600001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>BIBLIOTECA CIVICA PASSIONE DI FOSSOMBRONE; MASCHIO CARENATO ROCCA MALATESTIANA; EX-CASA DI RIPOSO; PIAZZA DANTE ALIGHIERI; PARCHEGGIO VIALE DELLA REPUBBLICA;</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>FOSSOMBRONE</td>
+          <td>5M - 20M</td>
+          <td>14.865.000 €</td>
+          <td>COMUNE DI FOSSOMBRONE - PS -</td>
+          <td>I57B25000040003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I57B25000040003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RI-CENTRO CENTRO STORICO RIETI RECUPERO EDIFICIO EX MANNI E EX OSPIZIO CERRONI, RIQUALIFICAZIONE STRADE CENTRO STORICO E REALIZZAZIONE PONTE DEI POZZI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>14.687.971 €</td>
+          <td>COMUNE DI RIETI - RI -</td>
+          <td>F13D21005300006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F13D21005300006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO DI SM NOVELLA ED EX MONASTERO NUOVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>14.604.160 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H13D21000210001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H13D21000210001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>HOUSING INTERGENERAZIONALE CONVENTO SAN DOMENICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>ASCOLI PICENO</td>
+          <td>ASCOLI PICENO</td>
+          <td>5M - 20M</td>
+          <td>14.559.749 €</td>
+          <td>COMUNE DI ASCOLI PICENO - AP -</td>
+          <td>C35F21000240001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C35F21000240001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO EDILIZIO EX CASCAMIFICIO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>ANCONA</td>
+          <td>JESI</td>
+          <td>5M - 20M</td>
+          <td>14.499.792 €</td>
+          <td>COMUNE DI JESI - AN -</td>
+          <td>G47D25000000002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G47D25000000002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EX CASERMA LUPI DI TOSCANA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>14.403.808 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H14E21000090001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14E21000090001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PPP GESTIONE, RIQUALIFICAZIONE ENERGETICA E FORNITURA ENERGIA ELETTRICA DEGLI IMPIANTI DELLA PUBBLICA ILLUMINAZIONE E IMMOBILI COMUNALI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>AREZZO</td>
+          <td>MONTEVARCHI</td>
+          <td>5M - 20M</td>
+          <td>14.281.626 €</td>
+          <td>COMUNE DI MONTEVARCHI - AR -</td>
+          <td>E79E19000910002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E79E19000910002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>¿COSTRUZIONE E MESSA A DISPOSIZIONE A FAVORE DEL COMUNE DI MASSAROSA DEL NUOVO COMPLESSO SCOLASTICO PIANO DI CONCA¿ DA REALIZZARSI AI SENSI DEL D.LGS 163/2006 E SMI ED ART. 44 DEL DL 1/12 CONVERTITO IN L.27 DE 24.03.2012¿</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>MASSAROSA</td>
+          <td>5M - 20M</td>
+          <td>14.000.000 €</td>
+          <td>COMUNE DI MASSAROSA - LU -</td>
+          <td>C79H12000120007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C79H12000120007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA MEDIA &#x27;GENTILE DA FOLIGNO&#x27;</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>FOLIGNO</td>
+          <td>5M - 20M</td>
+          <td>13.850.000 €</td>
+          <td>COMUNE DI FOLIGNO - PG -</td>
+          <td>C61B22001210006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C61B22001210006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PIAZZE PER LA RIQUALIFICAZIONE DEI BORGHI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>PIEVE TORINA</td>
+          <td>5M - 20M</td>
+          <td>13.700.000 €</td>
+          <td>COMUNE DI PIEVE TORINA - MC -</td>
+          <td>C53D21001330001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C53D21001330001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>NUOVO POLO SCOLASTICO AREA CENTRO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>CASTELFIORENTINO</td>
+          <td>5M - 20M</td>
+          <td>13.700.000 €</td>
+          <td>COMUNE DI CASTELFIORENTINO - FI -</td>
+          <td>C31B22000760006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C31B22000760006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>DELOCALIZZAZIONE COMPENDIO EDILIZIO CASA DI RIPOSO LAZZARELLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>SAN SEVERINO MARCHE</td>
+          <td>5M - 20M</td>
+          <td>13.690.950 €</td>
+          <td>COMUNE DI SAN SEVERINO MARCHE - MC -</td>
+          <td>I55F23000380001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I55F23000380001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PROGETTO DI FINANZA PER LA CONCESSIONE DELLA RIQUALIFICAZIONE DEL SERVIZIO DI GESTIONE E MANUTENZIONE DEGLI IMPIANTI DI PUBBLICA ILLUMINAZIONE AI SENSI DELL&#x27;ART. 180 E 183 DEL D.LGS. 50/2016</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>SABAUDIA</td>
+          <td>5M - 20M</td>
+          <td>13.420.000 €</td>
+          <td>COMUNE DI SABAUDIA - LATINA -</td>
+          <td>E68I21000240005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E68I21000240005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>MESSA IN SICUREZZA DEL POLO SCOLASTICO DI CAPANNORI COMPRENDENTE LA SCUOLA SECONDARIA DI PRIMO GRADO C. PIAGGIA ED IL LICEO SCIENTIFICO E. MAJORANA MEDIANTE DEMOLIZIONE, RICOSTRUZIONE E ADEGUAMENTO STRUTTURE ESISTENTI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>CAPANNORI</td>
+          <td>5M - 20M</td>
+          <td>13.409.000 €</td>
+          <td>COMUNE DI CAPANNORI - LU -</td>
+          <td>G53H20000070005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G53H20000070005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PARCO VIA G. BRUNO: COMPLETAMENTO ILLUMINAZIONE PUBBLICA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>13.336.000 €</td>
+          <td>COMUNE DI LIVORNO - LI -</td>
+          <td>J44H04000080004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J44H04000080004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CIMITERI COMUNALI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>SESTO FIORENTINO</td>
+          <td>5M - 20M</td>
+          <td>12.649.954 €</td>
+          <td>COMUNE DI SESTO FIORENTINO - FI -</td>
+          <td>B94H22000920005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B94H22000920005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>DEMOLIZIONE E RICOSTRUZIONE DEL PLESSO SCOLASTICO SANDRO PERTINI IN VIA DEL COLLEGIO TIVOLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>TIVOLI</td>
+          <td>5M - 20M</td>
+          <td>12.590.600 €</td>
+          <td>COMUNE DI TIVOLI - ROMA -</td>
+          <td>D32C22000220006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D32C22000220006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RECUPERARE E RIGENERARE NUOVI SPAZI PER LA CULTURA, LO SPORT E IL TURISMO. SPOLETO CITTÀ SOSTENIBILE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>SPOLETO</td>
+          <td>5M - 20M</td>
+          <td>12.500.000 €</td>
+          <td>COMUNE DI SPOLETO - PG -</td>
+          <td>B37D25000160005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B37D25000160005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EX CHIESA DI SAN PAOLO DI PROPRIETÀ COMUNALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>12.500.000 €</td>
+          <td>COMUNE DI MACERATA - MC -</td>
+          <td>I85F21001930001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I85F21001930001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE FUNZIONALE AREA SPORTIVA TURRI LOTTO 1 NUOVA SCUOLA MEDIA FERMI SISTEMAZIONE ESTERNA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>SCANDICCI</td>
+          <td>5M - 20M</td>
+          <td>12.500.000 €</td>
+          <td>COMUNE DI SCANDICCI - FI -</td>
+          <td>G71B21004430009</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G71B21004430009" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>NUOVO NUCLEO SCOLASTICO IN VIA DELL&#x27;ARCOVATA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>12.488.200 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H26J03000030005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H26J03000030005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIPRISTINO INFRASTRUTTURE STRADALI FRAZIONI VERSANTI VALLE RAMO FIUME CHIENTI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>PIEVE TORINA</td>
+          <td>5M - 20M</td>
+          <td>12.403.185 €</td>
+          <td>COMUNE DI PIEVE TORINA - MC -</td>
+          <td>C57H21010020001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C57H21010020001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE SPAZI ESTERNI, SICUREZZA DEGLI SPAZI ABITATI, RIQUALIFICAZIONE DEGLI SPAZI ABITATIVI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>12.300.000 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B29J21000700001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B29J21000700001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>STRADE COMUNALI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>TERRACINA</td>
+          <td>5M - 20M</td>
+          <td>12.294.000 €</td>
+          <td>COMUNE DI TERRACINA - LATINA -</td>
+          <td>J59H10000770006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J59H10000770006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>IMPIANTI DI PUBBLICA ILLUMINAZIONE, SEMAFORICI, TERMICI ED ELETTRICI DEGLI EDIFICI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>TODI</td>
+          <td>5M - 20M</td>
+          <td>12.170.066 €</td>
+          <td>COMUNE DI TODI - PG -</td>
+          <td>J42E22000470003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J42E22000470003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA MATERNA, ELEMENTARE E ASILO NIDO S. MARIA A COVERCIANO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>12.143.984 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H15D12000790004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H15D12000790004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA DINO COMPAGNI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>12.060.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H14H16001140004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14H16001140004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO SCOLASTICO OMNICOMPRENSIVO BEATO SIMONE FIDATI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>CASCIA</td>
+          <td>5M - 20M</td>
+          <td>12.057.500 €</td>
+          <td>COMUNE DI CASCIA - PG -</td>
+          <td>C45E22000290001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C45E22000290001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PALAZZETTO DELLO SPORT, VIA DELLE TAGLIATE, S.ANNA, LUCCA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>LUCCA</td>
+          <td>5M - 20M</td>
+          <td>12.000.000 €</td>
+          <td>COMUNE DI LUCCA - LU -</td>
+          <td>J68E23000100004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J68E23000100004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>MESSA IN SICUREZZA STABILI CON RIQUALIFICAZIONE ED EFFICIENTAMENTO ENERGETICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CIVITANOVA MARCHE</td>
+          <td>5M - 20M</td>
+          <td>12.000.000 €</td>
+          <td>COMUNE DI CIVITANOVA MARCHE - MC -</td>
+          <td>E74H23000110001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E74H23000110001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>FORNITURA E POSA IN OPERA DI PREFABBRICATO PER CENTRO INFORMAZIONI LOC. POMONTE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Edilizia pubblica</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>MARCIANA</td>
+          <td>5M - 20M</td>
+          <td>12.000.000 €</td>
+          <td>COMUNE DI MARCIANA - LIVORNO -</td>
+          <td>H58H06000010007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H58H06000010007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE NUOVA PISCINA COMUNALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>ROSIGNANO MARITTIMO</td>
+          <td>5M - 20M</td>
+          <td>12.000.000 €</td>
+          <td>COMUNE DI ROSIGNANO MARITTIMO - LI -</td>
+          <td>F35B25000380004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F35B25000380004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>ACQUISTO AREA OSPEDALE DISMESSO PER REALIZZAZIONE PARCO URBANO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>12.000.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C36D14000230007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C36D14000230007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>TEATRO MANZONI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>12.000.000 €</td>
+          <td>COMUNE DI PISTOIA - PT -</td>
+          <td>C59D22000100006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C59D22000100006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RECUPERO E RIQUALIFICAZIONE IMMOBILE DENOMINATO EX ARLECCHINO E P.ZZA CASTRUCCIO CASTRACANI A LIDO DI CAMAIORE I E II LOTTO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>CAMAIORE</td>
+          <td>5M - 20M</td>
+          <td>11.850.000 €</td>
+          <td>COMUNE DI CAMAIORE - LU -</td>
+          <td>D33D21006650008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D33D21006650008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>MURA CASTELLANE - RECUPERO CON MIGLIORAMENTO SISMICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>SAN GINESIO</td>
+          <td>5M - 20M</td>
+          <td>11.830.080 €</td>
+          <td>COMUNE DI SAN GINESIO - MC -</td>
+          <td>G42C17000230001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G42C17000230001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO SCOLASTICO E VERDE PUBBLICO; COMPLESSO DI EDILIZIA PUBBLICA RESIDENZIALE.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>FROSINONE</td>
+          <td>5M - 20M</td>
+          <td>11.806.060 €</td>
+          <td>COMUNE DI FROSINONE - FR -</td>
+          <td>E49H07000120007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E49H07000120007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CENTRO SERVIZI DEL PARCO NAZIONALE - OSTELLO - CENTRO ESPOSITIVO (EX CONVENTO DI S. FRANCESCO), P.ZZA SAN FRANCESCO, FG.59, P.LLE 346 - 206, COMUNE DI AMATRICE - CENTRO STORICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>AMATRICE</td>
+          <td>5M - 20M</td>
+          <td>11.756.238 €</td>
+          <td>COMUNE DI AMATRICE - RIETI -</td>
+          <td>E73D21000690001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E73D21000690001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE NUOVO PLESSO SCOLASTICO IN VIA HAMMAN SCUOLA PRIMARIA E SECONDARIA DI PRIMO GRADO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>SIENA</td>
+          <td>ABBADIA SAN SALVATORE</td>
+          <td>5M - 20M</td>
+          <td>11.665.000 €</td>
+          <td>COMUNE DI ABBADIA SAN SALVATORE - SI -</td>
+          <td>I21B21002630002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I21B21002630002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIGENERAZIONE URBANA AREA EX MONTECATINI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>CASTELFIORENTINO</td>
+          <td>5M - 20M</td>
+          <td>11.630.000 €</td>
+          <td>COMUNE DI CASTELFIORENTINO - FI -</td>
+          <td>C35I25000010008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C35I25000010008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA SECONDARIA DI PRIMO GRADO VITRUVIO POLLIONE E SCUOLA PRIMARIA EDMONDO DE AMICIS</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>FORMIA</td>
+          <td>5M - 20M</td>
+          <td>11.550.000 €</td>
+          <td>COMUNE DI FORMIA - LT -</td>
+          <td>H87B18000210007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H87B18000210007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PLESSO SCOLASTICO A.BACCI - SCUOLA PRIMARIA G.MAZZONI E SCUOLA SECONDARIA DI PRIMO GRADO A. BACCI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>SANT&#x27;ELPIDIO A MARE</td>
+          <td>5M - 20M</td>
+          <td>11.465.723 €</td>
+          <td>COMUNE DI SANT&#x27;ELPIDIO A MARE - AP -</td>
+          <td>J12C22000130006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J12C22000130006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>AREE VERDI PUBBLICHE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>11.450.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H12F24000060001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H12F24000060001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>AGGREGATO PIAZZA S. FRANCESCO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>VISSO</td>
+          <td>5M - 20M</td>
+          <td>11.400.000 €</td>
+          <td>COMUNE DI VISSO - MACERATA -</td>
+          <td>E63D21002210005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E63D21002210005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>DEPOSITO AZIENDA PUBBLICO TRASPORTO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>11.363.000 €</td>
+          <td>COMUNE DI LIVORNO - LI -</td>
+          <td>J46E03000010007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J46E03000010007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>LAVORI DI DEMOLIZIONE E RICOSTRUZIONE COMPLESSO SCOLASTICO ALESSANDRO MALASPINA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>PONTREMOLI</td>
+          <td>5M - 20M</td>
+          <td>11.250.000 €</td>
+          <td>COMUNE DI PONTREMOLI - MASSA-CARRARA -</td>
+          <td>E18E18000080001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E18E18000080001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>INTERVENTO DI RIQUALIFICAZIONE URBANA CITTÀ DI PESARO  VIA DELLACQUEDOTTO - STAZIONE FERROVIARIA, PROGETTO SPRINT</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>PESARO</td>
+          <td>5M - 20M</td>
+          <td>11.196.000 €</td>
+          <td>COMUNE DI PESARO - PS -</td>
+          <td>D73I18000030005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D73I18000030005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE DELL&#x27;AREA DELL&#x27;EX STAZIONE AUTOLINEE DI VIA PIO VI°</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>11.134.600 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B21B17000140005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B21B17000140005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>FORTEZZA DA BASSO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>11.026.968 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H12C16000680005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H12C16000680005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>FABBRICATI VIA FOSSO DELLA BUFALINA N.1, N.3, N.5, N.7 E N.2, N.4, N.6 FABBRICATI VIA PIAVOLA A BUTI N.1/3, N.5/7, N.9/11 FABBRICATI VIA MARZABOTTO N.2</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Edilizia pubblica</td>
+          <td>TOSCANA</td>
+          <td>PISA</td>
+          <td>PISA</td>
+          <td>5M - 20M</td>
+          <td>11.016.276 €</td>
+          <td>COMUNE DI PISA - PI -</td>
+          <td>J53D21001410001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J53D21001410001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE PARCO DELLE CARPUGNANE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>CALENZANO</td>
+          <td>5M - 20M</td>
+          <td>11.000.000 €</td>
+          <td>COMUNE DI CALENZANO - FI -</td>
+          <td>E71B21001570007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E71B21001570007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE IMMOBILI QUARTIERE STAZIONE E PAVIMENTAZIONE QUARTIERE STAZIONE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>10.996.667 €</td>
+          <td>COMUNE DI LIVORNO - LI -</td>
+          <td>J47B22000060001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J47B22000060001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>ASILO NIDO DI S.ANNA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>LUCCA</td>
+          <td>5M - 20M</td>
+          <td>10.970.000 €</td>
+          <td>COMUNE DI LUCCA - LU -</td>
+          <td>J68G10000590005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J68G10000590005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA PIER CIRONI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>10.958.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C38E19000000005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C38E19000000005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PIAZZA DELLA REPUBBLICA NEL CAPOLUOGO E MARCIAPIEDI CIRCOSTANTI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>RIGNANO SULL&#x27;ARNO</td>
+          <td>5M - 20M</td>
+          <td>10.898.000 €</td>
+          <td>COMUNE DI RIGNANO SULL&#x27;ARNO - FIRENZE -</td>
+          <td>G21H11000070004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G21H11000070004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>POLO DI ECCELLENZA PER LA RIGENERAZIONE, LO SVILUPPO ECONOMICO E LOFFERTA TURISTICO-CULTURALE DI SEZZE (RIQUALIFICAZIONE DI 4 AREE DISMESSE NEL COMUNE DI SEZZE:1) EX-CAVA PETRIANNI, 2) EX-S.R. 156 E MOLE MUTI, 3) SCUOLA MATERNA VIA PUGLIE, 4) EX-COLONIA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>SEZZE</td>
+          <td>5M - 20M</td>
+          <td>10.767.153 €</td>
+          <td>COMUNE DI SEZZE - LT -</td>
+          <td>C15I25000110001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C15I25000110001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>POLO DI ECCELLENZA PER LA RIGENERAZIONE, LO SVILUPPO ECONOMICO E LOFFERTA TURISTICO-CULTURALE DI SEZZE BANDO PUBBLICO PER LA SELEZIONE DI PIANI DI SVILUPPO IN AREE DISMESSE O IN DISUSO (ART.1, CO 146 E SS, LEGGE N. 178 DEL 2020)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>SEZZE</td>
+          <td>5M - 20M</td>
+          <td>10.767.153 €</td>
+          <td>COMUNE DI SEZZE - LT -</td>
+          <td>C11B25000090001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C11B25000090001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EDIFICIO AD USO ABITATIVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>ASSISI</td>
+          <td>5M - 20M</td>
+          <td>10.764.207 €</td>
+          <td>COMUNE DI ASSISI - PG -</td>
+          <td>G73F04000920008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G73F04000920008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA PRIMARIA CENA E INFANZIA CALVINO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>PERUGIA</td>
+          <td>5M - 20M</td>
+          <td>10.706.690 €</td>
+          <td>COMUNE DI PERUGIA - PG -</td>
+          <td>C91B21003990001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C91B21003990001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EDIFICIO EX OSPEDALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CAMERINO</td>
+          <td>5M - 20M</td>
+          <td>10.479.976 €</td>
+          <td>COMUNE DI CAMERINO - MC -</td>
+          <td>E13G08000120007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E13G08000120007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>NUOVO POLO PER SCUOLA PRIMARIA E SCUOLA SECONDARIA DI 1° GRADO A MONTENERO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>10.440.000 €</td>
+          <td>COMUNE DI LIVORNO - LI -</td>
+          <td>J41B22001680006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J41B22001680006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>AREA DENOMINATA TESEO TESEI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>PORTOFERRAIO</td>
+          <td>5M - 20M</td>
+          <td>10.430.588 €</td>
+          <td>COMUNE DI PORTOFERRAIO - LI -</td>
+          <td>F97D22000040005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F97D22000040005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO PROTOINDUSTRIALE PALAZZO GENTILI BELLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>MACERATA FELTRIA</td>
+          <td>5M - 20M</td>
+          <td>10.405.770 €</td>
+          <td>COMUNE DI MACERATA FELTRIA - PS -</td>
+          <td>F43G18000010001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F43G18000010001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>completamento della&#x27;abbattimente delle barriere architettoniche scuola media B:SISTI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>10.376.000 €</td>
+          <td>COMUNE DI RIETI - RI -</td>
+          <td>F81F05000000004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F81F05000000004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>INTERVENTI DI CONSOLIDAMENTO DEL VERSANTE E DELLA SCARPATA SOTTOSTANTE VIA DI SAN RIPOLI  LA FORNACE A MONTESPERTOLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>MONTESPERTOLI</td>
+          <td>5M - 20M</td>
+          <td>10.350.000 €</td>
+          <td>COMUNE DI MONTESPERTOLI - FIRENZE -</td>
+          <td>E51J26000060001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E51J26000060001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PIANI DI SVILUPPO IN AREE DISMESSE O IN DISUSO (BANDO PUBBLICO PER LA SELEZIONE AI SENSI DELL&#x27;ART.1, CO 146 E SS, LEGGE N. 178 DEL 2020) FONDI RIDE TO COAST - DIREZIONE MARE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>FONDI</td>
+          <td>5M - 20M</td>
+          <td>10.303.546 €</td>
+          <td>COMUNE DI FONDI - LATINA -</td>
+          <td>G75B25000060005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G75B25000060005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CONNETTERE PER RIGENERARE NUOVE CONNESSIONI URBANE, EDILIZIA SOCIALE E RECUPERO IMMOBILI AI FINI CULTURALI PER LA QUALITÀ DELL&#x27;ABITARE (PINQUA)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>ANCONA</td>
+          <td>SENIGALLIA</td>
+          <td>5M - 20M</td>
+          <td>10.233.000 €</td>
+          <td>COMUNE DI SENIGALLIA - AN -</td>
+          <td>H19J21000280005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H19J21000280005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PIANO DI SVILUPPO URBANO FINALIZZATO ALLA RIQUALIFICAZIONE DELLAREA DISMESSA EX-MERCATO ITTICO SITO IN PIAZZA NAPOLI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>PORTO SAN GIORGIO</td>
+          <td>5M - 20M</td>
+          <td>10.132.207 €</td>
+          <td>COMUNE DI PORTO SAN GIORGIO - AP -</td>
+          <td>J67D25000010005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J67D25000010005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE NUOVO POLO SCOLASTICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>ITRI</td>
+          <td>5M - 20M</td>
+          <td>10.039.648 €</td>
+          <td>COMUNE DI ITRI - LATINA -</td>
+          <td>C17B20003640002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C17B20003640002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE E RIGENERAZIONE DELL&#x27;AREA DI PERTINENZA DEL DISMESSO EDIFICIO COMUNALE, VOLTO ALLA REALIZZAZIONE DI INFRASTRUTTURE PER IL RILANCIO ECONOMICO DEL CENTRO STORICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ARICCIA</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI ARICCIA - RM -</td>
+          <td>D75I25000080001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D75I25000080001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE AREA A TERRA ZONA OPERATIVA PORTUALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CIVITANOVA MARCHE</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI CIVITANOVA MARCHE - MC -</td>
+          <td>E77F23000060001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E77F23000060001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA DON MILANI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H14H17000940004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14H17000940004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>NUOVA PISCINA COMUNALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>VIAREGGIO</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI VIAREGGIO - LU -</td>
+          <td>B45B22000200001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B45B22000200001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>DISTRETTO TESSILE PRATESE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C36I22004610001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C36I22004610001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RECUPERO FUNZIONALE DELLA TORRE DI PRETOLA E ANNESSO MULINO PER LA PRODUZIONE IDROELETTRICA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>PERUGIA</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI PERUGIA - PG -</td>
+          <td>C98I11000350001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C98I11000350001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>TEATRO STORICO COMUNALE G. VERDI - COMPLETAMENTO RESTAURO E RECUPERO FUNZIONALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>UMBRIA</td>
+          <td>TERNI</td>
+          <td>TERNI</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI TERNI - TR -</td>
+          <td>F43D21002040001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F43D21002040001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>STADIO PADOVANI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H19F23000040004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H19F23000040004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIGENERAZIONE DEL POLO TEATRALE DEL FABBRICONE E NUOVE CONNESSIONI URBANE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C37B22000080006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C37B22000080006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA DON MILANI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H14H16001180004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14H16001180004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PROGETTO GENERALE PARCO DELLE MURA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>SIENA</td>
+          <td>SIENA</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI SIENA - SI -</td>
+          <td>C69D23000340001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C69D23000340001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO SPORTIVO RUGBY</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H18E23000180004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H18E23000180004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO MONUMENTALE PALAZZO DONNA OLIMPIA-PALAZZO SAN PIETRO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>VITERBO</td>
+          <td>5M - 20M</td>
+          <td>9.986.769 €</td>
+          <td>COMUNE DI VITERBO - VT -</td>
+          <td>D83D21005220005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D83D21005220005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA SECONDARIA DI PRIMO GRADO DANTE ALIGHIERI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>CITTA&#x27; DI CASTELLO</td>
+          <td>5M - 20M</td>
+          <td>9.961.838 €</td>
+          <td>COMUNE DI CITTA&#x27; DI CASTELLO - PG -</td>
+          <td>G11B22000280006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G11B22000280006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIGENERAZIONE URBANA NUOVA VIABILITÀ E PARCHEGGI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>URBINO</td>
+          <td>5M - 20M</td>
+          <td>9.950.000 €</td>
+          <td>COMUNE DI URBINO - PESARO E URBINO -</td>
+          <td>B31B21003710001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B31B21003710001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>QUARTIERE LATINA SCALO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>9.900.000 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B28C05000030005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B28C05000030005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PIANO DI SVILUPPO PER LA RIQUALIFICAZIONE DEL COMPARTO URBANISTICO PUBBLICO DENOMINATO EX FUNGO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>SANTA MARINELLA</td>
+          <td>5M - 20M</td>
+          <td>9.900.000 €</td>
+          <td>COMUNE DI SANTA MARINELLA - RM -</td>
+          <td>D57G25000070001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D57G25000070001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>HOUSING SOCIALE E POLO EDUCATIVO DI ECCELLENZA CASERMA VECCHI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Edilizia pubblica</td>
+          <td>MARCHE</td>
+          <td>ASCOLI PICENO</td>
+          <td>ASCOLI PICENO</td>
+          <td>5M - 20M</td>
+          <td>9.728.077 €</td>
+          <td>COMUNE DI ASCOLI PICENO - AP -</td>
+          <td>C35F21000230008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C35F21000230008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>BIBLIOTECA FEDERICIANA</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>FANO</td>
+          <td>5M - 20M</td>
+          <td>9.700.000 €</td>
+          <td>COMUNE DI FANO - PS -</td>
+          <td>E37B22000750004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E37B22000750004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CONCESSIONE DELLA RIQUALIFICAZIONE E GESTIONE DEL SISTEMA MUSEALE INTEGRATO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>FERMO</td>
+          <td>5M - 20M</td>
+          <td>9.631.264 €</td>
+          <td>COMUNE DI FERMO - AP -</td>
+          <td>F69F18000620002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F69F18000620002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>CENTRO AGROALIMENTARE DI PIEDIRIPA DI MACERATA</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>9.620.276 €</td>
+          <td>COMUNE DI MACERATA - MC -</td>
+          <td>I87H21002790001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I87H21002790001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>VARIE VIABILITÀ COMUNALI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>9.600.000 €</td>
+          <td>COMUNE DI PISTOIA - PT -</td>
+          <td>C57H21006770005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C57H21006770005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIQUALIFICAZIONE DEL FABBRICATO EX SCUOLE ELEMENTARI L.RADICE IN PORTO ERCOLE, LUNGOMARE ANDREA DORIA 58-59 MEDIANTE DEMOLIZIONE, RICOSTRUZIONE E CAMBIO D&#x27;USO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>GROSSETO</td>
+          <td>MONTE ARGENTARIO</td>
+          <td>5M - 20M</td>
+          <td>9.500.000 €</td>
+          <td>COMUNE DI MONTE ARGENTARIO - GROSSETO -</td>
+          <td>D18C25000130001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D18C25000130001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>MESSA IN SICUREZZA DELLE MURA MEDIEVALI DELLA CITTÀ DI ASSISI  LOTTO 1</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>ASSISI</td>
+          <td>5M - 20M</td>
+          <td>9.500.000 €</td>
+          <td>COMUNE DI ASSISI - PG -</td>
+          <td>G79D24000360001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G79D24000360001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>NUOVA PISCINA COMUNALE</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>PIOMBINO</td>
+          <td>5M - 20M</td>
+          <td>9.500.000 €</td>
+          <td>COMUNE DI PIOMBINO - LIVORNO -</td>
+          <td>H79B11000010004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H79B11000010004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA SECONDARIA DI PRIMO GRADO CAPOLUOGO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>FOSSOMBRONE</td>
+          <td>5M - 20M</td>
+          <td>9.435.060 €</td>
+          <td>COMUNE DI FOSSOMBRONE - PS -</td>
+          <td>I51B22000250005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I51B22000250005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA SEC. DI I GRADO VOLUMNIO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>PERUGIA</td>
+          <td>5M - 20M</td>
+          <td>9.425.472 €</td>
+          <td>COMUNE DI PERUGIA - PG -</td>
+          <td>C91B21003980001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C91B21003980001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>REALIZZAZIONE POLO SCOLASTICO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>ANCONA</td>
+          <td>CASTELFIDARDO</td>
+          <td>5M - 20M</td>
+          <td>9.400.000 €</td>
+          <td>COMUNE DI CASTELFIDARDO - AN -</td>
+          <td>G28E18000080009</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G28E18000080009" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>FONDI SISMA 2016. EX CHIESA DI SAN FRANCESCO: RISTRUTTURAZIONE MIGLIORAMENTO SISMICO, RECUPERO ARCHITETTONICO E FUNZIONALE E SEDE COMUNALE VIA ROMA: DEMOLIZIONE E RICOSTRUZIONE, RECUPERO E RIQUALIFICAZIONE ARCHITETTONICA DELLO SCALONE DEL PANFILI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>MONTEGIORGIO</td>
+          <td>5M - 20M</td>
+          <td>9.300.000 €</td>
+          <td>COMUNE DI MONTEGIORGIO - AP -</td>
+          <td>E86J23000060001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E86J23000060001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLESSO EX CARCERE DELLE MURATE</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>9.234.815 €</td>
+          <td>COMUNE DI FIRENZE - FI -</td>
+          <td>H26D04000050002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H26D04000050002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>ERP LA CHICCAIA LIVORNO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>9.233.587 €</td>
+          <td>COMUNE DI LIVORNO - LI -</td>
+          <td>J47E17000030006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J47E17000030006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SCUOLA SECONDARIA SACCHETTI SASSETTI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>9.230.999 €</td>
+          <td>COMUNE DI RIETI - RI -</td>
+          <td>F11B21008370002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F11B21008370002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>SERVIZIO DI GESTIONE IN CONCESSIONE DELLA PISCINA COMUNALE O. BERTI E PROGETTAZIONE DEFINITIVA PER LA RIQUALIFICAZIONE E RECUPERO FUNZIONALE DI AREA A CARATTERE COMPLEMENTARE IN RELAZIONE ALLA GESTIONE DELL&#x27;IMPIANTO SPORTIVO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>PESARO</td>
+          <td>5M - 20M</td>
+          <td>9.220.626 €</td>
+          <td>COMUNE DI PESARO - PS -</td>
+          <td>D79E12000440004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D79E12000440004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>VIA VALLE DEL FORMALE</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ZAGAROLO</td>
+          <td>5M - 20M</td>
+          <td>9.204.033 €</td>
+          <td>COMUNE DI ZAGAROLO - ROMA -</td>
+          <td>C48H22000240006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C48H22000240006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>INTERVENTI DI RECUPERO DI UN&#x27;AREA DISMESSA DA ADIBIRE A PARCHEGGIO MULTIPIANO NEL COMUNE DI TARQUINIA (VT)</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>TARQUINIA</td>
+          <td>5M - 20M</td>
+          <td>9.200.000 €</td>
+          <td>COMUNE DI TARQUINIA - VITERBO -</td>
+          <td>D87B25000090005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D87B25000090005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EDIFICIO SCOLASTICO ALESSANDRO MALASPINA IN COMUNE DI PONTREMOLI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>PONTREMOLI</td>
+          <td>5M - 20M</td>
+          <td>9.200.000 €</td>
+          <td>COMUNE DI PONTREMOLI - MASSA-CARRARA -</td>
+          <td>E15E22000160005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E15E22000160005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>STORIA, NATURA E CULTURA</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>URBISAGLIA</td>
+          <td>5M - 20M</td>
+          <td>9.198.000 €</td>
+          <td>COMUNE DI SAN GINESIO - MC -</td>
+          <td>B23D21007980001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B23D21007980001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>AREA DEL MERCATO COPERTO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>9.149.149 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B29D09000050007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B29D09000050007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PROGECT FINANCING: PISCINA COMUNALE. P.P.P. MEDIANTE PROPOSTA DI LOCAZIONE FINANZIARIA DI OPERA PUBBLICA</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Sport / impianti sportivi</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>MASSA</td>
+          <td>5M - 20M</td>
+          <td>9.121.090 €</td>
+          <td>COMUNE DI MASSA - MS -</td>
+          <td>C61B21013420005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C61B21013420005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>EX CONSORZIO AGRARIO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>POMEZIA</td>
+          <td>5M - 20M</td>
+          <td>9.119.292 €</td>
+          <td>COMUNE DI POMEZIA - RM -</td>
+          <td>G51B21000570001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G51B21000570001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>LAVORI RIPARAZIONE DANNI POST-SISMA 2016 PALAZZO COMUNALE E TEATRO F. MARCHETTI</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CAMERINO</td>
+          <td>5M - 20M</td>
+          <td>9.055.586 €</td>
+          <td>COMUNE DI CAMERINO - MC -</td>
+          <td>E18B18001310001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E18B18001310001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PIAZZA DEL SUFFRAGIO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>TERNI</td>
+          <td>NARNI</td>
+          <td>5M - 20M</td>
+          <td>9.031.000 €</td>
+          <td>COMUNE DI NARNI - TR -</td>
+          <td>B38C25000900005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B38C25000900005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>NUOVA COSTRUZIONE 32 ALLOGGI DI EDILIZIA RESIDENZIALE PUBBLICA E PARCO URBANO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>9.018.458 €</td>
+          <td>COMUNE DI PISTOIA - PT -</td>
+          <td>C51B21000750001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C51B21000750001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>PROGETTAZIONE E REALIZZAZIONE INTERVENTI EFFICIENZA ENERGETICA, ADEGUAMENTO NORMATIVO, RIQUALIFICAZIONE, GESTIONE E FORNITURA ENERGIA ELETTRICA IMPIANTI DI PUBBLICA ILLUMINAZIONE, IMPIANTI SEMAFORICI E LINTEGRAZIONE DI SERVIZI A VALORE AGGIUNTO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>MARINO</td>
+          <td>5M - 20M</td>
+          <td>9.000.000 €</td>
+          <td>COMUNE DI MARINO - RM -</td>
+          <td>I19J24000630007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I19J24000630007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>ISTITUTO COMPRENSIVO NORD</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>PRATO</td>
+          <td>PRATO</td>
+          <td>5M - 20M</td>
+          <td>9.000.000 €</td>
+          <td>COMUNE DI PRATO - PO -</td>
+          <td>C31B21000570005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C31B21000570005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>COMPLETAMENTO STRUTTURALE ED IMPIANTISTICO.</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>GABICCE MARE</td>
+          <td>5M - 20M</td>
+          <td>9.000.000 €</td>
+          <td>COMUNE DI GABICCE MARE - PS -</td>
+          <td>D95I25000060005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D95I25000060005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">89</td>
+          <td><strong>RIGENERAZIONE URBANA DEL COMPLESSO DI PIAZZA GUIDO GUERRA CON REALIZZAZIONE DEL NUOVO TEATRO COMUNALE</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>EMPOLI</td>
+          <td>5M - 20M</td>
+          <td>9.000.000 €</td>
+          <td>COMUNE DI EMPOLI - FI -</td>
+          <td>C75E22000170001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C75E22000170001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>CAMPUS SCOLASTICO DI PESARO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>PESARO</td>
+          <td>5M - 20M</td>
+          <td>19.957.240 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI PESARO E URBINO</td>
+          <td>B75E25000230001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B75E25000230001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>SP34 VALDIFORFORA - MESSA IN SICUREZZA DEL TERRITORIO A RISCHIO IDROGEOLOGICO RIQUALIFICAZIONE DEL VERSANTE DI MONTE LUNGO LA STRADA PROVINCIALE SP34 VALDIFORFORA DAL KM 0+000 AL KM 7+300 NEI COMUNI DI PESCIA E SAN MARCELLO PITEGLIO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>SAN MARCELLO PITEGLIO</td>
+          <td>5M - 20M</td>
+          <td>19.500.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI PISTOIA</td>
+          <td>H98H22000070005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H98H22000070005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>EDIFICI NEI COMUNI DI LIVORNO, ROSIGNANO, PORTOFERRAIO E CASTAGNETO)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>ROSIGNANO MARITTIMO</td>
+          <td>5M - 20M</td>
+          <td>18.863.384 €</td>
+          <td>CASA LIVORNO E PROVINCIA S.P.A.</td>
+          <td>C84F22000050005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C84F22000050005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PPP ART. 193 DLGS. 36/2023 AFFIDAMENTO IN CONCESSIONE PROGETTAZIONE, REALIZZAZIONE INTERVENTI DI EFFICIENZA ENERGETICA, RIQUALIFICAZIONE E MANUTENZIONE DEGLI IMMOBILI DI ATER PR DI ROMA - MISURA PNRR M.7 I.17 PER EFFICIENTAMENTO ERP</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>COLONNA</td>
+          <td>5M - 20M</td>
+          <td>18.372.565 €</td>
+          <td>ATER DELLA PROVINCIA DI ROMA</td>
+          <td>H44F25000460007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H44F25000460007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PPP ART. 193 DLGS. 36/2023 AFFIDAMENTO IN CONCESSIONE PROGETTAZIONE, REALIZZAZIONE INTERVENTI DI EFFICIENZA ENERGETICA, RIQUALIFICAZIONE E MANUTENZIONE DEGLI IMMOBILI DI ATER PR DI ROMA - MISURA PNRR M.7 I.17 PER EFFICIENTAMENTO ERP</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>MONTE PORZIO CATONE</td>
+          <td>5M - 20M</td>
+          <td>18.174.468 €</td>
+          <td>ATER DELLA PROVINCIA DI ROMA</td>
+          <td>H14F25000180007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14F25000180007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ITG E.FERMI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>18.000.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI PISTOIA</td>
+          <td>H51B22000600006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H51B22000600006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>MUSEO TERRITORIALE DEL LAGO DI BOLSENA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>BOLSENA</td>
+          <td>5M - 20M</td>
+          <td>17.736.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI VITERBO</td>
+          <td>G21F11000070003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G21F11000070003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>21 SEDI DELLISTITUZIONE SISTEMA BIBLIOTECHE CENTRI CULTURALI DI ROMA CAPITALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>17.500.000 €</td>
+          <td>CITTA&#x27; METROPOLITANA DI ROMA CAPITALE</td>
+          <td>F83G22000620001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F83G22000620001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISTITUTO BARSANTI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>MASSA</td>
+          <td>5M - 20M</td>
+          <td>17.136.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI MASSA CARRARA</td>
+          <td>H61B22000320006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H61B22000320006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PARTENARIATO PUBBLICO DI INIZIATIVA PRIVATA PER LA RIQUALIFICAZIONE ENERGETICA ED IL CONSOLIDAMENTO ANTISISMICO FABBRICATI ERP MEDIANTE I BENEFICI FISCALI DI CUI AL D.L. 34/2020 CONVERTITO CON MODIFICAZIONI CON LA LEGGE 17.7.2020 N. 77</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>VIAREGGIO</td>
+          <td>5M - 20M</td>
+          <td>17.130.160 €</td>
+          <td>E.R.P. LUCCA S.R.L. (SOGGETTO GESTORE DELL&#x27;EDILIZIA RESIDENZIALE PUBBLICA DELLA PROVINCIA DI LUCCA S.R.L.)</td>
+          <td>E44F22000030005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E44F22000030005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>REALIZZAZIONE NUOVO ISTITUTO SCOLASTICO A CAMPI BISENZIO  VIA PRUNAIA CAMPI BISENZIO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>CAMPI BISENZIO</td>
+          <td>5M - 20M</td>
+          <td>17.000.000 €</td>
+          <td>CITTA&#x27; METROPOLITANA DI FIRENZE</td>
+          <td>B81B20001110001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B81B20001110001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>REALIZZAZIONE NUOVO EDIFICO AD USO SCUOLA SUPERIORE ISOLA D&#x27;ELBA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>PORTOFERRAIO</td>
+          <td>5M - 20M</td>
+          <td>16.777.062 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI LIVORNO</td>
+          <td>J95E22000380001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J95E22000380001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>LICEO BARSANTI E MATTEUCCI DI VIAREGGIO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>VIAREGGIO</td>
+          <td>5M - 20M</td>
+          <td>16.000.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI LUCCA</td>
+          <td>E41B21003030001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E41B21003030001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>NUOVA SEDE LICEO AGNOLETTI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>SESTO FIORENTINO</td>
+          <td>5M - 20M</td>
+          <td>15.348.848 €</td>
+          <td>CITTA&#x27; METROPOLITANA DI FIRENZE</td>
+          <td>B97B16000030003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B97B16000030003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>SOSTITUZIONE EDILIZIA ISTITUTO GALILEO GALILEI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>CITTA&#x27; METROPOLITANA DI FIRENZE</td>
+          <td>B16B19000040003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B16B19000040003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>FABBRICATI ATER VIA SFORZA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>14.955.000 €</td>
+          <td>AZIENDA TERRITORIALE DELL&#x27;EDILIZIA RESIDENZIALE PUBBLICA DELLA PROVINCIA DI RIETI</td>
+          <td>E19J21014480006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E19J21014480006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PPP ART. 193 DLGS. 36/2023 AFFIDAMENTO IN CONCESSIONE PROGETTAZIONE, REALIZZAZIONE INTERVENTI DI EFFICIENZA ENERGETICA, RIQUALIFICAZIONE E MANUTENZIONE DEGLI IMMOBILI DI ATER PR DI ROMA - MISURA PNRR M.7 I.17 PER EFFICIENTAMENTO ERP</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>GENZANO DI ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.055.564 €</td>
+          <td>ATER DELLA PROVINCIA DI ROMA</td>
+          <td>H14F25000310007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14F25000310007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PPP ART. 193 DLGS. 36/2023 AFFIDAMENTO IN CONCESSIONE PROGETTAZIONE, REALIZZAZIONE INTERVENTI DI EFFICIENZA ENERGETICA, RIQUALIFICAZIONE E MANUTENZIONE DEGLI IMMOBILI DI ATER PR DI ROMA - MISURA PNRR M.7 I.17 PER EFFICIENTAMENTO ERP</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>CARPINETO ROMANO</td>
+          <td>5M - 20M</td>
+          <td>13.975.313 €</td>
+          <td>ATER DELLA PROVINCIA DI ROMA</td>
+          <td>H14F26000020007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H14F26000020007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>SCUOLA DI ISTRIZIONE SECONDARIA SUPERIORE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>PORTOFERRAIO</td>
+          <td>5M - 20M</td>
+          <td>13.850.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI LIVORNO</td>
+          <td>J93H19000580004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J93H19000580004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PLESSO G. BENINCASA DEL&#x27;ISTITUTO SUPERIORE D&#x27;ISTRUZIONE SAVOIA-BENINCASA DI ANCONA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>ANCONA</td>
+          <td>ANCONA</td>
+          <td>5M - 20M</td>
+          <td>13.200.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI ANCONA</td>
+          <td>H31B22001400006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H31B22001400006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PETROCCHI - NUOVA SUCCURSALE DI VIA PANCONI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>12.409.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI PISTOIA</td>
+          <td>H51D20000550001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H51D20000550001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>INTEVENTI DI RIQUALIFICAZIONE ENERGETICA COMPRENSIVI DELLA PROGETTAZIONE, DELLA REALIZZAZIONE DI INTERVENTI PER L&#x27;EFFICIENZA ENERGETICA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>12.302.600 €</td>
+          <td>CITTA&#x27; METROPOLITANA DI FIRENZE</td>
+          <td>B12G19000420003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B12G19000420003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISOLATO 415, LOTTO I E LOTTO III, LOC. SHANGAY, LIVORNO.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>11.795.797 €</td>
+          <td>CASA LIVORNO E PROVINCIA S.P.A.</td>
+          <td>C49C03000000002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C49C03000000002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISTITUTO DI ISTRUZIONE SECONDARIA SUPERIORE EINAUDI DI PORTO SANT&#x27;ELPIDIO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>PORTO SANT&#x27;ELPIDIO</td>
+          <td>5M - 20M</td>
+          <td>11.777.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI FERMO</td>
+          <td>C78E18000090003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C78E18000090003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>AREA EX VILLAGGIO TRIESTE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>11.675.600 €</td>
+          <td>A.T.E.R. DELLA PROVINCIA DI LATINA</td>
+          <td>E25F21000170001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E25F21000170001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ITG E.FERMI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>PISTOIA</td>
+          <td>PISTOIA</td>
+          <td>5M - 20M</td>
+          <td>11.606.324 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI PISTOIA</td>
+          <td>H51D20000510001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H51D20000510001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>IPSIA S. SIMONI DI CASTELNUOVO GARFAGNANA. INTERVENTO DI NUOVA COSTRUZIONE PER LA REALIZZAZIONE DI UN NUOVO CORPO SCOLASTICO PER AULE, REFETTORIO, BIBLIOTECA E AULA MAGNA.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>LUCCA</td>
+          <td>CASTELNUOVO DI GARFAGNANA</td>
+          <td>5M - 20M</td>
+          <td>10.800.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI LUCCA</td>
+          <td>E71B21001790001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E71B21001790001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISTITUTO SCOLASTICO G.MINUTO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>MASSA</td>
+          <td>5M - 20M</td>
+          <td>10.600.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI MASSA CARRARA</td>
+          <td>H63H18000320002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H63H18000320002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISTITUTO SUPERIORE SCOLASTICO STATALE LEONARDO DA VINCIE TECNOLOGICO DI ARCIDOSSO (GR)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>GROSSETO</td>
+          <td>ARCIDOSSO</td>
+          <td>5M - 20M</td>
+          <td>10.500.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI GROSSETO</td>
+          <td>F41B22000750006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F41B22000750006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISS E. FERMI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>AREZZO</td>
+          <td>BIBBIENA</td>
+          <td>5M - 20M</td>
+          <td>10.300.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI AREZZO</td>
+          <td>I35E24000000001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I35E24000000001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>PROGRAMMA DI EFFICIENTAMENTO ENERGETICO E E RIQUALIFICAZIONE DI EDIFICI DI EDILIZIA RESIDENZIALE PUBBLICA NEL COMUNE DI POMEZIA IN VIA UGO LA MALFA 42 - DETERMINAZIONE REGIONE LAZIO N. G13815 DEL 11.11.2021</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>POMEZIA</td>
+          <td>5M - 20M</td>
+          <td>10.085.693 €</td>
+          <td>ATER DELLA PROVINCIA DI ROMA</td>
+          <td>H59J21011240001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H59J21011240001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>VIABILITA&#x27; DI ADDUZIONE AL NUOVO OSPEDALE DI FERMO - AMMODERNAMENTO DELLA S.P. 204 LUNGOTENNA - COMPLETAMENTO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>FERMO</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI FERMO</td>
+          <td>C64E24000060002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C64E24000060002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>VIABILITÀ DI COLLEGAMENTO DELLA VALLATA DEL POTENZA A MACERATA E AL NUOVO OSPEDALE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MONTECASSIANO</td>
+          <td>5M - 20M</td>
+          <td>10.000.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI MACERATA</td>
+          <td>F11B21000980001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F11B21000980001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>NUOVA COSTRUZIONE DI COMPLESSIVI N. 60 ALLOGGI IN LIVORNO, VIA G. BRUNO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>9.965.648 €</td>
+          <td>CASA LIVORNO E PROVINCIA S.P.A.</td>
+          <td>C48D18000040002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C48D18000040002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>NUOVA COSTRUZIONE DI COMPLESSIVI 78 ALLOGGI IN LIVORNO AREA EX MERCATO ORTOFRUTTICOLO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>9.937.314 €</td>
+          <td>CASA LIVORNO E PROVINCIA S.P.A.</td>
+          <td>C47E20000050002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C47E20000050002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>ISTITUTO DI ISTRUZIONE SUPERIORE</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>FROSINONE</td>
+          <td>5M - 20M</td>
+          <td>9.500.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI FROSINONE</td>
+          <td>I42E20000050001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I42E20000050001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>RIQUALIFICAZIONE COMPLESSO ERP SITI IN RIETI QUARTIERE MICIOCCOLI VIA SFORZA 4-34</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>9.407.000 €</td>
+          <td>AZIENDA TERRITORIALE DELL&#x27;EDILIZIA RESIDENZIALE PUBBLICA DELLA PROVINCIA DI RIETI</td>
+          <td>E14F22000060002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/E14F22000060002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>REALIZZAZIONE DI STRUTTURE TEMPORANEE PREFABBRICATE AD USO PUBBLICO E SOCIALE NEL COMUNE DI CAMERINO.</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>CAMERINO</td>
+          <td>5M - 20M</td>
+          <td>9.400.000 €</td>
+          <td>PROVINCIA AUTONOMA DI TRENTO</td>
+          <td>C17B17000160008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C17B17000160008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>LICEO SCIENTIFICO E DELLE SCIENZE UMANE LAURANA-BALDI DI URBINO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>URBINO</td>
+          <td>5M - 20M</td>
+          <td>9.360.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI PESARO E URBINO</td>
+          <td>B31B22000760006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B31B22000760006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>DEMOLIZIONE DI UN EDIFICIO E SUCCESSIVA NUOVA COSTRUZIONR DI N. 54 ALLOGGI NEL COMUNE DI LIVORNO, QUARTIERE SHANGAY, ISOLATO 417, VIA BIXIO, PARETTI WANBERGHER, POERIO.</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>9.223.587 €</td>
+          <td>CASA LIVORNO E PROVINCIA S.P.A.</td>
+          <td>C48D18000030003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C48D18000030003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>EDIFICIO</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>LIVORNO</td>
+          <td>5M - 20M</td>
+          <td>9.204.782 €</td>
+          <td>CASA LIVORNO E PROVINCIA S.P.A.</td>
+          <td>C49C10000510002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C49C10000510002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">86</td>
+          <td><strong>NUOVA COSTRUZIONE PER L&#x27;I.I.S. A. VOLTA A FROSINONE</strong><div class="desc">Score OpenCUP: 98</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>FROSINONE</td>
+          <td>5M - 20M</td>
+          <td>9.000.000 €</td>
+          <td>AMMINISTRAZIONE PROVINCIALE DI FROSINONE</td>
+          <td>I43H19000520004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I43H19000520004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>VALLE AURELIA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>19.909.865 €</td>
+          <td>CONSORZIO POLIFUNZIONALE PEGASO - REGIONE LAZIO</td>
+          <td>I89J02000070003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I89J02000070003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE SAN GIOVANNI BATTISTA IN FOLIGNO INTERVENTO DI MIGLIORAMENTO SISMICO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>UMBRIA</td>
+          <td>PERUGIA</td>
+          <td>FOLIGNO</td>
+          <td>5M - 20M</td>
+          <td>19.433.287 €</td>
+          <td>AZIENDA USL UMBRIA 2</td>
+          <td>F62C21000590001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F62C21000590001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>SMALL FORWARD PRODUCTIONS SRL</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>19.360.062 €</td>
+          <td>REGIONE PIEMONTE</td>
+          <td>J81B24000190003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J81B24000190003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>S.R. 71 UMBRO CASENTINESE -VARIANTE IN LOCALITA&#x27; CORSALONE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>AREZZO</td>
+          <td>CHIUSI DELLA VERNA</td>
+          <td>5M - 20M</td>
+          <td>18.500.000 €</td>
+          <td>REGIONE TOSCANA</td>
+          <td>D51B17001660001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D51B17001660001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>AMPLIAMENTO DEL PRESIDIO OSPEDALIERO F. SPAZIANI DI FROSINONE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>FROSINONE</td>
+          <td>5M - 20M</td>
+          <td>18.500.000 €</td>
+          <td>ASL DI FROSINONE</td>
+          <td>B48I24005240003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B48I24005240003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>AREA INDUSTRIALE ABC</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>18.200.000 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B21B22000650005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B21B22000650005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>PARETE ROCCIOSA SANTUARIO SS. TRINITÀ</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>VALLEPIETRA</td>
+          <td>5M - 20M</td>
+          <td>18.000.000 €</td>
+          <td>COMUNE DI VALLEPIETRA - ROMA -</td>
+          <td>G78E22000210006</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G78E22000210006" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>NUOVO OSPEDALE DI AMANDOLA (FM)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>FERMO</td>
+          <td>AMANDOLA</td>
+          <td>5M - 20M</td>
+          <td>18.000.000 €</td>
+          <td>REGIONE MARCHE</td>
+          <td>B28I17001280008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B28I17001280008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE SS.CARLO E DONNINO DI PERGOLA (PU)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>PERGOLA</td>
+          <td>5M - 20M</td>
+          <td>17.800.000 €</td>
+          <td>REGIONE MARCHE</td>
+          <td>B65F23000400008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B65F23000400008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>AREA DI ESPANSIONE DI ROFFIA -CASSA DEI PIAGGIONI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>TOSCANA</td>
+          <td>PISA</td>
+          <td>SAN MINIATO</td>
+          <td>5M - 20M</td>
+          <td>17.500.000 €</td>
+          <td>COMUNE DI SAN MINIATO - PI -</td>
+          <td>D23B07000010001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D23B07000010001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>INTERVENTO DI RISTRUTTURAZIONE E ADEGUAMENTO A NORMA P.O. DI SORA -OSPEDALE SS. TRINITÀ LOC. SAN MARCIANO SORA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>SORA</td>
+          <td>5M - 20M</td>
+          <td>17.010.367 €</td>
+          <td>ASL DI FROSINONE</td>
+          <td>B43D20000190003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B43D20000190003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>RESTAURO, RIFUNZIONALIZZAZIONE E VALORIZZAZIONE DELLANTICO OSPEDALE GRANDE DEGLI INFERMI DI VITERBO, VIA S. LORENZO, 107</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>VITERBO</td>
+          <td>5M - 20M</td>
+          <td>17.000.000 €</td>
+          <td>REGIONE LAZIO</td>
+          <td>F88E23000200001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F88E23000200001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>RIQUALIFICAZIONE POLO SCIENTIFICO E DIDATTICO DI PENTIMA.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>UMBRIA</td>
+          <td>TERNI</td>
+          <td>TERNI</td>
+          <td>5M - 20M</td>
+          <td>17.000.000 €</td>
+          <td>REGIONE UMBRIA</td>
+          <td>I43C23000290001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I43C23000290001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>INFRASTRUTTURE E RETE DI SOTTOSERVIZI DEL CAPOLUOGO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Infrastrutture / parcheggi</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>PIEVE TORINA</td>
+          <td>5M - 20M</td>
+          <td>16.724.532 €</td>
+          <td>COMUNE DI PIEVE TORINA - MC -</td>
+          <td>C57H21001050001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C57H21001050001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>FOSSI IN LOC. FOSSONE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>CARRARA</td>
+          <td>5M - 20M</td>
+          <td>16.632.000 €</td>
+          <td>COMUNE DI CARRARA - MASSA-CARRARA -</td>
+          <td>F87H21011460003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F87H21011460003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EDIFICIO AD USO ABITATIVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>TOLENTINO</td>
+          <td>5M - 20M</td>
+          <td>16.266.268 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE MARCHE</td>
+          <td>H23E24000990001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H23E24000990001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE SAN FILIPPO NERI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>15.966.320 €</td>
+          <td>ASL DI ROMA 1</td>
+          <td>J88I23001150003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J88I23001150003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>HT FILM SRL</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>15.717.872 €</td>
+          <td>REGIONE AUTONOMA DELLA SICILIA</td>
+          <td>G86I22000180008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G86I22000180008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>MANUTENZIONE STRAORDINARIA E POTENZIAMENTO LINEE FOGNARIE NEL COMUNE DI VITERBO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>VITERBO</td>
+          <td>5M - 20M</td>
+          <td>15.570.019 €</td>
+          <td>COMUNE DI VITERBO - VT -</td>
+          <td>D88B23001350005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D88B23001350005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EDIFICIO PRODUTTIVO RICONDUCIBILE AD ABITATIVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>15.525.398 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE MARCHE</td>
+          <td>H83E23000290001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H83E23000290001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>AZIENDA OSPEDALIERA UNIVERSITARIA SENESE OSPEDALE SANTA MARIA ALLE SCOTTE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>SIENA</td>
+          <td>SIENA</td>
+          <td>5M - 20M</td>
+          <td>15.444.800 €</td>
+          <td>AZIENDA OSPEDALIERA UNIVERSITARIA SENESE</td>
+          <td>I65F22000500003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I65F22000500003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>SMALL FORWARD PRODUCTIONS SPA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>15.441.902 €</td>
+          <td>REGIONE PIEMONTE</td>
+          <td>J81B22003070001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J81B22003070001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>AREA TERME DI FOGLIANO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>LATINA</td>
+          <td>5M - 20M</td>
+          <td>15.000.020 €</td>
+          <td>COMUNE DI LATINA - LT -</td>
+          <td>B22G11000010004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B22G11000010004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>IMPIANTO PUBBLICO PER LA PRODUZIONE E DISTRIBUZIONE DI ACQUA NATURALE REFRIGERATA E DEARSENIFICATA - INSTALLAZIONE MANUFATTI PREFABBRICATI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>MONTALTO DI CASTRO</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI MONTALTO DI CASTRO - VT -</td>
+          <td>J23E12000000004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J23E12000000004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>VARIANTE IN LOCALITA&#x27; TROGHI E OPERE DI COMPLETAMENTO DELLA MOBILITA&#x27;</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Completamento e finitura edifici</td>
+          <td>Infrastrutture / parcheggi</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>RIGNANO SULL&#x27;ARNO</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>COMUNE DI RIGNANO SULL&#x27;ARNO - FIRENZE -</td>
+          <td>G21B18000450007</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G21B18000450007" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE SS. CARLO E DONNINO DI PERGOLA (PU)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>PESARO E URBINO</td>
+          <td>PERGOLA</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>REGIONE MARCHE</td>
+          <td>B63D23000840008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B63D23000840008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EX OSPEDALE CIVILE DI RIETI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>15.000.000 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE LAZIO</td>
+          <td>C16F25000250001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C16F25000250001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>P.O. CISANELLO FABBRICATI SO CISANELLO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>TOSCANA</td>
+          <td>PISA</td>
+          <td>PISA</td>
+          <td>5M - 20M</td>
+          <td>14.830.000 €</td>
+          <td>AZIENDA OSPEDALIERA PISANA</td>
+          <td>D58I18000040008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D58I18000040008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE S. CAMILLO DE&#x27; LELLIS</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>14.667.375 €</td>
+          <td>ASL DI RIETI</td>
+          <td>I13I05000020001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I13I05000020001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OCSR N.37/2017 OSPEDALE DI COMUNITA&#x27; SS. SALVATORE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>TOLENTINO</td>
+          <td>5M - 20M</td>
+          <td>14.500.000 €</td>
+          <td>REGIONE MARCHE</td>
+          <td>B23D18000270001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B23D18000270001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>ROMANINA LOTTO A</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.378.778 €</td>
+          <td>CONSORZIO POLIFUNZIONALE PEGASO - REGIONE LAZIO</td>
+          <td>I89J02000020003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I89J02000020003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>ROMANINA LOTTO B</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.378.778 €</td>
+          <td>CONSORZIO POLIFUNZIONALE PEGASO - REGIONE LAZIO</td>
+          <td>I89J02000030003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I89J02000030003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EDIFICIO AD USO ABITATIVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>TOLENTINO</td>
+          <td>5M - 20M</td>
+          <td>14.334.928 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE MARCHE</td>
+          <td>H23E24000840008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H23E24000840008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>P.E.E.P. SEDIA DEL PAPA - COMPLETAMENTO REGIMENTAZIONE ACQUE METEORICHE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Completamento e finitura edifici</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>SEZZE</td>
+          <td>5M - 20M</td>
+          <td>14.283.000 €</td>
+          <td>COMUNE DI SEZZE - LT -</td>
+          <td>C65C05000070004</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C65C05000070004" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>REGIONE LAZIO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.267.164 €</td>
+          <td>REGIONE LAZIO</td>
+          <td>F84J25000520001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F84J25000520001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>SOCIETA&#x27; VI.GE.DAL.SRL LEG.RAPP.TE SIG. DI GENUA REMO (SOCIETA&#x27; DI GESTIONE)</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>SAN FELICE CIRCEO</td>
+          <td>5M - 20M</td>
+          <td>14.225.000 €</td>
+          <td>REGIONE LAZIO</td>
+          <td>F79E08000270001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F79E08000270001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE SAN FILIPPO NERI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.215.731 €</td>
+          <td>ASL DI ROMA 1</td>
+          <td>J81B01000400002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J81B01000400002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>VALLERANO A</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.212.737 €</td>
+          <td>CONSORZIO POLIFUNZIONALE PEGASO - REGIONE LAZIO</td>
+          <td>I89J02000090003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I89J02000090003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>GROENLANDIA SRL</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Cultura / centri civici</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>14.120.176 €</td>
+          <td>REGIONE PIEMONTE</td>
+          <td>J82C21002900003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/J82C21002900003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>APRILIA - S. APOLLONIA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>LATINA</td>
+          <td>APRILIA</td>
+          <td>5M - 20M</td>
+          <td>14.000.000 €</td>
+          <td>COMUNE DI APRILIA - LT -</td>
+          <td>G11J22000520001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/G11J22000520001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>PRESIDIO SOCIO-SANITARIO SANTA FINA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>SIENA</td>
+          <td>SAN GIMIGNANO</td>
+          <td>5M - 20M</td>
+          <td>14.000.000 €</td>
+          <td>AZIENDA USL TOSCANA SUD EST</td>
+          <td>H27E14000010005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H27E14000010005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>VALLERANO B</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>LAZIO</td>
+          <td>ROMA</td>
+          <td>ROMA</td>
+          <td>5M - 20M</td>
+          <td>13.890.136 €</td>
+          <td>CONSORZIO POLIFUNZIONALE PEGASO - REGIONE LAZIO</td>
+          <td>I89J02000100003</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I89J02000100003" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EDIFICIO AD USO ABITATIVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>MACERATA</td>
+          <td>5M - 20M</td>
+          <td>13.884.263 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE MARCHE</td>
+          <td>H83E26000300001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H83E26000300001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EDIFICIO AD USO ABITATIVO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Residenziale pubblico / ERS</td>
+          <td>MARCHE</td>
+          <td>MACERATA</td>
+          <td>VISSO</td>
+          <td>5M - 20M</td>
+          <td>13.655.190 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE MARCHE</td>
+          <td>H63E23001180008</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H63E23001180008" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>BONIFICA AREA DENOMINATA CITTÀ FUTURA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>TOSCANA</td>
+          <td>LIVORNO</td>
+          <td>PIOMBINO</td>
+          <td>5M - 20M</td>
+          <td>13.500.000 €</td>
+          <td>COMUNE DI PIOMBINO - LIVORNO -</td>
+          <td>H75C14000380001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H75C14000380001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>PROGETTAZIONE DEGLI INTERVENTI DI RIPRISTINO, MANUTENZIONE E SVILUPPO DELLE SISTEMAZIONI IDRAULICO-FORESTALI ATTI ALLA MESSA IN SICUREZZA IDROGEOLOGICA DELLAREA DEL CANDIA PREVISTI DAL PROTOCOLLO CANDIA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>MASSA</td>
+          <td>5M - 20M</td>
+          <td>13.500.000 €</td>
+          <td>COMUNE DI MASSA - MS -</td>
+          <td>C66J15002010005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/C66J15002010005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>RIQUALIFICAZIONE DI VILLA BASILEWSKY E DELLAMPLIAMENTO IN C.A., SITO IN VIA FILIPPO STROZZI 36  FIRENZE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>TOSCANA</td>
+          <td>FIRENZE</td>
+          <td>FIRENZE</td>
+          <td>5M - 20M</td>
+          <td>13.400.000 €</td>
+          <td>REGIONE TOSCANA</td>
+          <td>D13I26000030002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D13I26000030002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>AZIENDA OSPEDALIERA UNIVERSITARIA SENESE OSPEDALE SANTA MARIA ALLE SCOTTE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>TOSCANA</td>
+          <td>SIENA</td>
+          <td>SIENA</td>
+          <td>5M - 20M</td>
+          <td>13.314.725 €</td>
+          <td>AZIENDA OSPEDALIERA UNIVERSITARIA SENESE</td>
+          <td>I65F22000850005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/I65F22000850005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>OSPEDALE DI BELCOLLE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Sanità / RSA</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>VITERBO</td>
+          <td>5M - 20M</td>
+          <td>13.071.945 €</td>
+          <td>ASL DI VITERBO</td>
+          <td>D88G11001710005</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/D88G11001710005" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>BONIFICA DEL SITO ORFANO IN LOCALITÀ PASCOLARO , CASETTONE E BIVIO DEL PELELGRINO</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>LAZIO</td>
+          <td>VITERBO</td>
+          <td>GRAFFIGNANO</td>
+          <td>5M - 20M</td>
+          <td>13.000.000 €</td>
+          <td>COMUNE DI GRAFFIGNANO - VITERBO -</td>
+          <td>H51J21000120001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/H51J21000120001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>FOSSI LOC. BONASCOLA</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Impiantisti sottoservizi</td>
+          <td>Ambiente / rifiuti / depurazione</td>
+          <td>TOSCANA</td>
+          <td>MASSA-CARRARA</td>
+          <td>CARRARA</td>
+          <td>5M - 20M</td>
+          <td>12.867.000 €</td>
+          <td>COMUNE DI CARRARA - MASSA-CARRARA -</td>
+          <td>F87H21011440002</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F87H21011440002" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>EDIFICIO SCOLASTICO GUGLIELMO MARCONI</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Scuole / formazione</td>
+          <td>LAZIO</td>
+          <td>RIETI</td>
+          <td>RIETI</td>
+          <td>5M - 20M</td>
+          <td>12.858.248 €</td>
+          <td>UFFICIO SPECIALE PER LA RICOSTRUZIONE POST SISMA DEL 2016 DELLA REGIONE LAZIO</td>
+          <td>F19H17000010001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/F19H17000010001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>INTERVENTI DI RIQUALIFICAZIONE, RISTRUTTURAZIONE ED ADEGUAMENTO IN TERRITORIO SISMICO (ZONA 1)  ASL FROSINONE  DISTRETTO C  SORA VIA PIEMONTE</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>SORA</td>
+          <td>5M - 20M</td>
+          <td>12.776.348 €</td>
+          <td>ASL DI FROSINONE</td>
+          <td>B43D20000180001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B43D20000180001" target="_blank">Fonte</a></td>
+        </tr>
+        
+        <tr>
+          <td class="score">84</td>
+          <td><strong>INTERVENTO DI RIQUALIFICAZIONE, RISTRUTTURAZIONE E ADEGUAMENTO SISMICO DEL DISTRETTO C DI SORA.</strong><div class="desc">Score OpenCUP: 100</div></td>
+          <td>Edilizia</td>
+          <td>Riqualificazione urbana</td>
+          <td>LAZIO</td>
+          <td>FROSINONE</td>
+          <td>SORA</td>
+          <td>5M - 20M</td>
+          <td>12.776.348 €</td>
+          <td>ASL DI FROSINONE</td>
+          <td>B45F23000560001</td>
+          <td><a href="https://www.opencup.gov.it/portale/progetto/-/cup/B45F23000560001" target="_blank">Fonte</a></td>
+        </tr>
+        </tbody>
     </table>
   </div>
 </body>
