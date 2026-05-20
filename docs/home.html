@@ -1,0 +1,183 @@
+﻿<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>Project Radar MVP - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #617083;
+      --border: #e5e7eb;
+      --dark: #111827;
+      --accent: #0f766e;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--dark);
+      color: white;
+      padding: 28px 32px;
+    }
+
+    header h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d1d5db;
+      font-size: 15px;
+    }
+
+    main {
+      padding: 28px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 8px 0;
+      font-size: 19px;
+    }
+
+    .card p {
+      margin: 0 0 16px 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .card a {
+      display: inline-block;
+      color: white;
+      background: var(--accent);
+      padding: 9px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .section-title {
+      margin-top: 34px;
+      font-size: 20px;
+    }
+
+    .note {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #7c2d12;
+      margin-top: 22px;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 20px 32px 32px 32px;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Project Radar MVP</h1>
+    <p>Radar progetti, shortlist operativa e arricchimento ANAC per opportunità commerciali.</p>
+  </header>
+
+  <main>
+    <h2 class="section-title">Viste principali</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Vista operativa Alayan</h2>
+        <p>Shortlist commerciale basata sui segmenti Alayan: edilizia, sottoservizi, strade, finiture, industria e altri segmenti operativi.</p>
+        <a href="operational.html">Apri vista operativa</a>
+      </div>
+
+      <div class="card">
+        <h2>OpenCUP generale</h2>
+        <p>Vista generale dei progetti OpenCUP filtrati e ordinati dal radar. Utile come panoramica ampia, meno come shortlist commerciale.</p>
+        <a href="index.html">Apri vista generale</a>
+      </div>
+
+      <div class="card">
+        <h2>ANAC - affidamenti rilevanti</h2>
+        <p>Vista degli affidamenti ANAC con importo coerente rispetto al valore progetto. È la vista più utile per capire chi sta lavorando su cosa.</p>
+        <a href="anac_relevant_awards.html">Apri affidamenti rilevanti</a>
+      </div>
+
+      <div class="card">
+        <h2>ANAC - anomalie</h2>
+        <p>CIG con rapporti fuori scala tra importo aggiudicazione e valore progetto. Da trattare come casi multi-progetto o dati da verificare.</p>
+        <a href="anac_awards_anomalies.html">Apri anomalie</a>
+      </div>
+    </div>
+
+    <h2 class="section-title">File dati principali</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Shortlist operativa CSV</h2>
+        <p>Elenco scaricabile dei progetti OpenCUP più rilevanti per i segmenti commerciali Alayan.</p>
+        <a href="../reports/operational_shortlist.csv">Scarica CSV</a>
+      </div>
+
+      <div class="card">
+        <h2>Affidamenti ANAC CSV</h2>
+        <p>Elenco scaricabile degli affidamenti rilevanti con CUP, CIG, aggiudicatario, importo e data aggiudicazione.</p>
+        <a href="../reports/anac_relevant_awards.csv">Scarica CSV</a>
+      </div>
+
+      <div class="card">
+        <h2>Segmenti operativi</h2>
+        <p>Distribuzione dei progetti per segmento commerciale Alayan.</p>
+        <a href="../reports/operational_by_segment.csv">Scarica CSV</a>
+      </div>
+
+      <div class="card">
+        <h2>Anomalie ANAC CSV</h2>
+        <p>Elenco dei CIG fuori scala o potenzialmente multi-progetto, da verificare con cautela.</p>
+        <a href="../reports/anac_awards_anomalies.csv">Scarica CSV</a>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Nota operativa:</strong> OpenCUP identifica i progetti e il potenziale commerciale. ANAC collega i progetti agli appalti e agli operatori economici. Gli affidamenti ANAC non sempre rappresentano l'appalto principale dell'opera: per questo esiste una vista separata delle anomalie.
+    </div>
+  </main>
+
+  <footer>
+    Project Radar MVP · OpenCUP + ANAC · Vista interna di lavoro.
+  </footer>
+</body>
+</html>
