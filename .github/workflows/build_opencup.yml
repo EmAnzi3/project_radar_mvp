@@ -86,5 +86,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add docs/data.json docs/index.html reports/top_projects.csv
+          git add docs/operational.html docs/operational_data.json reports/operational_shortlist.csv reports/operational_by_segment.csv || true
           git diff --cached --quiet || git commit -m "Update OpenCUP radar outputs"
           git push

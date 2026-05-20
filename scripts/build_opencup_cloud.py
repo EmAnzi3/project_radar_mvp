@@ -10,6 +10,8 @@ from html import escape
 from pathlib import Path
 from typing import Optional
 
+from scripts.operational_view import write_operational_outputs
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TMP_DIR = BASE_DIR / "tmp" / "opencup"
@@ -1035,6 +1037,8 @@ def write_outputs(records: list[ProjectRecord]) -> None:
     print(f"[Output] docs/data.json")
     print(f"[Output] docs/index.html")
     write_diagnostics(records)
+
+    write_operational_outputs(records, DOCS_DIR, REPORTS_DIR)
 
     print(f"[Output] reports/top_projects.csv")
 
