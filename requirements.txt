@@ -1,0 +1,9 @@
+﻿requests
+beautifulsoup4
+lxml
+pandas
+python-dotenv
+sqlalchemy
+pydantic
+jinja2
+rapidfuzz

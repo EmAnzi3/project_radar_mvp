@@ -1,0 +1,26 @@
+﻿# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment
+.env
+
+# Database
+data/*.sqlite
+data/*.db
+
+# Raw / temporary data
+data/raw/
+tmp/
+
+# Logs
+*.log
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Office temporary files
+~$*
