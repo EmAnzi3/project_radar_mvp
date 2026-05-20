@@ -409,13 +409,17 @@ def is_noise(*values: Optional[str]) -> bool:
 
 
 def is_public_works_candidate(text: str) -> bool:
-    lower = text.lower()
+    lower = clean_text(text).lower()
 
     words = [
         "lavori pubblici",
         "realizzazione di lavori pubblici",
         "opere ed impiantistica",
+        "opere edili",
         "nuova realizzazione",
+        "nuova costruzione",
+        "realizzazione",
+        "costruzione",
         "manutenzione straordinaria",
         "ristrutturazione",
         "riqualificazione",
@@ -428,9 +432,26 @@ def is_public_works_candidate(text: str) -> bool:
         "immobili",
         "ambiente ed energia",
         "trasporti",
+        "scuola",
+        "ospedale",
+        "rsa",
+        "palestra",
+        "impianto sportivo",
+        "fognatura",
+        "acquedotto",
+        "depurazione",
+        "parcheggio",
+        "strada",
+        "viabilita",
+        "viabilit?",
+        "capannone",
+        "magazzino",
+        "edificio",
+        "fabbricato",
     ]
 
     return any(w in lower for w in words)
+
 
 
 def calculate_score(record: ProjectRecord) -> int:
@@ -620,9 +641,6 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
     if is_noise(title, description, classification, nature, typology, area, sector, subsector, opencup_category):
         return None
 
-    if not is_public_works_candidate(combined):
-        return None
-
     category = classify_category(
         combined,
         sector=sector,
@@ -632,6 +650,13 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
         title=title,
         description=description,
     )
+
+    # Filtro corretto:
+    # - se la categoria ? riconosciuta come Nii-like, il progetto passa;
+    # - se resta Altro, passa solo se contiene segnali chiari di opera/lavori.
+    if category == "Altro" and not is_public_works_candidate(combined):
+        return None
+
     intervention_type = infer_intervention_type(combined)
 
     funding = None
@@ -699,6 +724,7 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
 
     record.commercial_score = calculate_score(record)
     return record
+
 
 
 def download_zip() -> Path:
@@ -974,8 +1000,13 @@ def write_outputs(records: list[ProjectRecord]) -> None:
 def main() -> None:
     zip_path = download_zip()
     records = process_zip(zip_path)
+
+    if not records:
+        raise RuntimeError(
+            "OpenCUP scan completata ma candidati = 0. "
+            "Blocco output per evitare commit di dashboard vuota."
+        )
+
     write_outputs(records)
 
 
-if __name__ == "__main__":
-    main()
