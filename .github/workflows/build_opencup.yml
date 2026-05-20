@@ -52,6 +52,24 @@ jobs:
           DASHBOARD_LIMIT: ${{ inputs.dashboard_limit }}
         run: |
           python -u scripts/build_opencup_cloud.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path("docs/data.json")
+          if not p.exists():
+              raise SystemExit("ERRORE: docs/data.json non generato")
+
+          data = json.loads(p.read_text(encoding="utf-8"))
+
+          total = int(data.get("total_candidates") or 0)
+          shown = int(data.get("dashboard_count") or 0)
+
+          print(f"[Validation] total_candidates={total} dashboard_count={shown}")
+
+          if total <= 0 or shown <= 0:
+              raise SystemExit("ERRORE: output vuoto, blocco commit")
+          PY
 
       - name: Upload generated files as artifact
         uses: actions/upload-artifact@v4

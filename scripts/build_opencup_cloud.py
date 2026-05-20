@@ -1014,3 +1014,8 @@ def main() -> None:
     write_outputs(records)
 
 
+
+
+if __name__ == "__main__":
+    print("[Startup] build_opencup_cloud.py avviato", flush=True)
+    main()
