@@ -596,7 +596,7 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
     status = clean_status(row_get(row, 3))
 
     cost = to_float(row_get(row, 4))
-    if cost is not None and cost < MIN_PROJECT_VALUE_EUR:
+    if cost is None or cost < MIN_PROJECT_VALUE_EUR:
         return None
 
     region = row_get(row, 11)
@@ -622,6 +622,12 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
     title = row_get(row, 52) or composite_title or description or f"Progetto OpenCUP {cup}"
     location_hint = row_get(row, 53)
 
+    title = clean_text(title)
+    description = clean_text(description)
+
+    if not title and not description:
+        return None
+
     combined = " ".join(
         x for x in [
             title,
@@ -638,6 +644,8 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
         if x
     )
 
+    # Qui scartiamo solo rumore evidente: premi, contributi, agevolazioni, ricerca, ecc.
+    # NON scartiamo pi? perch? "non sembra abbastanza lavori pubblici": quello aveva azzerato tutto.
     if is_noise(title, description, classification, nature, typology, area, sector, subsector, opencup_category):
         return None
 
@@ -650,12 +658,6 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
         title=title,
         description=description,
     )
-
-    # Filtro corretto:
-    # - se la categoria ? riconosciuta come Nii-like, il progetto passa;
-    # - se resta Altro, passa solo se contiene segnali chiari di opera/lavori.
-    if category == "Altro" and not is_public_works_candidate(combined):
-        return None
 
     intervention_type = infer_intervention_type(combined)
 
@@ -1006,6 +1008,8 @@ def main() -> None:
             "OpenCUP scan completata ma candidati = 0. "
             "Blocco output per evitare commit di dashboard vuota."
         )
+
+    print(f"[Check] Candidati finali: {len(records):,}")
 
     write_outputs(records)
 
