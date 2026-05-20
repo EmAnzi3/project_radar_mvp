@@ -1,0 +1,14 @@
+{
+  "source": "OpenCUP",
+  "view": "operational",
+  "total_input_candidates": 177486,
+  "operational_candidates": 0,
+  "dashboard_count": 0,
+  "criteria": {
+    "exclude_macro_projects": true,
+    "min_operational_score": 45,
+    "preferred_value_range": "1M - 50M",
+    "segment_model": "Alayan commercial segments"
+  },
+  "records": []
+}
