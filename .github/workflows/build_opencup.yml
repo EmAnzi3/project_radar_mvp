@@ -78,7 +78,7 @@ jobs:
           path: |
             docs/data.json
             docs/index.html
-            reports/top_projects.csv
+            reports/*.csv
 
       - name: Commit generated outputs
         if: ${{ inputs.commit_outputs }}

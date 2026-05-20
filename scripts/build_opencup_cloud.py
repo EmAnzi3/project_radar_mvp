@@ -562,6 +562,283 @@ def txt(value) -> str:
     return escape(str(value or ""))
 
 
+
+
+def value_band(value: Optional[float]) -> str:
+    value = value or 0
+
+    if value >= 1_000_000_000:
+        return ">= 1B"
+    if value >= 500_000_000:
+        return "500M - 1B"
+    if value >= 100_000_000:
+        return "100M - 500M"
+    if value >= 50_000_000:
+        return "50M - 100M"
+    if value >= 20_000_000:
+        return "20M - 50M"
+    if value >= 5_000_000:
+        return "5M - 20M"
+    if value >= 1_000_000:
+        return "1M - 5M"
+    if value >= 500_000:
+        return "500k - 1M"
+    if value >= 200_000:
+        return "200k - 500k"
+    return "< 200k"
+
+
+def is_local_public_client(client: Optional[str]) -> bool:
+    c = clean_text(client).upper()
+
+    local_markers = [
+        "COMUNE",
+        "PROVINCIA",
+        "CITTA' METROPOLITANA",
+        "CITT? METROPOLITANA",
+        "REGIONE",
+        "AZIENDA USL",
+        "ASL",
+        "AZIENDA OSPEDALIERA",
+        "UNIONE DEI COMUNI",
+    ]
+
+    return any(m in c for m in local_markers)
+
+
+def is_macro_national_project(record: ProjectRecord) -> bool:
+    text = " ".join(
+        clean_text(x).lower()
+        for x in [
+            record.title,
+            record.description,
+            record.sector,
+            record.client,
+        ]
+        if x
+    )
+
+    macro_terms = [
+        "autostrada",
+        "autostradale",
+        "ferrovia",
+        "ferroviario",
+        "alta velocit?",
+        "alta velocita",
+        "concessione",
+        "raccordo autostradale",
+        "collegamento autostradale",
+        "corridoio",
+        "rete elettrica nazionale",
+        "hvdc",
+        "terna",
+    ]
+
+    return (record.estimated_value_eur or 0) >= 100_000_000 and any(t in text for t in macro_terms)
+
+
+def write_counter_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    with path.open("w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, delimiter=";", fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_records_csv(path: Path, records: list[ProjectRecord]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    fieldnames = [
+        "score",
+        "cup",
+        "title",
+        "category",
+        "region",
+        "province",
+        "municipality",
+        "value_eur",
+        "client",
+        "phase",
+        "status",
+        "source_url",
+    ]
+
+    with path.open("w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, delimiter=";", fieldnames=fieldnames)
+        writer.writeheader()
+
+        for r in records:
+            writer.writerow({
+                "score": r.commercial_score,
+                "cup": r.cup,
+                "title": r.title,
+                "category": r.category,
+                "region": r.region,
+                "province": r.province,
+                "municipality": r.municipality,
+                "value_eur": r.estimated_value_eur,
+                "client": r.client,
+                "phase": r.phase,
+                "status": r.status,
+                "source_url": r.source_url,
+            })
+
+
+def write_diagnostics(records: list[ProjectRecord]) -> None:
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    by_category = {}
+    by_value_band = {}
+    by_region = {}
+
+    for r in records:
+        value = r.estimated_value_eur or 0
+
+        cat = r.category or "ND"
+        band = value_band(value)
+        region = r.region or "ND"
+
+        by_category.setdefault(cat, {"category": cat, "count": 0, "total_value_eur": 0, "avg_score": 0})
+        by_category[cat]["count"] += 1
+        by_category[cat]["total_value_eur"] += value
+        by_category[cat]["avg_score"] += r.commercial_score or 0
+
+        by_value_band.setdefault(band, {"value_band": band, "count": 0, "total_value_eur": 0, "avg_score": 0})
+        by_value_band[band]["count"] += 1
+        by_value_band[band]["total_value_eur"] += value
+        by_value_band[band]["avg_score"] += r.commercial_score or 0
+
+        by_region.setdefault(region, {"region": region, "count": 0, "total_value_eur": 0, "avg_score": 0})
+        by_region[region]["count"] += 1
+        by_region[region]["total_value_eur"] += value
+        by_region[region]["avg_score"] += r.commercial_score or 0
+
+    for container in [by_category, by_value_band, by_region]:
+        for row in container.values():
+            count = row["count"] or 1
+            row["avg_score"] = round(row["avg_score"] / count, 2)
+            row["total_value_eur"] = round(row["total_value_eur"], 2)
+
+    category_rows = sorted(
+        by_category.values(),
+        key=lambda x: (x["count"], x["total_value_eur"]),
+        reverse=True,
+    )
+
+    value_band_order = {
+        ">= 1B": 1,
+        "500M - 1B": 2,
+        "100M - 500M": 3,
+        "50M - 100M": 4,
+        "20M - 50M": 5,
+        "5M - 20M": 6,
+        "1M - 5M": 7,
+        "500k - 1M": 8,
+        "200k - 500k": 9,
+        "< 200k": 10,
+    }
+
+    value_rows = sorted(
+        by_value_band.values(),
+        key=lambda x: value_band_order.get(x["value_band"], 99),
+    )
+
+    region_rows = sorted(
+        by_region.values(),
+        key=lambda x: (x["count"], x["total_value_eur"]),
+        reverse=True,
+    )
+
+    write_counter_csv(
+        REPORTS_DIR / "diagnostics_by_category.csv",
+        category_rows,
+        ["category", "count", "total_value_eur", "avg_score"],
+    )
+
+    write_counter_csv(
+        REPORTS_DIR / "diagnostics_by_value_band.csv",
+        value_rows,
+        ["value_band", "count", "total_value_eur", "avg_score"],
+    )
+
+    write_counter_csv(
+        REPORTS_DIR / "diagnostics_by_region.csv",
+        region_rows,
+        ["region", "count", "total_value_eur", "avg_score"],
+    )
+
+    # Top 20 per categoria
+    top_by_category = []
+    categories = sorted(set(r.category or "ND" for r in records))
+
+    for category in categories:
+        subset = [r for r in records if (r.category or "ND") == category]
+        subset.sort(
+            key=lambda r: (
+                r.commercial_score or 0,
+                r.estimated_value_eur or 0,
+            ),
+            reverse=True,
+        )
+        top_by_category.extend(subset[:20])
+
+    write_records_csv(REPORTS_DIR / "top_by_category.csv", top_by_category)
+
+    # Mid-market: fascia commercialmente pi? lavorabile
+    mid_market = [
+        r for r in records
+        if 1_000_000 <= (r.estimated_value_eur or 0) <= 50_000_000
+    ]
+    mid_market.sort(
+        key=lambda r: (
+            r.commercial_score or 0,
+            r.estimated_value_eur or 0,
+        ),
+        reverse=True,
+    )
+
+    write_records_csv(REPORTS_DIR / "top_mid_market.csv", mid_market[:1000])
+
+    # Enti locali / territoriali
+    local_public = [
+        r for r in records
+        if is_local_public_client(r.client)
+    ]
+    local_public.sort(
+        key=lambda r: (
+            r.commercial_score or 0,
+            r.estimated_value_eur or 0,
+        ),
+        reverse=True,
+    )
+
+    write_records_csv(REPORTS_DIR / "top_local_public.csv", local_public[:1000])
+
+    # Macro-opere nazionali: non escluse, ma separate per analisi
+    macro = [
+        r for r in records
+        if is_macro_national_project(r)
+    ]
+    macro.sort(
+        key=lambda r: (
+            r.estimated_value_eur or 0,
+            r.commercial_score or 0,
+        ),
+        reverse=True,
+    )
+
+    write_records_csv(REPORTS_DIR / "top_macro_projects.csv", macro[:1000])
+
+    print("[Diagnostics] reports/diagnostics_by_category.csv")
+    print("[Diagnostics] reports/diagnostics_by_value_band.csv")
+    print("[Diagnostics] reports/diagnostics_by_region.csv")
+    print("[Diagnostics] reports/top_by_category.csv")
+    print("[Diagnostics] reports/top_mid_market.csv")
+    print("[Diagnostics] reports/top_local_public.csv")
+    print("[Diagnostics] reports/top_macro_projects.csv")
+
+
 def write_outputs(records: list[ProjectRecord]) -> None:
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -757,6 +1034,8 @@ def write_outputs(records: list[ProjectRecord]) -> None:
 
     print(f"[Output] docs/data.json")
     print(f"[Output] docs/index.html")
+    write_diagnostics(records)
+
     print(f"[Output] reports/top_projects.csv")
 
 
