@@ -298,7 +298,7 @@ def main():
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
 
-    fields = ["operational_score", "primary_segment", "segment_tags", "value_band", "score", "cup", "title", "category", "region", "province", "municipality", "value_eur", "client", "source_url"]
+    fields = ["operational_score", "primary_segment", "segment_tags", "value_band", "score", "cup", "title", "category", "region", "province", "municipality", "phase", "status", "value_eur", "client", "source_url"]
 
     with OUT_CSV.open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, delimiter=";", fieldnames=fields)
@@ -348,6 +348,8 @@ def main():
           <td>{txt(r.get("region"))}</td>
           <td>{txt(r.get("province"))}</td>
           <td>{txt(r.get("municipality"))}</td>
+          <td>{txt(r.get("phase"))}</td>
+          <td>{txt(r.get("status"))}</td>
           <td>{txt(r.get("value_band"))}</td>
           <td>{money(value)}</td>
           <td>{txt(r.get("client"))}</td>
@@ -368,7 +370,7 @@ def main():
     .meta {{ display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; color: #4b5563; font-size: 14px; }}
     .pill {{ background: white; border: 1px solid #e5e7eb; padding: 8px 10px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }}
     .table-wrap {{ overflow-x: auto; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; }}
-    table {{ border-collapse: collapse; width: 100%; min-width: 1550px; background: white; }}
+    table {{ border-collapse: collapse; width: 100%; min-width: 1700px; background: white; }}
     th, td {{ padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }}
     th {{ background: #111827; color: white; position: sticky; top: 0; z-index: 1; }}
     tr:hover {{ background: #f3f4f6; }}
@@ -391,7 +393,7 @@ def main():
       <thead>
         <tr>
           <th>Score operativo</th><th>Progetto</th><th>Segmento Alayan</th><th>Categoria progetto</th>
-          <th>Regione</th><th>Prov.</th><th>Comune</th><th>Fascia valore</th><th>Valore</th>
+          <th>Regione</th><th>Prov.</th><th>Comune</th><th>Fase</th><th>Stato</th><th>Fascia valore</th><th>Valore</th>
           <th>Committente</th><th>CUP</th><th>Fonte</th>
         </tr>
       </thead>
