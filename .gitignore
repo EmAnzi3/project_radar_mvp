@@ -24,3 +24,6 @@ desktop.ini
 
 # Office temporary files
 ~$*
+
+# Downloaded GitHub Actions artifacts
+project-radar-output*.zip
