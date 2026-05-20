@@ -10,7 +10,7 @@ from html import escape
 from pathlib import Path
 from typing import Optional
 
-from scripts.operational_view import write_operational_outputs
+from operational_view import write_operational_outputs
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
