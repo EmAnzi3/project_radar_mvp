@@ -147,7 +147,32 @@ class ProjectRecord:
 def clean_text(value: Optional[str]) -> str:
     if not value:
         return ""
-    return re.sub(r"\s+", " ", str(value)).strip()
+
+    text = str(value)
+
+    replacements = {
+        "\x91": "'",
+        "\x92": "'",
+        "\x93": '"',
+        "\x94": '"',
+        "\x96": "-",
+        "\x97": "-",
+        "\xa0": " ",
+        "": "'",
+        "": '"',
+        "": '"',
+        "": "-",
+        "": "-",
+        "?": "'",
+        "?": "'",
+    }
+
+    for bad, good in replacements.items():
+        text = text.replace(bad, good)
+
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
 
 
 def clean_optional(value: Optional[str]) -> Optional[str]:
@@ -229,14 +254,118 @@ def clean_status(value: Optional[str]) -> Optional[str]:
     return None
 
 
-def classify_category(text: str) -> str:
-    lower = text.lower()
+def classify_category(
+    text: str,
+    sector: Optional[str] = None,
+    area: Optional[str] = None,
+    subsector: Optional[str] = None,
+    opencup_category: Optional[str] = None,
+    title: Optional[str] = None,
+    description: Optional[str] = None,
+) -> str:
+    full = clean_text(text).lower()
+    title_desc = " ".join(clean_text(x).lower() for x in [title, description] if x)
+    structured = " ".join(
+        clean_text(x).lower()
+        for x in [sector, area, subsector, opencup_category]
+        if x
+    )
 
+    # 1) Titolo/descrizione: segnali forti e specifici
+    if any(k in title_desc for k in [
+        "scuola", "scolastico", "asilo", "nido", "infanzia", "primaria",
+        "secondaria", "polo scolastico", "mensa scolastica"
+    ]):
+        return "Scuole / formazione"
+
+    if any(k in title_desc for k in [
+        "palestra", "palazzetto", "campo sportivo", "impianto sportivo",
+        "piscina", "spogliatoi", "centro sportivo", "stadio"
+    ]):
+        return "Sport / impianti sportivi"
+
+    if any(k in title_desc for k in [
+        "rsa", "casa di riposo", "residenza sanitaria", "centro anziani",
+        "ospedale", "poliambulatorio", "distretto sanitario", "casa della comunita",
+        "casa della comunit?", "presidio sanitario", "sanitario territoriale"
+    ]):
+        return "Sanit? / RSA"
+
+    if any(k in title_desc for k in [
+        "biblioteca", "teatro", "auditorium", "centro culturale",
+        "centro civico", "museo", "sala polivalente", "polo culturale", "cinema"
+    ]):
+        return "Cultura / centri civici"
+
+    if any(k in title_desc for k in [
+        "alloggi", "edilizia residenziale", "ers", "social housing",
+        "case popolari", "housing"
+    ]):
+        return "Residenziale pubblico / ERS"
+
+    if any(k in title_desc for k in [
+        "depuratore", "depurazione", "fognatura", "acquedotto",
+        "acque reflue", "rifiuti", "bonifica", "discarica", "trattamento rifiuti"
+    ]):
+        return "Ambiente / rifiuti / depurazione"
+
+    if any(k in title_desc for k in [
+        "parcheggio", "strada", "viabilit?", "viabilita", "marciapiede",
+        "ponte", "rotatoria", "pista ciclabile", "pavimentazione stradale",
+        "illuminazione pubblica", "autostrada", "ferrovia", "ferroviario"
+    ]):
+        return "Infrastrutture / parcheggi"
+
+    if any(k in title_desc for k in [
+        "riqualificazione", "rigenerazione urbana", "arredo urbano",
+        "parco", "piazza", "verde pubblico", "area dismessa", "giardini pubblici"
+    ]):
+        return "Riqualificazione urbana"
+
+    if any(k in title_desc for k in [
+        "magazzino", "logistica", "capannone", "area produttiva",
+        "zona industriale", "polo produttivo", "stoccaggio materiali"
+    ]):
+        return "Industriale / logistica"
+
+    if any(k in title_desc for k in [
+        "fotovoltaico", "agrivoltaico", "eolico", "bess", "accumulo",
+        "biometano", "cabina elettrica", "rete elettrica", "energia elettrica"
+    ]):
+        return "Energia"
+
+    # 2) Campi strutturati OpenCUP
+    if any(k in structured for k in ["sanitarie", "aziende ospedaliere", "servizi sanitari"]):
+        return "Sanit? / RSA"
+
+    if any(k in structured for k in ["istruzione", "scuole", "formazione scolastica"]):
+        return "Scuole / formazione"
+
+    if any(k in structured for k in ["infrastrutture di trasporto", "trasporti"]):
+        return "Infrastrutture / parcheggi"
+
+    if any(k in structured for k in ["infrastrutture ambientali", "risorse idriche", "acque reflue"]):
+        return "Ambiente / rifiuti / depurazione"
+
+    if any(k in structured for k in ["settore energetico", "ambiente ed energia", "energia"]):
+        return "Energia"
+
+    if "immobili" in structured:
+        if any(k in full for k in ["riqualificazione", "efficientamento", "ristrutturazione"]):
+            return "Edilizia pubblica"
+        return "Edilizia pubblica"
+
+    # 3) Fallback vecchio, ma meno aggressivo
     for category, keywords in CATEGORY_KEYWORDS.items():
-        if any(k in lower for k in keywords):
+        filtered_keywords = [
+            k for k in keywords
+            if k not in {"formazione", "energia"}
+        ]
+        if any(k in full for k in filtered_keywords):
             return category
 
     return "Altro"
+
 
 
 def infer_intervention_type(text: str) -> Optional[str]:
@@ -307,54 +436,128 @@ def is_public_works_candidate(text: str) -> bool:
 def calculate_score(record: ProjectRecord) -> int:
     score = 0
 
-    high_categories = {
-        "Scuole / formazione",
-        "Sport / impianti sportivi",
-        "Sanità / RSA",
-        "Cultura / centri civici",
-        "Riqualificazione urbana",
-        "Edilizia pubblica",
-        "Infrastrutture / parcheggi",
-        "Ambiente / rifiuti / depurazione",
-        "Industriale / logistica",
-        "Residenziale pubblico / ERS",
+    category_base = {
+        "Scuole / formazione": 28,
+        "Sanit? / RSA": 28,
+        "Sport / impianti sportivi": 24,
+        "Cultura / centri civici": 23,
+        "Edilizia pubblica": 23,
+        "Riqualificazione urbana": 21,
+        "Ambiente / rifiuti / depurazione": 20,
+        "Industriale / logistica": 20,
+        "Residenziale pubblico / ERS": 18,
+        "Energia": 16,
+        "Infrastrutture / parcheggi": 14,
+        "Altro": 4,
     }
 
-    if record.category in high_categories:
-        score += 25
+    score += category_base.get(record.category, 4)
 
     value = record.estimated_value_eur or 0
 
-    if value >= 10_000_000:
-        score += 35
+    # Curva valore: premia le opere grandi ma non lascia che i mega-progetti monopolizzino tutto.
+    if value >= 1_000_000_000:
+        score += 4
+    elif value >= 500_000_000:
+        score += 8
+    elif value >= 100_000_000:
+        score += 14
+    elif value >= 20_000_000:
+        score += 22
     elif value >= 5_000_000:
         score += 30
     elif value >= 1_000_000:
-        score += 22
-    elif value >= 300_000:
-        score += 12
+        score += 26
+    elif value >= 500_000:
+        score += 18
     elif value >= 200_000:
-        score += 6
-    else:
-        score -= 20
-
-    if record.phase:
-        score += 15
-
-    if record.intervention_type:
         score += 10
+    else:
+        score -= 30
 
-    if record.client:
-        score += 8
+    text = " ".join(
+        clean_text(x).lower()
+        for x in [
+            record.title,
+            record.description,
+            record.sector,
+            record.category,
+            record.intervention_type,
+            record.client,
+        ]
+        if x
+    )
 
+    # Bonus per interventi concreti e agganciabili commercialmente
+    if record.intervention_type in {
+        "nuova costruzione",
+        "ristrutturazione",
+        "riqualificazione",
+        "manutenzione straordinaria",
+        "messa in sicurezza",
+        "efficientamento energetico",
+    }:
+        score += 12
+
+    # Bonus localizzazione completa
     if record.region:
         score += 3
     if record.province:
         score += 3
     if record.municipality:
-        score += 4
+        score += 5
+
+    # Bonus committente locale/territoriale
+    client = clean_text(record.client).upper()
+    if client.startswith("COMUNE "):
+        score += 10
+    elif "PROVINCIA" in client or "CITTA' METROPOLITANA" in client or "CITT? METROPOLITANA" in client:
+        score += 8
+    elif "REGIONE" in client:
+        score += 7
+    elif "AZIENDA USL" in client or "ASL" in client or "AZIENDA OSPEDALIERA" in client:
+        score += 8
+
+    # Penalit? per macro-opere nazionali spesso poco azionabili commercialmente da filiale
+    macro_terms = [
+        "autostrada", "autostradale", "linea ferroviaria", "ferroviario",
+        "alta velocit?", "alta velocita", "concessione", "corridoio",
+        "collegamento stradale", "raccordo autostradale", "infrastruttura strategica",
+        "hvdc", "terna", "rete elettrica nazionale"
+    ]
+
+    if value >= 500_000_000 and any(k in text for k in macro_terms):
+        score -= 18
+    elif value >= 100_000_000 and any(k in text for k in macro_terms):
+        score -= 10
+
+    # Penalit? per titoli troppo generici o poco operativi
+    generic_titles = [
+        "manutenzione straordinaria",
+        "lavori vari",
+        "interventi vari",
+        "adeguamento",
+    ]
+
+    title_lower = clean_text(record.title).lower()
+    if record.category == "Altro":
+        score -= 12
+
+    if title_lower in generic_titles:
+        score -= 8
+
+    # Penalit? per localizzazione troppo ampia/non operativa
+    if clean_text(record.municipality).upper() in {"TUTTI", "TUTTE", "VARI", "DIVERSI"}:
+        score -= 12
+
+    # Piccolo bonus CUP/fonte
+    if record.cup:
+        score += 2
+    if record.source_url:
+        score += 2
 
     return max(0, min(score, 100))
+
 
 
 def parse_row(row: list[str]) -> Optional[ProjectRecord]:
@@ -420,7 +623,15 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
     if not is_public_works_candidate(combined):
         return None
 
-    category = classify_category(combined)
+    category = classify_category(
+        combined,
+        sector=sector,
+        area=area,
+        subsector=subsector,
+        opencup_category=opencup_category,
+        title=title,
+        description=description,
+    )
     intervention_type = infer_intervention_type(combined)
 
     funding = None

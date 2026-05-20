@@ -51,7 +51,7 @@ jobs:
           MIN_PROJECT_VALUE_EUR: ${{ inputs.min_value }}
           DASHBOARD_LIMIT: ${{ inputs.dashboard_limit }}
         run: |
-          python scripts/build_opencup_cloud.py
+          python -u scripts/build_opencup_cloud.py
 
       - name: Upload generated files as artifact
         uses: actions/upload-artifact@v4
