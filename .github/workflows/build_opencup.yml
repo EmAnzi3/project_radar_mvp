@@ -1,0 +1,72 @@
+﻿name: Build OpenCUP Radar
+
+on:
+  workflow_dispatch:
+    inputs:
+      opencup_url:
+        description: "URL diretto dello ZIP OpenCUP CSV"
+        required: true
+        type: string
+      min_value:
+        description: "Valore minimo progetto in euro"
+        required: false
+        default: "200000"
+        type: string
+      dashboard_limit:
+        description: "Numero record da mostrare in dashboard"
+        required: false
+        default: "120"
+        type: string
+      commit_outputs:
+        description: "Committa docs/ e reports/top_projects.csv nella repo"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install duckdb
+
+      - name: Build OpenCUP radar
+        env:
+          OPENCUP_URL: ${{ inputs.opencup_url }}
+          MIN_PROJECT_VALUE_EUR: ${{ inputs.min_value }}
+          DASHBOARD_LIMIT: ${{ inputs.dashboard_limit }}
+        run: |
+          python scripts/build_opencup_cloud.py
+
+      - name: Upload generated files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-radar-output
+          path: |
+            docs/data.json
+            docs/index.html
+            reports/top_projects.csv
+
+      - name: Commit generated outputs
+        if: ${{ inputs.commit_outputs }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/data.json docs/index.html reports/top_projects.csv
+          git diff --cached --quiet || git commit -m "Update OpenCUP radar outputs"
+          git push
