@@ -7,8 +7,76 @@ BRANCH_TERRITORY = Path("docs/data/branch_territory.json")
 OUT_HTML = Path("docs/branches.html")
 
 
+AREA_ORDER = ["Nord-Ovest", "Nord-Est", "Centro", "Sud", "Altro"]
+
+
+BRANCH_TO_AREA = {
+    # Nord-Ovest
+    "Albenga": "Nord-Ovest",
+    "Genova": "Nord-Ovest",
+    "Cuneo": "Nord-Ovest",
+    "Torino": "Nord-Ovest",
+    "Brescia": "Nord-Ovest",
+    "Bergamo": "Nord-Ovest",
+    "Sondrio": "Nord-Ovest",
+    "Lecco": "Nord-Ovest",
+    "Milano Sud": "Nord-Ovest",
+    "Milano Nord": "Nord-Ovest",
+    "Milano Ovest": "Nord-Ovest",
+    "Milano Est": "Nord-Ovest",
+
+    # Nord-Est
+    "Padova": "Nord-Est",
+    "Treviso": "Nord-Est",
+    "Verona": "Nord-Est",
+    "Venezia": "Nord-Est",
+    "Trento": "Nord-Est",
+    "Bolzano": "Nord-Est",
+    "Udine": "Nord-Est",
+
+    # Centro
+    "Firenze": "Centro",
+    "Lucca": "Centro",
+    "Livorno": "Centro",
+    "Bologna": "Centro",
+    "Rimini": "Centro",
+    "Parma": "Centro",
+    "Sassuolo": "Centro",
+    "Perugia": "Centro",
+    "Cagliari": "Centro",
+    "Sassari": "Centro",
+
+    # Sud
+    "Roma Nomentana": "Sud",
+    "Roma Aurelia": "Sud",
+    "Roma Aurealia": "Sud",
+    "Frosinone": "Sud",
+    "Napoli": "Sud",
+    "Salerno": "Sud",
+    "Bari": "Sud",
+    "Cosenza": "Sud",
+    "Catania": "Sud",
+}
+
+
 def clean(value):
     return str(value or "").strip()
+
+
+def display_branch(branch):
+    branch = clean(branch)
+
+    fixes = {
+        "SALERNO": "Salerno",
+        "Roma Aurealia": "Roma Aurelia",
+    }
+
+    return fixes.get(branch, branch)
+
+
+def branch_area(branch):
+    branch = display_branch(branch)
+    return BRANCH_TO_AREA.get(branch, "Altro")
 
 
 def main():
@@ -19,13 +87,18 @@ def main():
 
     branches = []
 
-    for branch, rows in data.items():
+    for raw_branch, rows in data.items():
+        branch = display_branch(raw_branch)
+        area = branch_area(branch)
+
         regions = sorted(set(clean(r.get("region")) for r in rows if clean(r.get("region"))))
         provinces = sorted(set(clean(r.get("province")) for r in rows if clean(r.get("province"))))
         municipalities = sorted(set(clean(r.get("municipality")) for r in rows if clean(r.get("municipality"))))
 
         branches.append({
+            "branch_raw": raw_branch,
             "branch": branch,
+            "area": area,
             "regions": regions,
             "provinces": provinces,
             "municipalities_count": len(municipalities),
@@ -33,25 +106,54 @@ def main():
             "url": f"search.html?branch={quote(branch)}",
         })
 
-    branches.sort(key=lambda x: x["branch"].lower())
+    branches.sort(
+        key=lambda x: (
+            AREA_ORDER.index(x["area"]) if x["area"] in AREA_ORDER else 99,
+            x["branch"].lower(),
+        )
+    )
 
-    cards = []
+    grouped = {area: [] for area in AREA_ORDER}
 
     for b in branches:
-        region_text = ", ".join(b["regions"]) if b["regions"] else "ND"
-        province_text = ", ".join(b["provinces"][:12])
-        if len(b["provinces"]) > 12:
-            province_text += f" +{len(b['provinces']) - 12}"
+        grouped.setdefault(b["area"], []).append(b)
 
-        cards.append(f"""
-      <div class="card">
-        <h2>{b["branch"]}</h2>
-        <p><strong>Regioni:</strong> {region_text}</p>
-        <p><strong>Province:</strong> {province_text or "ND"}</p>
-        <p class="muted">{b["municipalities_count"]} comuni/località mappati</p>
-        <a href="{b["url"]}">Apri ricerca filiale</a>
+    sections = []
+
+    for area in AREA_ORDER:
+        items = grouped.get(area, [])
+        if not items:
+            continue
+
+        cards = []
+
+        for b in items:
+            region_text = ", ".join(b["regions"]) if b["regions"] else "ND"
+            province_text = ", ".join(b["provinces"][:12])
+
+            if len(b["provinces"]) > 12:
+                province_text += f" +{len(b['provinces']) - 12}"
+
+            cards.append(f"""
+        <div class="card">
+          <h2>{b["branch"]}</h2>
+          <p><strong>Regioni:</strong> {region_text}</p>
+          <p><strong>Province:</strong> {province_text or "ND"}</p>
+          <p class="muted">{b["municipalities_count"]} comuni/località mappati</p>
+          <a href="{b["url"]}">Apri ricerca filiale</a>
+        </div>
+            """)
+
+        sections.append(f"""
+    <section class="area-section">
+      <h2>{area}</h2>
+      <div class="grid">
+        {''.join(cards)}
       </div>
+    </section>
         """)
+
+    unmapped = sorted(b["branch"] for b in branches if b["area"] == "Altro")
 
     html = f"""<!doctype html>
 <html lang="it">
@@ -101,7 +203,7 @@ def main():
     }}
 
     .top-actions {{
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }}
 
     .top-actions a {{
@@ -114,6 +216,17 @@ def main():
       font-weight: bold;
       font-size: 14px;
       margin-right: 8px;
+    }}
+
+    .area-section {{
+      margin: 28px 0 34px 0;
+    }}
+
+    .area-section h2 {{
+      font-size: 22px;
+      margin: 0 0 14px 0;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
     }}
 
     .grid {{
@@ -145,7 +258,7 @@ def main():
     .card .muted {{
       color: var(--muted);
       font-size: 13px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }}
 
     .card a {{
@@ -158,12 +271,22 @@ def main():
       font-weight: bold;
       font-size: 14px;
     }}
+
+    .warning {{
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #7c2d12;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }}
   </style>
 </head>
 <body>
   <header>
     <h1>Project Radar MVP - Filiali</h1>
-    <p>Accesso diretto alla ricerca filtrata per filiale.</p>
+    <p>Accesso diretto alla ricerca filtrata per filiale, raggruppata per Area Manager.</p>
   </header>
 
   <main>
@@ -172,9 +295,9 @@ def main():
       <a href="search.html">Ricerca completa</a>
     </div>
 
-    <div class="grid">
-      {''.join(cards)}
-    </div>
+    {f'<div class="warning"><strong>Filiali non mappate:</strong> {", ".join(unmapped)}</div>' if unmapped else ''}
+
+    {''.join(sections)}
   </main>
 </body>
 </html>
@@ -183,6 +306,13 @@ def main():
     OUT_HTML.write_text(html, encoding="utf-8")
 
     print(f"Filiali generate: {len(branches)}")
+    for area in AREA_ORDER:
+        if grouped.get(area):
+            print(f"{area}: {len(grouped[area])}")
+
+    if unmapped:
+        print(f"ATTENZIONE - Filiali non mappate: {', '.join(unmapped)}")
+
     print(f"Output: {OUT_HTML}")
 
 
