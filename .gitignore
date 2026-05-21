@@ -30,3 +30,6 @@ project-radar-output*.zip
 
 # ANAC raw downloads
 data/raw/anac/
+
+# GitHub Actions artifacts
+project-radar-output*.zip
