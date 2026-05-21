@@ -8,3 +8,7 @@ pydantic
 jinja2
 rapidfuzz
 duckdb
+openpyxl
+pgeocode
+openpyxl
+pgeocode
