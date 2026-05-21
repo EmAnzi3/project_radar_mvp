@@ -24,7 +24,7 @@
       max-height: calc(100vh - 340px);
       min-height: 420px;
     }
-    table { border-collapse: collapse; width: 100%; min-width: 1650px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1500px; }
     th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; font-size: 14px; }
     th {
       background: #111827;
@@ -39,10 +39,10 @@
     a { color: #0f766e; font-weight: bold; text-decoration: none; }
   
     .nowrap { white-space: nowrap; }
-    .money { white-space: nowrap; min-width: 100px; }
-    .award-col { white-space: nowrap; min-width: 110px; }
-    .source-col { white-space: nowrap; min-width: 65px; }
-    .contractors-col { min-width: 360px; max-width: 520px; }
+    .money { white-space: nowrap; min-width: 88px; }
+    .award-col { white-space: nowrap; min-width: 96px; }
+    .source-col { white-space: nowrap; min-width: 52px; }
+    .contractors-col { min-width: 300px; max-width: 440px; }
     .oe-line { padding: 0 0 7px 0; margin: 0 0 7px 0; border-bottom: 1px solid #eef2f7; }
     .oe-line:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
     .oe-name { font-weight: bold; overflow-wrap: anywhere; }
@@ -52,7 +52,7 @@
     /* Desktop/tablet: tabella adattiva, niente fuga verso destra */
     @media (min-width: 761px) {
       .table-wrap {
-        overflow-x: hidden;
+        overflow-x: auto;
       }
 
       table {
