@@ -115,7 +115,7 @@ def html_escape(value):
     return html.escape(clean(value))
 
 
-def write_awards_html(path, title, rows, input_count, shown_count, note):
+def write_awards_html(path, title, rows, input_count, shown_count, note, show_technical_columns=False):
     rows_html = []
 
     for r in rows[:shown_count]:
@@ -134,10 +134,7 @@ def write_awards_html(path, title, rows, input_count, shown_count, note):
             <strong>{html_escape(r.get("contractors"))}</strong><br>
             <span class="small">{html_escape(r.get("contractor_tax_codes"))}</span>
           </td>
-          <td>{money(r.get("award_amount_eur"))}</td>
-          <td>{pct(r.get("award_share_pct"))}</td>
-          <td>{html_escape(r.get("award_weight"))}</td>
-          <td>{html_escape(r.get("ratio_note"))}</td>
+          {f'<td>{money(r.get("award_amount_eur"))}</td><td>{pct(r.get("award_share_pct"))}</td><td>{html_escape(r.get("award_weight"))}</td><td>{html_escape(r.get("ratio_note"))}</td>' if show_technical_columns else ''}
           <td>{html_escape(r.get("award_date"))}</td>
           <td>{html_escape(r.get("award_result"))}</td>
           <td><a href="{html_escape(r.get("source_url"))}" target="_blank">Fonte</a></td>
@@ -224,10 +221,7 @@ def write_awards_html(path, title, rows, input_count, shown_count, note):
           <th>Valore progetto</th>
           <th>Committente</th>
           <th>Aggiudicatario / OE</th>
-          <th>Importo aggiud.</th>
-          <th>% su progetto</th>
-          <th>Peso affidamento</th>
-          <th>Nota rapporto</th>
+          {('<th>Importo aggiud.</th><th>% su progetto</th><th>Peso affidamento</th><th>Nota rapporto</th>' if show_technical_columns else '')}
           <th>Data</th>
           <th>Esito</th>
           <th>Fonte</th>
@@ -415,7 +409,8 @@ def main():
         relevant,
         input_count=len(rows),
         shown_count=500,
-        note="Solo affidamenti con rapporto importo/valore progetto tra 0,5% e 150%",
+        note="Affidamenti filtrati e normalizzati per uso commerciale",
+        show_technical_columns=False,
     )
 
     write_awards_html(
@@ -425,6 +420,7 @@ def main():
         input_count=len(rows),
         shown_count=500,
         note="CIG multi-progetto, importi fuori scala o affidamenti troppo piccoli rispetto al progetto",
+        show_technical_columns=True,
     )
 
     print(f"Righe input: {len(rows)}")
