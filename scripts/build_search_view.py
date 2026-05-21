@@ -622,6 +622,59 @@ function render() {
   `).join("");
 }
 
+
+function setSelectIfPresent(select, value) {
+  if (!value) return;
+
+  const decoded = decodeURIComponent(value).trim();
+  if (!decoded) return;
+
+  const options = Array.from(select.options);
+  const found = options.find(o => o.value.toLowerCase() === decoded.toLowerCase());
+
+  if (found) {
+    select.value = found.value;
+  }
+}
+
+function applyUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+
+  const branch = params.get("branch");
+  const region = params.get("region");
+  const province = params.get("province");
+  const municipality = params.get("municipality");
+  const segment = params.get("segment");
+
+  const valueMin = params.get("valueMin");
+  const valueMax = params.get("valueMax");
+  const dateFrom = params.get("dateFrom");
+  const dateTo = params.get("dateTo");
+  const q = params.get("q");
+
+  // Ordine importante:
+  // branch -> aggiorna territori
+  // region -> aggiorna province/comuni
+  // province -> aggiorna comuni
+  setSelectIfPresent(els.branch, branch);
+  updateDependentFilters();
+
+  setSelectIfPresent(els.region, region);
+  updateDependentFilters();
+
+  setSelectIfPresent(els.province, province);
+  updateDependentFilters();
+
+  setSelectIfPresent(els.municipality, municipality);
+  setSelectIfPresent(els.segment, segment);
+
+  if (valueMin) els.valueMin.value = valueMin;
+  if (valueMax) els.valueMax.value = valueMax;
+  if (dateFrom) els.dateFrom.value = dateFrom;
+  if (dateTo) els.dateTo.value = dateTo;
+  if (q) els.q.value = decodeURIComponent(q);
+}
+
 function resetFilters() {
   els.branch.value = "";
   els.region.value = "";
@@ -660,6 +713,7 @@ Promise.all([
     branchTerritory = territory;
     filtered = data;
     populateFilters();
+    applyUrlParams();
     applyFilters();
   })
   .catch(err => {
