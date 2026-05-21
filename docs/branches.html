@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>Project Radar MVP - Filiali</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #617083;
+      --border: #e5e7eb;
+      --dark: #111827;
+      --accent: #0f766e;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--dark);
+      color: white;
+      padding: 26px 32px;
+    }
+
+    header h1 {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d1d5db;
+      font-size: 15px;
+    }
+
+    main {
+      padding: 26px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .top-actions {
+      margin-bottom: 18px;
+    }
+
+    .top-actions a {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      padding: 10px 13px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 10px 0;
+      font-size: 19px;
+    }
+
+    .card p {
+      margin: 0 0 8px 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .card .muted {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .card a {
+      display: inline-block;
+      color: white;
+      background: var(--accent);
+      padding: 9px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Project Radar MVP - Filiali</h1>
+    <p>Accesso diretto alla ricerca filtrata per filiale.</p>
+  </header>
+
+  <main>
+    <div class="top-actions">
+      <a href="home.html">Home</a>
+      <a href="search.html">Ricerca completa</a>
+    </div>
+
+    <div class="grid">
+      
+      <div class="card">
+        <h2>Albenga</h2>
+        <p><strong>Regioni:</strong> Liguria</p>
+        <p><strong>Province:</strong> Imperia, Savona</p>
+        <p class="muted">225 comuni/località mappati</p>
+        <a href="search.html?branch=Albenga">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Bari</h2>
+        <p><strong>Regioni:</strong> Basilicata, Molise, Puglia</p>
+        <p><strong>Province:</strong> Bari, Barletta-Andria-Trani, Brindisi, Campobasso, Foggia, Lecce, Matera, Taranto</p>
+        <p class="muted">580 comuni/località mappati</p>
+        <a href="search.html?branch=Bari">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Bergamo</h2>
+        <p><strong>Regioni:</strong> Lombardia</p>
+        <p><strong>Province:</strong> Bergamo</p>
+        <p class="muted">338 comuni/località mappati</p>
+        <a href="search.html?branch=Bergamo">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Bologna</h2>
+        <p><strong>Regioni:</strong> Emilia-Romagna</p>
+        <p><strong>Province:</strong> Bologna, Ferrara, Modena</p>
+        <p class="muted">368 comuni/località mappati</p>
+        <a href="search.html?branch=Bologna">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Bolzano</h2>
+        <p><strong>Regioni:</strong> Trentino-Alto Adige, Veneto</p>
+        <p><strong>Province:</strong> Belluno, Bolzano-Bozen, Trento</p>
+        <p class="muted">796 comuni/località mappati</p>
+        <a href="search.html?branch=Bolzano">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Brescia</h2>
+        <p><strong>Regioni:</strong> Lombardia</p>
+        <p><strong>Province:</strong> Brescia, Cremona</p>
+        <p class="muted">533 comuni/località mappati</p>
+        <a href="search.html?branch=Brescia">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Cagliari</h2>
+        <p><strong>Regioni:</strong> Sardegna</p>
+        <p><strong>Province:</strong> Cagliari, Nuoro, Oristano, Sud Sardegna</p>
+        <p class="muted">245 comuni/località mappati</p>
+        <a href="search.html?branch=Cagliari">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Catania</h2>
+        <p><strong>Regioni:</strong> Sicilia</p>
+        <p><strong>Province:</strong> Agrigento, Caltanissetta, Catania, Enna, Messina, Palermo, Ragusa, Siracusa, Trapani</p>
+        <p class="muted">849 comuni/località mappati</p>
+        <a href="search.html?branch=Catania">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Cosenza</h2>
+        <p><strong>Regioni:</strong> Calabria</p>
+        <p><strong>Province:</strong> Catanzaro, Cosenza, Crotone, Reggio Di Calabria, Vibo Valentia</p>
+        <p class="muted">853 comuni/località mappati</p>
+        <a href="search.html?branch=Cosenza">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Cuneo</h2>
+        <p><strong>Regioni:</strong> Liguria, Piemonte</p>
+        <p><strong>Province:</strong> Asti, Cuneo, Imperia, Savona</p>
+        <p class="muted">455 comuni/località mappati</p>
+        <a href="search.html?branch=Cuneo">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Firenze</h2>
+        <p><strong>Regioni:</strong> Toscana</p>
+        <p><strong>Province:</strong> Arezzo, Firenze, Pistoia, Prato, Siena</p>
+        <p class="muted">684 comuni/località mappati</p>
+        <a href="search.html?branch=Firenze">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Frosinone</h2>
+        <p><strong>Regioni:</strong> Lazio, Molise</p>
+        <p><strong>Province:</strong> Frosinone, Isernia, Latina</p>
+        <p class="muted">349 comuni/località mappati</p>
+        <a href="search.html?branch=Frosinone">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Genova</h2>
+        <p><strong>Regioni:</strong> Liguria, Piemonte</p>
+        <p><strong>Province:</strong> Alessandria, Genova</p>
+        <p class="muted">288 comuni/località mappati</p>
+        <a href="search.html?branch=Genova">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Lecco</h2>
+        <p><strong>Regioni:</strong> Lombardia</p>
+        <p><strong>Province:</strong> Como, Lecco</p>
+        <p class="muted">172 comuni/località mappati</p>
+        <a href="search.html?branch=Lecco">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Livorno</h2>
+        <p><strong>Regioni:</strong> Toscana</p>
+        <p><strong>Province:</strong> Grosseto, Livorno, Pisa</p>
+        <p class="muted">388 comuni/località mappati</p>
+        <a href="search.html?branch=Livorno">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Lucca</h2>
+        <p><strong>Regioni:</strong> Liguria, Toscana</p>
+        <p><strong>Province:</strong> La Spezia, Lucca, Massa-Carrara</p>
+        <p class="muted">393 comuni/località mappati</p>
+        <a href="search.html?branch=Lucca">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Milano Est</h2>
+        <p><strong>Regioni:</strong> Lombardia</p>
+        <p><strong>Province:</strong> Cremona, Lodi, Milano, Monza e Brianza</p>
+        <p class="muted">185 comuni/località mappati</p>
+        <a href="search.html?branch=Milano%20Est">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Milano Nord</h2>
+        <p><strong>Regioni:</strong> Lombardia</p>
+        <p><strong>Province:</strong> Como, Milano, Monza e Brianza</p>
+        <p class="muted">279 comuni/località mappati</p>
+        <a href="search.html?branch=Milano%20Nord">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Milano Ovest</h2>
+        <p><strong>Regioni:</strong> Lombardia, Piemonte</p>
+        <p><strong>Province:</strong> Milano, Novara, Varese, Verbano-Cusio-Ossola</p>
+        <p class="muted">538 comuni/località mappati</p>
+        <a href="search.html?branch=Milano%20Ovest">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Milano Sud</h2>
+        <p><strong>Regioni:</strong> Lombardia, Piemonte</p>
+        <p><strong>Province:</strong> Alessandria, Milano, Pavia</p>
+        <p class="muted">413 comuni/località mappati</p>
+        <a href="search.html?branch=Milano%20Sud">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Napoli</h2>
+        <p><strong>Regioni:</strong> Campania</p>
+        <p><strong>Province:</strong> Avellino, Benevento, Caserta, Napoli</p>
+        <p class="muted">754 comuni/località mappati</p>
+        <a href="search.html?branch=Napoli">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Padova</h2>
+        <p><strong>Regioni:</strong> Veneto</p>
+        <p><strong>Province:</strong> Padova, Rovigo, Vicenza</p>
+        <p class="muted">576 comuni/località mappati</p>
+        <a href="search.html?branch=Padova">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Parma</h2>
+        <p><strong>Regioni:</strong> Emilia-Romagna</p>
+        <p><strong>Province:</strong> Parma, Piacenza, Reggio Nell'Emilia</p>
+        <p class="muted">423 comuni/località mappati</p>
+        <a href="search.html?branch=Parma">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Perugia</h2>
+        <p><strong>Regioni:</strong> Umbria</p>
+        <p><strong>Province:</strong> Perugia, Terni</p>
+        <p class="muted">388 comuni/località mappati</p>
+        <a href="search.html?branch=Perugia">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Rimini</h2>
+        <p><strong>Regioni:</strong> Emilia-Romagna, Marche</p>
+        <p><strong>Province:</strong> Ancona, Ascoli Piceno, Fermo, Forli, Macerata, Pesaro E Urbino, Ravenna, Rimini</p>
+        <p class="muted">847 comuni/località mappati</p>
+        <a href="search.html?branch=Rimini">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Roma Aurelia</h2>
+        <p><strong>Regioni:</strong> Lazio</p>
+        <p><strong>Province:</strong> Latina, Roma</p>
+        <p class="muted">193 comuni/località mappati</p>
+        <a href="search.html?branch=Roma%20Aurelia">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Roma Nomentana</h2>
+        <p><strong>Regioni:</strong> Abruzzi, Lazio</p>
+        <p><strong>Province:</strong> Chieti, L'Aquila, Pescara, Rieti, Roma, Teramo, Viterbo</p>
+        <p class="muted">1020 comuni/località mappati</p>
+        <a href="search.html?branch=Roma%20Nomentana">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>SALERNO</h2>
+        <p><strong>Regioni:</strong> Basilicata, Campania</p>
+        <p><strong>Province:</strong> Potenza, Salerno</p>
+        <p class="muted">566 comuni/località mappati</p>
+        <a href="search.html?branch=SALERNO">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Sassari</h2>
+        <p><strong>Regioni:</strong> Sardegna</p>
+        <p><strong>Province:</strong> Nuoro, Oristano, Sassari</p>
+        <p class="muted">369 comuni/località mappati</p>
+        <a href="search.html?branch=Sassari">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Sassuolo</h2>
+        <p><strong>Regioni:</strong> Emilia-Romagna</p>
+        <p><strong>Province:</strong> Modena, Reggio Nell'Emilia</p>
+        <p class="muted">337 comuni/località mappati</p>
+        <a href="search.html?branch=Sassuolo">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Sondrio</h2>
+        <p><strong>Regioni:</strong> Lombardia</p>
+        <p><strong>Province:</strong> Lecco, Sondrio</p>
+        <p class="muted">156 comuni/località mappati</p>
+        <a href="search.html?branch=Sondrio">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Torino</h2>
+        <p><strong>Regioni:</strong> Piemonte, Valle D'Aosta</p>
+        <p><strong>Province:</strong> Alessandria, Asti, Biella, Torino, Valle D'Aosta, Vercelli</p>
+        <p class="muted">1006 comuni/località mappati</p>
+        <a href="search.html?branch=Torino">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Trento</h2>
+        <p><strong>Regioni:</strong> Trentino-Alto Adige</p>
+        <p><strong>Province:</strong> Trento</p>
+        <p class="muted">396 comuni/località mappati</p>
+        <a href="search.html?branch=Trento">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Treviso</h2>
+        <p><strong>Regioni:</strong> Veneto</p>
+        <p><strong>Province:</strong> Belluno, Treviso</p>
+        <p class="muted">431 comuni/località mappati</p>
+        <a href="search.html?branch=Treviso">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Udine</h2>
+        <p><strong>Regioni:</strong> Friuli-Venezia Giulia</p>
+        <p><strong>Province:</strong> Gorizia, Pordenone, Trieste, Udine</p>
+        <p class="muted">523 comuni/località mappati</p>
+        <a href="search.html?branch=Udine">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Venezia</h2>
+        <p><strong>Regioni:</strong> Veneto</p>
+        <p><strong>Province:</strong> Venezia</p>
+        <p class="muted">175 comuni/località mappati</p>
+        <a href="search.html?branch=Venezia">Apri ricerca filiale</a>
+      </div>
+        
+      <div class="card">
+        <h2>Verona</h2>
+        <p><strong>Regioni:</strong> Lombardia, Veneto</p>
+        <p><strong>Province:</strong> Mantova, Verona</p>
+        <p class="muted">414 comuni/località mappati</p>
+        <a href="search.html?branch=Verona">Apri ricerca filiale</a>
+      </div>
+        
+    </div>
+  </main>
+</body>
+</html>
