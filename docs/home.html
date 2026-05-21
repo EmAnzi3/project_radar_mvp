@@ -13,6 +13,13 @@
       --border: #e5e7eb;
       --dark: #111827;
       --accent: #0f766e;
+      --warning-bg: #fff7ed;
+      --warning-border: #fed7aa;
+      --warning-text: #7c2d12;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -25,31 +32,69 @@
     header {
       background: var(--dark);
       color: white;
-      padding: 28px 32px;
+      padding: 30px 34px;
     }
 
     header h1 {
       margin: 0 0 8px 0;
-      font-size: 28px;
+      font-size: 30px;
+      letter-spacing: .2px;
     }
 
     header p {
       margin: 0;
       color: #d1d5db;
       font-size: 15px;
+      line-height: 1.45;
     }
 
     main {
-      padding: 28px 32px;
-      max-width: 1200px;
+      padding: 30px 34px;
+      max-width: 1240px;
       margin: 0 auto;
+    }
+
+    .hero {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      margin-bottom: 26px;
+    }
+
+    .hero h2 {
+      margin: 0 0 8px 0;
+      font-size: 23px;
+    }
+
+    .hero p {
+      margin: 0 0 18px 0;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 900px;
+    }
+
+    .primary-link {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 11px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .section-title {
+      margin: 30px 0 14px 0;
+      font-size: 20px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       gap: 18px;
-      margin-top: 22px;
     }
 
     .card {
@@ -60,9 +105,9 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    .card h2 {
+    .card h3 {
       margin: 0 0 8px 0;
-      font-size: 19px;
+      font-size: 18px;
     }
 
     .card p {
@@ -83,27 +128,22 @@
       font-size: 14px;
     }
 
-    .section-title {
-      margin-top: 34px;
-      font-size: 20px;
-    }
-
     .note {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
       border-radius: 12px;
       padding: 14px 16px;
-      color: #7c2d12;
-      margin-top: 22px;
+      color: var(--warning-text);
+      margin-top: 24px;
       line-height: 1.45;
       font-size: 14px;
     }
 
     footer {
-      padding: 20px 32px 32px 32px;
+      padding: 4px 34px 34px 34px;
       color: var(--muted);
       font-size: 13px;
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
     }
   </style>
@@ -111,68 +151,102 @@
 <body>
   <header>
     <h1>Project Radar MVP</h1>
-    <p>Radar progetti, shortlist operativa e arricchimento ANAC per opportunità commerciali.</p>
+    <p>Radar progetti, shortlist commerciale e arricchimento ANAC per supportare le filiali nella ricerca di opportunità territoriali.</p>
   </header>
 
   <main>
-    <h2 class="section-title">Viste principali</h2>
+    <section class="hero">
+      <h2>Ricerca progetti e affidamenti</h2>
+      <p>
+        Punto di ingresso principale per le filiali. Permette di filtrare per filiale, regione,
+        provincia, comune, segmento Alayan, valore progetto, data aggiudicazione, committente,
+        aggiudicatario, CUP e CIG.
+      </p>
+      <a class="primary-link" href="search.html">Apri ricerca filtrabile</a>
+    </section>
+
+    <h2 class="section-title">Viste operative</h2>
 
     <div class="grid">
       <div class="card">
-        <h2>Vista operativa Alayan</h2>
-        <p>Shortlist commerciale basata sui segmenti Alayan: edilizia, sottoservizi, strade, finiture, industria e altri segmenti operativi.</p>
+        <h3>Vista operativa Alayan</h3>
+        <p>
+          Shortlist commerciale derivata da OpenCUP, classificata per segmenti Alayan:
+          edilizia, sottoservizi, strade, finiture, industria e altri segmenti operativi.
+        </p>
         <a href="operational.html">Apri vista operativa</a>
       </div>
 
       <div class="card">
-        <h2>OpenCUP generale</h2>
-        <p>Vista generale dei progetti OpenCUP filtrati e ordinati dal radar. Utile come panoramica ampia, meno come shortlist commerciale.</p>
-        <a href="index.html">Apri vista generale</a>
-      </div>
-
-      <div class="card">
-        <h2>ANAC - affidamenti rilevanti</h2>
-        <p>Vista degli affidamenti ANAC con importo coerente rispetto al valore progetto. È la vista più utile per capire chi sta lavorando su cosa.</p>
+        <h3>ANAC - affidamenti rilevanti</h3>
+        <p>
+          Vista degli affidamenti con importi coerenti rispetto al valore progetto.
+          Utile per capire quali operatori economici risultano collegati ai progetti.
+        </p>
         <a href="anac_relevant_awards.html">Apri affidamenti rilevanti</a>
       </div>
 
       <div class="card">
-        <h2>ANAC - anomalie</h2>
-        <p>CIG con rapporti fuori scala tra importo aggiudicazione e valore progetto. Da trattare come casi multi-progetto o dati da verificare.</p>
+        <h3>ANAC - anomalie</h3>
+        <p>
+          Casi con rapporti fuori scala tra importo aggiudicazione e valore progetto.
+          Da trattare come CIG multi-progetto o record da verificare.
+        </p>
         <a href="anac_awards_anomalies.html">Apri anomalie</a>
+      </div>
+
+      <div class="card">
+        <h3>OpenCUP generale</h3>
+        <p>
+          Vista generale dei progetti OpenCUP filtrati dal radar.
+          Utile come panoramica ampia, meno come vista commerciale di lavoro.
+        </p>
+        <a href="index.html">Apri vista generale</a>
       </div>
     </div>
 
-    <h2 class="section-title">File dati principali</h2>
+    <h2 class="section-title">Download dati</h2>
 
     <div class="grid">
       <div class="card">
-        <h2>Shortlist operativa CSV</h2>
-        <p>Elenco scaricabile dei progetti OpenCUP più rilevanti per i segmenti commerciali Alayan.</p>
+        <h3>Shortlist operativa CSV</h3>
+        <p>
+          Elenco dei progetti più rilevanti per i segmenti commerciali Alayan.
+        </p>
         <a href="../reports/operational_shortlist.csv">Scarica CSV</a>
       </div>
 
       <div class="card">
-        <h2>Affidamenti ANAC CSV</h2>
-        <p>Elenco scaricabile degli affidamenti rilevanti con CUP, CIG, aggiudicatario, importo e data aggiudicazione.</p>
+        <h3>Affidamenti rilevanti CSV</h3>
+        <p>
+          Elenco degli affidamenti ANAC filtrati, con progetto, CUP, CIG,
+          aggiudicatario, CF/P.IVA, data ed esito.
+        </p>
         <a href="../reports/anac_relevant_awards.csv">Scarica CSV</a>
       </div>
 
       <div class="card">
-        <h2>Segmenti operativi</h2>
-        <p>Distribuzione dei progetti per segmento commerciale Alayan.</p>
+        <h3>Segmenti operativi CSV</h3>
+        <p>
+          Distribuzione dei progetti per segmento commerciale Alayan.
+        </p>
         <a href="../reports/operational_by_segment.csv">Scarica CSV</a>
       </div>
 
       <div class="card">
-        <h2>Anomalie ANAC CSV</h2>
-        <p>Elenco dei CIG fuori scala o potenzialmente multi-progetto, da verificare con cautela.</p>
+        <h3>Anomalie ANAC CSV</h3>
+        <p>
+          CIG fuori scala o potenzialmente multi-progetto, separati dalla vista principale.
+        </p>
         <a href="../reports/anac_awards_anomalies.csv">Scarica CSV</a>
       </div>
     </div>
 
     <div class="note">
-      <strong>Nota operativa:</strong> OpenCUP identifica i progetti e il potenziale commerciale. ANAC collega i progetti agli appalti e agli operatori economici. Gli affidamenti ANAC non sempre rappresentano l'appalto principale dell'opera: per questo esiste una vista separata delle anomalie.
+      <strong>Nota operativa:</strong>
+      OpenCUP individua i progetti e il potenziale commerciale. ANAC collega i progetti agli appalti,
+      ai CIG, agli operatori economici e agli importi di aggiudicazione. La ricerca filtrabile è la vista
+      consigliata per le filiali.
     </div>
   </main>
 
