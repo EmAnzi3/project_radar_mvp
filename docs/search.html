@@ -398,7 +398,7 @@ function render() {
   const rows = filtered.slice(0, maxRows);
 
   els.total.textContent = "Record totali: " + records.length;
-  els.shown.textContent = "Risultati filtrati: " + filtered.length + " ? mostrati: " + rows.length;
+  els.shown.textContent = "Risultati filtrati: " + filtered.length + " - mostrati: " + rows.length;
 
   els.tbody.innerHTML = rows.map(r => `
     <tr>
