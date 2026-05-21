@@ -203,14 +203,84 @@ def main():
     button { border: 0; background: #0f766e; color: white; border-radius: 9px; padding: 10px 12px; font-weight: bold; cursor: pointer; }
     .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; color: #617083; font-size: 14px; }
     .pill { background: white; border: 1px solid #e5e7eb; border-radius: 999px; padding: 8px 10px; }
-    .table-wrap { overflow-x: auto; background: white; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    table { border-collapse: collapse; width: 100%; min-width: 1850px; }
+    .table-wrap {
+      overflow: auto;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      max-height: calc(100vh - 340px);
+      min-height: 420px;
+    }
+    table { border-collapse: collapse; width: 100%; min-width: 1650px; }
     th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; font-size: 14px; }
-    th { background: #111827; color: white; position: sticky; top: 0; }
+    th {
+      background: #111827;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
     tr:hover { background: #f3f4f6; }
     .small { color: #617083; font-size: 12px; margin-top: 4px; }
     .warn { color: #92400e; font-weight: bold; }
     a { color: #0f766e; font-weight: bold; text-decoration: none; }
+  
+    .nowrap { white-space: nowrap; }
+    .money { white-space: nowrap; min-width: 100px; }
+    .award-col { white-space: nowrap; min-width: 110px; }
+    .source-col { white-space: nowrap; min-width: 65px; }
+    .contractors-col { min-width: 360px; max-width: 520px; }
+    .oe-line { padding: 0 0 7px 0; margin: 0 0 7px 0; border-bottom: 1px solid #eef2f7; }
+    .oe-line:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .oe-name { font-weight: bold; overflow-wrap: anywhere; }
+    .oe-tax { color: #617083; font-size: 12px; margin-top: 2px; }
+
+  
+    /* Desktop/tablet: tabella adattiva, niente fuga verso destra */
+    @media (min-width: 761px) {
+      .table-wrap {
+        overflow-x: hidden;
+      }
+
+      table {
+        width: 100%;
+        min-width: 0 !important;
+        table-layout: fixed;
+      }
+
+      th, td {
+        overflow-wrap: anywhere;
+        word-break: normal;
+      }
+
+      th:nth-child(1), td:nth-child(1) { width: 17%; }  /* Progetto */
+      th:nth-child(2), td:nth-child(2) { width: 6%; }   /* Filiale */
+      th:nth-child(3), td:nth-child(3) { width: 7%; }   /* Segmento */
+      th:nth-child(4), td:nth-child(4) { width: 7%; }   /* Regione */
+      th:nth-child(5), td:nth-child(5) { width: 7%; }   /* Provincia */
+      th:nth-child(6), td:nth-child(6) { width: 7%; }   /* Comune */
+      th:nth-child(7), td:nth-child(7) { width: 7%; }   /* Valore */
+      th:nth-child(8), td:nth-child(8) { width: 12%; }  /* Committente */
+      th:nth-child(9), td:nth-child(9) { width: 23%; }  /* Aggiudicatario */
+      th:nth-child(10), td:nth-child(10) { width: 7%; } /* Aggiudicazione */
+      th:nth-child(11), td:nth-child(11) { width: 4%; } /* Fonte */
+
+      .contractors-col {
+        min-width: 0 !important;
+        max-width: none !important;
+      }
+
+      .money,
+      .award-col,
+      .source-col {
+        white-space: nowrap;
+      }
+
+      .oe-line {
+        overflow-wrap: anywhere;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -250,12 +320,10 @@ def main():
             <th>Regione</th>
             <th>Provincia</th>
             <th>Comune</th>
-            <th>Valore progetto</th>
+            <th>Valore</th>
             <th>Committente</th>
             <th>Aggiudicatario / OE</th>
-            <th>CF / P.IVA</th>
-            <th>Data</th>
-            <th>Esito</th>
+            <th>Aggiudicazione</th>
             <th>Fonte</th>
           </tr>
         </thead>
@@ -297,6 +365,31 @@ function escapeHtml(str) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+
+function splitPipe(value) {
+  return String(value || "")
+    .split("|")
+    .map(x => x.trim())
+    .filter(Boolean);
+}
+
+function pairedContractors(namesValue, taxValue) {
+  const names = splitPipe(namesValue);
+  const taxes = splitPipe(taxValue);
+
+  if (!names.length) return "";
+
+  return names.map((name, i) => {
+    const tax = taxes[i] || "";
+    return `
+      <div class="oe-line">
+        <div class="oe-name">${escapeHtml(name)}</div>
+        ${tax ? `<div class="oe-tax">${escapeHtml(tax)}</div>` : ""}
+      </div>
+    `;
+  }).join("");
 }
 
 function optionList(values) {
@@ -436,26 +529,39 @@ function render() {
   const rows = filtered.slice(0, maxRows);
 
   els.total.textContent = "Record totali: " + records.length;
-  els.shown.textContent = "Risultati filtrati: " + filtered.length + " · mostrati: " + rows.length;
+  els.shown.textContent = "Risultati filtrati: " + filtered.length + " ? mostrati: " + rows.length;
 
   els.tbody.innerHTML = rows.map(r => `
     <tr>
       <td>
         <strong>${escapeHtml(r.title)}</strong>
-        <div class="small">CUP: ${escapeHtml(r.cup)} · CIG: ${escapeHtml(r.cig)}</div>
+        <div class="small">CUP: ${escapeHtml(r.cup)} - CIG: ${escapeHtml(r.cig)}</div>
       </td>
+
       <td>${branchLabel(r)}</td>
+
       <td>${escapeHtml(r.segment)}</td>
+
       <td>${escapeHtml(r.region)}</td>
+
       <td>${escapeHtml(r.province)}</td>
+
       <td>${escapeHtml(r.municipality)}</td>
-      <td>${euro(r.project_value)}</td>
+
+      <td class="money">${euro(r.project_value)}</td>
+
       <td>${escapeHtml(r.client)}</td>
-      <td>${escapeHtml(r.contractors)}</td>
-      <td>${escapeHtml(r.contractor_tax_codes)}</td>
-      <td>${escapeHtml(r.award_date)}</td>
-      <td>${escapeHtml(r.award_result)}</td>
-      <td><a href="${escapeHtml(r.source_url)}" target="_blank">Fonte</a></td>
+
+      <td class="contractors-col">${pairedContractors(r.contractors, r.contractor_tax_codes)}</td>
+
+      <td class="award-col">
+        ${escapeHtml(r.award_date)}
+        <div class="small">${escapeHtml(r.award_result)}</div>
+      </td>
+
+      <td class="source-col">
+        <a href="${escapeHtml(r.source_url)}" target="_blank">Fonte</a>
+      </td>
     </tr>
   `).join("");
 }
@@ -501,7 +607,7 @@ Promise.all([
     applyFilters();
   })
   .catch(err => {
-    els.tbody.innerHTML = `<tr><td colspan="13">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
+    els.tbody.innerHTML = `<tr><td colspan="11">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
   });
 </script>
 </body>
