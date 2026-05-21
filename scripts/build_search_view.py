@@ -4,13 +4,23 @@ import re
 from pathlib import Path
 
 INPUT = Path("reports/anac_relevant_awards.csv")
+BRANCH_MAP = Path("config/municipality_to_branch.csv")
+
 OUT_JSON = Path("docs/data/anac_relevant_awards.json")
+OUT_BRANCH_TERRITORY = Path("docs/data/branch_territory.json")
 OUT_HTML = Path("docs/search.html")
 
 
 def clean(value):
     text = str(value or "")
     text = text.replace("\ufeff", "")
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def norm(value):
+    text = clean(value).upper()
+    text = text.replace("'", " ")
+    text = re.sub(r"[^A-ZÀ-ÖØ-Ý0-9]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -27,9 +37,117 @@ def to_float(value):
         return 0.0
 
 
+def load_branch_map():
+    mapping = {}
+
+    if not BRANCH_MAP.exists():
+        print(f"[WARN] Mappa filiali non trovata: {BRANCH_MAP}")
+        return mapping
+
+    with BRANCH_MAP.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        for row in reader:
+            municipality_norm = clean(row.get("municipality_norm"))
+            province_norm = clean(row.get("province_norm"))
+
+            if not municipality_norm or not province_norm:
+                continue
+
+            key = (municipality_norm, province_norm)
+
+            mapping[key] = {
+                "branch": clean(row.get("branch")),
+                "branch_candidates": clean(row.get("branch_candidates")),
+                "branch_confidence": clean(row.get("confidence")),
+            }
+
+    print(f"[OK] Mappa comuni → filiali: {len(mapping)} righe")
+    return mapping
+
+
+
+def build_branch_territory():
+    """
+    Costruisce la competenza territoriale completa da config/municipality_to_branch.csv,
+    indipendentemente dai record disponibili nella vista ANAC.
+    """
+    territory = {}
+
+    if not BRANCH_MAP.exists():
+        return territory
+
+    with BRANCH_MAP.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter=";")
+
+        for row in reader:
+            branch = clean(row.get("branch"))
+            candidates = clean(row.get("branch_candidates"))
+            confidence = clean(row.get("confidence"))
+
+            region = clean(row.get("region"))
+            province = clean(row.get("province"))
+            municipality = clean(row.get("municipality"))
+
+            branches = []
+
+            if branch and branch not in {"AMBIGUA", "NON ASSEGNATA"}:
+                branches.append(branch)
+
+            if branch == "AMBIGUA" and candidates:
+                branches.extend([b.strip() for b in candidates.split("|") if b.strip()])
+
+            for b in branches:
+                territory.setdefault(b, [])
+
+                territory[b].append({
+                    "region": region,
+                    "province": province,
+                    "municipality": municipality,
+                    "confidence": confidence,
+                })
+
+    # Deduplica
+    clean_territory = {}
+
+    for branch, rows in territory.items():
+        seen = set()
+        out = []
+
+        for r in rows:
+            key = (r["region"], r["province"], r["municipality"])
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(r)
+
+        clean_territory[branch] = out
+
+    return clean_territory
+
+
+def assign_branch(row, branch_map):
+    key = (
+        norm(row.get("municipality")),
+        norm(row.get("province")),
+    )
+
+    match = branch_map.get(key)
+
+    if not match:
+        return {
+            "branch": "NON ASSEGNATA",
+            "branch_candidates": "",
+            "branch_confidence": "nessuna",
+        }
+
+    return match
+
+
 def main():
     if not INPUT.exists():
         raise SystemExit(f"File non trovato: {INPUT}")
+
+    branch_map = load_branch_map()
 
     records = []
 
@@ -37,7 +155,13 @@ def main():
         reader = csv.DictReader(f, delimiter=";")
 
         for row in reader:
+            branch_data = assign_branch(row, branch_map)
+
             records.append({
+                "branch": branch_data["branch"],
+                "branch_candidates": branch_data["branch_candidates"],
+                "branch_confidence": branch_data["branch_confidence"],
+
                 "segment": clean(row.get("primary_segment")),
                 "cup": clean(row.get("cup")),
                 "cig": clean(row.get("cig")),
@@ -58,6 +182,9 @@ def main():
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    branch_territory = build_branch_territory()
+    OUT_BRANCH_TERRITORY.write_text(json.dumps(branch_territory, ensure_ascii=False, indent=2), encoding="utf-8")
+
     html = """<!doctype html>
 <html lang="it">
 <head>
@@ -77,22 +204,24 @@ def main():
     .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; color: #617083; font-size: 14px; }
     .pill { background: white; border: 1px solid #e5e7eb; border-radius: 999px; padding: 8px 10px; }
     .table-wrap { overflow-x: auto; background: white; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    table { border-collapse: collapse; width: 100%; min-width: 1700px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1850px; }
     th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; font-size: 14px; }
     th { background: #111827; color: white; position: sticky; top: 0; }
     tr:hover { background: #f3f4f6; }
     .small { color: #617083; font-size: 12px; margin-top: 4px; }
+    .warn { color: #92400e; font-weight: bold; }
     a { color: #0f766e; font-weight: bold; text-decoration: none; }
   </style>
 </head>
 <body>
   <header>
     <h1>Project Radar MVP - Ricerca</h1>
-    <p>Filtro rapido su progetti, committenti e aggiudicatari ANAC.</p>
+    <p>Filtro rapido su progetti, filiali, committenti e aggiudicatari ANAC.</p>
   </header>
 
   <main>
     <section class="filters">
+      <div><label>Filiale</label><select id="branch"></select></div>
       <div><label>Regione</label><select id="region"></select></div>
       <div><label>Provincia</label><select id="province"></select></div>
       <div><label>Comune</label><select id="municipality"></select></div>
@@ -116,6 +245,7 @@ def main():
         <thead>
           <tr>
             <th>Progetto</th>
+            <th>Filiale</th>
             <th>Segmento</th>
             <th>Regione</th>
             <th>Provincia</th>
@@ -136,9 +266,11 @@ def main():
 
 <script>
 let records = [];
+let branchTerritory = {};
 let filtered = [];
 
 const els = {
+  branch: document.getElementById("branch"),
   region: document.getElementById("region"),
   province: document.getElementById("province"),
   municipality: document.getElementById("municipality"),
@@ -183,28 +315,84 @@ function fillSelect(select, values, label) {
   if (values.includes(current)) select.value = current;
 }
 
+function recordBranchList(r) {
+  const values = [];
+
+  if (r.branch && r.branch !== "AMBIGUA" && r.branch !== "NON ASSEGNATA") {
+    values.push(r.branch);
+  }
+
+  if (r.branch_candidates) {
+    for (const b of r.branch_candidates.split("|").map(x => x.trim()).filter(Boolean)) {
+      values.push(b);
+    }
+  }
+
+  return Array.from(new Set(values));
+}
+
+function branchLabel(r) {
+  if (r.branch === "AMBIGUA") {
+    return `<span class="warn">AMBIGUA</span><div class="small">${escapeHtml(r.branch_candidates)}</div>`;
+  }
+
+  if (r.branch === "NON ASSEGNATA") {
+    return `<span class="warn">NON ASSEGNATA</span>`;
+  }
+
+  return escapeHtml(r.branch);
+}
+
 function populateFilters() {
-  fillSelect(els.region, optionList(records.map(r => r.region)), "Tutte");
+  const allBranches = [];
+  for (const r of records) {
+    for (const b of recordBranchList(r)) allBranches.push(b);
+  }
+
+  fillSelect(els.branch, optionList(allBranches), "Tutte");
   fillSelect(els.segment, optionList(records.map(r => r.segment)), "Tutti");
   updateDependentFilters();
 }
 
 function updateDependentFilters() {
-  const region = els.region.value;
-  let subset = records;
-  if (region) subset = subset.filter(r => r.region === region);
+  const branch = els.branch.value;
 
-  fillSelect(els.province, optionList(subset.map(r => r.province)), "Tutte");
+  let territorySubset = null;
+
+  if (branch && branchTerritory[branch]) {
+    territorySubset = branchTerritory[branch];
+  }
+
+  // Se c'? una filiale, i menu geografici vengono dalla competenza territoriale.
+  // Se non c'? filiale, vengono dai record disponibili.
+  const regionSource = territorySubset || records;
+
+  fillSelect(els.region, optionList(regionSource.map(r => r.region)), "Tutte");
+
+  const region = els.region.value;
+
+  let provinceSource = regionSource;
+  if (region) {
+    provinceSource = provinceSource.filter(r => r.region === region);
+  }
+
+  fillSelect(els.province, optionList(provinceSource.map(r => r.province)), "Tutte");
 
   const province = els.province.value;
-  subset = records;
-  if (region) subset = subset.filter(r => r.region === region);
-  if (province) subset = subset.filter(r => r.province === province);
 
-  fillSelect(els.municipality, optionList(subset.map(r => r.municipality)), "Tutti");
+  let municipalitySource = regionSource;
+  if (region) {
+    municipalitySource = municipalitySource.filter(r => r.region === region);
+  }
+  if (province) {
+    municipalitySource = municipalitySource.filter(r => r.province === province);
+  }
+
+  fillSelect(els.municipality, optionList(municipalitySource.map(r => r.municipality)), "Tutti");
 }
 
 function applyFilters() {
+  const branch = els.branch.value;
   const region = els.region.value;
   const province = els.province.value;
   const municipality = els.municipality.value;
@@ -216,6 +404,7 @@ function applyFilters() {
   const q = els.q.value.trim().toLowerCase();
 
   filtered = records.filter(r => {
+    if (branch && !recordBranchList(r).includes(branch)) return false;
     if (region && r.region !== region) return false;
     if (province && r.province !== province) return false;
     if (municipality && r.municipality !== municipality) return false;
@@ -230,7 +419,8 @@ function applyFilters() {
     if (q) {
       const blob = [
         r.title, r.client, r.contractors, r.contractor_tax_codes,
-        r.cup, r.cig, r.municipality, r.province, r.region
+        r.cup, r.cig, r.municipality, r.province, r.region,
+        r.branch, r.branch_candidates
       ].join(" ").toLowerCase();
       if (!blob.includes(q)) return false;
     }
@@ -254,6 +444,7 @@ function render() {
         <strong>${escapeHtml(r.title)}</strong>
         <div class="small">CUP: ${escapeHtml(r.cup)} · CIG: ${escapeHtml(r.cig)}</div>
       </td>
+      <td>${branchLabel(r)}</td>
       <td>${escapeHtml(r.segment)}</td>
       <td>${escapeHtml(r.region)}</td>
       <td>${escapeHtml(r.province)}</td>
@@ -270,6 +461,7 @@ function render() {
 }
 
 function resetFilters() {
+  els.branch.value = "";
   els.region.value = "";
   els.province.value = "";
   els.municipality.value = "";
@@ -283,6 +475,10 @@ function resetFilters() {
   applyFilters();
 }
 
+els.branch.addEventListener("change", () => {
+  updateDependentFilters();
+  applyFilters();
+});
 els.region.addEventListener("change", () => { updateDependentFilters(); applyFilters(); });
 els.province.addEventListener("change", () => { updateDependentFilters(); applyFilters(); });
 els.municipality.addEventListener("change", applyFilters);
@@ -293,16 +489,19 @@ els.dateFrom.addEventListener("input", applyFilters);
 els.dateTo.addEventListener("input", applyFilters);
 els.q.addEventListener("input", applyFilters);
 
-fetch("data/anac_relevant_awards.json")
-  .then(r => r.json())
-  .then(data => {
+Promise.all([
+  fetch("data/anac_relevant_awards.json").then(r => r.json()),
+  fetch("data/branch_territory.json").then(r => r.json())
+])
+  .then(([data, territory]) => {
     records = data;
+    branchTerritory = territory;
     filtered = data;
     populateFilters();
     applyFilters();
   })
   .catch(err => {
-    els.tbody.innerHTML = `<tr><td colspan="12">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
+    els.tbody.innerHTML = `<tr><td colspan="13">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
   });
 </script>
 </body>
@@ -313,6 +512,7 @@ fetch("data/anac_relevant_awards.json")
 
     print(f"Record JSON: {len(records)}")
     print(f"JSON: {OUT_JSON}")
+    print(f"Branch territory JSON: {OUT_BRANCH_TERRITORY}")
     print(f"HTML: {OUT_HTML}")
 
 

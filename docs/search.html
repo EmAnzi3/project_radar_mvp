@@ -17,22 +17,24 @@
     .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; color: #617083; font-size: 14px; }
     .pill { background: white; border: 1px solid #e5e7eb; border-radius: 999px; padding: 8px 10px; }
     .table-wrap { overflow-x: auto; background: white; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    table { border-collapse: collapse; width: 100%; min-width: 1700px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1850px; }
     th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; font-size: 14px; }
     th { background: #111827; color: white; position: sticky; top: 0; }
     tr:hover { background: #f3f4f6; }
     .small { color: #617083; font-size: 12px; margin-top: 4px; }
+    .warn { color: #92400e; font-weight: bold; }
     a { color: #0f766e; font-weight: bold; text-decoration: none; }
   </style>
 </head>
 <body>
   <header>
     <h1>Project Radar MVP - Ricerca</h1>
-    <p>Filtro rapido su progetti, committenti e aggiudicatari ANAC.</p>
+    <p>Filtro rapido su progetti, filiali, committenti e aggiudicatari ANAC.</p>
   </header>
 
   <main>
     <section class="filters">
+      <div><label>Filiale</label><select id="branch"></select></div>
       <div><label>Regione</label><select id="region"></select></div>
       <div><label>Provincia</label><select id="province"></select></div>
       <div><label>Comune</label><select id="municipality"></select></div>
@@ -56,6 +58,7 @@
         <thead>
           <tr>
             <th>Progetto</th>
+            <th>Filiale</th>
             <th>Segmento</th>
             <th>Regione</th>
             <th>Provincia</th>
@@ -76,9 +79,11 @@
 
 <script>
 let records = [];
+let branchTerritory = {};
 let filtered = [];
 
 const els = {
+  branch: document.getElementById("branch"),
   region: document.getElementById("region"),
   province: document.getElementById("province"),
   municipality: document.getElementById("municipality"),
@@ -123,28 +128,84 @@ function fillSelect(select, values, label) {
   if (values.includes(current)) select.value = current;
 }
 
+function recordBranchList(r) {
+  const values = [];
+
+  if (r.branch && r.branch !== "AMBIGUA" && r.branch !== "NON ASSEGNATA") {
+    values.push(r.branch);
+  }
+
+  if (r.branch_candidates) {
+    for (const b of r.branch_candidates.split("|").map(x => x.trim()).filter(Boolean)) {
+      values.push(b);
+    }
+  }
+
+  return Array.from(new Set(values));
+}
+
+function branchLabel(r) {
+  if (r.branch === "AMBIGUA") {
+    return `<span class="warn">AMBIGUA</span><div class="small">${escapeHtml(r.branch_candidates)}</div>`;
+  }
+
+  if (r.branch === "NON ASSEGNATA") {
+    return `<span class="warn">NON ASSEGNATA</span>`;
+  }
+
+  return escapeHtml(r.branch);
+}
+
 function populateFilters() {
-  fillSelect(els.region, optionList(records.map(r => r.region)), "Tutte");
+  const allBranches = [];
+  for (const r of records) {
+    for (const b of recordBranchList(r)) allBranches.push(b);
+  }
+
+  fillSelect(els.branch, optionList(allBranches), "Tutte");
   fillSelect(els.segment, optionList(records.map(r => r.segment)), "Tutti");
   updateDependentFilters();
 }
 
 function updateDependentFilters() {
-  const region = els.region.value;
-  let subset = records;
-  if (region) subset = subset.filter(r => r.region === region);
+  const branch = els.branch.value;
 
-  fillSelect(els.province, optionList(subset.map(r => r.province)), "Tutte");
+  let territorySubset = null;
+
+  if (branch && branchTerritory[branch]) {
+    territorySubset = branchTerritory[branch];
+  }
+
+  // Se c'? una filiale, i menu geografici vengono dalla competenza territoriale.
+  // Se non c'? filiale, vengono dai record disponibili.
+  const regionSource = territorySubset || records;
+
+  fillSelect(els.region, optionList(regionSource.map(r => r.region)), "Tutte");
+
+  const region = els.region.value;
+
+  let provinceSource = regionSource;
+  if (region) {
+    provinceSource = provinceSource.filter(r => r.region === region);
+  }
+
+  fillSelect(els.province, optionList(provinceSource.map(r => r.province)), "Tutte");
 
   const province = els.province.value;
-  subset = records;
-  if (region) subset = subset.filter(r => r.region === region);
-  if (province) subset = subset.filter(r => r.province === province);
 
-  fillSelect(els.municipality, optionList(subset.map(r => r.municipality)), "Tutti");
+  let municipalitySource = regionSource;
+  if (region) {
+    municipalitySource = municipalitySource.filter(r => r.region === region);
+  }
+  if (province) {
+    municipalitySource = municipalitySource.filter(r => r.province === province);
+  }
+
+  fillSelect(els.municipality, optionList(municipalitySource.map(r => r.municipality)), "Tutti");
 }
 
 function applyFilters() {
+  const branch = els.branch.value;
   const region = els.region.value;
   const province = els.province.value;
   const municipality = els.municipality.value;
@@ -156,6 +217,7 @@ function applyFilters() {
   const q = els.q.value.trim().toLowerCase();
 
   filtered = records.filter(r => {
+    if (branch && !recordBranchList(r).includes(branch)) return false;
     if (region && r.region !== region) return false;
     if (province && r.province !== province) return false;
     if (municipality && r.municipality !== municipality) return false;
@@ -170,7 +232,8 @@ function applyFilters() {
     if (q) {
       const blob = [
         r.title, r.client, r.contractors, r.contractor_tax_codes,
-        r.cup, r.cig, r.municipality, r.province, r.region
+        r.cup, r.cig, r.municipality, r.province, r.region,
+        r.branch, r.branch_candidates
       ].join(" ").toLowerCase();
       if (!blob.includes(q)) return false;
     }
@@ -194,6 +257,7 @@ function render() {
         <strong>${escapeHtml(r.title)}</strong>
         <div class="small">CUP: ${escapeHtml(r.cup)} · CIG: ${escapeHtml(r.cig)}</div>
       </td>
+      <td>${branchLabel(r)}</td>
       <td>${escapeHtml(r.segment)}</td>
       <td>${escapeHtml(r.region)}</td>
       <td>${escapeHtml(r.province)}</td>
@@ -210,6 +274,7 @@ function render() {
 }
 
 function resetFilters() {
+  els.branch.value = "";
   els.region.value = "";
   els.province.value = "";
   els.municipality.value = "";
@@ -223,6 +288,10 @@ function resetFilters() {
   applyFilters();
 }
 
+els.branch.addEventListener("change", () => {
+  updateDependentFilters();
+  applyFilters();
+});
 els.region.addEventListener("change", () => { updateDependentFilters(); applyFilters(); });
 els.province.addEventListener("change", () => { updateDependentFilters(); applyFilters(); });
 els.municipality.addEventListener("change", applyFilters);
@@ -233,16 +302,19 @@ els.dateFrom.addEventListener("input", applyFilters);
 els.dateTo.addEventListener("input", applyFilters);
 els.q.addEventListener("input", applyFilters);
 
-fetch("data/anac_relevant_awards.json")
-  .then(r => r.json())
-  .then(data => {
+Promise.all([
+  fetch("data/anac_relevant_awards.json").then(r => r.json()),
+  fetch("data/branch_territory.json").then(r => r.json())
+])
+  .then(([data, territory]) => {
     records = data;
+    branchTerritory = territory;
     filtered = data;
     populateFilters();
     applyFilters();
   })
   .catch(err => {
-    els.tbody.innerHTML = `<tr><td colspan="12">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
+    els.tbody.innerHTML = `<tr><td colspan="13">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
   });
 </script>
 </body>
