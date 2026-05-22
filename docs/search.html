@@ -231,6 +231,84 @@
     }
     /* === /OE SEPARATOR FIX === */
 
+  
+    /* === SEARCH FEATURES: BADGE / SORT / EXPORT === */
+    .source-badge {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      vertical-align: middle;
+    }
+
+    .source-badge.anac {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+
+    .source-badge.opencup {
+      background: #e5e7eb;
+      color: #374151;
+      border: 1px solid #9ca3af;
+    }
+
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    
+
+    
+
+    
+
+    .export-btn {
+      margin-left: 8px;
+      background: #f97316;
+      color: #ffffff;
+    }
+
+    .export-btn:hover {
+      background: #ea580c;
+    }
+    /* === /SEARCH FEATURES: BADGE / SORT / EXPORT === */
+
+  
+    /* === SORT INDICATORS FIX - NO UNICODE === */
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    th.sortable::after {
+      content: "";
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: middle;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 6px solid rgba(255,255,255,.55);
+    }
+
+    th.sort-asc::after {
+      border-top: 0;
+      border-bottom: 6px solid #ffffff;
+    }
+
+    th.sort-desc::after {
+      border-top: 6px solid #ffffff;
+      border-bottom: 0;
+    }
+    /* === /SORT INDICATORS FIX - NO UNICODE === */
+
   </style>
 </head>
 <body>
@@ -251,7 +329,7 @@
       <div><label>Data aggiud. da</label><input id="dateFrom" type="date"></div>
       <div><label>Data aggiud. a</label><input id="dateTo" type="date"></div>
       <div><label>Testo libero</label><input id="q" placeholder="progetto, committente, aggiudicatario, CUP, CIG"></div>
-      <div><label>&nbsp;</label><button onclick="resetFilters()">Reset</button></div>
+      <div><label>&nbsp;</label><button onclick="resetFilters()">Reset</button><button class="export-btn" onclick="exportFilteredCsv()">Export CSV</button></div>
     </section>
 
     <section class="meta">
@@ -264,17 +342,17 @@
       <table>
         <thead>
           <tr>
-            <th>Progetto</th>
-            <th>Filiale</th>
-            <th>Segmento</th>
-            <th>Regione</th>
-            <th>Provincia</th>
-            <th>Comune</th>
-            <th>Valore</th>
-            <th>Committente</th>
-            <th>Aggiudicatario / OE</th>
-            <th>Aggiudicazione</th>
-            <th>Fonte</th>
+            <th class="sortable" data-sort="title" onclick="setSort('title')">Progetto</th>
+            <th class="sortable" data-sort="branch" onclick="setSort('branch')">Filiale</th>
+            <th class="sortable" data-sort="segment" onclick="setSort('segment')">Segmento</th>
+            <th class="sortable" data-sort="region" onclick="setSort('region')">Regione</th>
+            <th class="sortable" data-sort="province" onclick="setSort('province')">Provincia</th>
+            <th class="sortable" data-sort="municipality" onclick="setSort('municipality')">Comune</th>
+            <th class="sortable" data-sort="project_value" onclick="setSort('project_value')">Valore</th>
+            <th class="sortable" data-sort="client" onclick="setSort('client')">Committente</th>
+            <th class="sortable" data-sort="contractors" onclick="setSort('contractors')">Aggiudicatario / OE</th>
+            <th class="sortable" data-sort="award_date" onclick="setSort('award_date')">Aggiudicazione</th>
+            <th class="sortable source-col" data-sort="source_url" onclick="setSort('source_url')">Fonte</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -286,6 +364,8 @@
 let records = [];
 let branchTerritory = {};
 let filtered = [];
+let sortKey = "project_value";
+let sortDir = "desc";
 
 const els = {
   branch: document.getElementById("branch"),
@@ -317,6 +397,12 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+
+
+function clean(v) {
+  if (v === null || v === undefined) return "";
+  return String(v).trim();
+}
 
 function splitPipe(value) {
   return String(value || "")
@@ -474,9 +560,174 @@ function applyFilters() {
   render();
 }
 
+
+function hasAnacData(r) {
+  return Boolean(
+    clean(r.cig) ||
+    clean(r.contractors) ||
+    clean(r.contractor_name) ||
+    clean(r.award_date) ||
+    clean(r.award_result)
+  );
+}
+
+function sourceBadgeHtml(r) {
+  return hasAnacData(r)
+    ? '<span class="source-badge anac">ANAC</span>'
+    : '<span class="source-badge opencup">OpenCUP</span>';
+}
+
+function parseNum(v) {
+  if (v === null || v === undefined) return 0;
+  if (typeof v === "number") return v;
+  const n = Number(String(v).replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", "."));
+  return Number.isFinite(n) ? n : 0;
+}
+
+function sortValue(r, key) {
+  if (key === "project_value") return Number(r.project_value || 0);
+  if (key === "award_date") return clean(r.award_date);
+  return clean(r[key]);
+}
+
+
+function setSort(key) {
+  if (sortKey === key) {
+    sortDir = sortDir === "asc" ? "desc" : "asc";
+  } else {
+    sortKey = key;
+    sortDir = (key === "project_value" || key === "award_date") ? "desc" : "asc";
+  }
+
+  updateSortHeaders();
+  render();
+}
+
+function sortedFiltered() {
+  const arr = [...filtered];
+  arr.sort((a, b) => {
+    const av = sortValue(a, sortKey);
+    const bv = sortValue(b, sortKey);
+
+    if (typeof av === "number" && typeof bv === "number") {
+      return sortDir === "asc" ? av - bv : bv - av;
+    }
+
+    return sortDir === "asc"
+      ? String(av).localeCompare(String(bv), "it", { sensitivity: "base" })
+      : String(bv).localeCompare(String(av), "it", { sensitivity: "base" });
+  });
+  return arr;
+}
+
+function updateSortHeaders() {
+  document.querySelectorAll("th.sortable").forEach(th => {
+    th.classList.remove("sort-asc", "sort-desc");
+    if (th.dataset.sort === sortKey) {
+      th.classList.add(sortDir === "asc" ? "sort-asc" : "sort-desc");
+    }
+  });
+}
+
+function exportFilteredCsv() {
+  const rows = sortedFiltered();
+  const cols = [
+    ["Progetto", r => clean(r.title)],
+    ["Filiale", r => clean(r.branch || r.branch_name || r.assigned_branch || r.filiale)],
+    ["Segmento", r => clean(r.primary_segment || r.segment)],
+    ["Regione", r => clean(r.region)],
+    ["Provincia", r => clean(r.province)],
+    ["Comune", r => clean(r.municipality)],
+    ["Valore", r => clean(r.project_value || r.value_eur || r.value || r.project_value_eur)],
+    ["Committente", r => clean(r.client)],
+    ["Aggiudicatario / OE", r => clean(r.contractors || r.contractor_name)],
+    ["Data aggiudicazione", r => clean(r.award_date)],
+    ["Esito", r => clean(r.award_result)],
+    ["CUP", r => clean(r.cup)],
+    ["CIG", r => clean(r.cig)],
+    ["Fonte", r => clean(r.source_url || r.url)]
+  ];
+
+  const esc = v => '"' + String(v ?? "").replaceAll('"', '""') + '"';
+  const csv = [
+    cols.map(c => esc(c[0])).join(";"),
+    ...rows.map(r => cols.map(c => esc(c[1](r))).join(";"))
+  ].join("\\r\\n");
+
+  const blob = new Blob(["\\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "project_radar_risultati_filtrati.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function decorateBadges() {
+  document.querySelectorAll("tbody tr").forEach(tr => {
+    if (tr.querySelector(".source-badge")) return;
+    const firstCell = tr.querySelector("td");
+    if (!firstCell) return;
+
+    const isAnac = tr.textContent.includes("CIG:") || tr.textContent.includes("AGGIUDICATA");
+    const badge = document.createElement("span");
+    badge.className = "source-badge " + (isAnac ? "anac" : "opencup");
+    badge.textContent = isAnac ? "ANAC" : "OpenCUP";
+    firstCell.appendChild(document.createElement("br"));
+    firstCell.appendChild(badge);
+  });
+}
+
+
+
+function prSortValue(r, key) {
+  if (key === "project_value") {
+    return Number(r.project_value || 0);
+  }
+
+  if (key === "award_date") {
+    const d = clean(r.award_date);
+    return d ? d : "";
+  }
+
+  return clean(r[key]).toLowerCase();
+}
+
+function prSortedFiltered() {
+  return [...filtered].sort((a, b) => {
+    const av = prSortValue(a, sortKey);
+    const bv = prSortValue(b, sortKey);
+
+    if (typeof av === "number" && typeof bv === "number") {
+      return sortDir === "asc" ? av - bv : bv - av;
+    }
+
+    const cmp = String(av).localeCompare(String(bv), "it", {
+      sensitivity: "base",
+      numeric: true
+    });
+
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+}
+
+function setSort(key) {
+  if (sortKey === key) {
+    sortDir = sortDir === "asc" ? "desc" : "asc";
+  } else {
+    sortKey = key;
+    sortDir = (key === "project_value" || key === "award_date") ? "desc" : "asc";
+  }
+
+  updateSortHeaders();
+  render();
+}
+
 function render() {
   const maxRows = 300;
-  const rows = filtered.slice(0, maxRows);
+  const rows = prSortedFiltered().slice(0, maxRows);
 
   els.total.textContent = "Record totali: " + records.length;
   els.shown.textContent = "Risultati filtrati: " + filtered.length + " - mostrati: " + rows.length;
@@ -514,6 +765,8 @@ function render() {
       </td>
     </tr>
   `).join("");
+  decorateBadges();
+  updateSortHeaders();
 }
 
 
@@ -613,6 +866,12 @@ Promise.all([
   .catch(err => {
     els.tbody.innerHTML = `<tr><td colspan="11">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
   });
+
+
+
+
+
+
 </script>
 </body>
 </html>
