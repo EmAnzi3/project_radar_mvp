@@ -316,30 +316,28 @@ def build_html(page, rows, branch_map):
     }}
 
     .table-wrap {{
+      flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      max-height: calc(100vh - 195px);
-      min-height: 420px;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
     }}
 
     table {{
-      border-collapse: collapse;
       width: 100%;
       min-width: 0;
       table-layout: fixed;
-      background: white;
+      border-collapse: collapse;
     }}
 
     th, td {{
-      padding: 5px 5px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
+      font-size: 10px;
+      padding: 5px 4px;
+      border-bottom: 1px solid #e5e7eb;
       vertical-align: top;
-      font-size: 10.4px;
-      line-height: 1.22;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }}
 
     th {{
@@ -387,8 +385,9 @@ def build_html(page, rows, branch_map):
     }}
 
     .contractors-col {{
-      min-width: 0;
-      max-width: none;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }}
 
     th:nth-child(1), td:nth-child(1) {{ width: 16%; }}   /* Progetto */
@@ -447,15 +446,56 @@ def build_html(page, rows, branch_map):
       }}
 
       th, td {{
-        font-size: 9.7px;
-        padding: 4px 4px;
-      }}
+      font-size: 10px;
+      padding: 5px 4px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }}
 
       .small,
       .oe-tax {{
         font-size: 9px;
       }}
     }}
+  
+    /* FIX 14 inch: vertical scroll inside table + sticky header */
+    .table-wrap {{
+      max-height: calc(100vh - 260px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }}
+
+    table {{
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+    }}
+
+    thead {{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }}
+
+    thead th {{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: #111827;
+      color: #ffffff;
+      box-shadow: 0 2px 0 #374151;
+    }}
+
+    tbody td {{
+      background: #ffffff;
+    }}
+
   </style>
 </head>
 <body>
