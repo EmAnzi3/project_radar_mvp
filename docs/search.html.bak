@@ -189,48 +189,6 @@
     }
     /* === /ALAYAN RECORD TABLE STANDARD === */
 
-  
-    /* === SEARCH READABILITY FIX === */
-    th, td {
-      font-size: 11px !important;
-      border-bottom: 1px solid #d7dde5 !important;
-    }
-
-    tbody tr:nth-child(even) td {
-      background: #f8fafc !important;
-    }
-
-    tbody tr:nth-child(odd) td {
-      background: #ffffff !important;
-    }
-
-    tbody tr:hover td {
-      background: #eef6f5 !important;
-    }
-    /* === /SEARCH READABILITY FIX === */
-
-  
-    /* === OE SEPARATOR FIX === */
-    .oe-line {
-      padding: 4px 0 5px 0;
-      border-bottom: 1px solid #cbd5e1;
-    }
-
-    .oe-line:last-child {
-      border-bottom: 0;
-    }
-
-    .oe-name {
-      font-weight: 700;
-    }
-
-    .oe-tax {
-      color: #475569;
-      font-size: 10px;
-      margin-top: 2px;
-    }
-    /* === /OE SEPARATOR FIX === */
-
   </style>
 </head>
 <body>
