@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
@@ -385,7 +385,7 @@ const els = {
 
 function euro(value) {
   if (!value) return "";
-  return Number(value).toLocaleString("it-IT", { maximumFractionDigits: 0 }) + " €";
+  return Number(value).toLocaleString("it-IT", { maximumFractionDigits: 0 }) + " &euro;";
 }
 
 function escapeHtml(str) {
@@ -630,31 +630,39 @@ function updateSortHeaders() {
 }
 
 function exportFilteredCsv() {
-  const rows = sortedFiltered();
+  const rows = prSortedFiltered();
+
+  if (!rows.length) {
+    alert("Nessun record da esportare.");
+    return;
+  }
+
   const cols = [
     ["Progetto", r => clean(r.title)],
-    ["Filiale", r => clean(r.branch || r.branch_name || r.assigned_branch || r.filiale)],
-    ["Segmento", r => clean(r.primary_segment || r.segment)],
+    ["Filiale", r => clean(r.branch)],
+    ["Segmento", r => clean(r.segment)],
     ["Regione", r => clean(r.region)],
     ["Provincia", r => clean(r.province)],
     ["Comune", r => clean(r.municipality)],
-    ["Valore", r => clean(r.project_value || r.value_eur || r.value || r.project_value_eur)],
+    ["Valore progetto", r => clean(r.project_value)],
     ["Committente", r => clean(r.client)],
-    ["Aggiudicatario / OE", r => clean(r.contractors || r.contractor_name)],
+    ["Aggiudicatario / OE", r => clean(r.contractors)],
     ["Data aggiudicazione", r => clean(r.award_date)],
     ["Esito", r => clean(r.award_result)],
+    ["Importo aggiudicazione", r => clean(r.award_amount_eur)],
+    ["Peso affidamento", r => clean(r.award_weight)],
     ["CUP", r => clean(r.cup)],
     ["CIG", r => clean(r.cig)],
-    ["Fonte", r => clean(r.source_url || r.url)]
+    ["Fonte", r => clean(r.source_url)]
   ];
 
   const esc = v => '"' + String(v ?? "").replaceAll('"', '""') + '"';
   const csv = [
     cols.map(c => esc(c[0])).join(";"),
     ...rows.map(r => cols.map(c => esc(c[1](r))).join(";"))
-  ].join("\\r\\n");
+  ].join("\r\n");
 
-  const blob = new Blob(["\\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -852,7 +860,7 @@ els.dateTo.addEventListener("input", applyFilters);
 els.q.addEventListener("input", applyFilters);
 
 Promise.all([
-  fetch("data/anac_relevant_awards.json").then(r => r.json()),
+  fetch("data/national_anac_relevant_awards.json").then(r => r.json()),
   fetch("data/branch_territory.json").then(r => r.json())
 ])
   .then(([data, territory]) => {
