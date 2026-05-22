@@ -500,7 +500,23 @@ def download_zip() -> Path:
     zip_path = TMP_DIR / "opencup.zip"
 
     print(f"[Download] Scarico OpenCUP da: {OPENCUP_URL}")
-    urllib.request.urlretrieve(OPENCUP_URL, zip_path)
+    import time
+
+    last_error = None
+
+    for attempt in range(3):
+        try:
+            print(f"[Download] tentativo {attempt + 1}/3")
+            urllib.request.urlretrieve(OPENCUP_URL, zip_path)
+            last_error = None
+            break
+        except Exception as e:
+            last_error = e
+            print(f"[Download] errore: {e}")
+            time.sleep(15)
+
+    if last_error:
+        raise last_error
 
     print(f"[Download] Salvato: {zip_path} ({zip_path.stat().st_size / 1024 / 1024:.1f} MB)")
     return zip_path
