@@ -300,7 +300,7 @@ def main():
     with OUT_CSV.open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, delimiter=";", fieldnames=fields)
         writer.writeheader()
-        for row in enriched[:1000]:
+        for row in enriched:
             writer.writerow({k: row.get(k, "") for k in fields})
 
     by_segment = defaultdict(lambda: {"count": 0, "total": 0.0, "score": 0.0})
