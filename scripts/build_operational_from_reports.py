@@ -9,10 +9,7 @@ REPORTS_DIR = Path("reports")
 DOCS_DIR = Path("docs")
 
 INPUT_FILES = [
-    REPORTS_DIR / "top_mid_market.csv",
-    REPORTS_DIR / "top_local_public.csv",
-    REPORTS_DIR / "top_by_category.csv",
-    REPORTS_DIR / "top_projects.csv",
+    REPORTS_DIR / "all_relevant_200k.csv",
 ]
 
 OUT_CSV = REPORTS_DIR / "operational_shortlist.csv"

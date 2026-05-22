@@ -800,6 +800,9 @@ def write_diagnostics(records: list[ProjectRecord]) -> None:
         reverse=True,
     )
 
+    write_records_csv(REPORTS_DIR / "all_relevant_200k.csv", records)
+    print("[Diagnostics] reports/all_relevant_200k.csv")
+
     write_records_csv(REPORTS_DIR / "top_mid_market.csv", mid_market[:1000])
 
     # Enti locali / territoriali
