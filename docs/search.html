@@ -309,7 +309,38 @@
     }
     /* === /SORT INDICATORS FIX - NO UNICODE === */
 
-  </style>
+  
+    .details-btn {
+      margin-top: 4px;
+      padding: 3px 7px;
+      border: 0;
+      border-radius: 8px;
+      background: #374151;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .award-detail-row td {
+      background: #f8fafc !important;
+      border-top: 1px solid #94a3b8;
+      border-bottom: 1px solid #94a3b8;
+      padding: 8px;
+    }
+
+    .award-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    .tax-list {
+      color: #475569;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+</style>
 </head>
 <body>
   <header>
@@ -733,6 +764,75 @@ function setSort(key) {
   render();
 }
 
+
+
+function contractorsPreviewHtml(r) {
+  const names = [];
+
+  if (Array.isArray(r.awards)) {
+    for (const a of r.awards) {
+      for (const name of splitPipe(a.contractors || "")) {
+        if (name && !names.includes(name)) names.push(name);
+      }
+    }
+  }
+
+  if (!names.length) {
+    for (const name of splitPipe(r.contractors || r.contractors_summary || "")) {
+      if (name && !names.includes(name)) names.push(name);
+    }
+  }
+
+  const shown = names.slice(0, 3);
+  const extra = Math.max(0, names.length - shown.length);
+
+  return `
+    ${shown.map(x => `<div class="oe-line"><div class="oe-name">${escapeHtml(x)}</div></div>`).join("")}
+    ${extra ? `<div class="small"><strong>+ altri ${extra} OE</strong></div>` : ""}
+  `;
+}
+
+function awardsOeWithTaxHtml(a) {
+  const names = splitPipe(a.contractors || "");
+  const taxes = splitPipe(a.contractor_tax_codes || "");
+
+  return names.map((name, i) => {
+    const tax = taxes[i] || "";
+    return `
+      <div>
+        <strong>${escapeHtml(name)}</strong>
+        ${tax ? `<div class="tax-list">P.IVA / CF: ${escapeHtml(tax)}</div>` : ""}
+      </div>
+    `;
+  }).join("");
+}
+
+function awardsDetailHtml(r) {
+  const awards = Array.isArray(r.awards) ? r.awards : [];
+  if (!awards.length) return "";
+
+  return `
+    <strong>Dettaglio affidamenti ANAC (${awards.length})</strong>
+    ${awards.map(a => `
+      <div class="award-item">
+        <div><strong>CIG:</strong> ${escapeHtml(a.cig || "")}</div>
+        <div><strong>OE:</strong>${awardsOeWithTaxHtml(a)}</div>
+        <div class="small">
+          Data: ${escapeHtml(a.award_date || "")}
+          ${a.award_result ? " - Esito: " + escapeHtml(a.award_result) : ""}
+          ${a.award_amount_eur ? " ? Importo: " + euro(a.award_amount_eur) : ""}
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+
+function toggleAwards(rowId) {
+  const el = document.getElementById(rowId);
+  if (!el) return;
+  el.style.display = el.style.display === "none" ? "table-row" : "none";
+}
+
 function render() {
   const maxRows = 300;
   const rows = prSortedFiltered().slice(0, maxRows);
@@ -761,7 +861,10 @@ function render() {
 
       <td>${escapeHtml(r.client)}</td>
 
-      <td class="contractors-col">${pairedContractors(r.contractors, r.contractor_tax_codes)}</td>
+      <td class="contractors-col">
+        ${contractorsPreviewHtml(r)}
+        ${r.awards_count ? `<div><button class="details-btn" onclick="toggleAwards('awards-${r.cup}')">Dettagli ANAC (${r.awards_count})</button></div>` : ""}
+      </td>
 
       <td class="award-col">
         ${escapeHtml(r.award_date)}
@@ -772,6 +875,11 @@ function render() {
         <a href="${escapeHtml(r.source_url)}" target="_blank">Fonte</a>
       </td>
     </tr>
+    ${r.awards_count ? `
+      <tr id="awards-${escapeHtml(r.cup)}" class="award-detail-row" style="display:none;">
+        <td colspan="11">${awardsDetailHtml(r)}</td>
+      </tr>
+    ` : ""}
   `).join("");
   decorateBadges();
   updateSortHeaders();
@@ -860,7 +968,7 @@ els.dateTo.addEventListener("input", applyFilters);
 els.q.addEventListener("input", applyFilters);
 
 Promise.all([
-  fetch("data/national_anac_relevant_awards.json").then(r => r.json()),
+  fetch("data/master_projects.json").then(r => r.json()),
   fetch("data/branch_territory.json").then(r => r.json())
 ])
   .then(([data, territory]) => {

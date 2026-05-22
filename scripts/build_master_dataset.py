@@ -5,7 +5,7 @@ ROOT = Path(".")
 OUT = ROOT / "docs" / "data" / "master_projects.json"
 
 SOURCES = [
-    ROOT / "docs" / "data" / "anac_relevant_awards.json",
+    ROOT / "docs" / "data" / "national_anac_relevant_awards.json",
     ROOT / "docs" / "national_operational_data.json",
 ]
 
@@ -90,7 +90,7 @@ def merge_record(base, incoming):
     return base
 
 def main():
-    anac_rows = [normalize(r, "anac_relevant_awards") for r in load_json(ROOT / "docs" / "data" / "anac_relevant_awards.json")]
+    anac_rows = [normalize(r, "anac_relevant_awards") for r in load_json(ROOT / "docs" / "data" / "national_anac_relevant_awards.json")]
     opencup_rows = [normalize(r, "national_operational_data") for r in load_json(ROOT / "docs" / "national_operational_data.json")]
 
     anac_cups = {clean(r.get("cup")).upper() for r in anac_rows if clean(r.get("cup"))}
