@@ -84,6 +84,7 @@
       border-radius: 14px;
       padding: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden;
     }
 
     .card h2 {
@@ -124,6 +125,78 @@
       margin-bottom: 18px;
       font-size: 14px;
     }
+  
+    /* === BRANCH CARD UX === */
+
+    .card {
+      position: relative;
+      transition:
+        transform .14s ease,
+        box-shadow .14s ease,
+        border-color .14s ease;
+      cursor: pointer;
+      border: 1px solid #d9e2ec;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      border-color: #94a3b8;
+    }
+
+    .card-link-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: block;
+      border-radius: 14px;
+    }
+
+    .card h2,
+    .card p,
+    .card a {
+      position: relative;
+      z-index: 2;
+    }
+
+    .card .muted {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 8px;
+    }
+
+    .card a:last-child {
+      display: inline-block;
+      margin-top: 10px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .card a:last-child:hover {
+      text-decoration: underline;
+    }
+
+    /* === /BRANCH CARD UX === */
+
+  
+    /* === FIX CARD OVERLAY VISIBILITY === */
+    .card a.card-link-overlay {
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 1 !important;
+      display: block !important;
+      background: transparent !important;
+      color: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border-radius: 14px !important;
+      text-decoration: none !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      box-shadow: none !important;
+    }
+    /* === /FIX CARD OVERLAY VISIBILITY === */
+
   </style>
 </head>
 <body>
@@ -146,100 +219,112 @@
       <div class="grid">
         
         <div class="card">
-          <h2>Albenga</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Albenga" aria-label="Apri filiale"></a>
+<h2>Albenga</h2>
           <p><strong>Regioni:</strong> Liguria</p>
           <p><strong>Province:</strong> Imperia, Savona</p>
           <p class="muted">225 comuni/località mappati</p>
-          <a href="search.html?branch=Albenga">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Albenga">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Bergamo</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Bergamo" aria-label="Apri filiale"></a>
+<h2>Bergamo</h2>
           <p><strong>Regioni:</strong> Lombardia</p>
           <p><strong>Province:</strong> Bergamo</p>
           <p class="muted">338 comuni/località mappati</p>
-          <a href="search.html?branch=Bergamo">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Bergamo">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Brescia</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Brescia" aria-label="Apri filiale"></a>
+<h2>Brescia</h2>
           <p><strong>Regioni:</strong> Lombardia</p>
           <p><strong>Province:</strong> Brescia, Cremona</p>
           <p class="muted">533 comuni/località mappati</p>
-          <a href="search.html?branch=Brescia">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Brescia">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Cuneo</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Cuneo" aria-label="Apri filiale"></a>
+<h2>Cuneo</h2>
           <p><strong>Regioni:</strong> Liguria, Piemonte</p>
           <p><strong>Province:</strong> Asti, Cuneo, Imperia, Savona</p>
           <p class="muted">455 comuni/località mappati</p>
-          <a href="search.html?branch=Cuneo">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Cuneo">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Genova</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Genova" aria-label="Apri filiale"></a>
+<h2>Genova</h2>
           <p><strong>Regioni:</strong> Liguria, Piemonte</p>
           <p><strong>Province:</strong> Alessandria, Genova</p>
           <p class="muted">288 comuni/località mappati</p>
-          <a href="search.html?branch=Genova">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Genova">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Lecco</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Lecco" aria-label="Apri filiale"></a>
+<h2>Lecco</h2>
           <p><strong>Regioni:</strong> Lombardia</p>
           <p><strong>Province:</strong> Como, Lecco</p>
           <p class="muted">172 comuni/località mappati</p>
-          <a href="search.html?branch=Lecco">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Lecco">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Milano Est</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Milano%20Est" aria-label="Apri filiale"></a>
+<h2>Milano Est</h2>
           <p><strong>Regioni:</strong> Lombardia</p>
           <p><strong>Province:</strong> Cremona, Lodi, Milano, Monza e Brianza</p>
           <p class="muted">185 comuni/località mappati</p>
-          <a href="search.html?branch=Milano%20Est">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Milano%20Est">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Milano Nord</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Milano%20Nord" aria-label="Apri filiale"></a>
+<h2>Milano Nord</h2>
           <p><strong>Regioni:</strong> Lombardia</p>
           <p><strong>Province:</strong> Como, Milano, Monza e Brianza</p>
           <p class="muted">279 comuni/località mappati</p>
-          <a href="search.html?branch=Milano%20Nord">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Milano%20Nord">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Milano Ovest</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Milano%20Ovest" aria-label="Apri filiale"></a>
+<h2>Milano Ovest</h2>
           <p><strong>Regioni:</strong> Lombardia, Piemonte</p>
           <p><strong>Province:</strong> Milano, Novara, Varese, Verbano-Cusio-Ossola</p>
           <p class="muted">538 comuni/località mappati</p>
-          <a href="search.html?branch=Milano%20Ovest">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Milano%20Ovest">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Milano Sud</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Milano%20Sud" aria-label="Apri filiale"></a>
+<h2>Milano Sud</h2>
           <p><strong>Regioni:</strong> Lombardia, Piemonte</p>
           <p><strong>Province:</strong> Alessandria, Milano, Pavia</p>
           <p class="muted">413 comuni/località mappati</p>
-          <a href="search.html?branch=Milano%20Sud">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Milano%20Sud">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Sondrio</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Sondrio" aria-label="Apri filiale"></a>
+<h2>Sondrio</h2>
           <p><strong>Regioni:</strong> Lombardia</p>
           <p><strong>Province:</strong> Lecco, Sondrio</p>
           <p class="muted">156 comuni/località mappati</p>
-          <a href="search.html?branch=Sondrio">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Sondrio">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Torino</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Torino" aria-label="Apri filiale"></a>
+<h2>Torino</h2>
           <p><strong>Regioni:</strong> Piemonte, Valle D'Aosta</p>
           <p><strong>Province:</strong> Alessandria, Asti, Biella, Torino, Valle D'Aosta, Vercelli</p>
           <p class="muted">1006 comuni/località mappati</p>
-          <a href="search.html?branch=Torino">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Torino">Vai ai progetti</a>
+</div>
             
       </div>
     </section>
@@ -249,60 +334,67 @@
       <div class="grid">
         
         <div class="card">
-          <h2>Bolzano</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Bolzano" aria-label="Apri filiale"></a>
+<h2>Bolzano</h2>
           <p><strong>Regioni:</strong> Trentino-Alto Adige, Veneto</p>
           <p><strong>Province:</strong> Belluno, Bolzano-Bozen, Trento</p>
           <p class="muted">796 comuni/località mappati</p>
-          <a href="search.html?branch=Bolzano">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Bolzano">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Padova</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Padova" aria-label="Apri filiale"></a>
+<h2>Padova</h2>
           <p><strong>Regioni:</strong> Veneto</p>
           <p><strong>Province:</strong> Padova, Rovigo, Vicenza</p>
           <p class="muted">576 comuni/località mappati</p>
-          <a href="search.html?branch=Padova">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Padova">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Trento</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Trento" aria-label="Apri filiale"></a>
+<h2>Trento</h2>
           <p><strong>Regioni:</strong> Trentino-Alto Adige</p>
           <p><strong>Province:</strong> Trento</p>
           <p class="muted">396 comuni/località mappati</p>
-          <a href="search.html?branch=Trento">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Trento">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Treviso</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Treviso" aria-label="Apri filiale"></a>
+<h2>Treviso</h2>
           <p><strong>Regioni:</strong> Veneto</p>
           <p><strong>Province:</strong> Belluno, Treviso</p>
           <p class="muted">431 comuni/località mappati</p>
-          <a href="search.html?branch=Treviso">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Treviso">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Udine</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Udine" aria-label="Apri filiale"></a>
+<h2>Udine</h2>
           <p><strong>Regioni:</strong> Friuli-Venezia Giulia</p>
           <p><strong>Province:</strong> Gorizia, Pordenone, Trieste, Udine</p>
           <p class="muted">523 comuni/località mappati</p>
-          <a href="search.html?branch=Udine">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Udine">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Venezia</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Venezia" aria-label="Apri filiale"></a>
+<h2>Venezia</h2>
           <p><strong>Regioni:</strong> Veneto</p>
           <p><strong>Province:</strong> Venezia</p>
           <p class="muted">175 comuni/località mappati</p>
-          <a href="search.html?branch=Venezia">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Venezia">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Verona</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Verona" aria-label="Apri filiale"></a>
+<h2>Verona</h2>
           <p><strong>Regioni:</strong> Lombardia, Veneto</p>
           <p><strong>Province:</strong> Mantova, Verona</p>
           <p class="muted">414 comuni/località mappati</p>
-          <a href="search.html?branch=Verona">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Verona">Vai ai progetti</a>
+</div>
             
       </div>
     </section>
@@ -312,84 +404,94 @@
       <div class="grid">
         
         <div class="card">
-          <h2>Bologna</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Bologna" aria-label="Apri filiale"></a>
+<h2>Bologna</h2>
           <p><strong>Regioni:</strong> Emilia-Romagna</p>
           <p><strong>Province:</strong> Bologna, Ferrara, Modena</p>
           <p class="muted">368 comuni/località mappati</p>
-          <a href="search.html?branch=Bologna">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Bologna">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Cagliari</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Cagliari" aria-label="Apri filiale"></a>
+<h2>Cagliari</h2>
           <p><strong>Regioni:</strong> Sardegna</p>
           <p><strong>Province:</strong> Cagliari, Nuoro, Oristano, Sud Sardegna</p>
           <p class="muted">245 comuni/località mappati</p>
-          <a href="search.html?branch=Cagliari">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Cagliari">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Firenze</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Firenze" aria-label="Apri filiale"></a>
+<h2>Firenze</h2>
           <p><strong>Regioni:</strong> Toscana</p>
           <p><strong>Province:</strong> Arezzo, Firenze, Pistoia, Prato, Siena</p>
           <p class="muted">684 comuni/località mappati</p>
-          <a href="search.html?branch=Firenze">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Firenze">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Livorno</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Livorno" aria-label="Apri filiale"></a>
+<h2>Livorno</h2>
           <p><strong>Regioni:</strong> Toscana</p>
           <p><strong>Province:</strong> Grosseto, Livorno, Pisa</p>
           <p class="muted">388 comuni/località mappati</p>
-          <a href="search.html?branch=Livorno">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Livorno">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Lucca</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Lucca" aria-label="Apri filiale"></a>
+<h2>Lucca</h2>
           <p><strong>Regioni:</strong> Liguria, Toscana</p>
           <p><strong>Province:</strong> La Spezia, Lucca, Massa-Carrara</p>
           <p class="muted">393 comuni/località mappati</p>
-          <a href="search.html?branch=Lucca">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Lucca">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Parma</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Parma" aria-label="Apri filiale"></a>
+<h2>Parma</h2>
           <p><strong>Regioni:</strong> Emilia-Romagna</p>
           <p><strong>Province:</strong> Parma, Piacenza, Reggio Nell'Emilia</p>
           <p class="muted">423 comuni/località mappati</p>
-          <a href="search.html?branch=Parma">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Parma">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Perugia</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Perugia" aria-label="Apri filiale"></a>
+<h2>Perugia</h2>
           <p><strong>Regioni:</strong> Umbria</p>
           <p><strong>Province:</strong> Perugia, Terni</p>
           <p class="muted">388 comuni/località mappati</p>
-          <a href="search.html?branch=Perugia">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Perugia">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Rimini</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Rimini" aria-label="Apri filiale"></a>
+<h2>Rimini</h2>
           <p><strong>Regioni:</strong> Emilia-Romagna, Marche</p>
           <p><strong>Province:</strong> Ancona, Ascoli Piceno, Fermo, Forli, Macerata, Pesaro E Urbino, Ravenna, Rimini</p>
           <p class="muted">847 comuni/località mappati</p>
-          <a href="search.html?branch=Rimini">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Rimini">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Sassari</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Sassari" aria-label="Apri filiale"></a>
+<h2>Sassari</h2>
           <p><strong>Regioni:</strong> Sardegna</p>
           <p><strong>Province:</strong> Nuoro, Oristano, Sassari</p>
           <p class="muted">369 comuni/località mappati</p>
-          <a href="search.html?branch=Sassari">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Sassari">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Sassuolo</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Sassuolo" aria-label="Apri filiale"></a>
+<h2>Sassuolo</h2>
           <p><strong>Regioni:</strong> Emilia-Romagna</p>
           <p><strong>Province:</strong> Modena, Reggio Nell'Emilia</p>
           <p class="muted">337 comuni/località mappati</p>
-          <a href="search.html?branch=Sassuolo">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Sassuolo">Vai ai progetti</a>
+</div>
             
       </div>
     </section>
@@ -399,68 +501,76 @@
       <div class="grid">
         
         <div class="card">
-          <h2>Bari</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Bari" aria-label="Apri filiale"></a>
+<h2>Bari</h2>
           <p><strong>Regioni:</strong> Basilicata, Molise, Puglia</p>
           <p><strong>Province:</strong> Bari, Barletta-Andria-Trani, Brindisi, Campobasso, Foggia, Lecce, Matera, Taranto</p>
           <p class="muted">580 comuni/località mappati</p>
-          <a href="search.html?branch=Bari">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Bari">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Catania</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Catania" aria-label="Apri filiale"></a>
+<h2>Catania</h2>
           <p><strong>Regioni:</strong> Sicilia</p>
           <p><strong>Province:</strong> Agrigento, Caltanissetta, Catania, Enna, Messina, Palermo, Ragusa, Siracusa, Trapani</p>
           <p class="muted">849 comuni/località mappati</p>
-          <a href="search.html?branch=Catania">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Catania">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Cosenza</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Cosenza" aria-label="Apri filiale"></a>
+<h2>Cosenza</h2>
           <p><strong>Regioni:</strong> Calabria</p>
           <p><strong>Province:</strong> Catanzaro, Cosenza, Crotone, Reggio Di Calabria, Vibo Valentia</p>
           <p class="muted">853 comuni/località mappati</p>
-          <a href="search.html?branch=Cosenza">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Cosenza">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Frosinone</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Frosinone" aria-label="Apri filiale"></a>
+<h2>Frosinone</h2>
           <p><strong>Regioni:</strong> Lazio, Molise</p>
           <p><strong>Province:</strong> Frosinone, Isernia, Latina</p>
           <p class="muted">349 comuni/località mappati</p>
-          <a href="search.html?branch=Frosinone">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Frosinone">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Napoli</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Napoli" aria-label="Apri filiale"></a>
+<h2>Napoli</h2>
           <p><strong>Regioni:</strong> Campania</p>
           <p><strong>Province:</strong> Avellino, Benevento, Caserta, Napoli</p>
           <p class="muted">754 comuni/località mappati</p>
-          <a href="search.html?branch=Napoli">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Napoli">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Roma Aurelia</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Roma%20Aurelia" aria-label="Apri filiale"></a>
+<h2>Roma Aurelia</h2>
           <p><strong>Regioni:</strong> Lazio</p>
           <p><strong>Province:</strong> Latina, Roma</p>
           <p class="muted">193 comuni/località mappati</p>
-          <a href="search.html?branch=Roma%20Aurelia">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Roma%20Aurelia">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Roma Nomentana</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Roma%20Nomentana" aria-label="Apri filiale"></a>
+<h2>Roma Nomentana</h2>
           <p><strong>Regioni:</strong> Abruzzi, Lazio</p>
           <p><strong>Province:</strong> Chieti, L'Aquila, Pescara, Rieti, Roma, Teramo, Viterbo</p>
           <p class="muted">1020 comuni/località mappati</p>
-          <a href="search.html?branch=Roma%20Nomentana">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Roma%20Nomentana">Vai ai progetti</a>
+</div>
             
         <div class="card">
-          <h2>Salerno</h2>
+          <a class="card-link-overlay" href="search.htmlbranch=Salerno" aria-label="Apri filiale"></a>
+<h2>Salerno</h2>
           <p><strong>Regioni:</strong> Basilicata, Campania</p>
           <p><strong>Province:</strong> Potenza, Salerno</p>
           <p class="muted">566 comuni/località mappati</p>
-          <a href="search.html?branch=Salerno">Apri ricerca filiale</a>
-        </div>
+          <a href="search.htmlbranch=Salerno">Vai ai progetti</a>
+</div>
             
       </div>
     </section>
