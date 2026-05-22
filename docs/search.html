@@ -340,7 +340,30 @@
       margin-top: 2px;
     }
 
-</style>
+
+    /* === TIMELINE COLUMN FIX === */
+    .award-col {
+      min-width: 95px;
+      max-width: 130px;
+      white-space: normal !important;
+      word-break: normal !important;
+      overflow-wrap: anywhere !important;
+      line-height: 1.25;
+    }
+
+    .award-col strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .source-col {
+      width: 52px !important;
+      max-width: 52px !important;
+      text-align: center;
+    }
+    /* === /TIMELINE COLUMN FIX === */
+
+  </style>
 </head>
 <body>
   <header>
@@ -382,7 +405,7 @@
             <th class="sortable" data-sort="project_value" onclick="setSort('project_value')">Valore</th>
             <th class="sortable" data-sort="client" onclick="setSort('client')">Committente</th>
             <th class="sortable" data-sort="contractors" onclick="setSort('contractors')">Aggiudicatario / OE</th>
-            <th class="sortable" data-sort="award_date" onclick="setSort('award_date')">Aggiudicazione</th>
+            <th class="sortable" data-sort="award_date" onclick="setSort('award_date')">Timeline</th>
             <th class="sortable source-col" data-sort="source_url" onclick="setSort('source_url')">Fonte</th>
           </tr>
         </thead>
@@ -592,14 +615,20 @@ function applyFilters() {
 }
 
 
+
+function cupYear(cup) {
+  const c = clean(cup);
+  if (c.length < 6) return "";
+  const yy = c.substring(4, 6);
+  if (!/^\d{2}$/.test(yy)) return "";
+  const n = Number(yy);
+  return n <= 40 ? String(2000 + n) : String(1900 + n);
+}
+
 function hasAnacData(r) {
-  return Boolean(
-    clean(r.cig) ||
-    clean(r.contractors) ||
-    clean(r.contractor_name) ||
-    clean(r.award_date) ||
-    clean(r.award_result)
-  );
+  const awardsCount = Number(r.awards_count || 0);
+  const awards = Array.isArray(r.awards) ? r.awards : [];
+  return awardsCount > 0 || awards.length > 0;
 }
 
 function sourceBadgeHtml(r) {
@@ -705,18 +734,7 @@ function exportFilteredCsv() {
 }
 
 function decorateBadges() {
-  document.querySelectorAll("tbody tr").forEach(tr => {
-    if (tr.querySelector(".source-badge")) return;
-    const firstCell = tr.querySelector("td");
-    if (!firstCell) return;
-
-    const isAnac = tr.textContent.includes("CIG:") || tr.textContent.includes("AGGIUDICATA");
-    const badge = document.createElement("span");
-    badge.className = "source-badge " + (isAnac ? "anac" : "opencup");
-    badge.textContent = isAnac ? "ANAC" : "OpenCUP";
-    firstCell.appendChild(document.createElement("br"));
-    firstCell.appendChild(badge);
-  });
+  // Disabilitato: i badge sono gestiti dal record dati.
 }
 
 
@@ -844,7 +862,8 @@ function render() {
     <tr>
       <td>
         <strong>${escapeHtml(r.title)}</strong>
-        <div class="small">CUP: ${escapeHtml(r.cup)} - CIG: ${escapeHtml(r.cig)}</div>
+        <div class="small">CUP: ${escapeHtml(r.cup)}${r.cig ? " - CIG: " + escapeHtml(r.cig) : ""}</div>
+        ${sourceBadgeHtml(r)}
       </td>
 
       <td>${branchLabel(r)}</td>
@@ -862,13 +881,14 @@ function render() {
       <td>${escapeHtml(r.client)}</td>
 
       <td class="contractors-col">
-        ${contractorsPreviewHtml(r)}
+        ${hasAnacData(r) ? contractorsPreviewHtml(r) : '<span class="small">Non disponibile da OpenCUP</span>'}
         ${r.awards_count ? `<div><button class="details-btn" onclick="toggleAwards('awards-${r.cup}')">Dettagli ANAC (${r.awards_count})</button></div>` : ""}
       </td>
 
       <td class="award-col">
-        ${escapeHtml(r.award_date)}
-        <div class="small">${escapeHtml(r.award_result)}</div>
+        ${hasAnacData(r)
+          ? `<strong>Aggiudicazione:</strong> ${escapeHtml(r.award_date || "")}<div class="small">${escapeHtml(r.award_result || "")}</div>`
+          : `<strong>CUP:</strong> ${escapeHtml(cupYear(r.cup))}<div class="small">Nessun match ANAC</div>`}
       </td>
 
       <td class="source-col">
@@ -881,7 +901,7 @@ function render() {
       </tr>
     ` : ""}
   `).join("");
-  decorateBadges();
+
   updateSortHeaders();
 }
 
