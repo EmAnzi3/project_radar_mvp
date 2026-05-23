@@ -1,8 +1,11 @@
 ﻿from pathlib import Path
+import csv
 import json
+import re
 
 ROOT = Path(".")
 OUT = ROOT / "reports" / "master_projects.json"
+BRANCH_MAP = ROOT / "config" / "municipality_to_branch.csv"
 
 SOURCES = [
     ROOT / "docs" / "data" / "national_anac_relevant_awards.json",
@@ -34,6 +37,67 @@ def key_for(r):
     if cup:
         return f"CUP::{cup}"
     return f"TITLE::{title}::{municipality}"
+
+
+
+def norm(value):
+    text = clean(value).upper()
+    text = text.replace("'", " ")
+    text = re.sub(r"[^A-ZÀ-ÖØ-Ý0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def load_branch_map():
+    exact = {}
+
+    if not BRANCH_MAP.exists():
+        print(f"[WARN] Mappa filiali non trovata: {BRANCH_MAP}")
+        return exact
+
+    with BRANCH_MAP.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter=";")
+
+        for row in reader:
+            municipality_norm = clean(row.get("municipality_norm"))
+            province_norm = clean(row.get("province_norm"))
+
+            if not municipality_norm or not province_norm:
+                continue
+
+            exact[(municipality_norm, province_norm)] = {
+                "branch": clean(row.get("branch")),
+                "branch_candidates": clean(row.get("branch_candidates")),
+                "branch_confidence": clean(row.get("confidence")),
+            }
+
+    print(f"[OK] Mappa comuni → filiali: {len(exact)} chiavi esatte")
+    return exact
+
+
+def apply_branch_assignment(record, branch_map):
+    existing_branch = clean(record.get("branch"))
+
+    # Se ha già una filiale vera o AMBIGUA, non sovrascriviamo.
+    if existing_branch and existing_branch not in {"NON ASSEGNATA", "NON_ASSEGNATA"}:
+        return record
+
+    key = (
+        norm(record.get("municipality")),
+        norm(record.get("province")),
+    )
+
+    match = branch_map.get(key)
+
+    if match:
+        record["branch"] = match["branch"] or "NON ASSEGNATA"
+        record["branch_candidates"] = match["branch_candidates"]
+        record["branch_confidence"] = match["branch_confidence"]
+    else:
+        record["branch"] = "NON ASSEGNATA"
+        record["branch_candidates"] = ""
+        record["branch_confidence"] = "nessuna"
+
+    return record
 
 def normalize(r, source_name):
     return {
@@ -267,6 +331,10 @@ def group_projects(rows):
 def main():
     anac_rows = [normalize(r, "national_anac_relevant_awards") for r in load_json(ROOT / "docs" / "data" / "national_anac_relevant_awards.json")]
     opencup_rows = [normalize(r, "national_operational_data") for r in load_json(ROOT / "docs" / "national_operational_data.json")]
+
+    branch_map = load_branch_map()
+    anac_rows = [apply_branch_assignment(r, branch_map) for r in anac_rows]
+    opencup_rows = [apply_branch_assignment(r, branch_map) for r in opencup_rows]
 
     anac_cups = {clean(r.get("cup")).upper() for r in anac_rows if clean(r.get("cup"))}
 
