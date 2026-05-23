@@ -109,6 +109,6 @@ jobs:
           git add docs/data.json docs/index.html reports/top_projects.csv || true
           git add docs/operational.html docs/operational_data.json reports/operational_by_segment.csv || true
           git add reports/national_operational_by_segment.csv docs/national_operational.html || true
-          git add docs/data/branches/index.json docs/data/branches/*.json || true
+          git add -A docs/data/branches || true
           git diff --cached --quiet || git commit -m "Update OpenCUP radar outputs"
           git push
