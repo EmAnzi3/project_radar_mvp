@@ -75,9 +75,10 @@ jobs:
               raise SystemExit("ERRORE: output vuoto, blocco commit")
           PY
 
-      - name: Promote national OpenCUP artifact
+
+      - name: Promote operational shortlist to national dataset
         run: |
-          python -u scripts/promote_national_opencup_artifact.py
+          python -u scripts/promote_operational_to_national.py
 
       - name: Build grouped master dataset
         run: |
