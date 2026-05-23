@@ -33,3 +33,11 @@ data/raw/anac/
 
 # GitHub Actions artifacts
 project-radar-output*.zip
+
+# Project Radar - large generated intermediates
+docs/data/master_projects.json
+docs/national_operational_data.json
+reports/operational_shortlist.csv
+reports/national_operational_shortlist.csv
+reports/master_projects.json
+reports/*.zip

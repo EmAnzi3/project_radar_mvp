@@ -501,7 +501,11 @@ function fillSelect(select, values, label) {
 function recordBranchList(r) {
   const values = [];
 
-  if (r.branch && r.branch !== "AMBIGUA" && r.branch !== "NON ASSEGNATA") {
+  if (r.branch === "AMBIGUA") {
+    values.push("AMBIGUA");
+  } else if (r.branch === "NON ASSEGNATA") {
+    values.push("NON ASSEGNATA");
+  } else if (r.branch) {
     values.push(r.branch);
   }
 
@@ -511,7 +515,7 @@ function recordBranchList(r) {
     }
   }
 
-  return Array.from(new Set(values));
+  return [...new Set(values)];
 }
 
 function branchLabel(r) {
@@ -974,6 +978,21 @@ function resetFilters() {
 }
 
 els.branch.addEventListener("change", () => {
+  const selected = els.branch.value;
+
+  if (branchIndex) {
+    if (!selected) {
+      window.location.href = "search.html";
+      return;
+    }
+
+    const entry = findBranchEntry(selected);
+    if (entry) {
+      window.location.href = `search.html?branch=${encodeURIComponent(entry.slug)}`;
+      return;
+    }
+  }
+
   updateDependentFilters();
   applyFilters();
 });
@@ -987,26 +1006,220 @@ els.dateFrom.addEventListener("input", applyFilters);
 els.dateTo.addEventListener("input", applyFilters);
 els.q.addEventListener("input", applyFilters);
 
-Promise.all([
-  fetch("data/master_projects.json").then(r => r.json()),
-  fetch("data/branch_territory.json").then(r => r.json())
-])
-  .then(([data, territory]) => {
-    records = data;
-    branchTerritory = territory;
-    filtered = data;
-    populateFilters();
-    applyUrlParams();
-    applyFilters();
-  })
-  .catch(err => {
-    els.tbody.innerHTML = `<tr><td colspan="11">Errore caricamento dati: ${escapeHtml(err)}</td></tr>`;
+
+function safeBranchSlug(value) {
+  value = String(value || "").trim();
+
+  if (!value) return "";
+
+  const lowered = value.toLowerCase();
+
+  if (lowered === "non assegnata" || lowered === "non_assegnata") return "NON_ASSEGNATA";
+  if (lowered === "ambigua") return "AMBIGUA";
+
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Za-z0-9]+/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+let branchIndex = null;
+let currentShardEntry = null;
+let indexOnlyMode = false;
+
+function normalizeLoadedProjects(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.projects)) return data.projects;
+  if (data && Array.isArray(data.records)) return data.records;
+  if (data && Array.isArray(data.items)) return data.items;
+  if (data && Array.isArray(data.data)) return data.data;
+  return [];
+}
+
+function findBranchEntry(value) {
+  if (!branchIndex || !Array.isArray(branchIndex.branches)) return null;
+
+  const raw = String(value || "").trim();
+  const slug = safeBranchSlug(raw);
+
+  return branchIndex.branches.find(b =>
+    b.slug === raw ||
+    b.slug === slug ||
+    b.branch === raw ||
+    safeBranchSlug(b.branch) === slug
+  ) || null;
+}
+
+function ensureSelectOption(select, value) {
+  if (!select || !value) return;
+
+  const exists = Array.from(select.options).some(o => o.value === value);
+
+  if (!exists) {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = value;
+    select.appendChild(opt);
+  }
+
+  select.value = value;
+}
+
+function populateBranchFilterFromIndex(index) {
+  if (!index || !Array.isArray(index.branches)) return;
+
+  const branches = index.branches
+    .map(x => x.branch)
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b, "it"));
+
+  els.branch.innerHTML = "";
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Seleziona una filiale";
+  els.branch.appendChild(placeholder);
+
+  for (const branch of branches) {
+    const opt = document.createElement("option");
+    opt.value = branch;
+    opt.textContent = branch;
+    els.branch.appendChild(opt);
+  }
+
+  els.branch.value = "";
+}
+
+function renderIndexOnlyMessage(index) {
+  indexOnlyMode = true;
+
+  const totalBranches = index && Array.isArray(index.branches) ? index.branches.length : 0;
+  const totalRecords = index && index.unique_records ? Number(index.unique_records) : 0;
+
+  if (els.total) {
+    els.total.textContent = totalRecords
+      ? `Archivio nazionale indicizzato: ${totalRecords.toLocaleString("it-IT")} record`
+      : "Archivio nazionale indicizzato per filiale";
+  }
+
+  if (els.shown) {
+    els.shown.textContent = totalBranches
+      ? `${totalBranches} filiali disponibili`
+      : "Scegli una filiale";
+  }
+
+  const tbody = document.getElementById("tbody") || document.querySelector("tbody");
+
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="12" class="muted">
+          Archivio completo diviso per filiale. Seleziona una filiale dal menu oppure usa la pagina Filiali.
+          ${totalBranches ? `<br>${totalBranches} shard logici disponibili.` : ""}
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function loadBranchIndex() {
+  return fetch("data/branches/index.json").then(r => {
+    if (!r.ok) throw new Error("Indice shard non trovato: data/branches/index.json");
+    return r.json();
   });
+}
 
+function loadShardFiles(entry) {
+  const files = Array.isArray(entry.files) && entry.files.length
+    ? entry.files.map(f => f.file)
+    : [`${entry.slug}.json`];
 
+  return Promise.all(
+    files.map(file =>
+      fetch(`data/branches/${encodeURIComponent(file)}`).then(r => {
+        if (!r.ok) throw new Error(`Shard non trovato: ${file}`);
+        return r.json();
+      })
+    )
+  ).then(parts => {
+    const all = [];
 
+    for (const part of parts) {
+      all.push(...normalizeLoadedProjects(part));
+    }
 
+    return all;
+  });
+}
 
+function loadSearchData() {
+  const params = new URLSearchParams(window.location.search);
+  const branchParam = params.get("branch");
+
+  return Promise.all([
+    loadBranchIndex(),
+    fetch("data/branch_territory.json").then(r => r.json())
+  ]).then(([index, territory]) => {
+    branchIndex = index;
+    branchTerritory = territory;
+
+    if (!branchParam) {
+      records = [];
+      filtered = [];
+      populateBranchFilterFromIndex(index);
+      renderIndexOnlyMessage(index);
+      return;
+    }
+
+    const entry = findBranchEntry(branchParam);
+
+    if (!entry) {
+      throw new Error(`Filiale non trovata nell'indice shard: ${branchParam}`);
+    }
+
+    currentShardEntry = entry;
+    indexOnlyMode = false;
+
+    return loadShardFiles(entry).then(projects => {
+      records = projects;
+      filtered = projects;
+
+      populateFilters();
+      ensureSelectOption(els.branch, entry.branch);
+      applyUrlParams();
+      ensureSelectOption(els.branch, entry.branch);
+      applyFilters();
+    });
+  });
+}
+
+function showLoadError(err) {
+  console.error(err);
+
+  if (els.total) {
+    els.total.textContent = "Errore caricamento dati";
+  }
+
+  if (els.shown) {
+    els.shown.textContent = err.message || String(err);
+  }
+
+  const tbody = document.getElementById("tbody") || document.querySelector("tbody");
+
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="12" class="muted">
+          Errore caricamento dati: ${escapeHtml(err.message || String(err))}
+        </td>
+      </tr>
+    `;
+  }
+}
+
+loadSearchData().catch(showLoadError);
 
 </script>
 </body>

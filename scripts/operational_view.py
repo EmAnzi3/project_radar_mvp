@@ -406,7 +406,9 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
         reverse=True,
     )
 
-    shortlist = enriched[:1000]
+    # Shortlist completa: serve per lo sharding per filiale.
+    # La sola dashboard HTML resta limitata per non appesantire la pagina operativa.
+    shortlist = enriched
     dashboard = enriched[:250]
 
     with (reports_dir / "operational_shortlist.csv").open("w", encoding="utf-8-sig", newline="") as f:

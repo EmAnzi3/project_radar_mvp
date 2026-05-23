@@ -2,7 +2,7 @@
 import json
 
 ROOT = Path(".")
-OUT = ROOT / "docs" / "data" / "master_projects.json"
+OUT = ROOT / "reports" / "master_projects.json"
 
 SOURCES = [
     ROOT / "docs" / "data" / "national_anac_relevant_awards.json",
