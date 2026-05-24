@@ -80,6 +80,30 @@ jobs:
         run: |
           python -u scripts/promote_operational_to_national.py
 
+      - name: Prepare ANAC CUP targets
+        run: |
+          python -u scripts/national_prepare_anac_targets.py
+
+      - name: Match ANAC CUP-CIG
+        run: |
+          python -u scripts/national_match_anac_cup_cig.py
+
+      - name: Prepare ANAC CIG targets
+        run: |
+          python -u scripts/national_prepare_anac_cig_targets.py
+
+      - name: Match ANAC CIG-aggiudicatari
+        run: |
+          python -u scripts/national_match_anac_aggiudicatari.py
+
+      - name: Match ANAC aggiudicazioni
+        run: |
+          python -u scripts/national_match_anac_aggiudicazioni.py
+
+      - name: Build ANAC relevant awards
+        run: |
+          python -u scripts/national_build_anac_relevant_awards.py
+
       - name: Build grouped master dataset
         run: |
           python -u scripts/build_master_dataset.py
@@ -87,6 +111,96 @@ jobs:
       - name: Build branch shards
         run: |
           python -u scripts/build_branch_shards.py --input reports/master_projects.json
+
+      - name: Guard generated outputs
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          import sys
+          from pathlib import Path
+
+          errors = []
+
+          def csv_count(path):
+              with path.open("r", encoding="utf-8-sig", newline="") as f:
+                  return max(sum(1 for _ in f) - 1, 0)
+
+          def load_projects(path):
+              data = json.loads(path.read_text(encoding="utf-8"))
+              if isinstance(data, list):
+                  return data
+              for key in ("projects", "records", "items", "data", "rows"):
+                  if isinstance(data.get(key), list):
+                      return data[key]
+              return []
+
+          def clean(v):
+              return str(v or "").strip()
+
+          def has_contractor(r):
+              if clean(r.get("contractors")) or clean(r.get("contractor_tax_codes")) or clean(r.get("contractors_summary")):
+                  return True
+              awards = r.get("awards")
+              if isinstance(awards, list):
+                  return any(
+                      clean(a.get("contractors")) or clean(a.get("contractor_tax_codes")) or clean(a.get("contractor_name")) or clean(a.get("contractor_tax_code"))
+                      for a in awards
+                      if isinstance(a, dict)
+                  )
+              return False
+
+          index_path = Path("docs/data/branches/index.json")
+          if not index_path.exists():
+              errors.append("Manca docs/data/branches/index.json")
+          else:
+              idx = json.loads(index_path.read_text(encoding="utf-8"))
+              unique_records = int(idx.get("unique_records") or 0)
+              warnings = idx.get("warnings") or []
+
+              print("unique_records:", unique_records)
+              print("warnings:", warnings)
+
+              if unique_records < 400000:
+                  errors.append(f"unique_records troppo basso: {unique_records}")
+
+              if warnings:
+                  errors.append(f"Warnings shard presenti: {warnings}")
+
+          branch_dir = Path("docs/data/branches")
+          for p in branch_dir.glob("*.json"):
+              mb = p.stat().st_size / 1024 / 1024
+              if mb >= 95:
+                  errors.append(f"Shard troppo grande: {p} = {mb:.2f} MB")
+
+          relevant = Path("reports/national_anac_relevant_awards.csv")
+          if not relevant.exists():
+              errors.append("Manca reports/national_anac_relevant_awards.csv")
+          else:
+              relevant_rows = csv_count(relevant)
+              print("national_anac_relevant_awards rows:", relevant_rows)
+              if relevant_rows < 100000:
+                  errors.append(f"ANAC relevant troppo basso: {relevant_rows}")
+
+          lucca = Path("docs/data/branches/Lucca.json")
+          if lucca.exists():
+              rows = load_projects(lucca)
+              with_contractor = sum(1 for r in rows if has_contractor(r))
+              print("Lucca totale:", len(rows))
+              print("Lucca con aggiudicatario:", with_contractor)
+
+              if len(rows) >= 6000 and with_contractor < 1000:
+                  errors.append(f"Copertura ANAC Lucca sospetta: {with_contractor}/{len(rows)}")
+
+          if errors:
+              print("")
+              print("ERRORI GUARD:")
+              for e in errors:
+                  print("-", e)
+              sys.exit(1)
+
+          print("OK: guard output superato.")
+          PY
 
       - name: Upload generated files as artifact
         uses: actions/upload-artifact@v4
