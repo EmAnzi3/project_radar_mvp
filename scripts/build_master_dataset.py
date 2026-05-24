@@ -898,6 +898,10 @@ def apply_branch_assignment(record, branch_map):
 
 
 
+MUNICIPALITY_BRANCH_FALLBACKS = {
+    "VERMEZZO CON ZELO": "Milano Sud",
+}
+
 # --- Branch assignment override v3: project location only, automatic same-name province fallback ---
 
 PROVINCE_ALIASES = {
@@ -1305,7 +1309,17 @@ def apply_branch_assignment(record, branch_map):
 
     fallback_match = None
 
-    if not match:
+    if not match and municipality not in invalid_geo:
+        municipality_branch = MUNICIPALITY_BRANCH_FALLBACKS.get(municipality)
+        if municipality_branch:
+            fallback_match = {
+                "branch": municipality_branch,
+                "branch_candidates": "",
+                "branch_confidence": "territoriale_comune",
+                "method": "fallback_comune_territoriale",
+            }
+
+    if not match and not fallback_match:
         fallback_match = same_name_province_branch_fallback(record, branch_map)
 
     if not match and not fallback_match:
