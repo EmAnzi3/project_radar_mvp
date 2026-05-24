@@ -6,6 +6,8 @@ import re
 ROOT = Path(".")
 OUT = ROOT / "reports" / "master_projects.json"
 BRANCH_MAP = ROOT / "config" / "municipality_to_branch.csv"
+ANAC_RELEVANT_CSV = ROOT / "reports" / "national_anac_relevant_awards.csv"
+ANAC_RELEVANT_JSON = ROOT / "docs" / "data" / "national_anac_relevant_awards.json"
 
 SOURCES = [
     ROOT / "docs" / "data" / "national_anac_relevant_awards.json",
@@ -39,6 +41,26 @@ def key_for(r):
     return f"TITLE::{title}::{municipality}"
 
 
+
+
+def load_csv_semicolon(path):
+    if not path.exists():
+        print(f"[SKIP] manca: {path}")
+        return []
+
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f, delimiter=";"))
+
+
+def load_anac_relevant_rows():
+    # Preferisce il CSV completo temporaneo generato in reports/.
+    # Non creare/committare JSON ANAC enorme sotto docs/data.
+    if ANAC_RELEVANT_CSV.exists():
+        print(f"[OK] ANAC relevant source: {ANAC_RELEVANT_CSV}")
+        return load_csv_semicolon(ANAC_RELEVANT_CSV)
+
+    print(f"[WARN] ANAC CSV completo non trovato, fallback su JSON: {ANAC_RELEVANT_JSON}")
+    return load_json(ANAC_RELEVANT_JSON)
 
 def norm(value):
     text = clean(value).upper()
@@ -1344,9 +1366,91 @@ def apply_branch_assignment(record, branch_map):
     return record
 
 
+
+BRANCH_INDEX_JSON = ROOT / "docs" / "data" / "branches" / "index.json"
+BRANCH_SHARDS_DIR = ROOT / "docs" / "data" / "branches"
+
+
+
+def load_shard_rows(path):
+    if not path.exists():
+        print(f"[SKIP] shard mancante: {path}")
+        return []
+
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    if isinstance(data, list):
+        rows = data
+    elif isinstance(data, dict):
+        rows = []
+        for key in ["records", "projects", "data", "rows", "items"]:
+            value = data.get(key)
+            if isinstance(value, list):
+                rows = value
+                break
+    else:
+        rows = []
+
+    print(f"[OK] {path}: {len(rows)} record shard")
+    return rows
+
+def strip_anac_fields_for_opencup(row):
+    r = dict(row)
+
+    # Quando usiamo gli shard come fallback OpenCUP, rimuoviamo i vecchi agganci ANAC.
+    # I nuovi affidamenti ANAC arrivano solo da reports/national_anac_relevant_awards.csv.
+    r["has_anac"] = False
+    r["awards"] = []
+    r["awards_count"] = 0
+    r["contractors"] = ""
+    r["contractor_tax_codes"] = ""
+    r["contractors_summary"] = ""
+    r["award_date"] = ""
+    r["award_result"] = ""
+    r["award_amount_eur"] = ""
+    r["award_share_pct"] = ""
+    r["award_weight"] = ""
+    r["ratio_note"] = ""
+
+    return r
+
+
+def load_opencup_rows():
+    operational_json = ROOT / "docs" / "national_operational_data.json"
+
+    if operational_json.exists():
+        print(f"[OK] OpenCUP source: {operational_json}")
+        return load_json(operational_json)
+
+    if BRANCH_INDEX_JSON.exists():
+        print(f"[WARN] OpenCUP JSON completo non trovato, fallback su shard: {BRANCH_INDEX_JSON}")
+
+        rows = []
+        index = json.loads(BRANCH_INDEX_JSON.read_text(encoding="utf-8"))
+
+        for branch in index.get("branches", []):
+            for file_info in branch.get("files", []):
+                filename = clean(file_info.get("file"))
+                if not filename:
+                    continue
+
+                shard_path = BRANCH_SHARDS_DIR / filename
+                if not shard_path.exists():
+                    print(f"[SKIP] shard mancante: {shard_path}")
+                    continue
+
+                for row in load_shard_rows(shard_path):
+                    rows.append(strip_anac_fields_for_opencup(row))
+
+        print(f"[OK] OpenCUP rows da shard: {len(rows)}")
+        return rows
+
+    print(f"[SKIP] manca: {operational_json}")
+    return []
+
 def main():
-    anac_rows = [normalize(r, "national_anac_relevant_awards") for r in load_json(ROOT / "docs" / "data" / "national_anac_relevant_awards.json")]
-    opencup_rows = [normalize(r, "national_operational_data") for r in load_json(ROOT / "docs" / "national_operational_data.json")]
+    anac_rows = [normalize(r, "national_anac_relevant_awards") for r in load_anac_relevant_rows()]
+    opencup_rows = [normalize(r, "national_operational_data") for r in load_opencup_rows()]
 
     branch_map = load_branch_map()
     anac_rows = [apply_branch_assignment(r, branch_map) for r in anac_rows]

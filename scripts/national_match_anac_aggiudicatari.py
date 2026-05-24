@@ -215,7 +215,7 @@ def main():
         writer.writeheader()
         writer.writerows(matches)
 
-    # Join leggero: ogni match CIG→aggiudicatario viene collegato ai CUP e ai metadati OpenCUP.
+    # Join leggero: ogni match CIG-aggiudicatario viene collegato ai CUP e ai metadati OpenCUP.
     enriched_rows = []
 
     for m in matches:
@@ -291,7 +291,7 @@ def main():
     }
 
     print(f"Righe lette: {scanned:,}")
-    print(f"Match CIG→aggiudicatario trovati: {len(matches):,}")
+    print(f"Match CIG-aggiudicatario trovati: {len(matches):,}")
     print(f"Aggiudicatari unici stimati: {len(unique_contractors):,}")
     print(f"Output match: {OUT}")
     print(f"Output enriched: {OUT_ENRICHED}")
@@ -299,3 +299,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

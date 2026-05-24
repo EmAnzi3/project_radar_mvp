@@ -115,9 +115,11 @@ def main():
         writer.writerows(matches)
 
     print(f"Righe lette: {scanned:,}")
-    print(f"Match CUP→CIG trovati: {len(matches):,}")
+    print(f"Match CUP-CIG trovati: {len(matches):,}")
     print(f"Output: {OUT}")
 
 
 if __name__ == "__main__":
     main()
+
+

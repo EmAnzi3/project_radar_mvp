@@ -41,3 +41,6 @@ reports/operational_shortlist.csv
 reports/national_operational_shortlist.csv
 reports/master_projects.json
 reports/*.zip
+
+# Local generated outputs
+data/local/
