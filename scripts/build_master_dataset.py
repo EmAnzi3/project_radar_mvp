@@ -47,6 +47,176 @@ def norm(value):
     return re.sub(r"\s+", " ", text).strip()
 
 
+
+REGION_BRANCH_FALLBACKS = {
+    "ABRUZZO": "Roma Nomentana",
+    "MARCHE": "Rimini",
+    "SICILIA": "Catania",
+    "CALABRIA": "Cosenza",
+    "FRIULI VENEZIA GIULIA": "Udine",
+    "PUGLIA": "Bari",
+    "UMBRIA": "Perugia",
+
+}
+
+PROVINCE_BRANCH_FALLBACKS = {
+    "PISTOIA": "Firenze",
+    "PT": "Firenze",
+    "PRATO": "Firenze",
+    "PO": "Firenze",
+    "FIRENZE": "Firenze",
+    "FI": "Firenze",
+    "SIENA": "Firenze",
+    "SI": "Firenze",
+    "AREZZO": "Firenze",
+    "AR": "Firenze",
+
+    "BOLOGNA": "Bologna",
+    "BO": "Bologna",
+
+    "BOLZANO": "Bolzano",
+    "BOLZANO BOZEN": "Bolzano",
+    "BOZEN": "Bolzano",
+    "BZ": "Bolzano",
+
+    "TRENTO": "Trento",
+    "TN": "Trento",
+    "ALESSANDRIA": "Milano Sud",
+    "AL": "Milano Sud",
+    "AOSTA": "Torino",
+    "AO": "Torino",
+    "ASTI": "Torino",
+    "AT": "Torino",
+    "AVELLINO": "Napoli",
+    "AV": "Napoli",
+    "BARI": "Bari",
+    "BA": "Bari",
+    "BARLETTA ANDRIA TRANI": "Bari",
+    "BARLETTA-ANDRIA-TRANI": "Bari",
+    "BT": "Bari",
+    "BELLUNO": "Treviso",
+    "BL": "Treviso",
+    "BENEVENTO": "Napoli",
+    "BN": "Napoli",
+    "BERGAMO": "Bergamo",
+    "BG": "Bergamo",
+    "BIELLA": "Torino",
+    "BI": "Torino",
+    "POTENZA": "SALERNO",
+    "PZ": "SALERNO",
+    "MATERA": "Bari",
+    "MT": "Bari",
+    "CAMPOBASSO": "Bari",
+    "CB": "Bari",
+    "ISERNIA": "Frosinone",
+    "IS": "Frosinone",
+    "VERCELLI": "Torino",
+    "VC": "Torino",
+    "VERBANO CUSIO OSSOLA": "Milano Ovest",
+    "VERBANO-CUSIO-OSSOLA": "Milano Ovest",
+    "VB": "Milano Ovest",
+    "NOVARA": "Milano Ovest",
+    "NO": "Milano Ovest",
+    "COMO": "Milano Nord",
+    "CO": "Milano Nord",
+    "VARESE": "Milano Ovest",
+    "VA": "Milano Ovest",
+    "PAVIA": "Milano Sud",
+    "PV": "Milano Sud",
+    "LODI": "Milano Est",
+    "LO": "Milano Est",
+    "MANTOVA": "Verona",
+    "MN": "Verona",
+    "CREMONA": "Brescia",
+    "CR": "Brescia",
+    "REGGIO NELL EMILIA": "Parma",
+    "REGGIO NELL'EMILIA": "Parma",
+    "REGGIO EMILIA": "Parma",
+    "RE": "Parma",
+    "FORLI CESENA": "Rimini",
+    "FORLI-CESENA": "Rimini",
+    "FC": "Rimini",
+    "FERRARA": "Bologna",
+    "FE": "Bologna",
+    "PIACENZA": "Parma",
+    "PC": "Parma",
+    "RAVENNA": "Rimini",
+    "RA": "Rimini",
+    "MODENA": "Sassuolo",
+    "MO": "Sassuolo",
+    "VICENZA": "Padova",
+    "VI": "Padova",
+    "ROVIGO": "Padova",
+    "RO": "Padova",
+    "SAVONA": "Albenga",
+    "SV": "Albenga",
+    "IMPERIA": "Albenga",
+    "IM": "Albenga",
+    "LA SPEZIA": "Lucca",
+    "SP": "Lucca",
+    "GROSSETO": "Livorno",
+    "GR": "Livorno",
+    "RIETI": "Roma Nomentana",
+    "RI": "Roma Nomentana",
+    "LATINA": "Frosinone",
+    "LT": "Frosinone",
+    "BRINDISI": "Bari",
+    "BR": "Bari",
+    "FOGGIA": "Bari",
+    "FG": "Bari",
+    "LECCE": "Bari",
+    "LE": "Bari",
+    "TARANTO": "Bari",
+    "TA": "Bari",
+    "PERUGIA": "Perugia",
+    "PG": "Perugia",
+    "TERNI": "Perugia",
+    "TR": "Perugia",
+    "NUORO": "Sassari",
+    "NU": "Sassari",
+    "ORISTANO": "Cagliari",
+    "OR": "Cagliari",
+    "MONZA E DELLA BRIANZA": "Milano Nord",
+    "MONZA BRIANZA": "Milano Nord",
+    "MB": "Milano Nord",
+    "PISA": "Livorno",
+    "PI": "Livorno",
+    "CASERTA": "Napoli",
+    "CE": "Napoli",
+    "VITERBO": "Roma Nomentana",
+    "VT": "Roma Nomentana",
+    "MASSA CARRARA": "Lucca",
+    "MASSA-CARRARA": "Lucca",
+    "MS": "Lucca",
+
+}
+
+
+def territorial_branch_fallback(record):
+    region = norm(record.get("region"))
+    province_values = province_variants(record.get("province"))
+
+    for province in province_values:
+        branch = PROVINCE_BRANCH_FALLBACKS.get(province)
+        if branch:
+            return {
+                "branch": branch,
+                "branch_candidates": "",
+                "branch_confidence": "territoriale_provincia",
+                "method": "fallback_provincia_territoriale",
+            }
+
+    branch = REGION_BRANCH_FALLBACKS.get(region)
+    if branch:
+        return {
+            "branch": branch,
+            "branch_candidates": "",
+            "branch_confidence": "territoriale_regione",
+            "method": "fallback_regione_territoriale",
+        }
+
+    return None
+
 def load_branch_map():
     exact = {}
 
@@ -326,6 +496,739 @@ def group_projects(rows):
         out.append(base)
 
     return out
+
+
+
+# --- Branch assignment override v2: project location only, no CAP soggetto titolare ---
+
+PROVINCE_ALIASES = {
+    "MONZA E DELLA BRIANZA": "MB",
+    "MONZA BRIANZA": "MB",
+    "FORLI CESENA": "FC",
+    "FORLI-CESENA": "FC",
+    "FORLI": "FC",
+    "REGGIO NELL EMILIA": "RE",
+    "REGGIO EMILIA": "RE",
+    "BOLZANO": "BZ",
+    "BOLZANO BOZEN": "BZ",
+    "BOZEN": "BZ",
+    "AOSTA": "AO",
+    "VALLE D AOSTA": "AO",
+    "SUD SARDEGNA": "SU",
+    "CITTA METROPOLITANA DI CAGLIARI": "CA",
+    "CITTA METROPOLITANA DI FIRENZE": "FI",
+    "CITTA METROPOLITANA DI ROMA CAPITALE": "RM",
+    "CITTA METROPOLITANA DI MILANO": "MI",
+    "CITTA METROPOLITANA DI NAPOLI": "NA",
+    "CITTA METROPOLITANA DI TORINO": "TO",
+    "CITTA METROPOLITANA DI BOLOGNA": "BO",
+    "CITTA METROPOLITANA DI GENOVA": "GE",
+    "CITTA METROPOLITANA DI VENEZIA": "VE",
+    "CITTA METROPOLITANA DI BARI": "BA",
+    "CITTA METROPOLITANA DI REGGIO CALABRIA": "RC",
+    "MASSA CARRARA": "MS",
+    "LA SPEZIA": "SP",
+    "PESARO E URBINO": "PU",
+    "BARLETTA ANDRIA TRANI": "BT",
+    "VERBANO CUSIO OSSOLA": "VB",
+    "VIBO VALENTIA": "VV",
+    "ASCOLI PICENO": "AP",
+    "REGGIO CALABRIA": "RC",
+    "CALTANISSETTA": "CL",
+}
+
+
+def norm(value):
+    text = clean(value).upper()
+    text = text.replace("'", " ")
+    text = re.sub(r"[^A-ZÀ-ÖØ-Ý0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def province_variants(value):
+    raw = norm(value)
+    variants = set()
+
+    if raw:
+        variants.add(raw)
+
+    alias = PROVINCE_ALIASES.get(raw)
+    if alias:
+        variants.add(alias)
+
+    return {v for v in variants if v}
+
+
+
+REGION_BRANCH_FALLBACKS = {
+    "ABRUZZO": "Roma Nomentana",
+    "MARCHE": "Rimini",
+    "SICILIA": "Catania",
+    "CALABRIA": "Cosenza",
+    "FRIULI VENEZIA GIULIA": "Udine",
+    "PUGLIA": "Bari",
+    "UMBRIA": "Perugia",
+
+}
+
+PROVINCE_BRANCH_FALLBACKS = {
+    "PISTOIA": "Firenze",
+    "PT": "Firenze",
+    "PRATO": "Firenze",
+    "PO": "Firenze",
+    "FIRENZE": "Firenze",
+    "FI": "Firenze",
+    "SIENA": "Firenze",
+    "SI": "Firenze",
+    "AREZZO": "Firenze",
+    "AR": "Firenze",
+
+    "BOLOGNA": "Bologna",
+    "BO": "Bologna",
+
+    "BOLZANO": "Bolzano",
+    "BOLZANO BOZEN": "Bolzano",
+    "BOZEN": "Bolzano",
+    "BZ": "Bolzano",
+
+    "TRENTO": "Trento",
+    "TN": "Trento",
+    "ALESSANDRIA": "Milano Sud",
+    "AL": "Milano Sud",
+    "AOSTA": "Torino",
+    "AO": "Torino",
+    "ASTI": "Torino",
+    "AT": "Torino",
+    "BIELLA": "Torino",
+    "BI": "Torino",
+    "VERCELLI": "Torino",
+    "VC": "Torino",
+    "VERBANO CUSIO OSSOLA": "Milano Ovest",
+    "VERBANO-CUSIO-OSSOLA": "Milano Ovest",
+    "VB": "Milano Ovest",
+    "NOVARA": "Milano Ovest",
+    "NO": "Milano Ovest",
+    "COMO": "Milano Nord",
+    "CO": "Milano Nord",
+    "VARESE": "Milano Ovest",
+    "VA": "Milano Ovest",
+    "PAVIA": "Milano Sud",
+    "PV": "Milano Sud",
+    "LODI": "Milano Est",
+    "LO": "Milano Est",
+    "MANTOVA": "Verona",
+    "MN": "Verona",
+    "CREMONA": "Brescia",
+    "CR": "Brescia",
+    "REGGIO NELL EMILIA": "Parma",
+    "REGGIO NELL'EMILIA": "Parma",
+    "REGGIO EMILIA": "Parma",
+    "RE": "Parma",
+    "FORLI CESENA": "Rimini",
+    "FORLI-CESENA": "Rimini",
+    "FC": "Rimini",
+    "FERRARA": "Bologna",
+    "FE": "Bologna",
+    "PIACENZA": "Parma",
+    "PC": "Parma",
+    "RAVENNA": "Rimini",
+    "RA": "Rimini",
+    "MODENA": "Sassuolo",
+    "MO": "Sassuolo",
+    "VICENZA": "Padova",
+    "VI": "Padova",
+    "ROVIGO": "Padova",
+    "RO": "Padova",
+    "BELLUNO": "Treviso",
+    "BL": "Treviso",
+    "SAVONA": "Albenga",
+    "SV": "Albenga",
+    "IMPERIA": "Albenga",
+    "IM": "Albenga",
+    "LA SPEZIA": "Lucca",
+    "SP": "Lucca",
+    "GROSSETO": "Livorno",
+    "GR": "Livorno",
+    "RIETI": "Roma Nomentana",
+    "RI": "Roma Nomentana",
+    "LATINA": "Frosinone",
+    "LT": "Frosinone",
+    "AVELLINO": "Napoli",
+    "AV": "Napoli",
+    "BENEVENTO": "Napoli",
+    "BN": "Napoli",
+    "POTENZA": "SALERNO",
+    "PZ": "SALERNO",
+    "BARI": "Bari",
+    "BA": "Bari",
+    "BARLETTA ANDRIA TRANI": "Bari",
+    "BARLETTA-ANDRIA-TRANI": "Bari",
+    "BT": "Bari",
+    "BRINDISI": "Bari",
+    "BR": "Bari",
+    "FOGGIA": "Bari",
+    "FG": "Bari",
+    "LECCE": "Bari",
+    "LE": "Bari",
+    "TARANTO": "Bari",
+    "TA": "Bari",
+    "MATERA": "Bari",
+    "MT": "Bari",
+    "CAMPOBASSO": "Bari",
+    "CB": "Bari",
+    "ISERNIA": "Frosinone",
+    "IS": "Frosinone",
+    "PERUGIA": "Perugia",
+    "PG": "Perugia",
+    "TERNI": "Perugia",
+    "TR": "Perugia",
+    "NUORO": "Sassari",
+    "NU": "Sassari",
+    "ORISTANO": "Cagliari",
+    "OR": "Cagliari",
+    "MONZA E DELLA BRIANZA": "Milano Nord",
+    "MONZA BRIANZA": "Milano Nord",
+    "MB": "Milano Nord",
+    "PISA": "Livorno",
+    "PI": "Livorno",
+    "CASERTA": "Napoli",
+    "CE": "Napoli",
+    "VITERBO": "Roma Nomentana",
+    "VT": "Roma Nomentana",
+    "MASSA CARRARA": "Lucca",
+    "MASSA-CARRARA": "Lucca",
+    "MS": "Lucca",
+
+}
+
+
+def territorial_branch_fallback(record):
+    region = norm(record.get("region"))
+    province_values = province_variants(record.get("province"))
+
+    for province in province_values:
+        branch = PROVINCE_BRANCH_FALLBACKS.get(province)
+        if branch:
+            return {
+                "branch": branch,
+                "branch_candidates": "",
+                "branch_confidence": "territoriale_provincia",
+                "method": "fallback_provincia_territoriale",
+            }
+
+    branch = REGION_BRANCH_FALLBACKS.get(region)
+    if branch:
+        return {
+            "branch": branch,
+            "branch_candidates": "",
+            "branch_confidence": "territoriale_regione",
+            "method": "fallback_regione_territoriale",
+        }
+
+    return None
+
+def load_branch_map():
+    exact = {}
+    municipality_only = {}
+    municipality_signature = {}
+    municipality_ambiguous = set()
+
+    if not BRANCH_MAP.exists():
+        print(f"[WARN] Mappa filiali non trovata: {BRANCH_MAP}")
+        return {"exact": exact, "municipality_only": municipality_only}
+
+    with BRANCH_MAP.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter=";")
+
+        for row in reader:
+            municipality_norm = clean(row.get("municipality_norm"))
+            province_norm = clean(row.get("province_norm"))
+
+            if not municipality_norm or not province_norm:
+                continue
+
+            item = {
+                "branch": clean(row.get("branch")),
+                "branch_candidates": clean(row.get("branch_candidates")),
+                "branch_confidence": clean(row.get("confidence")),
+            }
+
+            province_keys = set()
+            province_keys.add(province_norm)
+            province_keys.update(province_variants(province_norm))
+            province_keys.update(province_variants(row.get("province")))
+            province_keys.update(province_variants(row.get("sigla_provincia")))
+            province_keys.update(province_variants(row.get("province_code")))
+
+            for province_key in province_keys:
+                if province_key:
+                    exact[(municipality_norm, province_key)] = item
+
+            signature = (item["branch"], item["branch_candidates"])
+            previous_signature = municipality_signature.get(municipality_norm)
+
+            if previous_signature and previous_signature != signature:
+                municipality_ambiguous.add(municipality_norm)
+            else:
+                municipality_only[municipality_norm] = item
+                municipality_signature[municipality_norm] = signature
+
+    for municipality_norm in municipality_ambiguous:
+        municipality_only.pop(municipality_norm, None)
+
+    print(f"[OK] Mappa comuni → filiali: {len(exact)} chiavi esatte, {len(municipality_only)} fallback comune")
+    return {"exact": exact, "municipality_only": municipality_only}
+
+
+def apply_branch_assignment(record, branch_map):
+    existing_branch = clean(record.get("branch"))
+
+    # Non usare CAP_SOGGETTO_TITOLARE: non localizza il progetto.
+    # Se ha già una filiale vera o AMBIGUA, non sovrascriviamo.
+    if existing_branch and existing_branch not in {"NON ASSEGNATA", "NON_ASSEGNATA"}:
+        return record
+
+    municipality = norm(record.get("municipality"))
+    province_raw = record.get("province")
+
+    invalid_geo = {"", "TUTTI", "TUTTE", "VARI", "VARIE", "NAZIONALE", "ITALIA"}
+
+    match = None
+    method = "none"
+
+    if municipality not in invalid_geo:
+        for province in province_variants(province_raw):
+            if province in invalid_geo:
+                continue
+
+            match = branch_map["exact"].get((municipality, province))
+            if match:
+                method = "exact_or_alias_province"
+                break
+
+    # Fallback prudente: solo se il comune è univoco nella mappa.
+    if not match and municipality not in invalid_geo:
+        match = branch_map["municipality_only"].get(municipality)
+        if match:
+            method = "fallback_comune_univoco"
+
+    # Fallback commerciale esplicito su provincia/regione.
+    territorial_match = None
+    if not match:
+        territorial_match = territorial_branch_fallback(record)
+
+    if match:
+        record["branch"] = match["branch"] or "NON ASSEGNATA"
+        record["branch_candidates"] = match["branch_candidates"]
+        record["branch_confidence"] = match["branch_confidence"] or method
+        record["branch_assignment_method"] = method
+    elif territorial_match:
+        record["branch"] = territorial_match["branch"]
+        record["branch_candidates"] = territorial_match["branch_candidates"]
+        record["branch_confidence"] = territorial_match["branch_confidence"]
+        record["branch_assignment_method"] = territorial_match["method"]
+    else:
+        record["branch"] = "NON ASSEGNATA"
+        record["branch_candidates"] = ""
+        record["branch_confidence"] = "nessuna"
+        record["branch_assignment_method"] = "none"
+
+    return record
+
+
+
+# --- Branch assignment override v3: project location only, automatic same-name province fallback ---
+
+PROVINCE_ALIASES = {
+    "MONZA E DELLA BRIANZA": "MB",
+    "MONZA BRIANZA": "MB",
+    "FORLI CESENA": "FC",
+    "FORLI-CESENA": "FC",
+    "FORLI": "FC",
+    "REGGIO NELL EMILIA": "RE",
+    "REGGIO EMILIA": "RE",
+    "BOLZANO": "BZ",
+    "BOLZANO BOZEN": "BZ",
+    "BOZEN": "BZ",
+    "AOSTA": "AO",
+    "VALLE D AOSTA": "AO",
+    "SUD SARDEGNA": "SU",
+    "CITTA METROPOLITANA DI CAGLIARI": "CA",
+    "CITTA METROPOLITANA DI FIRENZE": "FI",
+    "CITTA METROPOLITANA DI ROMA CAPITALE": "RM",
+    "CITTA METROPOLITANA DI MILANO": "MI",
+    "CITTA METROPOLITANA DI NAPOLI": "NA",
+    "CITTA METROPOLITANA DI TORINO": "TO",
+    "CITTA METROPOLITANA DI BOLOGNA": "BO",
+    "CITTA METROPOLITANA DI GENOVA": "GE",
+    "CITTA METROPOLITANA DI VENEZIA": "VE",
+    "CITTA METROPOLITANA DI BARI": "BA",
+    "CITTA METROPOLITANA DI REGGIO CALABRIA": "RC",
+    "MASSA CARRARA": "MS",
+    "LA SPEZIA": "SP",
+    "PESARO E URBINO": "PU",
+    "BARLETTA ANDRIA TRANI": "BT",
+    "BARLETTA-ANDRIA-TRANI": "BT",
+    "VERBANO CUSIO OSSOLA": "VB",
+    "VIBO VALENTIA": "VV",
+    "ASCOLI PICENO": "AP",
+    "REGGIO CALABRIA": "RC",
+    "CALTANISSETTA": "CL",
+}
+
+REGION_BRANCH_FALLBACKS = {
+    "ABRUZZO": "Roma Nomentana",
+    "MARCHE": "Rimini",
+    "SICILIA": "Catania",
+    "CALABRIA": "Cosenza",
+    "FRIULI VENEZIA GIULIA": "Udine",
+    "PUGLIA": "Bari",
+    "UMBRIA": "Perugia",
+}
+
+PROVINCE_BRANCH_FALLBACKS = {
+    "ALESSANDRIA": "Milano Sud",
+    "AL": "Milano Sud",
+
+    "AOSTA": "Torino",
+    "AO": "Torino",
+
+    "ASTI": "Torino",
+    "AT": "Torino",
+
+    "AVELLINO": "Napoli",
+    "AV": "Napoli",
+
+    "BARLETTA ANDRIA TRANI": "Bari",
+    "BARLETTA-ANDRIA-TRANI": "Bari",
+    "BT": "Bari",
+
+    "BELLUNO": "Treviso",
+    "BL": "Treviso",
+
+    "BENEVENTO": "Napoli",
+    "BN": "Napoli",
+
+    "BIELLA": "Torino",
+    "BI": "Torino",
+
+    "PISTOIA": "Firenze",
+    "PT": "Firenze",
+    "PRATO": "Firenze",
+    "PO": "Firenze",
+    "FIRENZE": "Firenze",
+    "FI": "Firenze",
+    "SIENA": "Firenze",
+    "SI": "Firenze",
+    "AREZZO": "Firenze",
+    "AR": "Firenze",
+
+    "POTENZA": "SALERNO",
+    "PZ": "SALERNO",
+
+    "MATERA": "Bari",
+    "MT": "Bari",
+
+    "CAMPOBASSO": "Bari",
+    "CB": "Bari",
+
+    "ISERNIA": "Frosinone",
+    "IS": "Frosinone",
+    "VERCELLI": "Torino",
+    "VC": "Torino",
+    "VERBANO CUSIO OSSOLA": "Milano Ovest",
+    "VERBANO-CUSIO-OSSOLA": "Milano Ovest",
+    "VB": "Milano Ovest",
+    "NOVARA": "Milano Ovest",
+    "NO": "Milano Ovest",
+    "COMO": "Milano Nord",
+    "CO": "Milano Nord",
+    "VARESE": "Milano Ovest",
+    "VA": "Milano Ovest",
+    "PAVIA": "Milano Sud",
+    "PV": "Milano Sud",
+    "LODI": "Milano Est",
+    "LO": "Milano Est",
+    "MANTOVA": "Verona",
+    "MN": "Verona",
+    "CREMONA": "Brescia",
+    "CR": "Brescia",
+    "REGGIO NELL EMILIA": "Parma",
+    "REGGIO NELL'EMILIA": "Parma",
+    "REGGIO EMILIA": "Parma",
+    "RE": "Parma",
+    "FORLI CESENA": "Rimini",
+    "FORLI-CESENA": "Rimini",
+    "FC": "Rimini",
+    "FERRARA": "Bologna",
+    "FE": "Bologna",
+    "PIACENZA": "Parma",
+    "PC": "Parma",
+    "RAVENNA": "Rimini",
+    "RA": "Rimini",
+    "MODENA": "Sassuolo",
+    "MO": "Sassuolo",
+    "VICENZA": "Padova",
+    "VI": "Padova",
+    "ROVIGO": "Padova",
+    "RO": "Padova",
+    "SAVONA": "Albenga",
+    "SV": "Albenga",
+    "IMPERIA": "Albenga",
+    "IM": "Albenga",
+    "LA SPEZIA": "Lucca",
+    "SP": "Lucca",
+    "GROSSETO": "Livorno",
+    "GR": "Livorno",
+    "RIETI": "Roma Nomentana",
+    "RI": "Roma Nomentana",
+    "LATINA": "Frosinone",
+    "LT": "Frosinone",
+    "BARI": "Bari",
+    "BA": "Bari",
+    "BRINDISI": "Bari",
+    "BR": "Bari",
+    "FOGGIA": "Bari",
+    "FG": "Bari",
+    "LECCE": "Bari",
+    "LE": "Bari",
+    "TARANTO": "Bari",
+    "TA": "Bari",
+    "PERUGIA": "Perugia",
+    "PG": "Perugia",
+    "TERNI": "Perugia",
+    "TR": "Perugia",
+    "NUORO": "Sassari",
+    "NU": "Sassari",
+    "ORISTANO": "Cagliari",
+    "OR": "Cagliari",
+    "MONZA E DELLA BRIANZA": "Milano Nord",
+    "MONZA BRIANZA": "Milano Nord",
+    "MB": "Milano Nord",
+    "PISA": "Livorno",
+    "PI": "Livorno",
+    "CASERTA": "Napoli",
+    "CE": "Napoli",
+    "VITERBO": "Roma Nomentana",
+    "VT": "Roma Nomentana",
+    "MASSA CARRARA": "Lucca",
+    "MASSA-CARRARA": "Lucca",
+    "MS": "Lucca",
+
+}
+
+
+def norm(value):
+    text = clean(value).upper()
+    text = text.replace("'", " ")
+    text = re.sub(r"[^A-ZÀ-ÖØ-Ý0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def province_variants(value):
+    raw = norm(value)
+    variants = set()
+
+    if raw:
+        variants.add(raw)
+
+    alias = PROVINCE_ALIASES.get(raw)
+    if alias:
+        variants.add(alias)
+
+    return {v for v in variants if v}
+
+
+def load_branch_map():
+    exact = {}
+    municipality_only = {}
+    municipality_signature = {}
+    municipality_ambiguous = set()
+
+    branch_by_norm = {}
+    branch_norm_ambiguous = set()
+
+    if not BRANCH_MAP.exists():
+        print(f"[WARN] Mappa filiali non trovata: {BRANCH_MAP}")
+        return {
+            "exact": exact,
+            "municipality_only": municipality_only,
+            "branch_by_norm": branch_by_norm,
+        }
+
+    with BRANCH_MAP.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter=";")
+
+        for row in reader:
+            municipality_norm = clean(row.get("municipality_norm"))
+            province_norm = clean(row.get("province_norm"))
+
+            if not municipality_norm or not province_norm:
+                continue
+
+            item = {
+                "branch": clean(row.get("branch")),
+                "branch_candidates": clean(row.get("branch_candidates")),
+                "branch_confidence": clean(row.get("confidence")),
+            }
+
+            branch = item["branch"]
+            branch_norm = norm(branch)
+
+            if branch and branch not in {"AMBIGUA", "NON ASSEGNATA"} and branch_norm not in {"MILANO", "ROMA"}:
+                previous_branch = branch_by_norm.get(branch_norm)
+                if previous_branch and previous_branch != branch:
+                    branch_norm_ambiguous.add(branch_norm)
+                else:
+                    branch_by_norm[branch_norm] = branch
+
+            province_keys = set()
+            province_keys.add(province_norm)
+            province_keys.update(province_variants(province_norm))
+            province_keys.update(province_variants(row.get("province")))
+            province_keys.update(province_variants(row.get("sigla_provincia")))
+            province_keys.update(province_variants(row.get("province_code")))
+
+            for province_key in province_keys:
+                if province_key:
+                    exact[(municipality_norm, province_key)] = item
+
+            signature = (item["branch"], item["branch_candidates"])
+            previous_signature = municipality_signature.get(municipality_norm)
+
+            if previous_signature and previous_signature != signature:
+                municipality_ambiguous.add(municipality_norm)
+            else:
+                municipality_only[municipality_norm] = item
+                municipality_signature[municipality_norm] = signature
+
+    for municipality_norm in municipality_ambiguous:
+        municipality_only.pop(municipality_norm, None)
+
+    for branch_norm in branch_norm_ambiguous:
+        branch_by_norm.pop(branch_norm, None)
+
+    # Esclusione prudente: Roma e Milano hanno più filiali.
+    branch_by_norm.pop("ROMA", None)
+    branch_by_norm.pop("MILANO", None)
+
+    print(
+        f"[OK] Mappa comuni → filiali: {len(exact)} chiavi esatte, "
+        f"{len(municipality_only)} fallback comune, "
+        f"{len(branch_by_norm)} fallback provincia=filiale"
+    )
+
+    return {
+        "exact": exact,
+        "municipality_only": municipality_only,
+        "branch_by_norm": branch_by_norm,
+    }
+
+
+def same_name_province_branch_fallback(record, branch_map):
+    province_values = province_variants(record.get("province"))
+
+    # Roma e Milano escluse: più filiali.
+    blocked = {"ROMA", "RM", "MILANO", "MI"}
+
+    for province in province_values:
+        if province in blocked:
+            continue
+
+        branch = branch_map.get("branch_by_norm", {}).get(province)
+        if branch:
+            return {
+                "branch": branch,
+                "branch_candidates": "",
+                "branch_confidence": "territoriale_provincia_omonima",
+                "method": "fallback_provincia_omonima_filiale",
+            }
+
+    return None
+
+
+def territorial_branch_fallback(record):
+    region = norm(record.get("region"))
+    province_values = province_variants(record.get("province"))
+
+    for province in province_values:
+        branch = PROVINCE_BRANCH_FALLBACKS.get(province)
+        if branch:
+            return {
+                "branch": branch,
+                "branch_candidates": "",
+                "branch_confidence": "territoriale_provincia",
+                "method": "fallback_provincia_territoriale",
+            }
+
+    branch = REGION_BRANCH_FALLBACKS.get(region)
+    if branch:
+        return {
+            "branch": branch,
+            "branch_candidates": "",
+            "branch_confidence": "territoriale_regione",
+            "method": "fallback_regione_territoriale",
+        }
+
+    return None
+
+
+def apply_branch_assignment(record, branch_map):
+    existing_branch = clean(record.get("branch"))
+
+    # Non usare CAP_SOGGETTO_TITOLARE: non localizza il progetto.
+    # Se ha già una filiale vera o AMBIGUA, non sovrascriviamo.
+    if existing_branch and existing_branch not in {"NON ASSEGNATA", "NON_ASSEGNATA"}:
+        return record
+
+    municipality = norm(record.get("municipality"))
+    province_raw = record.get("province")
+
+    invalid_geo = {"", "TUTTI", "TUTTE", "VARI", "VARIE", "NAZIONALE", "ITALIA"}
+
+    match = None
+    method = "none"
+
+    if municipality not in invalid_geo:
+        for province in province_variants(province_raw):
+            if province in invalid_geo:
+                continue
+
+            match = branch_map["exact"].get((municipality, province))
+            if match:
+                method = "exact_or_alias_province"
+                break
+
+    if not match and municipality not in invalid_geo:
+        match = branch_map["municipality_only"].get(municipality)
+        if match:
+            method = "fallback_comune_univoco"
+
+    fallback_match = None
+
+    if not match:
+        fallback_match = same_name_province_branch_fallback(record, branch_map)
+
+    if not match and not fallback_match:
+        fallback_match = territorial_branch_fallback(record)
+
+    if match:
+        record["branch"] = match["branch"] or "NON ASSEGNATA"
+        record["branch_candidates"] = match["branch_candidates"]
+        record["branch_confidence"] = match["branch_confidence"] or method
+        record["branch_assignment_method"] = method
+    elif fallback_match:
+        record["branch"] = fallback_match["branch"]
+        record["branch_candidates"] = fallback_match["branch_candidates"]
+        record["branch_confidence"] = fallback_match["branch_confidence"]
+        record["branch_assignment_method"] = fallback_match["method"]
+    else:
+        record["branch"] = "NON ASSEGNATA"
+        record["branch_candidates"] = ""
+        record["branch_confidence"] = "nessuna"
+        record["branch_assignment_method"] = "none"
+
+    return record
 
 
 def main():
