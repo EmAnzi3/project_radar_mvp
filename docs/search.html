@@ -389,6 +389,7 @@
     <section class="meta">
       <div class="pill" id="total"></div>
       <div class="pill" id="shown"></div>
+      <div class="pill" id="anacCoverage"></div>
       <div class="pill">Vista limitata ai primi 300 risultati filtrati</div>
     </section>
 
@@ -855,12 +856,42 @@ function toggleAwards(rowId) {
   el.style.display = el.style.display === "none" ? "table-row" : "none";
 }
 
+
+function hasAnacContractor(record) {
+  if (!record) return false;
+
+  if (String(record.contractors || "").trim()) return true;
+  if (String(record.contractor_tax_codes || "").trim()) return true;
+  if (String(record.contractors_summary || "").trim()) return true;
+
+  const awards = Array.isArray(record.awards) ? record.awards : [];
+  return awards.some(a =>
+    String((a && a.contractors) || "").trim() ||
+    String((a && a.contractor_tax_codes) || "").trim() ||
+    String((a && a.contractor_name) || "").trim() ||
+    String((a && a.contractor_tax_code) || "").trim()
+  );
+}
+
+function updateAnacCoverageBadge() {
+  const el = document.getElementById("anacCoverage");
+  if (!el) return;
+
+  const total = filtered.length;
+  const withContractor = filtered.filter(hasAnacContractor).length;
+  const withoutContractor = Math.max(total - withContractor, 0);
+  const pct = total ? ((withContractor / total) * 100).toFixed(1).replace(".", ",") : "0,0";
+
+  el.textContent = `Con aggiudicatario: ${withContractor.toLocaleString("it-IT")} | Senza: ${withoutContractor.toLocaleString("it-IT")} | Copertura: ${pct}%`;
+}
+
 function render() {
   const maxRows = 300;
   const rows = prSortedFiltered().slice(0, maxRows);
 
   els.total.textContent = "Record totali: " + records.length;
   els.shown.textContent = "Risultati filtrati: " + filtered.length + " - mostrati: " + rows.length;
+  updateAnacCoverageBadge();
 
   els.tbody.innerHTML = rows.map(r => `
     <tr>
@@ -1102,6 +1133,11 @@ function renderIndexOnlyMessage(index) {
     els.total.textContent = totalRecords
       ? `Archivio nazionale indicizzato: ${totalRecords.toLocaleString("it-IT")} record`
       : "Archivio nazionale indicizzato per filiale";
+  }
+
+  const anacCoverage = document.getElementById("anacCoverage");
+  if (anacCoverage) {
+    anacCoverage.textContent = "";
   }
 
   if (els.shown) {
