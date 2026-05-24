@@ -56,6 +56,8 @@ REGION_BRANCH_FALLBACKS = {
     "FRIULI VENEZIA GIULIA": "Udine",
     "PUGLIA": "Bari",
     "UMBRIA": "Perugia",
+    "VALLE D AOSTA": "Torino",
+    "VALLE D'AOSTA": "Torino",
 
 }
 
@@ -188,6 +190,28 @@ PROVINCE_BRANCH_FALLBACKS = {
     "MASSA CARRARA": "Lucca",
     "MASSA-CARRARA": "Lucca",
     "MS": "Lucca",
+    "VALLE D AOSTA": "Torino",
+    "VALLE D'AOSTA": "Torino",
+    "CARBONIA IGLESIAS": "Cagliari",
+    "CARBONIA-IGLESIAS": "Cagliari",
+    "CI": "Cagliari",
+    "CITTA METROPOLITANA DI CAGLIARI": "Cagliari",
+    "CITTA' METROPOLITANA DI CAGLIARI": "Cagliari",
+    "CA": "Cagliari",
+    "CITTA METROPOLITANA DI SASSARI": "Sassari",
+    "CITTA' METROPOLITANA DI SASSARI": "Sassari",
+    "SS": "Sassari",
+    "GALLURA NORD EST SARDEGNA": "Sassari",
+    "GALLURA NORD-EST SARDEGNA": "Sassari",
+    "MEDIO CAMPIDANO": "Cagliari",
+    "VS": "Cagliari",
+    "OGLIASTRA": "Cagliari",
+    "OG": "Cagliari",
+    "OLBIA TEMPIO": "Sassari",
+    "OLBIA-TEMPIO": "Sassari",
+    "OT": "Sassari",
+    "SUD SARDEGNA": "Cagliari",
+    "SU": "Cagliari",
 
 }
 
@@ -535,6 +559,19 @@ PROVINCE_ALIASES = {
     "ASCOLI PICENO": "AP",
     "REGGIO CALABRIA": "RC",
     "CALTANISSETTA": "CL",
+    "CARBONIA IGLESIAS": "CI",
+    "CARBONIA-IGLESIAS": "CI",
+    "CITTA' METROPOLITANA DI CAGLIARI": "CA",
+    "CITTA METROPOLITANA DI SASSARI": "SS",
+    "CITTA' METROPOLITANA DI SASSARI": "SS",
+    "GALLURA NORD EST SARDEGNA": "OT",
+    "GALLURA NORD-EST SARDEGNA": "OT",
+    "MEDIO CAMPIDANO": "VS",
+    "OGLIASTRA": "OG",
+    "OLBIA TEMPIO": "OT",
+    "OLBIA-TEMPIO": "OT",
+    "VALLE D'AOSTA": "AO",
+
 }
 
 
@@ -568,6 +605,8 @@ REGION_BRANCH_FALLBACKS = {
     "FRIULI VENEZIA GIULIA": "Udine",
     "PUGLIA": "Bari",
     "UMBRIA": "Perugia",
+    "VALLE D AOSTA": "Torino",
+    "VALLE D'AOSTA": "Torino",
 
 }
 
@@ -698,6 +737,28 @@ PROVINCE_BRANCH_FALLBACKS = {
     "MASSA CARRARA": "Lucca",
     "MASSA-CARRARA": "Lucca",
     "MS": "Lucca",
+    "VALLE D AOSTA": "Torino",
+    "VALLE D'AOSTA": "Torino",
+    "CARBONIA IGLESIAS": "Cagliari",
+    "CARBONIA-IGLESIAS": "Cagliari",
+    "CI": "Cagliari",
+    "CITTA METROPOLITANA DI CAGLIARI": "Cagliari",
+    "CITTA' METROPOLITANA DI CAGLIARI": "Cagliari",
+    "CA": "Cagliari",
+    "CITTA METROPOLITANA DI SASSARI": "Sassari",
+    "CITTA' METROPOLITANA DI SASSARI": "Sassari",
+    "SS": "Sassari",
+    "GALLURA NORD EST SARDEGNA": "Sassari",
+    "GALLURA NORD-EST SARDEGNA": "Sassari",
+    "MEDIO CAMPIDANO": "Cagliari",
+    "VS": "Cagliari",
+    "OGLIASTRA": "Cagliari",
+    "OG": "Cagliari",
+    "OLBIA TEMPIO": "Sassari",
+    "OLBIA-TEMPIO": "Sassari",
+    "OT": "Sassari",
+    "SUD SARDEGNA": "Cagliari",
+    "SU": "Cagliari",
 
 }
 
@@ -874,6 +935,19 @@ PROVINCE_ALIASES = {
     "ASCOLI PICENO": "AP",
     "REGGIO CALABRIA": "RC",
     "CALTANISSETTA": "CL",
+    "CARBONIA IGLESIAS": "CI",
+    "CARBONIA-IGLESIAS": "CI",
+    "CITTA' METROPOLITANA DI CAGLIARI": "CA",
+    "CITTA METROPOLITANA DI SASSARI": "SS",
+    "CITTA' METROPOLITANA DI SASSARI": "SS",
+    "GALLURA NORD EST SARDEGNA": "OT",
+    "GALLURA NORD-EST SARDEGNA": "OT",
+    "MEDIO CAMPIDANO": "VS",
+    "OGLIASTRA": "OG",
+    "OLBIA TEMPIO": "OT",
+    "OLBIA-TEMPIO": "OT",
+    "VALLE D'AOSTA": "AO",
+
 }
 
 REGION_BRANCH_FALLBACKS = {
@@ -884,6 +958,9 @@ REGION_BRANCH_FALLBACKS = {
     "FRIULI VENEZIA GIULIA": "Udine",
     "PUGLIA": "Bari",
     "UMBRIA": "Perugia",
+    "VALLE D AOSTA": "Torino",
+    "VALLE D'AOSTA": "Torino",
+
 }
 
 PROVINCE_BRANCH_FALLBACKS = {
@@ -1014,6 +1091,28 @@ PROVINCE_BRANCH_FALLBACKS = {
     "MASSA CARRARA": "Lucca",
     "MASSA-CARRARA": "Lucca",
     "MS": "Lucca",
+    "VALLE D AOSTA": "Torino",
+    "VALLE D'AOSTA": "Torino",
+    "CARBONIA IGLESIAS": "Cagliari",
+    "CARBONIA-IGLESIAS": "Cagliari",
+    "CI": "Cagliari",
+    "CITTA METROPOLITANA DI CAGLIARI": "Cagliari",
+    "CITTA' METROPOLITANA DI CAGLIARI": "Cagliari",
+    "CA": "Cagliari",
+    "CITTA METROPOLITANA DI SASSARI": "Sassari",
+    "CITTA' METROPOLITANA DI SASSARI": "Sassari",
+    "SS": "Sassari",
+    "GALLURA NORD EST SARDEGNA": "Sassari",
+    "GALLURA NORD-EST SARDEGNA": "Sassari",
+    "MEDIO CAMPIDANO": "Cagliari",
+    "VS": "Cagliari",
+    "OGLIASTRA": "Cagliari",
+    "OG": "Cagliari",
+    "OLBIA TEMPIO": "Sassari",
+    "OLBIA-TEMPIO": "Sassari",
+    "OT": "Sassari",
+    "SUD SARDEGNA": "Cagliari",
+    "SU": "Cagliari",
 
 }
 
