@@ -425,6 +425,41 @@
     }
   }
 
+
+  .required-star {
+    color: #dc2626;
+    font-weight: 900;
+    margin-left: 3px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 3px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    border: 1px solid transparent;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, .04);
+  }
+
+  .tag-anac {
+    color: #065f46;
+    background: #d1fae5;
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, .12);
+  }
+
+  .tag-open {
+    color: #334155;
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    box-shadow: 0 0 0 2px rgba(100, 116, 139, .12);
+  }
+
 </style>
 </head>
 <body>
@@ -446,7 +481,7 @@
 
   <main>
     <section class="filters">
-      <div><label>Filiale</label><select id="branch"></select></div>
+      <div><label>Filiale <span class="required-star">*</span></label><select id="branch"></select></div>
       <div><label>Regione</label><select id="region"></select></div>
       <div><label>Provincia</label><select id="province"></select></div>
       <div><label>Comune</label><select id="municipality"></select></div>
@@ -484,7 +519,7 @@
             <th class="sortable" data-sort="project_value" onclick="setSort('project_value')">Valore</th>
             <th class="sortable" data-sort="client" onclick="setSort('client')">Committente</th>
             <th class="sortable" data-sort="contractors" onclick="setSort('contractors')">Aggiudicatario / OE</th>
-            <th class="sortable" data-sort="award_date" onclick="setSort('award_date')">Timeline</th>
+            <th class="sortable" data-sort="timeline" onclick="setSort('timeline')">Timeline</th>
             <th class="sortable source-col" data-sort="source_url" onclick="setSort('source_url')">Fonte</th>
           </tr>
         </thead>
@@ -686,8 +721,8 @@ function applyFilters() {
     if (valueMin && Number(r.project_value || 0) < valueMin) return false;
     if (valueMax && Number(r.project_value || 0) > valueMax) return false;
 
-    if (dateFrom && (!r.award_date || r.award_date < dateFrom)) return false;
-    if (dateTo && (!r.award_date || r.award_date > dateTo)) return false;
+    if (dateFrom && timelineSortTimestamp(r) < Date.parse(dateFrom + "T00:00:00Z")) return false;
+    if (dateTo && timelineSortTimestamp(r) > Date.parse(dateTo + "T23:59:59Z")) return false;
 
     if (q) {
       const blob = [
@@ -735,6 +770,7 @@ function parseNum(v) {
 }
 
 function sortValue(r, key) {
+  if (key === "timeline") return timelineSortTimestamp(r);
   if (key === "project_value") return Number(r.project_value || 0);
   if (key === "award_date") return clean(r.award_date);
   return clean(r[key]);
@@ -829,7 +865,58 @@ function decorateBadges() {
 
 
 
+
+
+
+function extractCupYear(record) {
+  const direct = String(record.cup_year || "").trim();
+
+  if (/^\d{4}$/.test(direct)) {
+    return Number(direct);
+  }
+
+  const cup = String(record.cup || "").trim().toUpperCase();
+
+  // CUP standard: il secondo/terzo carattere spesso codifica l'anno a 2 cifre.
+  // Esempi visti: B21J23000170001 -> 2023, D72E23000410001 -> 2023
+  const match = cup.match(/^[A-Z](\d{2})[A-Z0-9]/);
+
+  if (match) {
+    const yy = Number(match[1]);
+
+    if (Number.isFinite(yy)) {
+      return yy >= 80 ? 1900 + yy : 2000 + yy;
+    }
+  }
+
+  // Fallback: cerca un anno esplicito nel testo, se presente.
+  const explicit = cup.match(/(19|20)\d{2}/);
+  if (explicit) {
+    return Number(explicit[0]);
+  }
+
+  return 0;
+}
+
+function timelineSortTimestamp(record) {
+  const awardDate = String(record.award_date || "").trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(awardDate)) {
+    const ts = Date.parse(awardDate + "T00:00:00Z");
+    if (Number.isFinite(ts)) return ts;
+  }
+
+  const year = extractCupYear(record);
+
+  if (year) {
+    return Date.parse(String(year) + "-01-01T00:00:00Z");
+  }
+
+  return 0;
+}
+
 function prSortValue(r, key) {
+  if (key === "timeline") return timelineSortTimestamp(r);
   if (key === "project_value") {
     return Number(r.project_value || 0);
   }
