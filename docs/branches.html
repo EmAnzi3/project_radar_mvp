@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
@@ -259,6 +259,168 @@
     }
   }
 
+
+  .branch-updates-panel {
+    max-width: 1220px;
+    margin: 18px auto;
+    padding: 0 clamp(16px, 3vw, 32px);
+  }
+
+  .branch-updates-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, .10);
+  }
+
+  .branch-updates-card h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    letter-spacing: -0.03em;
+  }
+
+  .branch-updates-card p {
+    margin: 0 0 14px;
+    color: #64748b;
+  }
+
+  .branch-updates-list {
+    display: grid;
+    gap: 9px;
+  }
+
+  .branch-update-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) repeat(4, auto);
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 14px;
+  }
+
+  .branch-update-row a {
+    color: #111827;
+    font-weight: 850;
+    text-decoration: none;
+  }
+
+  .branch-update-row a:hover {
+    color: #0f766e;
+    text-decoration: underline;
+  }
+
+  .delta-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 850;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+
+  .delta-new {
+    color: #7c2d12;
+    background: #ffedd5;
+    border-color: #fb923c;
+  }
+
+  .delta-updated {
+    color: #1e3a8a;
+    background: #dbeafe;
+    border-color: #60a5fa;
+  }
+
+  .delta-anac {
+    color: #065f46;
+    background: #ccfbf1;
+    border-color: #14b8a6;
+  }
+
+  .delta-removed {
+    color: #7f1d1d;
+    background: #fee2e2;
+    border-color: #f87171;
+  }
+
+  @media (max-width: 780px) {
+    .branch-update-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+
+  .hero-update-summary {
+    margin-top: 18px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.14);
+    color: #e2e8f0;
+    width: fit-content;
+  }
+
+  .hero-update-summary strong {
+    color: #ffffff;
+    font-size: 13px;
+  }
+
+  .hero-update-summary span {
+    font-size: 13px;
+    color: #cbd5e1;
+  }
+
+  .hero-update-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.12);
+    font-size: 12px;
+    font-weight: 800;
+    color: #f8fafc;
+  }
+
+  .hero-update-chip.new {
+    background: rgba(249,115,22,.20);
+    border-color: rgba(249,115,22,.35);
+  }
+
+  .hero-update-chip.updated {
+    background: rgba(37,99,235,.20);
+    border-color: rgba(96,165,250,.35);
+  }
+
+  .hero-update-chip.anac {
+    background: rgba(20,184,166,.20);
+    border-color: rgba(20,184,166,.35);
+  }
+
+  .hero-update-chip.removed {
+    background: rgba(239,68,68,.18);
+    border-color: rgba(248,113,113,.35);
+  }
+
+  @media (max-width: 680px) {
+    .hero-update-summary {
+      border-radius: 18px;
+      align-items: flex-start;
+    }
+  }
+
 </style>
 <script id="salerno-url-normalizer">
 (function () {
@@ -285,9 +447,20 @@
   </div>
 </nav>
 
+
+
   <header>
     <h1>Project Radar MVP - Filiali</h1>
     <p>Accesso diretto alla ricerca filtrata per filiale, raggruppata per Area Manager.</p>
+  <div class="hero-update-summary" id="branchUpdatesCompact">
+    <strong>Ultimo aggiornamento</strong>
+    <span id="branchUpdatesSubtitle">caricamento…</span>
+    <span class="hero-update-chip anac" id="branchUpdateNew">0 nuovi</span>
+    <span class="hero-update-chip updated" id="branchUpdateChanged">0 agg.</span>
+    <span class="hero-update-chip new" id="branchUpdateAnac">0 ANAC</span>
+    <span class="hero-update-chip removed" id="branchUpdateRemoved">0 rimossi</span>
+  </div>
+
   </header>
 
   <main>
@@ -749,5 +922,43 @@
 })();
 </script>
 
+
+<script id="branch-updates-script">
+(function () {
+  const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+
+  async function loadManifest() {
+    const response = await fetch("data/update_manifest.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+    return response.json();
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+
+  function renderManifest(manifest) {
+    const generated = manifest.generated_at_utc
+      ? new Date(manifest.generated_at_utc).toLocaleString("it-IT")
+      : "non disponibile";
+
+    setText("branchUpdatesSubtitle", `generato: ${generated}`);
+    setText("branchUpdateNew", `${fmtInt(manifest.new_records)} nuovi`);
+    setText("branchUpdateChanged", `${fmtInt(manifest.updated_records)} agg.`);
+    setText("branchUpdateAnac", `${fmtInt(manifest.anac_added_records)} ANAC`);
+    setText("branchUpdateRemoved", `${fmtInt(manifest.removed_records)} rimossi`);
+  }
+
+  loadManifest()
+    .then(renderManifest)
+    .catch(err => {
+      console.warn(err);
+      setText("branchUpdatesSubtitle", "dato non disponibile");
+    });
+})();
+</script>
+
 </body>
 </html>
+
