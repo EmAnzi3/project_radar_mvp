@@ -1,0 +1,472 @@
+﻿<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project Radar MVP - Aggiornamenti</title>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --teal: #0f766e;
+      --orange: #f97316;
+      --blue: #2563eb;
+      --red: #dc2626;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --line: #e5e7eb;
+      --text: #111827;
+      --muted: #64748b;
+      --shadow: 0 18px 45px rgba(15, 23, 42, .10);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(20,184,166,.14), transparent 28rem),
+        radial-gradient(circle at top right, rgba(249,115,22,.11), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, .96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 10px clamp(16px, 3vw, 32px);
+      display: flex;
+      justify-content: center;
+    }
+
+    .site-nav-inner {
+      width: min(1220px, 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .site-nav-title {
+      color: #fff;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .site-nav a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 750;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .site-nav a:hover {
+      background: rgba(20,184,166,.22);
+      color: #fff;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(15,23,42,.99), rgba(17,24,39,.96));
+      color: white;
+      padding: 44px clamp(22px, 4vw, 54px) 70px;
+    }
+
+    .hero {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.5vw, 60px);
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    main {
+      max-width: 1220px;
+      margin: -42px auto 50px;
+      padding: 0 clamp(18px, 3vw, 30px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .meta-line {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 8px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .kpi {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .kpi .value {
+      margin-top: 8px;
+      font-size: clamp(30px, 3vw, 44px);
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .kpi.new .value { color: var(--teal); }
+    .kpi.updated .value { color: var(--blue); }
+    .kpi.anac .value { color: var(--orange); }
+    .kpi.removed .value { color: var(--red); }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid #dbe3ef;
+      border-radius: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+      background: white;
+    }
+
+    th {
+      text-align: left;
+      background: #0f172a;
+      color: white;
+      font-size: 13px;
+      padding: 12px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #e2e8f0;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+
+    .branch-link {
+      font-weight: 900;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .branch-link:hover {
+      color: var(--teal);
+      text-decoration: underline;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .chip-new {
+      color: #065f46;
+      background: #d1fae5;
+      border-color: #10b981;
+    }
+
+    .chip-updated {
+      color: #1e3a8a;
+      background: #dbeafe;
+      border-color: #60a5fa;
+    }
+
+    .chip-anac {
+      color: #7c2d12;
+      background: #ffedd5;
+      border-color: #fb923c;
+    }
+
+    .chip-removed {
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .actions a {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      text-decoration: none;
+      color: white;
+      background: #334155;
+    }
+
+    .actions a.new { background: var(--teal); }
+    .actions a.updated { background: var(--blue); }
+    .actions a.anac { background: var(--orange); }
+
+    .empty {
+      padding: 18px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .site-nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <div class="site-nav-title">Project Radar MVP</div>
+      <div class="site-nav-links">
+        <a href="index.html">Home</a>
+        <a href="search.html">Ricerca</a>
+        <a href="branches.html">Filiali</a>
+        <a href="updates.html">Aggiornamenti</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <section class="hero">
+      <h1>Aggiornamenti mensili</h1>
+      <p class="subtitle">
+        Riepilogo delle variazioni rilevate rispetto al precedente aggiornamento:
+        nuovi record, record aggiornati e nuovi match ANAC.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Ultimo aggiornamento</h2>
+      <div class="meta-line" id="updateMeta">Caricamento manifest aggiornamenti…</div>
+    </section>
+
+    <section class="kpi-grid">
+      <article class="kpi new">
+        <div class="label">Nuovi nel radar</div>
+        <div class="value" id="kpiNew">—</div>
+      </article>
+
+      <article class="kpi updated">
+        <div class="label">Aggiornati</div>
+        <div class="value" id="kpiUpdated">—</div>
+      </article>
+
+      <article class="kpi anac">
+        <div class="label">ANAC aggiunto</div>
+        <div class="value" id="kpiAnac">—</div>
+      </article>
+
+      <article class="kpi removed">
+        <div class="label">Rimossi</div>
+        <div class="value" id="kpiRemoved">—</div>
+      </article>
+
+      <article class="kpi">
+        <div class="label">Filiali con novità</div>
+        <div class="value" id="kpiBranches">—</div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Novità per filiale</h2>
+      <div id="updatesContent" class="empty">Caricamento dati…</div>
+    </section>
+  </main>
+
+  <script>
+    const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function branchDisplayName(value) {
+      const text = String(value || "").trim();
+      if (text === "SALERNO") return "Salerno";
+      return text;
+    }
+
+    function branchSlug(value) {
+      const text = String(value || "").trim();
+      if (text.toUpperCase() === "SALERNO") return "SALERNO";
+      return text;
+    }
+
+    function searchLink(branch, change) {
+      const params = new URLSearchParams();
+      params.set("branch", branchSlug(branch));
+      if (change) params.set("change", change);
+      return `search.html?${params.toString()}`;
+    }
+
+    async function loadManifest() {
+      const response = await fetch("data/update_manifest.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+      return response.json();
+    }
+
+    function render(manifest) {
+      const generated = manifest.generated_at_utc
+        ? new Date(manifest.generated_at_utc).toLocaleString("it-IT")
+        : "non disponibile";
+
+      document.getElementById("updateMeta").textContent =
+        `Run ${manifest.run_id || "n/d"} · generato: ${generated} · record correnti: ${fmtInt(manifest.current_unique_records)} · record precedenti: ${fmtInt(manifest.previous_unique_records)}`;
+
+      document.getElementById("kpiNew").textContent = fmtInt(manifest.new_records);
+      document.getElementById("kpiUpdated").textContent = fmtInt(manifest.updated_records);
+      document.getElementById("kpiAnac").textContent = fmtInt(manifest.anac_added_records);
+      document.getElementById("kpiRemoved").textContent = fmtInt(manifest.removed_records);
+      document.getElementById("kpiBranches").textContent = fmtInt(manifest.branches_with_news);
+
+      const rows = Array.isArray(manifest.by_branch) ? manifest.by_branch : [];
+      const container = document.getElementById("updatesContent");
+
+      if (!rows.length) {
+        container.className = "empty";
+        container.textContent = "Nessuna variazione rilevata nell’ultimo aggiornamento.";
+        return;
+      }
+
+      container.className = "table-wrap";
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Filiale</th>
+              <th>Nuovi</th>
+              <th>Aggiornati</th>
+              <th>ANAC aggiunto</th>
+              <th>Rimossi</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => {
+              const branch = branchDisplayName(row.branch);
+              const rawBranch = row.branch;
+
+              return `
+                <tr>
+                  <td><a class="branch-link" href="${searchLink(rawBranch, "")}">${escapeHtml(branch)}</a></td>
+                  <td><span class="chip chip-new">${fmtInt(row.new)}</span></td>
+                  <td><span class="chip chip-updated">${fmtInt(row.updated)}</span></td>
+                  <td><span class="chip chip-anac">${fmtInt(row.anac_added)}</span></td>
+                  <td><span class="chip chip-removed">${fmtInt(row.removed)}</span></td>
+                  <td>
+                    <div class="actions">
+                      <a class="new" href="${searchLink(rawBranch, "new")}">Nuovi</a>
+                      <a class="updated" href="${searchLink(rawBranch, "updated")}">Aggiornati</a>
+                      <a class="anac" href="${searchLink(rawBranch, "anac_added")}">ANAC</a>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    loadManifest()
+      .then(render)
+      .catch(err => {
+        console.error(err);
+        document.getElementById("updateMeta").textContent = "Manifest aggiornamenti non disponibile.";
+        document.getElementById("updatesContent").textContent = "Impossibile caricare data/update_manifest.json.";
+      });
+  </script>
+</body>
+</html>

@@ -589,6 +589,7 @@
       <a href="index.html">Home</a>
       <a href="search.html">Ricerca</a>
       <a href="branches.html">Filiali</a>
+      <a href="updates.html">Aggiornamenti</a>
     </div>
   </div>
 </nav>
@@ -1870,6 +1871,38 @@ loadSearchData().catch(showLoadError);
   observer.observe(document.documentElement, {
     childList: true,
     subtree: true
+  });
+})();
+</script>
+
+
+<script id="change-url-param-loader">
+(function () {
+  function applyChangeParam() {
+    const params = new URLSearchParams(window.location.search);
+    const change = params.get("change");
+
+    if (!change) return;
+
+    const select = document.getElementById("changeFilter");
+    if (!select) return;
+
+    const allowed = Array.from(select.options).some(option => option.value === change);
+    if (!allowed) return;
+
+    if (select.value !== change) {
+      select.value = change;
+    }
+
+    if (typeof applyFilters === "function") {
+      applyFilters();
+    }
+  }
+
+  window.addEventListener("load", () => {
+    setTimeout(applyChangeParam, 100);
+    setTimeout(applyChangeParam, 500);
+    setTimeout(applyChangeParam, 1200);
   });
 })();
 </script>
