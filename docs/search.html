@@ -395,7 +395,7 @@
       <div class="pill" id="total"></div>
       <div class="pill" id="shown"></div>
       <div class="pill" id="anacCoverage"></div>
-      <div class="pill">Vista limitata ai primi 300 risultati filtrati</div>
+      <div class="pill">300 risultati per pagina</div>
     </section>
 
     <section class="table-wrap">
@@ -424,6 +424,8 @@
 let records = [];
 let branchTerritory = {};
 let filtered = [];
+let currentPage = 1;
+const pageSize = 300;
 let sortKey = "project_value";
 let sortDir = "desc";
 
@@ -586,6 +588,7 @@ function updateDependentFilters() {
 }
 
 function applyFilters() {
+  currentPage = 1;
   const branch = els.branch.value;
   const region = els.region.value;
   const province = els.province.value;
@@ -798,6 +801,44 @@ function setSort(key) {
 
 
 
+
+
+function formatEuro(value) {
+  const n = Number(String(value || "").replace(/\./g, "").replace(",", "."));
+  if (!Number.isFinite(n) || n === 0) return "";
+  return n.toLocaleString("it-IT", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0
+  });
+}
+
+function escapeAttr(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function branchDisplayHtml(record) {
+  const branches = recordBranchList(record);
+  const branch = String(record.branch || "").trim();
+
+  if (!branches.length) {
+    return escapeHtml(branch);
+  }
+
+  if (branches.length === 1) {
+    return escapeHtml(branches[0]);
+  }
+
+  return `
+    <strong>${escapeHtml(branch || "AMBIGUA")}</strong>
+    <small>${branches.map(escapeHtml).join(" | ")}</small>
+  `;
+}
+
 function contractorsPreviewHtml(r) {
   const names = [];
 
@@ -894,58 +935,131 @@ function updateAnacCoverageBadge() {
   el.textContent = `Con aggiudicatario: ${withContractor.toLocaleString("it-IT")} | Senza: ${withoutContractor.toLocaleString("it-IT")} | Copertura: ${pct}%`;
 }
 
+
+function ensurePagerElement() {
+  let pager = document.getElementById("pagerControls");
+
+  if (!pager) {
+    pager = document.createElement("section");
+    pager.id = "pagerControls";
+    pager.className = "meta";
+    pager.style.marginTop = "16px";
+
+    const tableWrap = document.querySelector(".table-wrap");
+    if (tableWrap && tableWrap.parentNode) {
+      tableWrap.parentNode.insertBefore(pager, tableWrap.nextSibling);
+    }
+  }
+
+  return pager;
+}
+
+function paginationWindow(totalPages) {
+  const pages = [];
+
+  if (totalPages <= 9) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+    return pages;
+  }
+
+  pages.push(1);
+
+  const start = Math.max(2, currentPage - 2);
+  const end = Math.min(totalPages - 1, currentPage + 2);
+
+  if (start > 2) pages.push("...");
+
+  for (let i = start; i <= end; i++) pages.push(i);
+
+  if (end < totalPages - 1) pages.push("...");
+
+  pages.push(totalPages);
+  return pages;
+}
+
+function goToPage(page) {
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  currentPage = Math.min(Math.max(Number(page) || 1, 1), totalPages);
+  render();
+}
+
+function updatePagerControls(totalFiltered, shownCount, startIndex, endIndex) {
+  const pager = ensurePagerElement();
+  if (!pager) return;
+
+  if (!totalFiltered) {
+    pager.innerHTML = `<div class="pill">Nessun risultato da visualizzare</div>`;
+    return;
+  }
+
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / pageSize));
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+
+  const pageButtons = paginationWindow(totalPages).map(p => {
+    if (p === "...") {
+      return `<span class="pill">...</span>`;
+    }
+
+    const activeStyle = p === currentPage
+      ? `style="background:#0f766e;color:white;"`
+      : "";
+
+    return `<button type="button" ${activeStyle} onclick="goToPage(${p})">${p}</button>`;
+  }).join("");
+
+  pager.innerHTML = `
+    <div class="pill">Pagina ${currentPage.toLocaleString("it-IT")} di ${totalPages.toLocaleString("it-IT")}</div>
+    <div class="pill">Record ${startIndex.toLocaleString("it-IT")}-${endIndex.toLocaleString("it-IT")} di ${totalFiltered.toLocaleString("it-IT")}</div>
+    <button type="button" onclick="goToPage(1)" ${currentPage === 1 ? "disabled" : ""}>Prima</button>
+    <button type="button" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>Prec.</button>
+    ${pageButtons}
+    <button type="button" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>Succ.</button>
+    <button type="button" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? "disabled" : ""}>Ultima</button>
+  `;
+}
+
 function render() {
-  const maxRows = 300;
-  const rows = prSortedFiltered().slice(0, maxRows);
+  const sorted = prSortedFiltered();
+  const totalFiltered = sorted.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / pageSize));
+
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+
+  const startOffset = (currentPage - 1) * pageSize;
+  const rows = sorted.slice(startOffset, startOffset + pageSize);
+
+  const startIndex = totalFiltered ? startOffset + 1 : 0;
+  const endIndex = Math.min(startOffset + rows.length, totalFiltered);
 
   els.total.textContent = "Record totali: " + records.length;
-  els.shown.textContent = "Risultati filtrati: " + filtered.length + " - mostrati: " + rows.length;
+  els.shown.textContent = "Risultati filtrati: " + filtered.length + " - pagina " + currentPage + "/" + totalPages + " - mostrati: " + rows.length;
   updateAnacCoverageBadge();
 
   els.tbody.innerHTML = rows.map(r => `
     <tr>
       <td>
         <strong>${escapeHtml(r.title)}</strong>
-        <div class="small">CUP: ${escapeHtml(r.cup)}${r.cig ? " - CIG: " + escapeHtml(r.cig) : ""}</div>
-        ${sourceBadgeHtml(r)}
+        <small>CUP: ${escapeHtml(r.cup)} ${r.cig ? "- CIG: " + escapeHtml(r.cig) : ""}</small>
+        ${r.has_anac ? '<span class="tag tag-anac">ANAC</span>' : '<span class="tag tag-open">OpenCUP</span>'}
       </td>
-
-      <td>${branchLabel(r)}</td>
-
+      <td>${branchDisplayHtml(r)}</td>
       <td>${escapeHtml(r.segment)}</td>
-
       <td>${escapeHtml(r.region)}</td>
-
       <td>${escapeHtml(r.province)}</td>
-
       <td>${escapeHtml(r.municipality)}</td>
-
-      <td class="money">${euro(r.project_value)}</td>
-
+      <td>${formatEuro(r.project_value)}</td>
       <td>${escapeHtml(r.client)}</td>
-
-      <td class="contractors-col">
-        ${hasAnacData(r) ? contractorsPreviewHtml(r) : '<span class="small">Non disponibile da OpenCUP</span>'}
-        ${r.awards_count ? `<div><button class="details-btn" onclick="toggleAwards('awards-${r.cup}')">Dettagli ANAC (${r.awards_count})</button></div>` : ""}
+      <td>${contractorsPreviewHtml(r)}</td>
+      <td>
+        <strong>${r.has_anac ? "Aggiudicazione:" : "CUP:"}</strong><br>
+        ${escapeHtml(r.award_date || r.cup_year || "")}<br>
+        <span>${escapeHtml(r.award_result || (r.has_anac ? "" : "Nessun match ANAC"))}</span>
       </td>
-
-      <td class="award-col">
-        ${hasAnacData(r)
-          ? `<strong>Aggiudicazione:</strong> ${escapeHtml(r.award_date || "")}<div class="small">${escapeHtml(r.award_result || "")}</div>`
-          : `<strong>CUP:</strong> ${escapeHtml(cupYear(r.cup))}<div class="small">Nessun match ANAC</div>`}
-      </td>
-
-      <td class="source-col">
-        <a href="${escapeHtml(r.source_url)}" target="_blank">Fonte</a>
-      </td>
+      <td>${r.source_url ? `<a href="${escapeAttr(r.source_url)}" target="_blank">Fonte</a>` : ""}</td>
     </tr>
-    ${r.awards_count ? `
-      <tr id="awards-${escapeHtml(r.cup)}" class="award-detail-row" style="display:none;">
-        <td colspan="11">${awardsDetailHtml(r)}</td>
-      </tr>
-    ` : ""}
   `).join("");
 
+  updatePagerControls(totalFiltered, rows.length, startIndex, endIndex);
   updateSortHeaders();
 }
 
@@ -1271,3 +1385,4 @@ loadSearchData().catch(showLoadError);
 </script>
 </body>
 </html>
+
