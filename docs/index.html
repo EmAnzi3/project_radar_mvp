@@ -316,7 +316,139 @@
         text-align: left;
       }
     }
-  </style>
+  
+    .updates-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .update-kpi {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .update-kpi .label {
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+    }
+
+    .update-kpi .value {
+      margin-top: 7px;
+      font-size: clamp(26px, 2.8vw, 42px);
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .update-kpi.new .value { color: #0f766e; }
+    .update-kpi.updated .value { color: #2563eb; }
+    .update-kpi.anac .value { color: #ea580c; }
+
+    .updates-panel {
+      margin-bottom: 18px;
+    }
+
+    .updates-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .updates-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .updates-branches {
+      display: grid;
+      gap: 10px;
+    }
+
+    .update-branch-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 1fr) repeat(4, auto);
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    .update-branch-row a {
+      color: var(--text);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .update-branch-row a:hover {
+      color: var(--teal);
+      text-decoration: underline;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .chip-new {
+      color: #7c2d12;
+      background: #ffedd5;
+      border-color: #fb923c;
+    }
+
+    .chip-updated {
+      color: #1e3a8a;
+      background: #dbeafe;
+      border-color: #60a5fa;
+    }
+
+    .chip-anac {
+      color: #065f46;
+      background: #ccfbf1;
+      border-color: #14b8a6;
+    }
+
+    .chip-removed {
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    @media (max-width: 900px) {
+      .updates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .update-branch-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .updates-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+</style>
 </head>
 <body>
   <header>
@@ -383,6 +515,42 @@
         <div class="value" id="kpiCoverage">—</div>
         <div class="note">Quota record con match ANAC.</div>
       </article>
+    </section>
+
+
+    <section class="updates-panel card">
+      <div class="updates-head">
+        <div>
+          <h2>Ultimi aggiornamenti</h2>
+          <p id="updatesSubtitle">Riepilogo delle variazioni rispetto al precedente aggiornamento dati.</p>
+        </div>
+        <a class="button secondary" href="search.html?change=new">Vedi nuovi record</a>
+      </div>
+
+      <div class="updates-grid">
+        <article class="update-kpi new">
+          <div class="label">Nuovi nel radar</div>
+          <div class="value" id="updateNew">—</div>
+        </article>
+
+        <article class="update-kpi updated">
+          <div class="label">Aggiornati</div>
+          <div class="value" id="updateChanged">—</div>
+        </article>
+
+        <article class="update-kpi anac">
+          <div class="label">ANAC aggiunto</div>
+          <div class="value" id="updateAnac">—</div>
+        </article>
+
+        <article class="update-kpi">
+          <div class="label">Filiali con novità</div>
+          <div class="value" id="updateBranches">—</div>
+        </article>
+      </div>
+
+      <h2>Filiali con più novità</h2>
+      <div id="updatesBranchList" class="updates-branches loading">Caricamento aggiornamenti…</div>
     </section>
 
     <section class="grid">
@@ -512,6 +680,89 @@
       return response.json();
     }
 
+
+    function branchDisplayName(value) {
+      const text = String(value || "").trim();
+      if (text === "SALERNO") return "Salerno";
+      return text;
+    }
+
+    function branchSlug(value) {
+      const text = String(value || "").trim();
+      if (text.toUpperCase() === "SALERNO") return "SALERNO";
+      return text;
+    }
+
+    async function loadUpdateManifest() {
+      const response = await fetch("data/update_manifest.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+      return response.json();
+    }
+
+    function renderUpdateManifest(manifest) {
+      const newRecords = Number(manifest.new_records || 0);
+      const updatedRecords = Number(manifest.updated_records || 0);
+      const anacAdded = Number(manifest.anac_added_records || 0);
+      const removed = Number(manifest.removed_records || 0);
+      const branchesWithNews = Number(manifest.branches_with_news || 0);
+
+      document.getElementById("updateNew").textContent = fmtInt(newRecords);
+      document.getElementById("updateChanged").textContent = fmtInt(updatedRecords);
+      document.getElementById("updateAnac").textContent = fmtInt(anacAdded);
+      document.getElementById("updateBranches").textContent = fmtInt(branchesWithNews);
+
+      const generated = manifest.generated_at_utc
+        ? new Date(manifest.generated_at_utc).toLocaleString("it-IT")
+        : "non disponibile";
+
+      const subtitle = document.getElementById("updatesSubtitle");
+      if (subtitle) {
+        subtitle.textContent = `Confronto ultimo aggiornamento · generato: ${generated}`;
+      }
+
+      const list = document.getElementById("updatesBranchList");
+      if (!list) return;
+
+      const rows = Array.isArray(manifest.by_branch) ? manifest.by_branch.slice(0, 10) : [];
+
+      if (!rows.length) {
+        list.classList.remove("loading");
+        list.innerHTML = `<div class="update-branch-row">
+          <span><strong>Nessuna variazione rilevata</strong></span>
+          <span class="chip">0 nuovi</span>
+          <span class="chip">0 aggiornati</span>
+          <span class="chip">0 ANAC</span>
+          <span class="chip">0 rimossi</span>
+        </div>`;
+        return;
+      }
+
+      list.classList.remove("loading");
+      list.innerHTML = rows.map(row => {
+        const branch = branchDisplayName(row.branch);
+        const slug = encodeURIComponent(branchSlug(row.branch));
+
+        return `
+          <div class="update-branch-row">
+            <a href="search.html?branch=${slug}">${escapeHtml(branch)}</a>
+            <span class="chip chip-new">+${fmtInt(row.new)} nuovi</span>
+            <span class="chip chip-updated">${fmtInt(row.updated)} agg.</span>
+            <span class="chip chip-anac">${fmtInt(row.anac_added)} ANAC</span>
+            <span class="chip chip-removed">${fmtInt(row.removed)} rimossi</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    loadUpdateManifest()
+      .then(renderUpdateManifest)
+      .catch(err => {
+        console.warn(err);
+        const list = document.getElementById("updatesBranchList");
+        if (list) list.textContent = "Manifest aggiornamenti non disponibile.";
+      });
+
+
     loadStats()
       .then(stats => {
         document.getElementById("heroProjects").textContent = fmtInt(stats.total_records);
@@ -574,3 +825,4 @@
   </script>
 </body>
 </html>
+
