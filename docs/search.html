@@ -460,6 +460,75 @@
     box-shadow: 0 0 0 2px rgba(100, 116, 139, .12);
   }
 
+
+  .oe-details {
+    margin-top: 6px;
+    border-top: 1px solid #cbd5e1;
+    padding-top: 5px;
+  }
+
+  .oe-details summary {
+    cursor: pointer;
+    color: #0f766e;
+    font-weight: 850;
+    font-size: 11px;
+    user-select: none;
+  }
+
+  .oe-list {
+    margin-top: 6px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .oe-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .oe-item strong {
+    display: block;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .oe-item small {
+    display: block;
+    margin-top: 2px;
+    color: #64748b;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .oe-preview {
+    display: grid;
+    gap: 4px;
+  }
+
+  .oe-preview-line {
+    border-bottom: 1px solid #dbe3ef;
+    padding-bottom: 3px;
+  }
+
+  .oe-preview-line strong {
+    display: block;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .oe-preview-line small {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+    margin-top: 1px;
+  }
+
+  .oe-more {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 750;
+  }
+
 </style>
 </head>
 <body>
@@ -999,30 +1068,123 @@ function branchDisplayHtml(record) {
   `;
 }
 
-function contractorsPreviewHtml(r) {
-  const names = [];
+function splitContractorField(value) {
+  const text = String(value || "").trim();
 
-  if (Array.isArray(r.awards)) {
-    for (const a of r.awards) {
-      for (const name of splitPipe(a.contractors || "")) {
-        if (name && !names.includes(name)) names.push(name);
-      }
+  if (!text) return [];
+
+  return text
+    .split(/\s+\|\s+|\n|<br\s*\/?>/i)
+    .map(v => v.trim())
+    .filter(Boolean);
+}
+
+function collectContractorItems(record) {
+  const items = [];
+  const seen = new Set();
+
+  function addItem(name, taxCode) {
+    const n = String(name || "").trim();
+    const t = String(taxCode || "").trim();
+
+    if (!n && !t) return;
+
+    const key = `${n.toUpperCase()}|${t.toUpperCase()}`;
+
+    if (seen.has(key)) return;
+
+    seen.add(key);
+    items.push({
+      name: n || "Operatore economico non indicato",
+      taxCode: t
+    });
+  }
+
+  const awards = Array.isArray(record.awards) ? record.awards : [];
+
+  awards.forEach(award => {
+    if (!award || typeof award !== "object") return;
+
+    const names = splitContractorField(
+      award.contractors ||
+      award.contractor_name ||
+      award.aggiudicatario ||
+      ""
+    );
+
+    const taxCodes = splitContractorField(
+      award.contractor_tax_codes ||
+      award.contractor_tax_code ||
+      award.partita_iva ||
+      award.codice_fiscale ||
+      ""
+    );
+
+    const maxLen = Math.max(names.length, taxCodes.length);
+
+    for (let i = 0; i < maxLen; i++) {
+      addItem(names[i] || names[0] || "", taxCodes[i] || "");
+    }
+  });
+
+  if (!items.length) {
+    const names = splitContractorField(record.contractors || record.contractors_summary || "");
+    const taxCodes = splitContractorField(record.contractor_tax_codes || "");
+
+    const maxLen = Math.max(names.length, taxCodes.length);
+
+    for (let i = 0; i < maxLen; i++) {
+      addItem(names[i] || names[0] || "", taxCodes[i] || "");
     }
   }
 
-  if (!names.length) {
-    for (const name of splitPipe(r.contractors || r.contractors_summary || "")) {
-      if (name && !names.includes(name)) names.push(name);
-    }
-  }
+  return items;
+}
 
-  const shown = names.slice(0, 3);
-  const extra = Math.max(0, names.length - shown.length);
+function contractorItemHtml(item) {
+  const tax = item.taxCode
+    ? `<small>P.IVA/CF: ${escapeHtml(item.taxCode)}</small>`
+    : `<small>P.IVA/CF non disponibile</small>`;
 
   return `
-    ${shown.map(x => `<div class="oe-line"><div class="oe-name">${escapeHtml(x)}</div></div>`).join("")}
-    ${extra ? `<div class="small"><strong>+ altri ${extra} OE</strong></div>` : ""}
+    <div class="oe-item">
+      <strong>${escapeHtml(item.name)}</strong>
+      ${tax}
+    </div>
   `;
+}
+
+function contractorsPreviewHtml(r) {
+  const items = collectContractorItems(r);
+
+  if (!items.length) {
+    return `<span style="color:#64748b;">Non disponibile da OpenCUP</span>`;
+  }
+
+  const previewItems = items.slice(0, 3);
+
+  const preview = `
+    <div class="oe-preview">
+      ${previewItems.map(item => `
+        <div class="oe-preview-line">
+          <strong>${escapeHtml(item.name)}</strong>
+          ${item.taxCode ? `<small>P.IVA/CF: ${escapeHtml(item.taxCode)}</small>` : ""}
+        </div>
+      `).join("")}
+      ${items.length > 3 ? `<div class="oe-more">+ altri ${items.length - 3} OE</div>` : ""}
+    </div>
+  `;
+
+  const details = `
+    <details class="oe-details">
+      <summary>Vedi tutti aggiudicatari / OE (${items.length})</summary>
+      <div class="oe-list">
+        ${items.map(contractorItemHtml).join("")}
+      </div>
+    </details>
+  `;
+
+  return preview + details;
 }
 
 function awardsOeWithTaxHtml(a) {
