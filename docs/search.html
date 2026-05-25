@@ -530,6 +530,18 @@
   }
 
 </style>
+<script id="salerno-url-normalizer">
+(function () {
+  const url = new URL(window.location.href);
+  const branch = url.searchParams.get("branch");
+
+  if (branch && branch.trim().toUpperCase() === "SALERNO" && branch !== "SALERNO") {
+    url.searchParams.set("branch", "SALERNO");
+    window.location.replace(url.toString());
+  }
+})();
+</script>
+
 </head>
 <body>
 <nav class="site-nav">
@@ -1705,6 +1717,94 @@ function showLoadError(err) {
 loadSearchData().catch(showLoadError);
 
 </script>
+<script id="salerno-ui-normalizer">
+(function () {
+  const RAW = "SALERNO";
+  const DISPLAY = "Salerno";
+
+  function isSalerno(value) {
+    return String(value || "").trim().toUpperCase() === RAW;
+  }
+
+  function fixSelectOptions() {
+    document.querySelectorAll("select option").forEach(option => {
+      if (isSalerno(option.value) || isSalerno(option.textContent)) {
+        option.value = RAW;
+        option.textContent = DISPLAY;
+      }
+    });
+
+    document.querySelectorAll("select").forEach(select => {
+      if (isSalerno(select.value)) {
+        select.value = RAW;
+      }
+    });
+  }
+
+  function fixTextNodes(root) {
+    const walker = document.createTreeWalker(
+      root || document.body,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent) return NodeFilter.FILTER_REJECT;
+          if (["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return node.nodeValue.includes(RAW)
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT;
+        }
+      }
+    );
+
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(node => {
+      node.nodeValue = node.nodeValue.replaceAll(RAW, DISPLAY);
+    });
+  }
+
+  function fixLinks() {
+    document.querySelectorAll("a[href]").forEach(a => {
+      const href = a.getAttribute("href") || "";
+
+      // Il link deve continuare a puntare al valore tecnico SALERNO.
+      // Cambiamo solo il testo visibile.
+      if (isSalerno(a.textContent)) {
+        a.textContent = DISPLAY;
+      }
+
+      if (href.includes("branch=Salerno")) {
+        a.setAttribute("href", href.replace("branch=Salerno", "branch=SALERNO"));
+      }
+    });
+  }
+
+  function run() {
+    fixSelectOptions();
+    fixTextNodes(document.body);
+    fixLinks();
+  }
+
+  window.addEventListener("DOMContentLoaded", run);
+  window.addEventListener("load", run);
+  setTimeout(run, 250);
+  setTimeout(run, 1000);
+
+  const observer = new MutationObserver(() => {
+    window.requestAnimationFrame(run);
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+})();
+</script>
+
 </body>
 </html>
 
