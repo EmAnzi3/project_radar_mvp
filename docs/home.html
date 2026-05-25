@@ -586,22 +586,43 @@
   </main>
 
   <script>
-    const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
-    const fmtPct = n => `${Number(n || 0).toFixed(1).replace(".", ",")}%`;
+    function formatThousands(value) {
+      const n = Number(value || 0);
+
+      if (!Number.isFinite(n)) return "0";
+
+      const rounded = Math.round(n);
+      return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function formatDecimalIt(value, digits = 1) {
+      const n = Number(value || 0);
+
+      if (!Number.isFinite(n)) return "0";
+
+      const fixed = n.toFixed(digits);
+      const [integerPart, decimalPart] = fixed.split(".");
+      const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+      return decimalPart ? `${formattedInteger},${decimalPart}` : formattedInteger;
+    }
+
+    const fmtInt = n => formatThousands(n);
+    const fmtPct = n => `${formatDecimalIt(n, 1)}%`;
 
     function fmtMoneyShort(value) {
       const n = Number(value || 0);
       if (!Number.isFinite(n) || n <= 0) return "—";
 
       if (n >= 1_000_000_000) {
-        return `${(n / 1_000_000_000).toLocaleString("it-IT", { maximumFractionDigits: 1 })} mld €`;
+        return `${formatDecimalIt(n / 1_000_000_000, 1)} mld €`;
       }
 
       if (n >= 1_000_000) {
-        return `${(n / 1_000_000).toLocaleString("it-IT", { maximumFractionDigits: 1 })} mln €`;
+        return `${formatDecimalIt(n / 1_000_000, 1)} mln €`;
       }
 
-      return `${n.toLocaleString("it-IT", { maximumFractionDigits: 0 })} €`;
+      return `${formatThousands(n)} €`;
     }
 
     function escapeHtml(value) {
