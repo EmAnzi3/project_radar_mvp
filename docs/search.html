@@ -529,6 +529,44 @@
     font-weight: 750;
   }
 
+
+  .change-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+  }
+
+  .change-tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 850;
+    line-height: 1;
+    border: 1px solid transparent;
+  }
+
+  .change-new {
+    color: #7c2d12;
+    background: #ffedd5;
+    border-color: #fb923c;
+  }
+
+  .change-updated {
+    color: #1e3a8a;
+    background: #dbeafe;
+    border-color: #60a5fa;
+  }
+
+  .change-anac {
+    color: #065f46;
+    background: #ccfbf1;
+    border-color: #14b8a6;
+  }
+
 </style>
 <script id="salerno-url-normalizer">
 (function () {
@@ -571,6 +609,12 @@
         <option value="">Tutti</option>
         <option value="with">Con aggiudicatario</option>
         <option value="without">Senza aggiudicatario</option>
+      </select></div>
+      <div><label>Novità ultimo aggiornamento</label><select id="changeFilter">
+        <option value="">Tutte</option>
+        <option value="new">Nuovo nel radar</option>
+        <option value="updated">Aggiornato</option>
+        <option value="anac_added">ANAC aggiunto</option>
       </select></div>
       <div><label>Valore min. progetto</label><input id="valueMin" type="number" min="0" step="100000" placeholder="es. 1000000"></div>
       <div><label>Valore max. progetto</label><input id="valueMax" type="number" min="0" step="100000" placeholder="es. 20000000"></div>
@@ -625,6 +669,7 @@ const els = {
   municipality: document.getElementById("municipality"),
   segment: document.getElementById("segment"),
   contractorFilter: document.getElementById("contractorFilter"),
+  changeFilter: document.getElementById("changeFilter"),
   valueMin: document.getElementById("valueMin"),
   valueMax: document.getElementById("valueMax"),
   dateFrom: document.getElementById("dateFrom"),
@@ -784,6 +829,7 @@ function applyFilters() {
   const municipality = els.municipality.value;
   const segment = els.segment.value;
   const contractorFilter = els.contractorFilter ? els.contractorFilter.value : "";
+  const changeFilter = els.changeFilter ? els.changeFilter.value : "";
   const valueMin = Number(els.valueMin.value || 0);
   const valueMax = Number(els.valueMax.value || 0);
   const dateFrom = els.dateFrom.value;
@@ -798,6 +844,7 @@ function applyFilters() {
     if (segment && r.segment !== segment) return false;
     if (contractorFilter === "with" && !hasAnacContractor(r)) return false;
     if (contractorFilter === "without" && hasAnacContractor(r)) return false;
+    if (changeFilter && String(r.change_status || "") !== changeFilter) return false;
 
     if (valueMin && Number(r.project_value || 0) < valueMin) return false;
     if (valueMax && Number(r.project_value || 0) > valueMax) return false;
@@ -1166,6 +1213,25 @@ function contractorItemHtml(item) {
   `;
 }
 
+
+function changeBadgesHtml(record) {
+  const badges = Array.isArray(record.change_badges) ? record.change_badges : [];
+
+  if (!badges.length) return "";
+
+  const html = badges.map(label => {
+    const text = String(label || "").trim();
+    let cls = "change-updated";
+
+    if (text === "Nuovo nel radar") cls = "change-new";
+    if (text === "ANAC aggiunto") cls = "change-anac";
+
+    return `<span class="change-tag ${cls}">${escapeHtml(text)}</span>`;
+  }).join("");
+
+  return `<div class="change-tags">${html}</div>`;
+}
+
 function contractorsPreviewHtml(r) {
   const items = collectContractorItems(r);
 
@@ -1375,6 +1441,7 @@ function render() {
         <strong>${escapeHtml(r.title)}</strong>
         <small>CUP: ${escapeHtml(r.cup)} ${r.cig ? "- CIG: " + escapeHtml(r.cig) : ""}</small>
         ${r.has_anac ? '<span class="tag tag-anac">ANAC</span>' : '<span class="tag tag-open">OpenCUP</span>'}
+        ${changeBadgesHtml(r)}
       </td>
       <td>${branchDisplayHtml(r)}</td>
       <td>${escapeHtml(r.segment)}</td>
@@ -1457,6 +1524,7 @@ function resetFilters() {
   els.municipality.value = "";
   els.segment.value = "";
   if (els.contractorFilter) els.contractorFilter.value = "";
+  if (els.changeFilter) els.changeFilter.value = "";
   els.valueMin.value = "";
   els.valueMax.value = "";
   els.dateFrom.value = "";
@@ -1490,6 +1558,7 @@ els.province.addEventListener("change", () => { updateDependentFilters(); applyF
 els.municipality.addEventListener("change", applyFilters);
 els.segment.addEventListener("change", applyFilters);
 if (els.contractorFilter) els.contractorFilter.addEventListener("change", applyFilters);
+if (els.changeFilter) els.changeFilter.addEventListener("change", applyFilters);
 els.valueMin.addEventListener("input", applyFilters);
 els.valueMax.addEventListener("input", applyFilters);
 els.dateFrom.addEventListener("input", applyFilters);

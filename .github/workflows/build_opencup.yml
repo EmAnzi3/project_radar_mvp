@@ -35,6 +35,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Snapshot previous branch shards
+        run: |
+          rm -rf tmp/previous_branches
+          mkdir -p tmp/previous_branches
+          if [ -d docs/data/branches ]; then
+            cp -R docs/data/branches/. tmp/previous_branches/
+          fi
+          find tmp/previous_branches -maxdepth 1 -name "*.json" | wc -l
+
       - name: Download ANAC raw datasets
         env:
           GH_TOKEN: ${{ github.token }}
@@ -121,6 +130,10 @@ jobs:
       - name: Build branch shards
         run: |
           python -u scripts/build_branch_shards.py --input reports/master_projects.json
+
+      - name: Apply monthly delta badges
+        run: |
+          python -u scripts/apply_monthly_delta.py --previous tmp/previous_branches --current docs/data/branches --manifest docs/data/update_manifest.json
 
       - name: Build homepage stats
         run: |
