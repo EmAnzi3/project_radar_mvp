@@ -378,6 +378,11 @@
       <div><label>Provincia</label><select id="province"></select></div>
       <div><label>Comune</label><select id="municipality"></select></div>
       <div><label>Segmento Alayan</label><select id="segment"></select></div>
+      <div><label>Aggiudicatario</label><select id="contractorFilter">
+        <option value="">Tutti</option>
+        <option value="with">Con aggiudicatario</option>
+        <option value="without">Senza aggiudicatario</option>
+      </select></div>
       <div><label>Valore min. progetto</label><input id="valueMin" type="number" min="0" step="100000" placeholder="es. 1000000"></div>
       <div><label>Valore max. progetto</label><input id="valueMax" type="number" min="0" step="100000" placeholder="es. 20000000"></div>
       <div><label>Data aggiud. da</label><input id="dateFrom" type="date"></div>
@@ -428,6 +433,7 @@ const els = {
   province: document.getElementById("province"),
   municipality: document.getElementById("municipality"),
   segment: document.getElementById("segment"),
+  contractorFilter: document.getElementById("contractorFilter"),
   valueMin: document.getElementById("valueMin"),
   valueMax: document.getElementById("valueMax"),
   dateFrom: document.getElementById("dateFrom"),
@@ -585,6 +591,7 @@ function applyFilters() {
   const province = els.province.value;
   const municipality = els.municipality.value;
   const segment = els.segment.value;
+  const contractorFilter = els.contractorFilter ? els.contractorFilter.value : "";
   const valueMin = Number(els.valueMin.value || 0);
   const valueMax = Number(els.valueMax.value || 0);
   const dateFrom = els.dateFrom.value;
@@ -597,6 +604,8 @@ function applyFilters() {
     if (province && r.province !== province) return false;
     if (municipality && r.municipality !== municipality) return false;
     if (segment && r.segment !== segment) return false;
+    if (contractorFilter === "with" && !hasAnacContractor(r)) return false;
+    if (contractorFilter === "without" && hasAnacContractor(r)) return false;
 
     if (valueMin && Number(r.project_value || 0) < valueMin) return false;
     if (valueMax && Number(r.project_value || 0) > valueMax) return false;
@@ -999,6 +1008,7 @@ function resetFilters() {
   els.province.value = "";
   els.municipality.value = "";
   els.segment.value = "";
+  if (els.contractorFilter) els.contractorFilter.value = "";
   els.valueMin.value = "";
   els.valueMax.value = "";
   els.dateFrom.value = "";
@@ -1031,6 +1041,7 @@ els.region.addEventListener("change", () => { updateDependentFilters(); applyFil
 els.province.addEventListener("change", () => { updateDependentFilters(); applyFilters(); });
 els.municipality.addEventListener("change", applyFilters);
 els.segment.addEventListener("change", applyFilters);
+if (els.contractorFilter) els.contractorFilter.addEventListener("change", applyFilters);
 els.valueMin.addEventListener("input", applyFilters);
 els.valueMax.addEventListener("input", applyFilters);
 els.dateFrom.addEventListener("input", applyFilters);
