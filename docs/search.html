@@ -363,9 +363,82 @@
     }
     /* === /TIMELINE COLUMN FIX === */
 
-  </style>
+  
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, .96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    padding: 10px clamp(16px, 3vw, 32px);
+    display: flex;
+    justify-content: center;
+  }
+
+  .site-nav-inner {
+    width: min(1220px, 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .site-nav-title {
+    color: #fff;
+    font-weight: 850;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .site-nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .site-nav a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 750;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+  }
+
+  .site-nav a:hover {
+    background: rgba(20,184,166,.22);
+    color: #fff;
+  }
+
+  @media (max-width: 640px) {
+    .site-nav-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .site-nav-links {
+      justify-content: flex-start;
+    }
+  }
+
+</style>
 </head>
 <body>
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <div class="site-nav-title">Project Radar MVP</div>
+    <div class="site-nav-links">
+      <a href="index.html">Home</a>
+      <a href="search.html">Ricerca</a>
+      <a href="branches.html">Filiali</a>
+    </div>
+  </div>
+</nav>
+
   <header>
     <h1>Project Radar MVP - Ricerca</h1>
     <p>Filtro rapido su progetti, filiali, committenti e aggiudicatari ANAC.</p>
