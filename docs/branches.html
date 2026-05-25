@@ -421,6 +421,79 @@
     }
   }
 
+  /* === BRANCH CARD DELTA CLEAN === */
+  .branch-card-delta {
+    margin: 10px 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+  }
+
+  .branch-card-delta-title {
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 22px;
+    padding: 0;
+    margin: 0 2px 0 0;
+  }
+
+  .branch-card-delta a {
+    box-sizing: border-box;
+    height: 22px;
+    min-height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    margin: 0;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 850;
+    line-height: 22px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    vertical-align: middle;
+    position: relative;
+    top: 0;
+  }
+
+  .branch-card-delta a:hover {
+    filter: brightness(.96);
+  }
+
+  .branch-card-delta-new {
+    color: #065f46;
+    background: #d1fae5;
+    border-color: #10b981;
+  }
+
+  .branch-card-delta-updated {
+    color: #1e3a8a;
+    background: #dbeafe;
+    border-color: #60a5fa;
+  }
+
+  .branch-card-delta-anac {
+    color: #7c2d12;
+    background: #ffedd5;
+    border-color: #fb923c;
+  }
+
+  .branch-card-delta-removed {
+    color: #7f1d1d;
+    background: #fee2e2;
+    border-color: #f87171;
+  }
+  /* === /BRANCH CARD DELTA CLEAN === */
+
 </style>
 <script id="salerno-url-normalizer">
 (function () {
@@ -957,6 +1030,150 @@
       console.warn(err);
       setText("branchUpdatesSubtitle", "dato non disponibile");
     });
+})();
+</script>
+
+
+<script id="branch-card-delta-script">
+(function () {
+  const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+
+  function branchDisplayName(value) {
+    const text = String(value || "").trim();
+    if (text === "SALERNO") return "Salerno";
+    return text;
+  }
+
+  function branchSlug(value) {
+    const text = String(value || "").trim();
+    if (text.toUpperCase() === "SALERNO") return "SALERNO";
+    return text;
+  }
+
+  function normalizeBranch(value) {
+    return String(value || "")
+      .trim()
+      .replace(/\+/g, " ")
+      .replace(/_/g, " ")
+      .toUpperCase();
+  }
+
+  function searchLink(branch, change) {
+    const params = new URLSearchParams();
+    params.set("branch", branchSlug(branch));
+    if (change) params.set("change", change);
+    return `search.html?${params.toString()}`;
+  }
+
+  function findBranchCard(branch) {
+    const expected = normalizeBranch(branch);
+
+    const links = Array.from(document.querySelectorAll('a[href*="search.html"][href*="branch="]'));
+
+    for (const link of links) {
+      try {
+        const url = new URL(link.getAttribute("href"), window.location.href);
+        const linkBranch = url.searchParams.get("branch");
+
+        if (normalizeBranch(linkBranch) === expected) {
+          return link.closest(".card, .branch-card, article, div");
+        }
+      } catch (_) {
+        continue;
+      }
+    }
+
+    // Fallback: cerca il titolo testuale della filiale.
+    const display = branchDisplayName(branch);
+    const headings = Array.from(document.querySelectorAll("h2, h3, strong"));
+
+    for (const heading of headings) {
+      if (normalizeBranch(heading.textContent) === normalizeBranch(display)) {
+        return heading.closest(".card, .branch-card, article, div");
+      }
+    }
+
+    return null;
+  }
+
+  function renderDelta(row) {
+    const newCount = Number(row.new || 0);
+    const updatedCount = Number(row.updated || 0);
+    const anacCount = Number(row.anac_added || 0);
+
+    if (!newCount && !updatedCount && !anacCount) return "";
+
+    const branch = row.branch;
+
+    const baseStyle = [
+      "display:inline-flex",
+      "align-items:center",
+      "justify-content:center",
+      "height:20px",
+      "min-height:20px",
+      "line-height:20px",
+      "padding:0 8px",
+      "margin:0",
+      "border-radius:999px",
+      "font-size:11px",
+      "font-weight:850",
+      "text-decoration:none",
+      "border:1px solid transparent",
+      "white-space:nowrap",
+      "box-sizing:border-box",
+      "vertical-align:middle",
+      "position:relative",
+      "top:0"
+    ].join(";");
+
+    const newStyle = `${baseStyle};color:#065f46;background:#d1fae5;border-color:#10b981;`;
+    const updatedStyle = `${baseStyle};color:#1e3a8a;background:#dbeafe;border-color:#60a5fa;`;
+    const anacStyle = `${baseStyle};color:#7c2d12;background:#ffedd5;border-color:#fb923c;top:-1px;`;
+
+    return `
+      <div style="margin:10px 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:100%;">
+        <span style="height:20px;line-height:20px;color:#64748b;font-size:12px;font-weight:850;margin-right:2px;">Novità:</span>
+        ${newCount ? `<a style="${newStyle}" href="${searchLink(branch, "new")}">+${fmtInt(newCount)} nuovi</a>` : ""}
+        ${updatedCount ? `<a style="${updatedStyle}" href="${searchLink(branch, "updated")}">${fmtInt(updatedCount)} agg.</a>` : ""}
+        ${anacCount ? `<a style="${anacStyle}" href="${searchLink(branch, "anac_added")}">${fmtInt(anacCount)} ANAC</a>` : ""}
+      </div>
+    `;
+  }
+
+  async function loadManifest() {
+    const response = await fetch("data/update_manifest.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+    return response.json();
+  }
+
+  function applyBranchCardDeltas(manifest) {
+    const rows = Array.isArray(manifest.by_branch) ? manifest.by_branch : [];
+
+    document.querySelectorAll(".branch-card-delta").forEach(el => el.remove());
+
+    rows.forEach(row => {
+      const html = renderDelta(row);
+      if (!html) return;
+
+      const card = findBranchCard(row.branch);
+      if (!card) return;
+
+      const button = Array.from(card.querySelectorAll("a"))
+        .find(a => (a.textContent || "").toLowerCase().includes("vai ai progetti"));
+
+      if (button && button.parentElement) {
+        button.insertAdjacentHTML("beforebegin", html);
+      } else {
+        card.insertAdjacentHTML("beforeend", html);
+      }
+    });
+  }
+
+  window.addEventListener("load", () => {
+    loadManifest()
+      .then(applyBranchCardDeltas)
+      .catch(err => console.warn(err));
+  });
 })();
 </script>
 
