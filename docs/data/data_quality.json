@@ -1,8 +1,9 @@
 {
-  "generated_at_utc": "2026-05-26T21:03:39.817295+00:00",
-  "total_records": 536673,
-  "with_contractor": 144859,
-  "contractor_coverage_pct": 26.99,
+  "generated_at_utc": "2026-05-26T21:19:10.334025+00:00",
+  "raw_rows": 536673,
+  "total_records": 500909,
+  "with_contractor": 132321,
+  "contractor_coverage_pct": 26.42,
   "duplicate_cups_count": 15185,
   "duplicate_cups_top": [
     {
@@ -111,14 +112,14 @@
       "key": "non_assegnata",
       "label": "Record non assegnati",
       "count": 2774,
-      "pct": 0.52,
+      "pct": 0.55,
       "severity": "warning"
     },
     {
       "key": "ambigua",
       "label": "Record ambigui",
-      "count": 50949,
-      "pct": 9.49,
+      "count": 15185,
+      "pct": 3.03,
       "severity": "warning"
     },
     {
@@ -386,17 +387,17 @@
   "branches": [
     {
       "branch": "AMBIGUA",
-      "records": 50949,
+      "records": 15185,
       "non_assegnata": 0,
-      "ambigua": 50949,
+      "ambigua": 15185,
       "missing_region": 0,
       "missing_province": 0,
       "missing_municipality": 0,
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 17501,
-      "contractor_coverage_pct": 34.35
+      "with_contractor": 4963,
+      "contractor_coverage_pct": 32.68
     },
     {
       "branch": "NON ASSEGNATA",

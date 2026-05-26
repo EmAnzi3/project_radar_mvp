@@ -341,7 +341,7 @@
 
     <section class="kpi-grid">
       <article class="kpi">
-        <div class="label">Record controllati</div>
+        <div class="label">Progetti unici controllati</div>
         <div class="value info" id="kpiRecords">—</div>
       </article>
 
@@ -351,7 +351,7 @@
       </article>
 
       <article class="kpi">
-        <div class="label">CUP duplicati</div>
+        <div class="label">CUP ripetuti</div>
         <div class="value warn" id="kpiDuplicates">—</div>
       </article>
 
@@ -507,7 +507,8 @@
           ? new Date(data.generated_at_utc).toLocaleString("it-IT")
           : "non disponibile";
 
-        document.getElementById("generatedAt").textContent = `Generato: ${generated}`;
+        document.getElementById("generatedAt").textContent =
+          `Generato: ${generated} · righe shard analizzate: ${fmtInt(data.raw_rows)}`;
         document.getElementById("kpiRecords").textContent = fmtInt(data.total_records);
         document.getElementById("kpiContractors").textContent = fmtPct(data.contractor_coverage_pct);
         document.getElementById("kpiDuplicates").textContent = fmtInt(data.duplicate_cups_count);
@@ -527,3 +528,4 @@
   </script>
 </body>
 </html>
+

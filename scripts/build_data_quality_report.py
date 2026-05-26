@@ -1,4 +1,5 @@
 ﻿import json
+import hashlib
 from pathlib import Path
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -18,6 +19,31 @@ def clean(v):
 
 def norm(v):
     return clean(v).upper()
+
+
+def record_key(record):
+    cup = norm(record.get("cup"))
+    if cup:
+        return f"CUP::{cup}"
+
+    cig = norm(record.get("cig"))
+    if cig:
+        return f"CIG::{cig}"
+
+    rid = norm(record.get("id"))
+    if rid:
+        return f"ID::{rid}"
+
+    blob = "|".join([
+        norm(record.get("title")),
+        norm(record.get("client")),
+        norm(record.get("municipality")),
+        norm(record.get("province")),
+        clean(record.get("project_value")),
+    ])
+
+    return "HASH::" + hashlib.sha1(blob.encode("utf-8")).hexdigest()
+
 
 
 def load_rows(path):
@@ -103,7 +129,8 @@ def main():
     cup_counter = Counter()
     shard_files = []
 
-    all_rows = 0
+    raw_rows = 0
+    seen_project_keys = set()
 
     for path in sorted(BRANCH_DIR.glob("*.json")):
         if path.name == "index.json":
@@ -131,18 +158,25 @@ def main():
             if not isinstance(r, dict):
                 continue
 
-            all_rows += 1
+            raw_rows += 1
 
             branch = clean(r.get("branch")) or branch_from_file
             branch_norm = norm(branch)
 
-            totals["records"] += 1
-            by_branch[branch]["records"] += 1
-
             cup = clean(r.get("cup")).upper()
             if cup:
                 cup_counter[cup] += 1
-            else:
+
+            key = record_key(r)
+            if key in seen_project_keys:
+                continue
+
+            seen_project_keys.add(key)
+
+            totals["records"] += 1
+            by_branch[branch]["records"] += 1
+
+            if not cup:
                 totals["missing_cup"] += 1
                 by_branch[branch]["missing_cup"] += 1
                 if len(samples["missing_cup"]) < 10:
@@ -278,6 +312,7 @@ def main():
 
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "raw_rows": raw_rows,
         "total_records": totals["records"],
         "with_contractor": totals["with_contractor"],
         "contractor_coverage_pct": pct(totals["with_contractor"], totals["records"]),
@@ -300,7 +335,8 @@ def main():
     OUT_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"[OK] Data quality scritto: {OUT_JSON}")
-    print(f"Record: {totals['records']}")
+    print(f"Righe shard: {raw_rows}")
+    print(f"Progetti unici: {totals['records']}")
     print(f"Non assegnati: {totals['non_assegnata']}")
     print(f"Ambigui: {totals['ambigua']}")
     print(f"Comune mancante: {totals['missing_municipality']}")
