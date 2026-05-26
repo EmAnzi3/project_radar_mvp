@@ -1,0 +1,529 @@
+﻿<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project Radar MVP - Qualità dati</title>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --teal: #0f766e;
+      --orange: #f97316;
+      --blue: #2563eb;
+      --red: #dc2626;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --line: #e5e7eb;
+      --text: #111827;
+      --muted: #64748b;
+      --shadow: 0 18px 45px rgba(15, 23, 42, .10);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(20,184,166,.14), transparent 28rem),
+        radial-gradient(circle at top right, rgba(249,115,22,.11), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, .96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 10px clamp(16px, 3vw, 32px);
+      display: flex;
+      justify-content: center;
+    }
+
+    .site-nav-inner {
+      width: min(1220px, 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .site-nav-title {
+      color: #fff;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .site-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .site-nav a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 750;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .site-nav a:hover {
+      background: rgba(20,184,166,.22);
+      color: #fff;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(15,23,42,.99), rgba(17,24,39,.96));
+      color: white;
+      padding: 44px clamp(22px, 4vw, 54px) 70px;
+    }
+
+    .hero {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.5vw, 60px);
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin: 18px 0 0;
+      max-width: 820px;
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    main {
+      max-width: 1220px;
+      margin: -42px auto 50px;
+      padding: 0 clamp(18px, 3vw, 30px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .kpi {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .kpi .value {
+      margin-top: 8px;
+      font-size: clamp(30px, 3vw, 44px);
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .value.ok { color: var(--teal); }
+    .value.warn { color: var(--orange); }
+    .value.bad { color: var(--red); }
+    .value.info { color: var(--blue); }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .issue-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .issue {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .issue strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .issue .num {
+      margin-top: 8px;
+      font-size: 26px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .issue .pct {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .issue.ok .num { color: var(--teal); }
+    .issue.warning .num { color: var(--orange); }
+    .issue.info .num { color: var(--blue); }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid #dbe3ef;
+      border-radius: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+      background: white;
+    }
+
+    th {
+      text-align: left;
+      background: #0f172a;
+      color: white;
+      font-size: 13px;
+      padding: 12px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #e2e8f0;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .pill.ok {
+      color: #065f46;
+      background: #d1fae5;
+      border-color: #10b981;
+    }
+
+    .pill.warning {
+      color: #7c2d12;
+      background: #ffedd5;
+      border-color: #fb923c;
+    }
+
+    .pill.critical {
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    .sample-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sample {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .sample strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .sample small {
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    @media (max-width: 980px) {
+      .kpi-grid,
+      .issue-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .site-nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .kpi-grid,
+      .issue-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <div class="site-nav-title">Project Radar MVP</div>
+      <div class="site-nav-links">
+        <a href="index.html">Home</a>
+        <a href="search.html">Ricerca</a>
+        <a href="branches.html">Filiali</a>
+        <a href="updates.html">Aggiornamenti</a>
+        <a href="data_quality.html">Qualità dati</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <section class="hero">
+      <h1>Qualità dati</h1>
+      <p class="subtitle">
+        Controllo tecnico su copertura, geografie, assegnazioni, link fonte e dimensione shard.
+        Serve a individuare anomalie prima che arrivino alle filiali.
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Stato controllo</h2>
+      <div class="meta" id="generatedAt">Caricamento report qualità dati…</div>
+    </section>
+
+    <section class="kpi-grid">
+      <article class="kpi">
+        <div class="label">Record controllati</div>
+        <div class="value info" id="kpiRecords">—</div>
+      </article>
+
+      <article class="kpi">
+        <div class="label">Copertura aggiudicatari</div>
+        <div class="value ok" id="kpiContractors">—</div>
+      </article>
+
+      <article class="kpi">
+        <div class="label">CUP duplicati</div>
+        <div class="value warn" id="kpiDuplicates">—</div>
+      </article>
+
+      <article class="kpi">
+        <div class="label">Shard in warning</div>
+        <div class="value warn" id="kpiShardWarnings">—</div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Problemi principali</h2>
+      <div id="issues" class="issue-grid">Caricamento…</div>
+    </section>
+
+    <section class="card">
+      <h2>Shard più grandi</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Filiale</th>
+              <th>Record</th>
+              <th>MB</th>
+              <th>Stato</th>
+            </tr>
+          </thead>
+          <tbody id="shardsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Filiali con più anomalie</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Filiale</th>
+              <th>Record</th>
+              <th>Non assegnata</th>
+              <th>Ambigua</th>
+              <th>Comune mancante</th>
+              <th>Provincia mancante</th>
+              <th>Fonte mancante</th>
+              <th>Copertura ANAC</th>
+            </tr>
+          </thead>
+          <tbody id="branchesBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Esempi da verificare</h2>
+      <div id="samples" class="sample-list">Caricamento…</div>
+    </section>
+  </main>
+
+  <script>
+    const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+    const fmtPct = n => `${Number(n || 0).toFixed(2).replace(".", ",")}%`;
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function statusPill(status) {
+      const s = String(status || "ok");
+      return `<span class="pill ${s}">${escapeHtml(s)}</span>`;
+    }
+
+    async function loadQuality() {
+      const response = await fetch("data/data_quality.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("Report qualità dati non disponibile.");
+      return response.json();
+    }
+
+    function renderIssues(data) {
+      const container = document.getElementById("issues");
+      const rows = Array.isArray(data.issues) ? data.issues : [];
+
+      container.innerHTML = rows.map(issue => `
+        <article class="issue ${escapeHtml(issue.severity)}">
+          <strong>${escapeHtml(issue.label)}</strong>
+          <div class="num">${fmtInt(issue.count)}</div>
+          <div class="pct">${fmtPct(issue.pct)} del totale</div>
+        </article>
+      `).join("");
+    }
+
+    function renderShards(data) {
+      const body = document.getElementById("shardsBody");
+      const rows = Array.isArray(data.shards) ? data.shards.slice(0, 15) : [];
+
+      body.innerHTML = rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.file)}</td>
+          <td>${escapeHtml(row.branch)}</td>
+          <td>${fmtInt(row.records)}</td>
+          <td>${String(row.mb).replace(".", ",")}</td>
+          <td>${statusPill(row.status)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderBranches(data) {
+      const body = document.getElementById("branchesBody");
+      const rows = Array.isArray(data.branches) ? data.branches.slice(0, 25) : [];
+
+      body.innerHTML = rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.branch)}</td>
+          <td>${fmtInt(row.records)}</td>
+          <td>${fmtInt(row.non_assegnata)}</td>
+          <td>${fmtInt(row.ambigua)}</td>
+          <td>${fmtInt(row.missing_municipality)}</td>
+          <td>${fmtInt(row.missing_province)}</td>
+          <td>${fmtInt(row.missing_source_url)}</td>
+          <td>${fmtPct(row.contractor_coverage_pct)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSamples(data) {
+      const container = document.getElementById("samples");
+      const samples = data.samples || {};
+      const blocks = [];
+
+      Object.entries(samples).forEach(([key, rows]) => {
+        if (!Array.isArray(rows) || !rows.length) return;
+
+        blocks.push(`
+          <div class="sample">
+            <strong>${escapeHtml(key)}</strong>
+            <small>${rows.map(r => `
+              • ${escapeHtml(r.branch)} · ${escapeHtml(r.province)} · ${escapeHtml(r.municipality)} · CUP ${escapeHtml(r.cup)} · ${escapeHtml(r.title)}
+            `).join("<br>")}</small>
+          </div>
+        `);
+      });
+
+      container.innerHTML = blocks.length ? blocks.join("") : "Nessun esempio critico da mostrare.";
+    }
+
+    loadQuality()
+      .then(data => {
+        const generated = data.generated_at_utc
+          ? new Date(data.generated_at_utc).toLocaleString("it-IT")
+          : "non disponibile";
+
+        document.getElementById("generatedAt").textContent = `Generato: ${generated}`;
+        document.getElementById("kpiRecords").textContent = fmtInt(data.total_records);
+        document.getElementById("kpiContractors").textContent = fmtPct(data.contractor_coverage_pct);
+        document.getElementById("kpiDuplicates").textContent = fmtInt(data.duplicate_cups_count);
+
+        const warnings = (data.shards || []).filter(s => s.status === "warning" || s.status === "critical").length;
+        document.getElementById("kpiShardWarnings").textContent = fmtInt(warnings);
+
+        renderIssues(data);
+        renderShards(data);
+        renderBranches(data);
+        renderSamples(data);
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("generatedAt").textContent = "Report qualità dati non disponibile.";
+      });
+  </script>
+</body>
+</html>

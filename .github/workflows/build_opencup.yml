@@ -139,6 +139,10 @@ jobs:
         run: |
           python -u scripts/build_home_stats.py
 
+      - name: Build data quality report
+        run: |
+          python -u scripts/build_data_quality_report.py
+
       - name: Set public homepage
         run: |
           cp docs/home.html docs/index.html
