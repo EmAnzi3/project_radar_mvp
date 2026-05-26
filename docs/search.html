@@ -1907,6 +1907,242 @@ loadSearchData().catch(showLoadError);
 })();
 </script>
 
+
+<script id="commercial-csv-export">
+(function () {
+  function csvClean(value) {
+    return String(value ?? "")
+      .replace(/\r?\n|\r/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function csvCell(value) {
+    const text = csvClean(value);
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  function toNumber(value) {
+    const n = Number(value || 0);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function formatThousands(value) {
+    const n = Math.round(toNumber(value));
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function formatEuro(value) {
+    const n = toNumber(value);
+    if (!n) return "";
+    return `${formatThousands(n)} €`;
+  }
+
+  function fallbackSplit(value) {
+    return String(value || "")
+      .split(/\s+\|\s+|\n|<br\s*\/?>/i)
+      .map(v => v.trim())
+      .filter(Boolean);
+  }
+
+  function exportContractorItems(record) {
+    if (typeof collectContractorItems === "function") {
+      return collectContractorItems(record);
+    }
+
+    const names = fallbackSplit(record.contractors || record.contractors_summary || "");
+    const taxCodes = fallbackSplit(record.contractor_tax_codes || "");
+    const maxLen = Math.max(names.length, taxCodes.length);
+    const items = [];
+
+    for (let i = 0; i < maxLen; i++) {
+      items.push({
+        name: names[i] || names[0] || "",
+        taxCode: taxCodes[i] || ""
+      });
+    }
+
+    return items.filter(item => item.name || item.taxCode);
+  }
+
+  function sourceLabel(record) {
+    if (record.has_anac || String(record.source || "").toUpperCase().includes("ANAC")) {
+      return "ANAC";
+    }
+
+    return "OpenCUP";
+  }
+
+  function timelineLabel(record) {
+    const awardDate = String(record.award_date || "").trim();
+
+    if (awardDate) {
+      const result = String(record.award_result || "").trim();
+      return result ? `Aggiudicazione: ${awardDate} - ${result}` : `Aggiudicazione: ${awardDate}`;
+    }
+
+    const year = typeof extractCupYear === "function" ? extractCupYear(record) : String(record.cup_year || "").trim();
+
+    if (year) {
+      return `CUP: ${year}`;
+    }
+
+    return "";
+  }
+
+  function changeLabel(record) {
+    const status = String(record.change_status || "").trim();
+
+    if (status === "new") return "Nuovo nel radar";
+    if (status === "updated") return "Aggiornato";
+    if (status === "anac_added") return "ANAC aggiunto";
+
+    const badges = Array.isArray(record.change_badges) ? record.change_badges : [];
+    return badges.join(" | ");
+  }
+
+  function exportRowsForCsv() {
+    if (typeof prSortedFiltered === "function") {
+      return prSortedFiltered();
+    }
+
+    if (Array.isArray(window.records)) {
+      return window.records;
+    }
+
+    if (Array.isArray(window.allRecords)) {
+      return window.allRecords;
+    }
+
+    throw new Error("Non trovo i record filtrati da esportare.");
+  }
+
+  function buildCommercialCsv() {
+    const rows = exportRowsForCsv();
+
+    const headers = [
+      "Filiale",
+      "Segmento",
+      "Regione",
+      "Provincia",
+      "Comune",
+      "Titolo progetto",
+      "Valore progetto",
+      "Committente",
+      "Aggiudicatari / OE",
+      "P.IVA/CF aggiudicatari",
+      "Numero OE",
+      "Timeline",
+      "Fonte dati",
+      "CUP",
+      "CIG",
+      "Novità ultimo aggiornamento",
+      "Link fonte"
+    ];
+
+    const lines = [];
+    lines.push(headers.map(csvCell).join(";"));
+
+    rows.forEach(record => {
+      const contractors = exportContractorItems(record);
+      const contractorNames = contractors.map(item => item.name).filter(Boolean).join(" | ");
+      const contractorTaxCodes = contractors.map(item => item.taxCode).filter(Boolean).join(" | ");
+
+      const line = [
+        record.branch,
+        record.segment || record.primary_segment,
+        record.region,
+        record.province,
+        record.municipality,
+        record.title,
+        formatEuro(record.project_value),
+        record.client,
+        contractorNames,
+        contractorTaxCodes,
+        contractors.length ? contractors.length : "",
+        timelineLabel(record),
+        sourceLabel(record),
+        record.cup,
+        record.cig,
+        changeLabel(record),
+        record.source_url || record.url
+      ];
+
+      lines.push(line.map(csvCell).join(";"));
+    });
+
+    return lines.join("\r\n");
+  }
+
+  function filenameForExport() {
+    const params = new URLSearchParams(window.location.search);
+    const branchSelect = document.getElementById("branchFilter");
+    const branch = params.get("branch") || (branchSelect ? branchSelect.value : "") || "nazionale";
+    const stamp = new Date().toISOString().slice(0, 10);
+    const safeBranch = String(branch)
+      .replace(/[^a-z0-9_-]+/gi, "_")
+      .replace(/^_+|_+$/g, "");
+
+    return `project_radar_${safeBranch}_${stamp}.csv`;
+  }
+
+  function downloadCommercialCsv() {
+    const csv = buildCommercialCsv();
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filenameForExport();
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+  }
+
+  function isExportElement(el) {
+    if (!el) return false;
+    const candidate = el.closest ? el.closest("button, a") : null;
+    return candidate && String(candidate.textContent || "").trim().toLowerCase().includes("export csv");
+  }
+
+  function bindCommercialExportButton() {
+    const candidates = Array.from(document.querySelectorAll("button, a"))
+      .filter(el => String(el.textContent || "").trim().toLowerCase().includes("export csv"));
+
+    candidates.forEach(button => {
+      button.removeAttribute("onclick");
+      button.title = "Esporta tutti i risultati filtrati con colonne commerciali pulite.";
+    });
+  }
+
+  // Intercetta il click in capture phase: batte anche eventuali vecchi handler.
+  document.addEventListener("click", event => {
+    if (!isExportElement(event.target)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    try {
+      downloadCommercialCsv();
+    } catch (err) {
+      console.error(err);
+      alert("Errore durante l'export CSV: " + err.message);
+    }
+  }, true);
+
+  window.downloadCommercialCsv = downloadCommercialCsv;
+
+  window.addEventListener("load", () => {
+    setTimeout(bindCommercialExportButton, 100);
+    setTimeout(bindCommercialExportButton, 700);
+    setTimeout(bindCommercialExportButton, 1500);
+  });
+})();
+</script>
+
 </body>
 </html>
 
