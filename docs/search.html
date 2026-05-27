@@ -609,6 +609,233 @@
     }
     /* === /ANAC LEVEL BADGES === */
 
+  
+    /* === BRANCH DASHBOARD PROTOTYPE === */
+    .branch-dashboard {
+      margin: 18px 0 22px;
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 58%, #334155 100%);
+      color: #fff;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, .18);
+    }
+
+    .branch-dashboard[hidden] {
+      display: none;
+    }
+
+    .branch-dashboard-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .branch-dashboard-title {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.05em;
+      line-height: 1.02;
+    }
+
+    .branch-dashboard-subtitle {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+
+    .branch-dashboard-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .branch-dashboard-kpi {
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .09);
+      border: 1px solid rgba(255, 255, 255, .13);
+    }
+
+    .branch-dashboard-kpi .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #cbd5e1;
+      font-weight: 850;
+    }
+
+    .branch-dashboard-kpi .value {
+      margin-top: 7px;
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 950;
+      letter-spacing: -0.045em;
+      color: #fff;
+    }
+
+    .branch-dashboard-kpi .note {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .branch-dashboard-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .branch-dashboard-panel {
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .12);
+      min-width: 0;
+    }
+
+    .branch-dashboard-panel h3 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: .02em;
+      color: #f8fafc;
+    }
+
+    .branch-mini-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 0;
+      border-top: 1px solid rgba(255, 255, 255, .10);
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+
+    .branch-mini-row:first-of-type {
+      border-top: 0;
+    }
+
+    .branch-mini-row span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .branch-mini-row strong {
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 1000px) {
+      .branch-dashboard-head {
+        display: block;
+      }
+
+
+      .branch-dashboard-kpis,
+      .branch-dashboard-panels {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .branch-mini-bar {
+      margin-top: 5px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .12);
+      overflow: hidden;
+    }
+
+    .branch-mini-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: rgba(255, 255, 255, .72);
+    }
+
+    .branch-anac-visual {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .branch-donut {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #34d399 0 var(--confirmed),
+        #f59e0b var(--confirmed) var(--enriched),
+        #60a5fa var(--enriched) var(--technical),
+        rgba(255,255,255,.14) var(--technical) 100%
+      );
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+    }
+
+    .branch-donut::after {
+      content: "";
+      position: absolute;
+      inset: 40px;
+      border-radius: 50%;
+      background: #1e293b;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+
+    .branch-donut-label {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+      font-size: 30px;
+      font-weight: 950;
+      color: #fff;
+      letter-spacing: -0.04em;
+    }
+
+    .branch-anac-legend {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .branch-anac-legend-row {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+
+    .branch-anac-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.4);
+    }
+
+    .branch-anac-dot.confirmed { background: #34d399; }
+    .branch-anac-dot.enriched { background: #f59e0b; }
+    .branch-anac-dot.technical { background: #60a5fa; }
+
+
+    .branch-anac-visual {
+      min-height: 178px;
+    }
+
+    .branch-dashboard-panel .branch-mini-bar span {
+      transition: width .25s ease;
+    }
+
+    /* === /BRANCH DASHBOARD PROTOTYPE === */
+
   </style>
 <script id="salerno-url-normalizer">
 (function () {
@@ -751,9 +978,20 @@ function escapeHtml(str) {
 
 
 function normFilterValue(value) {
-  return String(value || "")
+  let v = String(value || "")
     .trim()
-    .toLocaleUpperCase("it-IT");
+    .toLocaleUpperCase("it-IT")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[-_/]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (v === "MONZA E BRIANZA" || v === "MONZA BRIANZA" || v === "MB") {
+    return "MONZA E DELLA BRIANZA";
+  }
+
+  return v;
 }
 
 function sameFilterValue(a, b) {
@@ -2280,6 +2518,297 @@ loadSearchData().catch(showLoadError);
   });
 })();
 </script>
+
+
+  <script id="branch-dashboard-prototype">
+    (function () {
+      function clean(value) {
+        return String(value || "").trim();
+      }
+
+      function fmtInt(value) {
+        return Number(value || 0).toLocaleString("it-IT");
+      }
+
+      function fmtPct(value) {
+        return `${Number(value || 0).toFixed(1).replace(".", ",")}%`;
+      }
+
+      function grouped(value, decimals = 0) {
+        const fixed = Number(value || 0).toFixed(decimals);
+        const parts = fixed.split(".");
+        const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return decimals > 0 ? `${intPart},${parts[1]}` : intPart;
+      }
+
+      function fmtMoneyShort(value) {
+        const n = Number(value || 0);
+        if (!Number.isFinite(n) || n <= 0) return "—";
+
+        if (n >= 1000000000) return `${grouped(n / 1000000000, 1)} mld €`;
+        if (n >= 1000000) return `${grouped(n / 1000000, 1)} mln €`;
+        return `${grouped(n, 0)} €`;
+      }
+
+      function branchDisplayName(slug) {
+        return decodeURIComponent(clean(slug)).replace(/_/g, " ");
+      }
+
+      function getRows(data) {
+        if (Array.isArray(data)) return data;
+        return data.records || data.projects || data.rows || [];
+      }
+
+      function parseProjectValue(row) {
+        const candidateFields = [
+          "value_eur",
+          "value",
+          "project_value_eur",
+          "project_value",
+          "amount_eur",
+          "amount",
+          "total_value_eur",
+          "importo",
+          "importo_eur",
+          "valore",
+          "valore_eur",
+          "costo",
+          "cost"
+        ];
+
+        for (const field of candidateFields) {
+          const raw = row && row[field];
+
+          if (raw === null || raw === undefined || raw === "") continue;
+
+          if (typeof raw === "number") {
+            if (Number.isFinite(raw)) return raw;
+            continue;
+          }
+
+          let value = String(raw)
+            .replace(/€/g, "")
+            .replace(/\s/g, "")
+            .trim();
+
+          if (!value) continue;
+
+          // Formato italiano: 1.234.567,89
+          if (value.includes(",") && value.includes(".")) {
+            value = value.replace(/\./g, "").replace(",", ".");
+          } else if (value.includes(",")) {
+            value = value.replace(",", ".");
+          }
+
+          const n = Number(value);
+          if (Number.isFinite(n)) return n;
+        }
+
+        return 0;
+      }
+
+      function counter(rows, field, limit = 5) {
+        const map = new Map();
+
+        rows.forEach(row => {
+          const key = clean(row[field]);
+          if (!key) return;
+          map.set(key, (map.get(key) || 0) + 1);
+        });
+
+        return Array.from(map.entries())
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, limit)
+          .map(([label, count]) => ({ label, count }));
+      }
+
+      function firstFrequent(rows, field) {
+        const top = counter(rows, field, 1)[0];
+        return top ? top.label : "—";
+      }
+
+      function miniRows(items, total) {
+        if (!items.length) return '<div class="branch-mini-row"><span>Nessun dato disponibile</span><strong>—</strong></div>';
+
+        const palette = [
+          "#14b8a6",
+          "#3b82f6",
+          "#f97316",
+          "#22c55e",
+          "#a855f7",
+          "#eab308",
+          "#06b6d4",
+          "#ef4444"
+        ];
+
+        const max = Math.max(...items.map(item => Number(item.count || 0)), 1);
+
+        return items.map((item, index) => {
+          const width = Math.max(3, Math.round((Number(item.count || 0) / max) * 100));
+          const pct = total ? fmtPct((Number(item.count || 0) / total) * 100) : "0,0%";
+          const color = palette[index % palette.length];
+
+          return `
+            <div>
+              <div class="branch-mini-row">
+                <span title="${item.label}">${item.label}</span>
+                <strong>${fmtInt(item.count)} · ${pct}</strong>
+              </div>
+              <div class="branch-mini-bar">
+                <span style="width:${width}%; background:${color};"></span>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function ensureDashboard() {
+        let el = document.getElementById("branchDashboard");
+        if (el) return el;
+
+        el = document.createElement("section");
+        el.id = "branchDashboard";
+        el.className = "branch-dashboard";
+        el.hidden = true;
+
+        const main = document.querySelector("main") || document.body;
+        const firstSection = main.querySelector("section, .card, .filters") || main.firstElementChild;
+
+        if (firstSection) {
+          main.insertBefore(el, firstSection);
+        } else {
+          main.prepend(el);
+        }
+
+        return el;
+      }
+
+      function renderBranchDashboard(branchSlug, rows) {
+        const el = ensureDashboard();
+        const branchName = branchDisplayName(branchSlug);
+
+        if (!branchSlug || !rows.length) {
+          el.hidden = true;
+          return;
+        }
+
+        const total = rows.length;
+        const totalValue = rows.reduce((sum, row) => sum + parseProjectValue(row), 0);
+        const avgValue = total ? totalValue / total : 0;
+
+        const cigCount = rows.filter(row => Number(row.anac_match_cig_count || 0) > 0).length;
+        const enrichedCount = rows.filter(row => Number(row.anac_enriched_cig_count || 0) > 0).length;
+        const confirmedCount = rows.filter(row => Number(row.anac_confirmed_awards_count || 0) > 0 || clean(row.anac_level) === "confirmed").length;
+
+        const region = firstFrequent(rows, "region");
+        const province = firstFrequent(rows, "province");
+
+        const municipalities = counter(rows, "municipality", 5);
+        const segments = counter(rows, "primary_segment", 5).length
+          ? counter(rows, "primary_segment", 5)
+          : counter(rows, "segment", 5);
+
+        el.innerHTML = `
+          <div class="branch-dashboard-head">
+            <div>
+              <h1 class="branch-dashboard-title">Dashboard filiale · ${branchName}</h1>
+              <p class="branch-dashboard-subtitle">
+                Vista locale dei progetti OpenCUP arricchiti con dati ANAC.
+                Territorio prevalente: ${region} · ${province}.
+              </p>
+            </div>
+          </div>
+
+          <div class="branch-dashboard-kpis">
+            <div class="branch-dashboard-kpi">
+              <div class="label">Progetti</div>
+              <div class="value">${fmtInt(total)}</div>
+              <div class="note">record nello shard filiale</div>
+            </div>
+
+            <div class="branch-dashboard-kpi">
+              <div class="label">Valore complessivo</div>
+              <div class="value">${fmtMoneyShort(totalValue)}</div>
+              <div class="note">somma valore progetto</div>
+            </div>
+
+            <div class="branch-dashboard-kpi">
+              <div class="label">Valore medio</div>
+              <div class="value">${fmtMoneyShort(avgValue)}</div>
+              <div class="note">media per progetto</div>
+            </div>
+
+            <div class="branch-dashboard-kpi">
+              <div class="label">CIG ANAC collegato</div>
+              <div class="value">${fmtPct(total ? cigCount / total * 100 : 0)}</div>
+              <div class="note">${fmtInt(cigCount)} progetti</div>
+            </div>
+
+            <div class="branch-dashboard-kpi">
+              <div class="label">ANAC >=100k</div>
+              <div class="value">${fmtPct(total ? confirmedCount / total * 100 : 0)}</div>
+              <div class="note">${fmtInt(confirmedCount)} aggiudicatari confermati</div>
+            </div>
+          </div>
+
+          <div class="branch-dashboard-panels">
+            <div class="branch-dashboard-panel">
+              <h3>Top comuni</h3>
+              ${miniRows(municipalities, total)}
+            </div>
+
+            <div class="branch-dashboard-panel">
+              <h3>Top segmenti</h3>
+              ${miniRows(segments, total)}
+            </div>
+
+            <div class="branch-dashboard-panel">
+              <h3>Qualità dato ANAC</h3>
+              <div class="branch-anac-visual">
+                <div class="branch-donut"
+                  style="--confirmed:${total ? (confirmedCount / total * 100).toFixed(2) : 0}%; --enriched:${total ? (enrichedCount / total * 100).toFixed(2) : 0}%; --technical:${total ? (cigCount / total * 100).toFixed(2) : 0}%;">
+                  <div class="branch-donut-label">${fmtPct(total ? confirmedCount / total * 100 : 0)}</div>
+                </div>
+
+                <div class="branch-anac-legend">
+                  <div class="branch-anac-legend-row">
+                    <span class="branch-anac-dot confirmed"></span>
+                    <span>Aggiudicatario ANAC >=100k</span>
+                    <strong>${fmtInt(confirmedCount)}</strong>
+                  </div>
+                  <div class="branch-anac-legend-row">
+                    <span class="branch-anac-dot enriched"></span>
+                    <span>Dati ANAC con affidamento</span>
+                    <strong>${fmtInt(enrichedCount)}</strong>
+                  </div>
+                  <div class="branch-anac-legend-row">
+                    <span class="branch-anac-dot technical"></span>
+                    <span>CIG ANAC collegato</span>
+                    <strong>${fmtInt(cigCount)}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        el.hidden = false;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const branch = params.get("branch");
+
+      if (!branch) return;
+
+      fetch(`data/branches/${encodeURIComponent(branch)}.json`, { cache: "no-store" })
+        .then(response => {
+          if (!response.ok) throw new Error(`Branch shard non disponibile: ${branch}`);
+          return response.json();
+        })
+        .then(data => renderBranchDashboard(branch, getRows(data)))
+        .catch(err => console.warn("Dashboard filiale non caricata:", err));
+    })();
+  </script>
 
 </body>
 </html>
