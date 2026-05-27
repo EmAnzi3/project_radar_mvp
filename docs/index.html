@@ -573,7 +573,7 @@
           </div>
           <div class="mini">
             <div class="value" id="heroCoverage">—</div>
-            <div class="label">copertura ANAC</div>
+            <div class="label">copertura aggiudicatari</div>
           </div>
           <div class="mini">
             <div class="value" id="heroBranches">—</div>
@@ -607,7 +607,7 @@
       <article class="card kpi">
         <div class="label">Copertura aggiudicatari</div>
         <div class="value" id="kpiCoverage">—</div>
-        <div class="note">Quota record con match ANAC.</div>
+        <div class="note">Quota record con aggiudicatario / OE valorizzato.</div>
       </article>
     </section>
 
@@ -681,7 +681,7 @@
     <section class="card anac-level-kpi-section">
       <div class="anac-level-kpi-header">
         <div>
-          <h2>Copertura ANAC per qualità del dato</h2>
+          <h2>Livelli ANAC per qualità del dato</h2>
           <p>
             I livelli sono progressivi: il CIG collegato indica un aggancio tecnico CUP-CIG;
             il dato confermato indica un aggiudicatario ANAC con importo >=100k e rapporto coerente.
@@ -737,19 +737,27 @@
     const fmtInt = n => formatThousands(n);
     const fmtPct = n => `${formatDecimalIt(n, 1)}%`;
 
+    function fmtGroupedNumber(value, decimals = 0) {
+      const n = Number(value || 0);
+      const fixed = n.toFixed(decimals);
+      const parts = fixed.split(".");
+      const integer = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return decimals > 0 ? `${integer},${parts[1]}` : integer;
+    }
+
     function fmtMoneyShort(value) {
       const n = Number(value || 0);
       if (!Number.isFinite(n) || n <= 0) return "—";
 
-      if (n >= 1_000_000_000) {
-        return `${formatDecimalIt(n / 1_000_000_000, 1)} mld €`;
+      if (n >= 1000000000) {
+        return `${fmtGroupedNumber(n / 1000000000, 1)} mld €`;
       }
 
-      if (n >= 1_000_000) {
-        return `${formatDecimalIt(n / 1_000_000, 1)} mln €`;
+      if (n >= 1000000) {
+        return `${fmtGroupedNumber(n / 1000000, 1)} mln €`;
       }
 
-      return `${formatThousands(n)} €`;
+      return `${fmtGroupedNumber(n, 0)} €`;
     }
 
     function escapeHtml(value) {
@@ -817,7 +825,7 @@
           <div class="area-row"><span>Progetti</span><b>${fmtInt(a.count)}</b></div>
           <div class="area-row"><span>Valore</span><b>${fmtMoneyShort(a.total_value_eur)}</b></div>
           <div class="area-row"><span>Valore medio</span><b>${fmtMoneyShort(a.avg_value_eur)}</b></div>
-          <div class="area-row"><span>Copertura ANAC</span><b>${fmtPct(a.coverage_pct)}</b></div>
+          <div class="area-row"><span>Copertura aggiudicatari</span><b>${fmtPct(a.coverage_pct)}</b></div>
         </div>
       `).join("");
     }
@@ -1004,149 +1012,6 @@
         });
     })();
   </script>
-
-
-  <script id="home-defensive-json-loader">
-    (function () {
-      const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
-
-      function fmtPct(n) {
-        return `${Number(n || 0).toFixed(1).replace(".", ",")}%`;
-      }
-
-      function fmtBillionEuro(value) {
-        const n = Number(value || 0) / 1_000_000_000;
-        return `${n.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mld €`;
-      }
-
-      function fmtMillionEuro(value) {
-        const n = Number(value || 0) / 1_000_000;
-        return `${n.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mln €`;
-      }
-
-      function cleanText(value) {
-        return String(value || "").replace(/\s+/g, " ").trim();
-      }
-
-      function normText(value) {
-        return cleanText(value).toLocaleLowerCase("it-IT");
-      }
-
-      function isPlaceholder(el) {
-        const text = cleanText(el && el.textContent);
-        return !text || text === "—" || text === "-" || text === "–" || text === "Caricamento...";
-      }
-
-      function setTextById(id, value) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = value;
-      }
-
-      function setCardValueByLabel(label, value) {
-        const wanted = normText(label);
-
-        const labelNodes = Array.from(document.querySelectorAll("body *")).filter(el => {
-          const tag = el.tagName;
-          if (["SCRIPT", "STYLE", "A", "BUTTON", "SELECT", "OPTION"].includes(tag)) return false;
-          return normText(el.textContent) === wanted;
-        });
-
-        labelNodes.forEach(labelEl => {
-          let box = labelEl.parentElement;
-
-          for (let depth = 0; box && depth < 5; depth++, box = box.parentElement) {
-            const candidates = Array.from(box.querySelectorAll("*")).filter(el => {
-              if (el === labelEl) return false;
-
-              const tag = el.tagName;
-              if (["SCRIPT", "STYLE", "A", "BUTTON", "SELECT", "OPTION"].includes(tag)) return false;
-
-              const cls = String(el.className || "");
-              const text = cleanText(el.textContent);
-
-              return (
-                isPlaceholder(el) ||
-                /value|number|metric|stat|kpi|amount/i.test(cls) ||
-                /^\d+[\d\.,% €mldn]*$/.test(text)
-              );
-            });
-
-            if (candidates.length) {
-              candidates[0].textContent = value;
-              return;
-            }
-          }
-        });
-      }
-
-      function setLoadingMessage(value) {
-        const node = Array.from(document.querySelectorAll("body *"))
-          .find(el => cleanText(el.textContent) === "Caricamento aggiornamenti...");
-        if (node) node.textContent = value;
-      }
-
-      function loadJson(path) {
-        return fetch(path, { cache: "no-store" }).then(response => {
-          if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
-          return response.json();
-        });
-      }
-
-      Promise.all([
-        loadJson("data/home_stats.json"),
-        loadJson("data/update_manifest.json").catch(() => null),
-        loadJson("data/anac_level_stats.json").catch(() => null)
-      ])
-        .then(([home, updates, anac]) => {
-          if (home) {
-            setCardValueByLabel("Progetti indicizzati", fmtInt(home.total_records));
-            setCardValueByLabel("Valore complessivo", fmtBillionEuro(home.total_value_eur));
-            setCardValueByLabel("Valore medio progetto", fmtMillionEuro(home.avg_project_value_eur));
-            setCardValueByLabel("Copertura aggiudicatari", fmtPct(home.national_coverage_pct));
-            setCardValueByLabel("Filiali logiche", fmtInt(home.total_branches));
-
-            setTextById("totalRecords", fmtInt(home.total_records));
-            setTextById("totalValue", fmtBillionEuro(home.total_value_eur));
-            setTextById("avgValue", fmtMillionEuro(home.avg_project_value_eur));
-            setTextById("coverage", fmtPct(home.national_coverage_pct));
-          }
-
-          if (updates) {
-            setCardValueByLabel("Nuovi nel radar", fmtInt(updates.new_records));
-            setCardValueByLabel("Aggiornati", fmtInt(updates.updated_records));
-            setCardValueByLabel("ANAC aggiunto", fmtInt(updates.anac_added_records));
-            setCardValueByLabel("Filiali con novità", fmtInt(updates.branches_with_news));
-
-            setLoadingMessage(
-              Number(updates.branches_with_news || 0)
-                ? `${fmtInt(updates.branches_with_news)} filiali con novità`
-                : "Nessuna variazione rilevata"
-            );
-          }
-
-          if (anac && anac.funnel) {
-            const f = anac.funnel;
-
-            setCardValueByLabel("CIG ANAC collegato", fmtPct(f.technical_match_pct));
-            setCardValueByLabel("Dati ANAC con affidamento", fmtPct(f.enriched_pct));
-            setCardValueByLabel("Aggiudicatario ANAC >=100k", fmtPct(f.confirmed_pct));
-
-            setTextById("anacTechnicalPct", fmtPct(f.technical_match_pct));
-            setTextById("anacTechnicalCount", fmtInt(f.technical_match_projects));
-
-            setTextById("anacEnrichedPct", fmtPct(f.enriched_pct));
-            setTextById("anacEnrichedCount", fmtInt(f.enriched_projects));
-
-            setTextById("anacConfirmedPct", fmtPct(f.confirmed_pct));
-            setTextById("anacConfirmedCount", fmtInt(f.confirmed_projects));
-          }
-        })
-        .catch(err => {
-          console.error("Errore caricamento KPI homepage:", err);
-        });
-    })();
-  </script>
-
 </body>
 </html>
 
