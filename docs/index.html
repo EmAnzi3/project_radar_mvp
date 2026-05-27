@@ -448,7 +448,101 @@
       }
     }
 
-</style>
+
+    /* === ANAC LEVEL KPI SECTION === */
+    .anac-level-kpi-section {
+      margin-top: 22px;
+    }
+
+    .anac-level-kpi-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-end;
+      margin-bottom: 14px;
+    }
+
+    .anac-level-kpi-header h2 {
+      margin: 0;
+      font-size: clamp(22px, 2.4vw, 32px);
+      letter-spacing: -0.04em;
+      color: #0f172a;
+    }
+
+    .anac-level-kpi-header p {
+      margin: 6px 0 0;
+      max-width: 760px;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .anac-level-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .anac-level-kpi {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, .08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .anac-level-kpi::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: #94a3b8;
+    }
+
+    .anac-level-kpi.technical::before { background: #2563eb; }
+    .anac-level-kpi.enriched::before { background: #f97316; }
+    .anac-level-kpi.confirmed::before { background: #0f766e; }
+
+    .anac-level-kpi .label {
+      color: #475569;
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .anac-level-kpi .value {
+      margin-top: 9px;
+      font-size: clamp(30px, 3vw, 44px);
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      color: #0f172a;
+    }
+
+    .anac-level-kpi.technical .value { color: #2563eb; }
+    .anac-level-kpi.enriched .value { color: #f97316; }
+    .anac-level-kpi.confirmed .value { color: #0f766e; }
+
+    .anac-level-kpi .sub {
+      margin-top: 6px;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 900px) {
+      .anac-level-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .anac-level-kpi-header {
+        display: block;
+      }
+    }
+    /* === /ANAC LEVEL KPI SECTION === */
+
+  </style>
 </head>
 <body>
   <header>
@@ -583,6 +677,39 @@
     <div class="footer" id="footerInfo">
       Project Radar MVP · OpenCUP + ANAC · Vista interna di lavoro.
     </div>
+  
+    <section class="card anac-level-kpi-section">
+      <div class="anac-level-kpi-header">
+        <div>
+          <h2>Copertura ANAC per qualità del dato</h2>
+          <p>
+            I livelli sono progressivi: il CIG collegato indica un aggancio tecnico CUP-CIG;
+            il dato confermato indica un aggiudicatario ANAC con importo >=100k e rapporto coerente.
+          </p>
+        </div>
+      </div>
+
+      <div class="anac-level-kpi-grid">
+        <article class="anac-level-kpi technical">
+          <div class="label">CIG ANAC collegato</div>
+          <div class="value" id="anacTechnicalPct">—</div>
+          <div class="sub"><span id="anacTechnicalCount">—</span> progetti con almeno un CIG ANAC.</div>
+        </article>
+
+        <article class="anac-level-kpi enriched">
+          <div class="label">Dati ANAC con affidamento</div>
+          <div class="value" id="anacEnrichedPct">—</div>
+          <div class="sub"><span id="anacEnrichedCount">—</span> progetti con dati ANAC di affidamento.</div>
+        </article>
+
+        <article class="anac-level-kpi confirmed">
+          <div class="label">Aggiudicatario ANAC >=100k</div>
+          <div class="value" id="anacConfirmedPct">—</div>
+          <div class="sub"><span id="anacConfirmedCount">—</span> progetti con aggiudicatario confermato.</div>
+        </article>
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -835,7 +962,7 @@
           : "non disponibile";
 
         document.getElementById("footerInfo").textContent =
-          `Project Radar MVP · OpenCUP + ANAC · Aggiornato: ${generated}`;
+          `Project Radar MVP · OpenCUP + ANAC
       })
       .catch(err => {
         console.error(err);
@@ -844,6 +971,40 @@
         });
       });
   </script>
+
+  <script id="anac-level-home-kpis">
+    (function () {
+      const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+      const fmtPct = n => `${Number(n || 0).toFixed(1).replace(".", ",")}%`;
+
+      function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      }
+
+      fetch("data/anac_level_stats.json", { cache: "no-store" })
+        .then(response => {
+          if (!response.ok) throw new Error("anac_level_stats.json non disponibile");
+          return response.json();
+        })
+        .then(data => {
+          const funnel = data.funnel || {};
+
+          setText("anacTechnicalPct", fmtPct(funnel.technical_match_pct));
+          setText("anacTechnicalCount", fmtInt(funnel.technical_match_projects));
+
+          setText("anacEnrichedPct", fmtPct(funnel.enriched_pct));
+          setText("anacEnrichedCount", fmtInt(funnel.enriched_projects));
+
+          setText("anacConfirmedPct", fmtPct(funnel.confirmed_pct));
+          setText("anacConfirmedCount", fmtInt(funnel.confirmed_projects));
+        })
+        .catch(err => {
+          console.warn("KPI ANAC non caricati:", err);
+        });
+    })();
+  </script>
+
 </body>
 </html>
 

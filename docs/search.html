@@ -567,7 +567,49 @@
     border-color: #14b8a6;
   }
 
-</style>
+
+    /* === ANAC LEVEL BADGES === */
+    .anac-level-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin-top: 4px;
+      margin-right: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1.35;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .anac-level-badge.technical {
+      color: #1d4ed8;
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    .anac-level-badge.small {
+      color: #c2410c;
+      background: #ffedd5;
+      border-color: #fdba74;
+    }
+
+    .anac-level-badge.review {
+      color: #92400e;
+      background: #fef3c7;
+      border-color: #fbbf24;
+    }
+
+    .anac-level-badge.confirmed {
+      color: #065f46;
+      background: #d1fae5;
+      border-color: #6ee7b7;
+    }
+    /* === /ANAC LEVEL BADGES === */
+
+  </style>
 <script id="salerno-url-normalizer">
 (function () {
   const url = new URL(window.location.href);
@@ -611,6 +653,14 @@
         <option value="">Tutti</option>
         <option value="with">Con aggiudicatario</option>
         <option value="without">Senza aggiudicatario</option>
+      </select></div>
+      <div><label>Livello ANAC</label><select id="anacLevelFilter">
+        <option value="">Tutti</option>
+        <option value="none">Nessun match ANAC</option>
+        <option value="technical">CIG ANAC collegato</option>
+        <option value="small">Affidamento ANAC &lt;100k</option>
+        <option value="review">ANAC da verificare</option>
+        <option value="confirmed">Aggiudicatario ANAC &gt;=100k</option>
       </select></div>
       <div><label>Novità ultimo aggiornamento</label><select id="changeFilter">
         <option value="">Tutte</option>
@@ -672,6 +722,7 @@ const els = {
   segment: document.getElementById("segment"),
   contractorFilter: document.getElementById("contractorFilter"),
   changeFilter: document.getElementById("changeFilter"),
+  anacLevelFilter: document.getElementById("anacLevelFilter"),
   valueMin: document.getElementById("valueMin"),
   valueMax: document.getElementById("valueMax"),
   dateFrom: document.getElementById("dateFrom"),
@@ -832,6 +883,7 @@ function applyFilters() {
   const segment = els.segment.value;
   const contractorFilter = els.contractorFilter ? els.contractorFilter.value : "";
   const changeFilter = els.changeFilter ? els.changeFilter.value : "";
+  const anacLevelFilter = els.anacLevelFilter ? els.anacLevelFilter.value : "";
   const valueMin = Number(els.valueMin.value || 0);
   const valueMax = Number(els.valueMax.value || 0);
   const dateFrom = els.dateFrom.value;
@@ -847,6 +899,7 @@ function applyFilters() {
     if (contractorFilter === "with" && !hasAnacContractor(r)) return false;
     if (contractorFilter === "without" && hasAnacContractor(r)) return false;
     if (changeFilter && String(r.change_status || "") !== changeFilter) return false;
+    if (anacLevelFilter && String(r.anac_level || "none") !== anacLevelFilter) return false;
 
     if (valueMin && Number(r.project_value || 0) < valueMin) return false;
     if (valueMax && Number(r.project_value || 0) > valueMax) return false;
@@ -858,7 +911,8 @@ function applyFilters() {
       const blob = [
         r.title, r.client, r.contractors, r.contractor_tax_codes,
         r.cup, r.cig, r.municipality, r.province, r.region,
-        r.branch, r.branch_candidates
+        r.branch, r.branch_candidates,
+        r.anac_level_label, r.anac_level_detail, r.anac_level
       ].join(" ").toLowerCase();
       if (!blob.includes(q)) return false;
     }
@@ -884,6 +938,32 @@ function hasAnacData(r) {
   const awardsCount = Number(r.awards_count || 0);
   const awards = Array.isArray(r.awards) ? r.awards : [];
   return awardsCount > 0 || awards.length > 0;
+}
+
+
+function anacLevelLabel(record) {
+  const level = clean(record && record.anac_level ? record.anac_level : "none");
+  const label = clean(record && record.anac_level_label ? record.anac_level_label : "");
+
+  if (label) return label;
+
+  if (level === "technical") return "CIG ANAC collegato";
+  if (level === "small") return "Affidamento ANAC <100k";
+  if (level === "review") return "ANAC da verificare";
+  if (level === "confirmed") return "Aggiudicatario ANAC >=100k";
+
+  return "Nessun match ANAC";
+}
+
+function anacLevelBadgeHtml(record) {
+  const level = clean(record && record.anac_level ? record.anac_level : "none");
+
+  if (!level || level === "none") return "";
+
+  const label = anacLevelLabel(record);
+  const detail = clean(record && record.anac_level_detail ? record.anac_level_detail : label);
+
+  return `<span class="anac-level-badge ${escapeAttr(level)}" title="${escapeAttr(detail)}">${escapeHtml(label)}</span>`;
 }
 
 function sourceBadgeHtml(r) {
@@ -1330,11 +1410,19 @@ function updateAnacCoverageBadge() {
   if (!el) return;
 
   const total = filtered.length;
-  const withContractor = filtered.filter(hasAnacContractor).length;
-  const withoutContractor = Math.max(total - withContractor, 0);
-  const pct = total ? ((withContractor / total) * 100).toFixed(1).replace(".", ",") : "0,0";
 
-  el.textContent = `Con aggiudicatario: ${withContractor.toLocaleString("it-IT")} | Senza: ${withoutContractor.toLocaleString("it-IT")} | Copertura: ${pct}%`;
+  const technical = filtered.filter(r => Number(r.anac_match_cig_count || 0) > 0).length;
+  const enriched = filtered.filter(r => Number(r.anac_enriched_cig_count || 0) > 0).length;
+  const confirmed = filtered.filter(r => String(r.anac_level || "") === "confirmed").length;
+
+  const technicalPct = total ? ((technical / total) * 100).toFixed(1).replace(".", ",") : "0,0";
+  const enrichedPct = total ? ((enriched / total) * 100).toFixed(1).replace(".", ",") : "0,0";
+  const confirmedPct = total ? ((confirmed / total) * 100).toFixed(1).replace(".", ",") : "0,0";
+
+  el.textContent =
+    `CIG ANAC: ${technical.toLocaleString("it-IT")} (${technicalPct}%) | ` +
+    `Affidamenti ANAC: ${enriched.toLocaleString("it-IT")} (${enrichedPct}%) | ` +
+    `ANAC >=100k: ${confirmed.toLocaleString("it-IT")} (${confirmedPct}%)`;
 }
 
 
@@ -1443,6 +1531,7 @@ function render() {
         <strong>${escapeHtml(r.title)}</strong>
         <small>CUP: ${escapeHtml(r.cup)} ${r.cig ? "- CIG: " + escapeHtml(r.cig) : ""}</small>
         ${r.has_anac ? '<span class="tag tag-anac">ANAC</span>' : '<span class="tag tag-open">OpenCUP</span>'}
+        ${anacLevelBadgeHtml(r)}
         ${changeBadgesHtml(r)}
       </td>
       <td>${branchDisplayHtml(r)}</td>
@@ -1527,6 +1616,8 @@ function resetFilters() {
   els.segment.value = "";
   if (els.contractorFilter) els.contractorFilter.value = "";
   if (els.changeFilter) els.changeFilter.value = "";
+  const anacLevelSelect = document.getElementById("anacLevelFilter");
+  if (anacLevelSelect) anacLevelSelect.value = "";
   els.valueMin.value = "";
   els.valueMax.value = "";
   els.dateFrom.value = "";
@@ -1561,6 +1652,7 @@ els.municipality.addEventListener("change", applyFilters);
 els.segment.addEventListener("change", applyFilters);
 if (els.contractorFilter) els.contractorFilter.addEventListener("change", applyFilters);
 if (els.changeFilter) els.changeFilter.addEventListener("change", applyFilters);
+if (els.anacLevelFilter) els.anacLevelFilter.addEventListener("change", applyFilters);
 els.valueMin.addEventListener("input", applyFilters);
 els.valueMax.addEventListener("input", applyFilters);
 els.dateFrom.addEventListener("input", applyFilters);
@@ -1974,6 +2066,26 @@ loadSearchData().catch(showLoadError);
     return "OpenCUP";
   }
 
+
+  function anacLevelLabelForExport(record) {
+    const level = String(record.anac_level || "none").trim();
+    const label = String(record.anac_level_label || "").trim();
+
+    if (label) return label;
+
+    if (level === "technical") return "CIG ANAC collegato";
+    if (level === "small") return "Affidamento ANAC <100k";
+    if (level === "review") return "ANAC da verificare";
+    if (level === "confirmed") return "Aggiudicatario ANAC >=100k";
+
+    return "Nessun match ANAC";
+  }
+
+  function anacCountForExport(record, field) {
+    const n = Number(record[field] || 0);
+    return Number.isFinite(n) ? String(Math.round(n)) : "";
+  }
+
   function timelineLabel(record) {
     const awardDate = String(record.award_date || "").trim();
 
@@ -2033,6 +2145,13 @@ loadSearchData().catch(showLoadError);
       "Aggiudicatari / OE",
       "P.IVA/CF aggiudicatari",
       "Numero OE",
+      "Livello ANAC",
+      "Dettaglio livello ANAC",
+      "CIG ANAC collegati",
+      "Affidamenti ANAC rilevati",
+      "Aggiudicatari ANAC >=100k",
+      "Affidamenti ANAC <100k",
+      "ANAC da verificare",
       "Timeline",
       "Fonte dati",
       "CUP",
@@ -2061,6 +2180,13 @@ loadSearchData().catch(showLoadError);
         contractorNames,
         contractorTaxCodes,
         contractors.length ? contractors.length : "",
+        anacLevelLabelForExport(record),
+        csvClean(record.anac_level_detail || ""),
+        anacCountForExport(record, "anac_match_cig_count"),
+        anacCountForExport(record, "anac_enriched_cig_count"),
+        anacCountForExport(record, "anac_confirmed_awards_count"),
+        anacCountForExport(record, "anac_small_awards_count"),
+        anacCountForExport(record, "anac_review_awards_count"),
         timelineLabel(record),
         sourceLabel(record),
         record.cup,
