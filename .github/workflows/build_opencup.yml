@@ -127,6 +127,10 @@ jobs:
         run: |
           python -u scripts/build_master_dataset.py
 
+      - name: Apply ANAC visibility levels
+        run: |
+          python -u scripts/apply_anac_levels_to_master.py
+
       - name: Build branch shards
         run: |
           python -u scripts/build_branch_shards.py --input reports/master_projects.json
@@ -256,7 +260,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add docs/data.json docs/index.html docs/home.html docs/data/home_stats.json reports/top_projects.csv || true
+          git add docs/data.json docs/index.html docs/home.html docs/data/home_stats.json docs/data/anac_level_stats.json reports/top_projects.csv || true
           git add docs/operational.html docs/operational_data.json reports/operational_by_segment.csv || true
           git add reports/national_operational_by_segment.csv docs/national_operational.html || true
           git add -A docs/data/branches || true
