@@ -990,6 +990,9 @@ REGION_BRANCH_FALLBACKS = {
 }
 
 PROVINCE_BRANCH_FALLBACKS = {
+    "PESARO E URBINO": "Rimini",
+    "PU": "Rimini",
+
     "ALESSANDRIA": "Milano Sud",
     "AL": "Milano Sud",
 
@@ -1300,10 +1303,22 @@ def territorial_branch_fallback(record):
 
 def apply_branch_assignment(record, branch_map):
     existing_branch = clean(record.get("branch"))
+    existing_method = clean(record.get("branch_assignment_method")).lower()
+    existing_confidence = clean(record.get("branch_confidence")).lower()
 
     # Non usare CAP_SOGGETTO_TITOLARE: non localizza il progetto.
-    # Se ha già una filiale vera o AMBIGUA, non sovrascriviamo.
-    if existing_branch and existing_branch not in {"NON ASSEGNATA", "NON_ASSEGNATA"}:
+    # Conserva solo eventuali assegnazioni manuali/forzate.
+    is_manual_assignment = (
+        existing_method.startswith("manual")
+        or "manual" in existing_confidence
+        or "forzat" in existing_confidence
+    )
+
+    if (
+        existing_branch
+        and existing_branch not in {"NON ASSEGNATA", "NON_ASSEGNATA"}
+        and is_manual_assignment
+    ):
         return record
 
     municipality = norm(record.get("municipality"))
@@ -1314,24 +1329,32 @@ def apply_branch_assignment(record, branch_map):
     match = None
     method = "none"
 
-    if municipality not in invalid_geo:
-        for province in province_variants(province_raw):
-            if province in invalid_geo:
-                continue
+    province_values = [
+        province for province in province_variants(province_raw)
+        if province not in invalid_geo
+    ]
+    has_valid_province = bool(province_values)
 
+    # 1. Match forte: Comune + Provincia.
+    if municipality not in invalid_geo:
+        for province in province_values:
             match = branch_map["exact"].get((municipality, province))
             if match:
                 method = "exact_or_alias_province"
                 break
 
-    if not match and municipality not in invalid_geo:
+    # 2. Fallback solo-comune: consentito SOLO se la provincia manca.
+    # Se la provincia è nota ma non coincide, evitare omonimie tipo:
+    # Peglio CO vs Peglio PU, Livo CO vs Livo TN.
+    if not match and municipality not in invalid_geo and not has_valid_province:
         match = branch_map["municipality_only"].get(municipality)
         if match:
             method = "fallback_comune_univoco"
 
     fallback_match = None
 
-    if not match and municipality not in invalid_geo:
+    # 3. Fallback comune esplicito: anche questo solo se la provincia manca.
+    if not match and not has_valid_province and municipality not in invalid_geo:
         municipality_branch = MUNICIPALITY_BRANCH_FALLBACKS.get(municipality)
         if municipality_branch:
             fallback_match = {
@@ -1341,9 +1364,12 @@ def apply_branch_assignment(record, branch_map):
                 "method": "fallback_comune_territoriale",
             }
 
+    # 4. Fallback provincia=filiale, quando applicabile.
     if not match and not fallback_match:
         fallback_match = same_name_province_branch_fallback(record, branch_map)
 
+    # 5. Fallback territoriale provincia/regione.
+    # Qui Peglio + Marche deve andare a Rimini; Livo + Trento deve andare a Trento.
     if not match and not fallback_match:
         fallback_match = territorial_branch_fallback(record)
 
