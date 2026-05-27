@@ -573,7 +573,7 @@
           </div>
           <div class="mini">
             <div class="value" id="heroCoverage">—</div>
-            <div class="label">copertura aggiudicatari</div>
+            <div class="label">aggiudicatari ANAC &gt;=100k</div>
           </div>
           <div class="mini">
             <div class="value" id="heroBranches">—</div>
@@ -605,9 +605,9 @@
       </article>
 
       <article class="card kpi">
-        <div class="label">Copertura aggiudicatari</div>
+        <div class="label">Aggiudicatari ANAC &gt;=100k</div>
         <div class="value" id="kpiCoverage">—</div>
-        <div class="note">Quota record con aggiudicatario / OE valorizzato.</div>
+        <div class="note">Quota progetti con aggiudicatario ANAC confermato e importo &gt;=100k.</div>
       </article>
     </section>
 
@@ -923,13 +923,13 @@
       .then(stats => {
         document.getElementById("heroProjects").textContent = fmtInt(stats.total_records);
         document.getElementById("heroValue").textContent = fmtMoneyShort(stats.total_value_eur);
-        document.getElementById("heroCoverage").textContent = fmtPct(stats.national_coverage_pct);
+        document.getElementById("heroCoverage").textContent = "—";
         document.getElementById("heroBranches").textContent = fmtInt(stats.total_branches);
 
         document.getElementById("kpiProjects").textContent = fmtInt(stats.total_records);
         document.getElementById("kpiTotalValue").textContent = fmtMoneyShort(stats.total_value_eur);
         document.getElementById("kpiAvgValue").textContent = fmtMoneyShort(stats.avg_project_value_eur);
-        document.getElementById("kpiCoverage").textContent = fmtPct(stats.national_coverage_pct);
+        document.getElementById("kpiCoverage").textContent = "—";
 
         renderAreas(document.getElementById("areas"), stats.areas);
 
@@ -1006,6 +1006,9 @@
 
           setText("anacConfirmedPct", fmtPct(funnel.confirmed_pct));
           setText("anacConfirmedCount", fmtInt(funnel.confirmed_projects));
+
+          setText("heroCoverage", fmtPct(funnel.confirmed_pct));
+          setText("kpiCoverage", fmtPct(funnel.confirmed_pct));
         })
         .catch(err => {
           console.warn("KPI ANAC non caricati:", err);
