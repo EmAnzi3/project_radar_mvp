@@ -749,6 +749,17 @@ function escapeHtml(str) {
 
 
 
+
+function normFilterValue(value) {
+  return String(value || "")
+    .trim()
+    .toLocaleUpperCase("it-IT");
+}
+
+function sameFilterValue(a, b) {
+  return normFilterValue(a) === normFilterValue(b);
+}
+
 function clean(v) {
   if (v === null || v === undefined) return "";
   return String(v).trim();
@@ -856,7 +867,7 @@ function updateDependentFilters() {
 
   let provinceSource = regionSource;
   if (region) {
-    provinceSource = provinceSource.filter(r => r.region === region);
+    provinceSource = provinceSource.filter(r => sameFilterValue(r.region, region));
   }
 
   fillSelect(els.province, optionList(provinceSource.map(r => r.province)), "Tutte");
@@ -865,10 +876,10 @@ function updateDependentFilters() {
 
   let municipalitySource = regionSource;
   if (region) {
-    municipalitySource = municipalitySource.filter(r => r.region === region);
+    municipalitySource = municipalitySource.filter(r => sameFilterValue(r.region, region));
   }
   if (province) {
-    municipalitySource = municipalitySource.filter(r => r.province === province);
+    municipalitySource = municipalitySource.filter(r => sameFilterValue(r.province, province));
   }
 
   fillSelect(els.municipality, optionList(municipalitySource.map(r => r.municipality)), "Tutti");
@@ -892,10 +903,10 @@ function applyFilters() {
 
   filtered = records.filter(r => {
     if (branch && !recordBranchList(r).includes(branch)) return false;
-    if (region && r.region !== region) return false;
-    if (province && r.province !== province) return false;
-    if (municipality && r.municipality !== municipality) return false;
-    if (segment && r.segment !== segment) return false;
+    if (region && !sameFilterValue(r.region, region)) return false;
+    if (province && !sameFilterValue(r.province, province)) return false;
+    if (municipality && !sameFilterValue(r.municipality, municipality)) return false;
+    if (segment && !sameFilterValue(r.segment, segment)) return false;
     if (contractorFilter === "with" && !hasAnacContractor(r)) return false;
     if (contractorFilter === "without" && hasAnacContractor(r)) return false;
     if (changeFilter && String(r.change_status || "") !== changeFilter) return false;
