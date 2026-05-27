@@ -1,0 +1,40 @@
+{
+  "total_records": 500909,
+  "funnel": {
+    "technical_match_projects": 230999,
+    "technical_match_pct": 46.12,
+    "enriched_projects": 165991,
+    "enriched_pct": 33.14,
+    "confirmed_projects": 132336,
+    "confirmed_pct": 26.42
+  },
+  "exclusive_levels": {
+    "confirmed": {
+      "count": 132336,
+      "pct": 26.42
+    },
+    "none": {
+      "count": 269910,
+      "pct": 53.88
+    },
+    "review": {
+      "count": 2519,
+      "pct": 0.5
+    },
+    "small": {
+      "count": 31136,
+      "pct": 6.22
+    },
+    "technical": {
+      "count": 65008,
+      "pct": 12.98
+    }
+  },
+  "labels": {
+    "none": "Nessun match ANAC",
+    "technical": "CIG ANAC collegato",
+    "small": "Affidamento ANAC <100k",
+    "review": "ANAC da verificare",
+    "confirmed": "Aggiudicatario ANAC >=100k"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-05-25T08:15:26.716989+00:00",
+  "generated_at_utc": "2026-05-27T10:18:18.520716+00:00",
   "total_records": 500909,
   "total_branches": 39,
   "total_with_contractor": 144859,
@@ -422,11 +422,11 @@
     },
     {
       "name": "Impiantisti sottoservizi",
-      "count": 82829
+      "count": 84654
     },
     {
       "name": "Completamento e finitura edifici",
-      "count": 8782
+      "count": 6957
     },
     {
       "name": "Impiantisti",
