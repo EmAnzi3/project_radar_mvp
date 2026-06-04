@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
@@ -16,9 +16,9 @@
     button { border: 0; background: #0f766e; color: white; border-radius: 9px; padding: 10px 12px; font-weight: bold; cursor: pointer; }
     .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; color: #617083; font-size: 14px; }
     .pill { background: white; border: 1px solid #e5e7eb; border-radius: 999px; padding: 8px 10px; }
-    
-    
-    
+
+
+
     th {
       background: #111827;
       color: white;
@@ -30,7 +30,7 @@
     .small { color: #617083; font-size: 12px; margin-top: 4px; }
     .warn { color: #92400e; font-weight: bold; }
     a { color: #0f766e; font-weight: bold; text-decoration: none; }
-  
+
     .nowrap { white-space: nowrap; }
     .money { white-space: nowrap; min-width: 88px; }
     .award-col { white-space: nowrap; min-width: 96px; }
@@ -41,14 +41,14 @@
     .oe-name { font-weight: bold; overflow-wrap: anywhere; }
     .oe-tax { color: #617083; font-size: 12px; margin-top: 2px; }
 
-  
+
     /* Desktop/tablet: tabella adattiva, niente fuga verso destra */
     @media (min-width: 761px) {
-      
 
-      
 
-      
+
+
+
 
       th:nth-child(1), td:nth-child(1) { width: 17%; }  /* Progetto */
       th:nth-child(2), td:nth-child(2) { width: 6%; }   /* Filiale */
@@ -78,10 +78,10 @@
       }
     }
 
-  
+
     /* Rifinitura desktop: font pi? piccolo e colonne pi? leggibili */
     @media (min-width: 761px) {
-      
+
 
       th {
         white-space: nowrap;
@@ -130,7 +130,7 @@
       }
     }
 
-  
+
     /* === ALAYAN RECORD TABLE STANDARD === */
     .table-wrap {
       max-height: calc(100vh - 300px);
@@ -189,7 +189,7 @@
     }
     /* === /ALAYAN RECORD TABLE STANDARD === */
 
-  
+
     /* === SEARCH READABILITY FIX === */
     th, td {
       font-size: 11px !important;
@@ -209,7 +209,7 @@
     }
     /* === /SEARCH READABILITY FIX === */
 
-  
+
     /* === OE SEPARATOR FIX === */
     .oe-line {
       padding: 4px 0 5px 0;
@@ -231,7 +231,7 @@
     }
     /* === /OE SEPARATOR FIX === */
 
-  
+
     /* === SEARCH FEATURES: BADGE / SORT / EXPORT === */
     .source-badge {
       display: inline-block;
@@ -261,11 +261,11 @@
       user-select: none;
     }
 
-    
 
-    
 
-    
+
+
+
 
     .export-btn {
       margin-left: 8px;
@@ -278,7 +278,7 @@
     }
     /* === /SEARCH FEATURES: BADGE / SORT / EXPORT === */
 
-  
+
     /* === SORT INDICATORS FIX - NO UNICODE === */
     th.sortable {
       cursor: pointer;
@@ -309,7 +309,7 @@
     }
     /* === /SORT INDICATORS FIX - NO UNICODE === */
 
-  
+
     .details-btn {
       margin-top: 4px;
       padding: 3px 7px;
@@ -363,7 +363,7 @@
     }
     /* === /TIMELINE COLUMN FIX === */
 
-  
+
   .site-nav {
     position: sticky;
     top: 0;
@@ -609,7 +609,7 @@
     }
     /* === /ANAC LEVEL BADGES === */
 
-  
+
     /* === BRANCH DASHBOARD PROTOTYPE === */
     .branch-dashboard {
       margin: 18px 0 22px;
@@ -836,7 +836,26 @@
 
     /* === /BRANCH DASHBOARD PROTOTYPE === */
 
-  </style>
+
+.source-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.map-link:hover {
+  transform: translateY(-1px);
+}</style>
 <script id="salerno-url-normalizer">
 (function () {
   const url = new URL(window.location.href);
@@ -1298,7 +1317,8 @@ function exportFilteredCsv() {
     ["Peso affidamento", r => clean(r.award_weight)],
     ["CUP", r => clean(r.cup)],
     ["CIG", r => clean(r.cig)],
-    ["Fonte", r => clean(r.source_url)]
+    ["Fonte", r => clean(r.source_url)],
+    ["Google Maps", r => clean(r.maps_url)]
   ];
 
   const esc = v => '"' + String(v ?? "").replaceAll('"', '""') + '"';
@@ -1794,6 +1814,18 @@ function updatePagerControls(totalFiltered, shownCount, startIndex, endIndex) {
   `;
 }
 
+
+function mapsLinkHtml(r) {
+  const url = clean(r && r.maps_url);
+  if (!url) return "";
+
+  const query = clean(r && r.maps_query);
+  const title = query
+    ? `Apri ubicazione su Google Maps: ${escapeAttr(query)}`
+    : "Apri ubicazione su Google Maps";
+
+  return `<a class="map-link" href="${escapeAttr(url)}" target="_blank" rel="noopener" title="${title}" aria-label="Apri ubicazione su Google Maps">📍</a>`;
+}
 function render() {
   const sorted = prSortedFiltered();
   const totalFiltered = sorted.length;
@@ -1833,7 +1865,7 @@ function render() {
         ${escapeHtml(r.award_date || r.cup_year || "")}<br>
         <span>${escapeHtml(r.award_result || (r.has_anac ? "" : "Nessun match ANAC"))}</span>
       </td>
-      <td>${r.source_url ? `<a href="${escapeAttr(r.source_url)}" target="_blank">Fonte</a>` : ""}</td>
+      <td><div class="source-links">${r.source_url ? `<a href="${escapeAttr(r.source_url)}" target="_blank" rel="noopener">Fonte</a>` : ""}${mapsLinkHtml(r)}</div></td>
     </tr>
   `).join("");
 
@@ -2849,7 +2881,3 @@ loadSearchData().catch(showLoadError);
 
 </body>
 </html>
-
-
-
-
