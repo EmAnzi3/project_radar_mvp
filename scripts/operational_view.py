@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 import json
 import re
 from dataclasses import asdict
@@ -424,6 +424,7 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
             "region",
             "province",
             "municipality",
+            "address",
             "value_eur",
             "client",
             "source_url",
@@ -446,6 +447,7 @@ def write_operational_outputs(records: list, docs_dir: Path, reports_dir: Path) 
                 "region": field(r, "region"),
                 "province": field(r, "province"),
                 "municipality": field(r, "municipality"),
+                "address": field(r, "address"),
                 "value_eur": field(r, "estimated_value_eur"),
                 "client": field(r, "client"),
                 "source_url": field(r, "source_url"),

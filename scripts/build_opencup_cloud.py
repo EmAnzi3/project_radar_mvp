@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 import json
 import os
 import re
@@ -359,7 +359,30 @@ def calculate_score(record: ProjectRecord) -> int:
     return max(0, min(score, 100))
 
 
-def parse_row(row: list[str]) -> Optional[ProjectRecord]:
+def normalize_column_name(value: str | None) -> str:
+    text = str(value or "").replace("\ufeff", "").strip().lower()
+    text = re.sub(r"[^a-z0-9]+", "_", text)
+    return re.sub(r"_+", "_", text).strip("_")
+
+
+def find_column_index(header: list[str], *names: str) -> int | None:
+    indexes = {
+        normalize_column_name(column): index
+        for index, column in enumerate(header)
+    }
+
+    for name in names:
+        index = indexes.get(normalize_column_name(name))
+        if index is not None:
+            return index
+
+    return None
+
+
+def parse_row(
+    row: list[str],
+    intervention_address_idx: int | None = None,
+) -> Optional[ProjectRecord]:
     cup = row_get(row, 0)
     if not cup:
         return None
@@ -381,10 +404,13 @@ def parse_row(row: list[str]) -> Optional[ProjectRecord]:
     province = row_get(row, 14) or row_get(row, 13)
     municipality = row_get(row, 16)
 
-    street_name = row_get(row, 19)
-    street_type = row_get(row, 20)
-    street_number = row_get(row, 21)
-    address = " ".join(x for x in [street_type, street_name, street_number] if x) or composite_location
+    # Usa esclusivamente l'ubicazione dell'intervento.
+    # Non deve essere confusa con l'indirizzo del soggetto titolare.
+    address = (
+        row_get(row, intervention_address_idx)
+        if intervention_address_idx is not None
+        else None
+    )
 
     client = row_get(row, 17)
 
@@ -538,7 +564,19 @@ def process_zip(zip_path: Path) -> list[ProjectRecord]:
                 text = (line.decode("utf-8-sig", errors="ignore") for line in raw)
                 reader = csv.reader(text, delimiter=";")
 
-                next(reader, None)
+                header = next(reader, None) or []
+
+                intervention_address_idx = find_column_index(
+                    header,
+                    "INDIRIZZO_INTERVENTO",
+                    "indirizzo intervento",
+                    "indirizzo o area di riferimento",
+                )
+
+                print(
+                    "[OpenCUP] Colonna INDIRIZZO_INTERVENTO: "
+                    f"{intervention_address_idx}"
+                )
 
                 for row in reader:
                     scanned += 1
@@ -546,7 +584,7 @@ def process_zip(zip_path: Path) -> list[ProjectRecord]:
                     if scanned % 100_000 == 0:
                         print(f"[OpenCUP] Righe lette: {scanned:,} | candidati: {len(records):,}")
 
-                    rec = parse_row(row)
+                    rec = parse_row(row, intervention_address_idx)
                     if not rec:
                         continue
 
@@ -675,6 +713,7 @@ def write_records_csv(path: Path, records: list[ProjectRecord]) -> None:
         "region",
         "province",
         "municipality",
+        "address",
         "value_eur",
         "client",
         "phase",
@@ -695,6 +734,7 @@ def write_records_csv(path: Path, records: list[ProjectRecord]) -> None:
                 "region": r.region,
                 "province": r.province,
                 "municipality": r.municipality,
+                "address": r.address,
                 "value_eur": r.estimated_value_eur,
                 "client": r.client,
                 "phase": r.phase,

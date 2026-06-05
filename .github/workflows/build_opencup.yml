@@ -1,11 +1,12 @@
-﻿name: Build OpenCUP Radar
+name: Build OpenCUP Radar
 
 on:
   workflow_dispatch:
     inputs:
       opencup_url:
-        description: "URL diretto dello ZIP OpenCUP CSV"
-        required: true
+        description: "Override opzionale URL ZIP; lascia vuoto per rilevare automaticamente l'ultimo OpenCUP"
+        required: false
+        default: ""
         type: string
       min_value:
         description: "Valore minimo progetto in euro"
@@ -26,14 +27,20 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: project-radar-update
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 360
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Snapshot previous branch shards
         run: |
@@ -64,9 +71,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install duckdb
 
+      - name: Resolve latest OpenCUP download
+        id: opencup
+        env:
+          OPENCUP_URL_OVERRIDE: ${{ inputs.opencup_url }}
+        run: |
+          python -u scripts/resolve_opencup_download.py
+
       - name: Build OpenCUP radar
         env:
-          OPENCUP_URL: ${{ inputs.opencup_url }}
+          OPENCUP_URL: ${{ steps.opencup.outputs.url }}
           MIN_PROJECT_VALUE_EUR: ${{ inputs.min_value }}
           DASHBOARD_LIMIT: ${{ inputs.dashboard_limit }}
         run: |
@@ -123,6 +137,10 @@ jobs:
         run: |
           python -u scripts/national_build_anac_relevant_awards.py
 
+      - name: Build ANAC search pages
+        run: |
+          python -u scripts/build_national_anac_pages_like_search.py
+
       - name: Build grouped master dataset
         run: |
           python -u scripts/build_master_dataset.py
@@ -131,9 +149,60 @@ jobs:
         run: |
           python -u scripts/apply_anac_levels_to_master.py
 
+      - name: Add strict Google Maps links
+        run: |
+          python -u scripts/add_google_maps_links_from_address_ultra_strict.py \
+            --input reports/master_projects.json \
+            --audit reports/google_maps_links_ultra_strict_audit.csv \
+            --apply
+
       - name: Build branch shards
         run: |
-          python -u scripts/build_branch_shards.py --input reports/master_projects.json
+          python -u scripts/build_branch_shards.py \
+            --input reports/master_projects.json \
+            --out-dir docs/data/branches \
+            --max-file-mb 45
+
+      - name: Guard Google Maps enrichment
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          branch_dir = Path("docs/data/branches")
+          maps_count = 0
+
+          for path in branch_dir.glob("*.json"):
+              if path.name == "index.json":
+                  continue
+
+              data = json.loads(path.read_text(encoding="utf-8"))
+
+              if isinstance(data, list):
+                  rows = data
+              else:
+                  rows = (
+                      data.get("projects")
+                      or data.get("records")
+                      or data.get("items")
+                      or data.get("data")
+                      or data.get("rows")
+                      or []
+                  )
+
+              maps_count += sum(
+                  1 for row in rows
+                  if str(row.get("maps_url") or "").strip()
+              )
+
+          print(f"Record con Google Maps: {maps_count:,}")
+
+          if maps_count < 5000:
+              raise SystemExit(
+                  f"ERRORE: link Google Maps troppo pochi: {maps_count}"
+              )
+          PY
 
       - name: Apply monthly delta badges
         run: |
@@ -210,7 +279,7 @@ jobs:
           branch_dir = Path("docs/data/branches")
           for p in branch_dir.glob("*.json"):
               mb = p.stat().st_size / 1024 / 1024
-              if mb >= 95:
+              if mb >= 50:
                   errors.append(f"Shard troppo grande: {p} = {mb:.2f} MB")
 
           relevant = Path("reports/national_anac_relevant_awards.csv")
@@ -251,6 +320,10 @@ jobs:
             docs/index.html
             docs/data/branches/index.json
             docs/data/branches/*.json
+            docs/data/anac_level_stats.json
+            docs/national_anac_relevant_awards.html
+            docs/national_anac_awards_anomalies.html
+            docs/national_anac_enriched.html
             reports/top_projects.csv
             reports/operational_by_segment.csv
             reports/national_operational_by_segment.csv
@@ -263,6 +336,7 @@ jobs:
           git add docs/data.json docs/index.html docs/home.html docs/data/home_stats.json docs/data/anac_level_stats.json reports/top_projects.csv || true
           git add docs/operational.html docs/operational_data.json reports/operational_by_segment.csv || true
           git add reports/national_operational_by_segment.csv docs/national_operational.html || true
+          git add docs/national_anac_relevant_awards.html docs/national_anac_awards_anomalies.html docs/national_anac_enriched.html || true
           git add -A docs/data/branches || true
           git diff --cached --quiet || git commit -m "Update OpenCUP radar outputs"
           git push

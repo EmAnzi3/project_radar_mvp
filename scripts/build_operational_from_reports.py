@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 import json
 import re
 from collections import defaultdict
@@ -295,7 +295,7 @@ def main():
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
 
-    fields = ["operational_score", "primary_segment", "segment_tags", "value_band", "score", "cup", "title", "category", "region", "province", "municipality", "phase", "status", "value_eur", "client", "source_url"]
+    fields = ["operational_score", "primary_segment", "segment_tags", "value_band", "score", "cup", "title", "category", "region", "province", "municipality", "address", "phase", "status", "value_eur", "client", "source_url"]
 
     with OUT_CSV.open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, delimiter=";", fieldnames=fields)

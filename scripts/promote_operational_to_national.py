@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 import csv
 import json
 import shutil
@@ -24,6 +24,7 @@ with DST.open("r", encoding="utf-8-sig", newline="") as f:
             "region": r.get("region") or "",
             "province": r.get("province") or "",
             "municipality": r.get("municipality") or "",
+            "address": r.get("address") or "",
             "value_eur": float(r.get("value_eur") or 0),
             "client": r.get("client") or "",
             "cup": r.get("cup") or "",
