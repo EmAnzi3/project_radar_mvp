@@ -76,6 +76,50 @@ jobs:
             --current docs/data/branches \
             --manifest docs/data/update_manifest.json
 
+      - name: Rebuild and validate data quality report
+        run: |
+          python -u scripts/build_data_quality_report.py
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          quality_path = Path("docs/data/data_quality.json")
+          index_path = Path("docs/data/branches/index.json")
+
+          if not quality_path.exists():
+              raise SystemExit(
+                  "ERRORE: docs/data/data_quality.json non generato"
+              )
+
+          quality = json.loads(
+              quality_path.read_text(encoding="utf-8")
+          )
+          index = json.loads(
+              index_path.read_text(encoding="utf-8")
+          )
+
+          quality_records = int(
+              quality.get("total_records") or 0
+          )
+          index_records = int(
+              index.get("unique_records") or 0
+          )
+
+          print(
+              f"Qualità dati: {quality_records:,} record"
+          )
+          print(
+              f"Indice shard: {index_records:,} record"
+          )
+
+          if quality_records != index_records:
+              raise SystemExit(
+                  "ERRORE: report qualità dati non coerente "
+                  f"({quality_records} != {index_records})"
+              )
+          PY
+
       - name: Guard maintenance outputs
         run: |
           python - <<'PY'
@@ -172,6 +216,7 @@ jobs:
           name: updates-maps-maintenance
           path: |
             docs/data/update_manifest.json
+            docs/data/data_quality.json
             reports/google_maps_links_smart_audit.csv
             reports/google_maps_links_smart_summary.json
 
@@ -182,6 +227,7 @@ jobs:
 
           git add -A docs/data/branches
           git add docs/data/update_manifest.json
+          git add docs/data/data_quality.json
 
           git diff --cached --quiet \
             || git commit -m "Refresh update delta and Maps coverage"
