@@ -1,4 +1,4 @@
-﻿import argparse
+import argparse
 import hashlib
 import json
 from collections import defaultdict
@@ -196,18 +196,22 @@ def build_previous_index(previous_dir):
                 continue
 
             key = record_key(record)
+            branch = (
+                clean(record.get("branch"))
+                or branch_from_path(path)
+                or "Non assegnata"
+            )
 
-            if key in previous:
-                continue
-
-            previous[key] = {
-                "signature": record_signature(record),
-                "has_contractor": has_contractor(record),
-                "branch": clean(record.get("branch")) or branch_from_path(path),
-            }
+            if key not in previous:
+                previous[key] = {
+                    "signature": record_signature(record),
+                    "has_contractor": has_contractor(record),
+                    "branches": {branch},
+                }
+            else:
+                previous[key]["branches"].add(branch)
 
     return previous
-
 
 def clear_change_fields(record):
     changed = False
@@ -225,6 +229,8 @@ def annotate_current_files(previous, current_dir, manifest_path):
     generated_at = datetime.now(timezone.utc).isoformat()
 
     current_keys = set()
+    unique_changes = {}
+
     by_branch = defaultdict(lambda: {
         "branch": "",
         "new": 0,
@@ -243,7 +249,26 @@ def annotate_current_files(previous, current_dir, manifest_path):
     files_processed = 0
     files_changed = 0
 
-    for path in current_dir.glob("*.json"):
+    # Evita doppi conteggi della stessa chiave nella stessa filiale,
+    # mantenendo comunque i badge su tutte le copie visibili.
+    branch_change_keys = set()
+
+    def register_branch_change(branch, key, status):
+        if not status:
+            return
+
+        marker = (branch, key, status)
+
+        if marker in branch_change_keys:
+            return
+
+        branch_change_keys.add(marker)
+
+        by_branch[branch]["branch"] = branch
+        by_branch[branch][status] += 1
+        by_branch[branch]["total_changes"] += 1
+
+    for path in sorted(current_dir.glob("*.json")):
         if path.name == "index.json":
             continue
 
@@ -258,46 +283,70 @@ def annotate_current_files(previous, current_dir, manifest_path):
                 continue
 
             key = record_key(record)
-            current_keys.add(key)
+            branch = (
+                clean(record.get("branch"))
+                or branch_from_path(path)
+                or "Non assegnata"
+            )
 
-            branch = clean(record.get("branch")) or branch_from_path(path)
             by_branch[branch]["branch"] = branch
-
-            prev = previous.get(key)
-            badges = []
-            status = ""
-
             clear_changed = clear_change_fields(record)
 
-            if prev is None:
-                status = "new"
-                badges.append("Nuovo nel radar")
-                totals["new_records"] += 1
-                by_branch[branch]["new"] += 1
+            if key not in current_keys:
+                current_keys.add(key)
 
-            else:
-                current_has_contractor = has_contractor(record)
-                previous_has_contractor = bool(prev.get("has_contractor"))
-                signature_changed = record_signature(record) != prev.get("signature")
+                prev = previous.get(key)
+                badges = []
+                status = ""
 
-                if current_has_contractor and not previous_has_contractor:
-                    status = "anac_added"
-                    badges.append("ANAC aggiunto")
-                    totals["anac_added_records"] += 1
-                    by_branch[branch]["anac_added"] += 1
+                if prev is None:
+                    status = "new"
+                    badges.append("Nuovo nel radar")
+                    totals["new_records"] += 1
+                else:
+                    current_has_contractor = has_contractor(record)
+                    previous_has_contractor = bool(
+                        prev.get("has_contractor")
+                    )
+                    signature_changed = (
+                        record_signature(record)
+                        != prev.get("signature")
+                    )
 
-                elif signature_changed:
-                    status = "updated"
-                    badges.append("Aggiornato")
-                    totals["updated_records"] += 1
-                    by_branch[branch]["updated"] += 1
+                    if (
+                        current_has_contractor
+                        and not previous_has_contractor
+                    ):
+                        status = "anac_added"
+                        badges.append("ANAC aggiunto")
+                        totals["anac_added_records"] += 1
+
+                    elif signature_changed:
+                        status = "updated"
+                        badges.append("Aggiornato")
+                        totals["updated_records"] += 1
+
+                unique_changes[key] = {
+                    "status": status,
+                    "badges": badges,
+                }
+
+            change = unique_changes.get(
+                key,
+                {"status": "", "badges": []},
+            )
+
+            status = change["status"]
+            badges = change["badges"]
 
             if badges:
                 record["change_status"] = status
-                record["change_badges"] = badges
+                record["change_badges"] = list(badges)
                 record["change_run"] = run_id
                 file_changed = True
-                by_branch[branch]["total_changes"] += 1
+
+                register_branch_change(branch, key, status)
+
             elif clear_changed:
                 file_changed = True
 
@@ -308,21 +357,27 @@ def annotate_current_files(previous, current_dir, manifest_path):
     removed_keys = set(previous.keys()) - current_keys
 
     for key in removed_keys:
-        prev_branch = previous[key].get("branch") or "Non assegnata"
-        by_branch[prev_branch]["branch"] = prev_branch
-        by_branch[prev_branch]["removed"] += 1
-        by_branch[prev_branch]["total_changes"] += 1
+        branches = previous[key].get("branches") or {
+            "Non assegnata"
+        }
+
+        for branch in branches:
+            register_branch_change(branch, key, "removed")
 
     branches_payload = [
-        value for value in by_branch.values()
+        value
+        for value in by_branch.values()
         if value["total_changes"] > 0
     ]
 
     branches_payload.sort(
-        key=lambda x: (
-            x["new"] + x["updated"] + x["anac_added"],
-            x["new"],
-            x["anac_added"],
+        key=lambda item: (
+            item["new"]
+            + item["updated"]
+            + item["anac_added"]
+            + item["removed"],
+            item["new"],
+            item["anac_added"],
         ),
         reverse=True,
     )
@@ -337,8 +392,13 @@ def annotate_current_files(previous, current_dir, manifest_path):
         "anac_added_records": totals["anac_added_records"],
         "removed_records": len(removed_keys),
         "branches_with_news": sum(
-            1 for b in branches_payload
-            if b["new"] or b["updated"] or b["anac_added"]
+            1
+            for branch in branches_payload
+            if (
+                branch["new"]
+                or branch["updated"]
+                or branch["anac_added"]
+            )
         ),
         "files_processed": files_processed,
         "files_changed": files_changed,
@@ -349,14 +409,13 @@ def annotate_current_files(previous, current_dir, manifest_path):
     write_json(manifest_path, manifest)
 
     print(f"[OK] Manifest delta scritto: {manifest_path}")
-    print(f"Previous records: {len(previous)}")
-    print(f"Current records: {len(current_keys)}")
-    print(f"Nuovi: {totals['new_records']}")
-    print(f"Aggiornati: {totals['updated_records']}")
-    print(f"ANAC aggiunto: {totals['anac_added_records']}")
-    print(f"Rimossi: {len(removed_keys)}")
+    print(f"Previous records: {len(previous):,}")
+    print(f"Current records: {len(current_keys):,}")
+    print(f"Nuovi: {totals['new_records']:,}")
+    print(f"Aggiornati: {totals['updated_records']:,}")
+    print(f"ANAC aggiunto: {totals['anac_added_records']:,}")
+    print(f"Rimossi: {len(removed_keys):,}")
     print(f"File modificati: {files_changed}/{files_processed}")
-
 
 def main():
     parser = argparse.ArgumentParser()

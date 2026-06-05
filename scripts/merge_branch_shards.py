@@ -1,6 +1,8 @@
-﻿import argparse
+import argparse
 import json
 from pathlib import Path
+
+from apply_monthly_delta import record_key
 
 
 def extract_rows(payload):
@@ -35,8 +37,12 @@ def main() -> int:
         raise SystemExit(f"Indice shard mancante: {index_path}")
 
     index = json.loads(index_path.read_text(encoding="utf-8"))
-    rows = []
+
     files_seen = set()
+    records_by_key = {}
+
+    physical_rows = 0
+    duplicate_rows = 0
 
     for branch in index.get("branches", []):
         for file_info in branch.get("files", []):
@@ -55,17 +61,34 @@ def main() -> int:
             part_rows = extract_rows(payload)
 
             print(f"[LOAD] {filename}: {len(part_rows):,}")
-            rows.extend(part_rows)
 
+            for record in part_rows:
+                if not isinstance(record, dict):
+                    continue
+
+                physical_rows += 1
+                key = record_key(record)
+
+                if key in records_by_key:
+                    duplicate_rows += 1
+                    continue
+
+                records_by_key[key] = record
+
+    rows = list(records_by_key.values())
     expected = int(index.get("unique_records") or 0)
 
+    print()
     print(f"[SUMMARY] File letti: {len(files_seen)}")
-    print(f"[SUMMARY] Record ricomposti: {len(rows):,}")
-    print(f"[SUMMARY] Record attesi: {expected:,}")
+    print(f"[SUMMARY] Righe fisiche: {physical_rows:,}")
+    print(f"[SUMMARY] Duplicazioni tra filiali: {duplicate_rows:,}")
+    print(f"[SUMMARY] Record unici ricomposti: {len(rows):,}")
+    print(f"[SUMMARY] Record unici attesi: {expected:,}")
 
     if expected and len(rows) != expected:
         raise SystemExit(
-            f"Conteggio incoerente: ricomposti={len(rows)} attesi={expected}"
+            "Conteggio univoco incoerente: "
+            f"ricomposti={len(rows)} attesi={expected}"
         )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
