@@ -1,10 +1,10 @@
 {
-  "generated_at_utc": "2026-05-26T21:19:10.334025+00:00",
-  "raw_rows": 536673,
-  "total_records": 500909,
+  "generated_at_utc": "2026-06-05T15:50:23.361981+00:00",
+  "raw_rows": 539828,
+  "total_records": 503832,
   "with_contractor": 132321,
-  "contractor_coverage_pct": 26.42,
-  "duplicate_cups_count": 15185,
+  "contractor_coverage_pct": 26.26,
+  "duplicate_cups_count": 15275,
   "duplicate_cups_top": [
     {
       "cup": "C44E24000090002",
@@ -111,14 +111,14 @@
     {
       "key": "non_assegnata",
       "label": "Record non assegnati",
-      "count": 2774,
-      "pct": 0.55,
+      "count": 2797,
+      "pct": 0.56,
       "severity": "warning"
     },
     {
       "key": "ambigua",
       "label": "Record ambigui",
-      "count": 15185,
+      "count": 15275,
       "pct": 3.03,
       "severity": "warning"
     },
@@ -173,28 +173,6 @@
       },
       {
         "branch": "AMBIGUA",
-        "title": "FONDAZIONE CA' GRANDA OSPEDALE MAGGIORE POLICLINICO DI MILANO",
-        "cup": "C44E24000090002",
-        "region": "LOMBARDIA",
-        "province": "MILANO",
-        "municipality": "MILANO",
-        "value": "49799158.0",
-        "source": "ANAC",
-        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/C44E24000090002"
-      },
-      {
-        "branch": "AMBIGUA",
-        "title": "FONDAZIONE CA' GRANDA OSPEDALE MAGGIORE POLICLINICO DI MILANO",
-        "cup": "C44E24000100002",
-        "region": "LOMBARDIA",
-        "province": "MILANO",
-        "municipality": "MILANO",
-        "value": "30422025.0",
-        "source": "ANAC",
-        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/C44E24000100002"
-      },
-      {
-        "branch": "AMBIGUA",
         "title": "LAVORI DI RISTRUTTURAZIONE DELL'EDIFICIO SITO IN VIA DELLE RUPICOLE - ROMA, FINALIZZATO ALLA RIFUNZIONALIZZAZIONE DELL'EDIFICIO AL FINE DI CONTENERE IL LABORATORIO ANTIDOPING",
         "cup": "J89D24000160001",
         "region": "LAZIO",
@@ -203,17 +181,6 @@
         "value": "18000000.0",
         "source": "ANAC",
         "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/J89D24000160001"
-      },
-      {
-        "branch": "AMBIGUA",
-        "title": "D.G.R. XII/862/2023 - DETERMINAZIONI IN ORDINE AGLI INVESTIMENTI IN AMBITO SANITARIO PER LESERCIZIO FINANZIARIO 2023 - ( 14.000.000,00)",
-        "cup": "C44E23000190002",
-        "region": "LOMBARDIA",
-        "province": "MILANO",
-        "municipality": "MILANO",
-        "value": "14000000.0",
-        "source": "ANAC",
-        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/C44E23000190002"
       },
       {
         "branch": "AMBIGUA",
@@ -250,17 +217,6 @@
       },
       {
         "branch": "AMBIGUA",
-        "title": "MILANO, LIVIGNO, BORMIO",
-        "cup": "H42C23000250002",
-        "region": "LOMBARDIA",
-        "province": "MILANO",
-        "municipality": "MILANO",
-        "value": "33792400.0",
-        "source": "ANAC",
-        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/H42C23000250002"
-      },
-      {
-        "branch": "AMBIGUA",
         "title": "RINNOVO ARMAMENTO NELLA TRATTA ACQUA ACETOSA-MONTE ANTENNE PER UN TRATTO DI CIRCA 3 KM E TRA VIGNANELLO-VITERBO PER UN TRATTO DI CIRCA 8 KM DI BINARIO",
         "cup": "C77D23000040001",
         "region": "LAZIO",
@@ -269,6 +225,50 @@
         "value": "19000000.0",
         "source": "ANAC",
         "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/C77D23000040001"
+      },
+      {
+        "branch": "AMBIGUA",
+        "title": "INTERA RETE IN GESTIONE AUTOSTRADE",
+        "cup": "H86G21004020005",
+        "region": "LAZIO",
+        "province": "ROMA",
+        "municipality": "ROMA",
+        "value": "80000000.0",
+        "source": "ANAC",
+        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/H86G21004020005"
+      },
+      {
+        "branch": "AMBIGUA",
+        "title": "GIUBILEO 2025 - RIQUALIFICAZIONE PAVIMENTAZIONI STORICHE: TRASFORMAZIONE DELLA SEDE STRADALE DA SELCIATO IN CONGLOMERATO BITUMINOSO E VICEVERSA",
+        "cup": "J87H23000980001",
+        "region": "LAZIO",
+        "province": "ROMA",
+        "municipality": "ROMA",
+        "value": "6800000.0",
+        "source": "ANAC",
+        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/J87H23000980001"
+      },
+      {
+        "branch": "AMBIGUA",
+        "title": "ACCORDO QUADRO CON UNICO OPERATORE PER LAVORI DI MANUTENZIONE, RINNOVAMENTO E MODIFICA DEGLI IMPIANTI DI ALLARME ANTIFURTO, ANTINCENDIO, ANTIRAPINA, TELEVISIVI A CIRCUITO CHIUSO, C",
+        "cup": "J83C23000450004",
+        "region": "LAZIO",
+        "province": "ROMA",
+        "municipality": "ROMA",
+        "value": "5546937.0",
+        "source": "ANAC",
+        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/J83C23000450004"
+      },
+      {
+        "branch": "AMBIGUA",
+        "title": "ACCORDO QUADRO IN DUE LOTTI DEI LAVORI DI MO, ESERCIZIO E MODIFICA DEGLI IMPIANTI DI SICUREZZA DI NOTEVOLE CONTENUTO TECNOLOGICO, INSTALLATI PRESSO IL TERRITORIO DI ROMA CAPITALE ",
+        "cup": "J83C23000340004",
+        "region": "LAZIO",
+        "province": "ROMA",
+        "municipality": "ROMA",
+        "value": "5208660.0",
+        "source": "ANAC",
+        "source_url": "https://www.opencup.gov.it/portale/progetto/-/cup/J83C23000340004"
       }
     ],
     "non_assegnata": [
@@ -387,9 +387,9 @@
   "branches": [
     {
       "branch": "AMBIGUA",
-      "records": 15185,
+      "records": 15275,
       "non_assegnata": 0,
-      "ambigua": 15185,
+      "ambigua": 15275,
       "missing_region": 0,
       "missing_province": 0,
       "missing_municipality": 0,
@@ -397,12 +397,12 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 4963,
-      "contractor_coverage_pct": 32.68
+      "contractor_coverage_pct": 32.49
     },
     {
       "branch": "NON ASSEGNATA",
-      "records": 2774,
-      "non_assegnata": 2774,
+      "records": 2797,
+      "non_assegnata": 2797,
       "ambigua": 0,
       "missing_region": 0,
       "missing_province": 0,
@@ -410,12 +410,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 359,
-      "contractor_coverage_pct": 12.94
+      "with_contractor": 369,
+      "contractor_coverage_pct": 13.19
     },
     {
       "branch": "Catania",
-      "records": 45485,
+      "records": 45639,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -424,12 +424,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 8698,
-      "contractor_coverage_pct": 19.12
+      "with_contractor": 8680,
+      "contractor_coverage_pct": 19.02
     },
     {
       "branch": "Roma Nomentana",
-      "records": 39182,
+      "records": 39561,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -439,11 +439,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 7422,
-      "contractor_coverage_pct": 18.94
+      "contractor_coverage_pct": 18.76
     },
     {
       "branch": "Napoli",
-      "records": 36576,
+      "records": 36792,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -453,11 +453,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 6821,
-      "contractor_coverage_pct": 18.65
+      "contractor_coverage_pct": 18.54
     },
     {
       "branch": "Bari",
-      "records": 34734,
+      "records": 34995,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -466,12 +466,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 10883,
-      "contractor_coverage_pct": 31.33
+      "with_contractor": 10897,
+      "contractor_coverage_pct": 31.14
     },
     {
       "branch": "Rimini",
-      "records": 32561,
+      "records": 32752,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -480,12 +480,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 8048,
-      "contractor_coverage_pct": 24.72
+      "with_contractor": 8051,
+      "contractor_coverage_pct": 24.58
     },
     {
       "branch": "Cosenza",
-      "records": 28240,
+      "records": 28483,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -495,11 +495,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 6362,
-      "contractor_coverage_pct": 22.53
+      "contractor_coverage_pct": 22.34
     },
     {
       "branch": "SALERNO",
-      "records": 20213,
+      "records": 20338,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -509,11 +509,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 4660,
-      "contractor_coverage_pct": 23.05
+      "contractor_coverage_pct": 22.91
     },
     {
       "branch": "Torino",
-      "records": 17966,
+      "records": 18016,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -522,12 +522,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 5633,
-      "contractor_coverage_pct": 31.35
+      "with_contractor": 5630,
+      "contractor_coverage_pct": 31.25
     },
     {
       "branch": "Udine",
-      "records": 15288,
+      "records": 15411,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -536,12 +536,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4498,
-      "contractor_coverage_pct": 29.42
+      "with_contractor": 4514,
+      "contractor_coverage_pct": 29.29
     },
     {
       "branch": "Firenze",
-      "records": 13437,
+      "records": 13513,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -551,11 +551,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 4445,
-      "contractor_coverage_pct": 33.08
+      "contractor_coverage_pct": 32.89
     },
     {
       "branch": "Padova",
-      "records": 12563,
+      "records": 12601,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -565,11 +565,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 4229,
-      "contractor_coverage_pct": 33.66
+      "contractor_coverage_pct": 33.56
     },
     {
       "branch": "Perugia",
-      "records": 11717,
+      "records": 11778,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -579,11 +579,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2668,
-      "contractor_coverage_pct": 22.77
+      "contractor_coverage_pct": 22.65
     },
     {
       "branch": "Sassari",
-      "records": 11287,
+      "records": 11484,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -592,12 +592,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2833,
-      "contractor_coverage_pct": 25.1
+      "with_contractor": 2861,
+      "contractor_coverage_pct": 24.91
     },
     {
       "branch": "Frosinone",
-      "records": 11234,
+      "records": 11296,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -607,11 +607,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2313,
-      "contractor_coverage_pct": 20.59
+      "contractor_coverage_pct": 20.48
     },
     {
       "branch": "Cagliari",
-      "records": 11179,
+      "records": 11144,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -620,12 +620,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 3056,
-      "contractor_coverage_pct": 27.34
+      "with_contractor": 3044,
+      "contractor_coverage_pct": 27.32
     },
     {
       "branch": "Brescia",
-      "records": 9850,
+      "records": 9907,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -635,11 +635,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2820,
-      "contractor_coverage_pct": 28.63
+      "contractor_coverage_pct": 28.46
     },
     {
       "branch": "Milano Ovest",
-      "records": 9516,
+      "records": 9565,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -649,11 +649,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2988,
-      "contractor_coverage_pct": 31.4
+      "contractor_coverage_pct": 31.24
     },
     {
       "branch": "Bologna",
-      "records": 8969,
+      "records": 8986,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -663,11 +663,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2886,
-      "contractor_coverage_pct": 32.18
+      "contractor_coverage_pct": 32.12
     },
     {
       "branch": "Bolzano",
-      "records": 8309,
+      "records": 8375,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -677,11 +677,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2558,
-      "contractor_coverage_pct": 30.79
+      "contractor_coverage_pct": 30.54
     },
     {
       "branch": "Verona",
-      "records": 8158,
+      "records": 8196,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -691,11 +691,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2481,
-      "contractor_coverage_pct": 30.41
+      "contractor_coverage_pct": 30.27
     },
     {
       "branch": "Livorno",
-      "records": 7206,
+      "records": 7250,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -705,11 +705,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2374,
-      "contractor_coverage_pct": 32.94
+      "contractor_coverage_pct": 32.74
     },
     {
       "branch": "Parma",
-      "records": 7088,
+      "records": 7125,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -719,11 +719,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2159,
-      "contractor_coverage_pct": 30.46
+      "contractor_coverage_pct": 30.3
     },
     {
       "branch": "Bergamo",
-      "records": 7022,
+      "records": 7026,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -732,12 +732,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2106,
-      "contractor_coverage_pct": 29.99
+      "with_contractor": 2092,
+      "contractor_coverage_pct": 29.78
     },
     {
       "branch": "Treviso",
-      "records": 7007,
+      "records": 6999,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -746,12 +746,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2637,
-      "contractor_coverage_pct": 37.63
+      "with_contractor": 2621,
+      "contractor_coverage_pct": 37.45
     },
     {
       "branch": "Roma Aurelia",
-      "records": 6944,
+      "records": 6961,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -761,11 +761,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1788,
-      "contractor_coverage_pct": 25.75
+      "contractor_coverage_pct": 25.69
     },
     {
       "branch": "Lucca",
-      "records": 6633,
+      "records": 6669,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -775,11 +775,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 2210,
-      "contractor_coverage_pct": 33.32
+      "contractor_coverage_pct": 33.14
     },
     {
       "branch": "Milano Nord",
-      "records": 6469,
+      "records": 6458,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -788,12 +788,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2191,
-      "contractor_coverage_pct": 33.87
+      "with_contractor": 2186,
+      "contractor_coverage_pct": 33.85
     },
     {
       "branch": "Cuneo",
-      "records": 6211,
+      "records": 6234,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -803,11 +803,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1557,
-      "contractor_coverage_pct": 25.07
+      "contractor_coverage_pct": 24.98
     },
     {
       "branch": "Milano Sud",
-      "records": 6051,
+      "records": 6065,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -816,12 +816,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 1944,
-      "contractor_coverage_pct": 32.13
+      "with_contractor": 1936,
+      "contractor_coverage_pct": 31.92
     },
     {
       "branch": "Trento",
-      "records": 5942,
+      "records": 6026,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -830,12 +830,12 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2163,
-      "contractor_coverage_pct": 36.4
+      "with_contractor": 2168,
+      "contractor_coverage_pct": 35.98
     },
     {
       "branch": "Genova",
-      "records": 5632,
+      "records": 5667,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -845,11 +845,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1890,
-      "contractor_coverage_pct": 33.56
+      "contractor_coverage_pct": 33.35
     },
     {
       "branch": "Sassuolo",
-      "records": 5554,
+      "records": 5594,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -859,11 +859,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1434,
-      "contractor_coverage_pct": 25.82
+      "contractor_coverage_pct": 25.63
     },
     {
       "branch": "Venezia",
-      "records": 4793,
+      "records": 4835,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -873,11 +873,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1802,
-      "contractor_coverage_pct": 37.6
+      "contractor_coverage_pct": 37.27
     },
     {
       "branch": "Albenga",
-      "records": 4693,
+      "records": 4717,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -887,11 +887,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1532,
-      "contractor_coverage_pct": 32.64
+      "contractor_coverage_pct": 32.48
     },
     {
       "branch": "Milano Est",
-      "records": 3611,
+      "records": 3648,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -901,11 +901,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 1183,
-      "contractor_coverage_pct": 32.76
+      "contractor_coverage_pct": 32.43
     },
     {
       "branch": "Sondrio",
-      "records": 2876,
+      "records": 2891,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -915,11 +915,11 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 923,
-      "contractor_coverage_pct": 32.09
+      "contractor_coverage_pct": 31.93
     },
     {
       "branch": "Lecco",
-      "records": 2754,
+      "records": 2763,
       "non_assegnata": 0,
       "ambigua": 0,
       "missing_region": 0,
@@ -929,281 +929,309 @@
       "missing_source_url": 0,
       "missing_cup": 0,
       "with_contractor": 804,
-      "contractor_coverage_pct": 29.19
+      "contractor_coverage_pct": 29.1
     }
   ],
   "shards": [
     {
-      "file": "Roma_Nomentana.json",
-      "branch": "Roma_Nomentana",
-      "records": 51213,
-      "mb": 51.34,
-      "status": "warning"
-    },
-    {
-      "file": "Catania.json",
-      "branch": "Catania",
-      "records": 45485,
-      "mb": 45.09,
-      "status": "warning"
-    },
-    {
-      "file": "Napoli.json",
-      "branch": "Napoli",
-      "records": 36576,
-      "mb": 36.26,
+      "file": "Bari_part_001.json",
+      "branch": "Bari_part_001",
+      "records": 31825,
+      "mb": 44.97,
       "status": "ok"
     },
     {
-      "file": "Bari.json",
-      "branch": "Bari",
-      "records": 34734,
-      "mb": 35.85,
+      "file": "Catania_part_001.json",
+      "branch": "Catania_part_001",
+      "records": 32006,
+      "mb": 44.97,
+      "status": "ok"
+    },
+    {
+      "file": "Napoli_part_001.json",
+      "branch": "Napoli_part_001",
+      "records": 31914,
+      "mb": 44.97,
+      "status": "ok"
+    },
+    {
+      "file": "Roma_Nomentana_part_001.json",
+      "branch": "Roma_Nomentana_part_001",
+      "records": 31727,
+      "mb": 44.97,
       "status": "ok"
     },
     {
       "file": "Rimini.json",
       "branch": "Rimini",
-      "records": 32561,
-      "mb": 33.15,
+      "records": 32752,
+      "mb": 44.3,
       "status": "ok"
     },
     {
       "file": "Cosenza.json",
       "branch": "Cosenza",
-      "records": 28240,
-      "mb": 28.63,
+      "records": 28483,
+      "mb": 39.69,
       "status": "ok"
     },
     {
       "file": "SALERNO.json",
       "branch": "SALERNO",
-      "records": 20213,
-      "mb": 20.31,
+      "records": 20338,
+      "mb": 28.16,
       "status": "ok"
     },
     {
       "file": "Roma_Aurelia.json",
       "branch": "Roma_Aurelia",
-      "records": 18975,
-      "mb": 19.97,
+      "records": 19056,
+      "mb": 27.57,
       "status": "ok"
     },
     {
       "file": "Torino.json",
       "branch": "Torino",
-      "records": 18423,
-      "mb": 19.1,
+      "records": 18473,
+      "mb": 25.73,
+      "status": "ok"
+    },
+    {
+      "file": "Roma_Nomentana_part_002.json",
+      "branch": "Roma_Nomentana_part_002",
+      "records": 19929,
+      "mb": 25.07,
       "status": "ok"
     },
     {
       "file": "AMBIGUA.json",
       "branch": "AMBIGUA",
-      "records": 15185,
-      "mb": 17.01,
+      "records": 15275,
+      "mb": 23.11,
       "status": "ok"
     },
     {
       "file": "Udine.json",
       "branch": "Udine",
-      "records": 15288,
-      "mb": 15.81,
+      "records": 15411,
+      "mb": 21.36,
       "status": "ok"
     },
     {
       "file": "Firenze.json",
       "branch": "Firenze",
-      "records": 13437,
-      "mb": 14.24,
+      "records": 13513,
+      "mb": 19.31,
       "status": "ok"
     },
     {
       "file": "Milano_Ovest.json",
       "branch": "Milano_Ovest",
-      "records": 12213,
-      "mb": 13.6,
+      "records": 12288,
+      "mb": 18.22,
       "status": "ok"
     },
     {
       "file": "Padova.json",
       "branch": "Padova",
-      "records": 12563,
-      "mb": 13.07,
+      "records": 12601,
+      "mb": 17.84,
       "status": "ok"
     },
     {
-      "file": "Perugia.json",
-      "branch": "Perugia",
-      "records": 11717,
-      "mb": 11.56,
-      "status": "ok"
-    },
-    {
-      "file": "Cagliari.json",
-      "branch": "Cagliari",
-      "records": 11179,
-      "mb": 11.39,
+      "file": "Catania_part_002.json",
+      "branch": "Catania_part_002",
+      "records": 13633,
+      "mb": 17.16,
       "status": "ok"
     },
     {
       "file": "Sassari.json",
       "branch": "Sassari",
-      "records": 11287,
-      "mb": 11.36,
+      "records": 11484,
+      "mb": 15.76,
       "status": "ok"
     },
     {
       "file": "Frosinone.json",
       "branch": "Frosinone",
-      "records": 11234,
-      "mb": 11.1,
+      "records": 11296,
+      "mb": 15.64,
       "status": "ok"
     },
     {
-      "file": "Milano_Nord.json",
-      "branch": "Milano_Nord",
-      "records": 9166,
-      "mb": 10.47,
+      "file": "Cagliari.json",
+      "branch": "Cagliari",
+      "records": 11144,
+      "mb": 15.59,
       "status": "ok"
     },
     {
-      "file": "Milano_Sud.json",
-      "branch": "Milano_Sud",
-      "records": 9205,
-      "mb": 10.39,
+      "file": "Perugia.json",
+      "branch": "Perugia",
+      "records": 11778,
+      "mb": 15.26,
       "status": "ok"
     },
     {
       "file": "Brescia.json",
       "branch": "Brescia",
-      "records": 9850,
-      "mb": 10.09,
+      "records": 9907,
+      "mb": 13.87,
+      "status": "ok"
+    },
+    {
+      "file": "Milano_Nord.json",
+      "branch": "Milano_Nord",
+      "records": 9181,
+      "mb": 13.87,
+      "status": "ok"
+    },
+    {
+      "file": "Milano_Sud.json",
+      "branch": "Milano_Sud",
+      "records": 9245,
+      "mb": 13.81,
       "status": "ok"
     },
     {
       "file": "Bologna.json",
       "branch": "Bologna",
-      "records": 8969,
-      "mb": 9.65,
+      "records": 8986,
+      "mb": 12.75,
       "status": "ok"
     },
     {
       "file": "Bolzano.json",
       "branch": "Bolzano",
-      "records": 8309,
-      "mb": 8.86,
+      "records": 8375,
+      "mb": 11.71,
       "status": "ok"
     },
     {
       "file": "Verona.json",
       "branch": "Verona",
-      "records": 8158,
-      "mb": 8.56,
+      "records": 8196,
+      "mb": 11.64,
       "status": "ok"
     },
     {
       "file": "Livorno.json",
       "branch": "Livorno",
-      "records": 7206,
-      "mb": 7.61,
+      "records": 7250,
+      "mb": 10.28,
       "status": "ok"
     },
     {
       "file": "Parma.json",
       "branch": "Parma",
-      "records": 7088,
-      "mb": 7.53,
+      "records": 7125,
+      "mb": 10.18,
       "status": "ok"
     },
     {
       "file": "Treviso.json",
       "branch": "Treviso",
-      "records": 7007,
-      "mb": 7.44,
+      "records": 6999,
+      "mb": 9.99,
       "status": "ok"
     },
     {
       "file": "Milano_Est.json",
       "branch": "Milano_Est",
-      "records": 6308,
-      "mb": 7.42,
+      "records": 6371,
+      "mb": 9.85,
       "status": "ok"
     },
     {
       "file": "Bergamo.json",
       "branch": "Bergamo",
-      "records": 7022,
-      "mb": 7.12,
+      "records": 7026,
+      "mb": 9.78,
       "status": "ok"
     },
     {
       "file": "Lucca.json",
       "branch": "Lucca",
-      "records": 6633,
-      "mb": 6.98,
+      "records": 6669,
+      "mb": 9.43,
       "status": "ok"
     },
     {
       "file": "Trento.json",
       "branch": "Trento",
-      "records": 5942,
-      "mb": 6.65,
+      "records": 6026,
+      "mb": 8.76,
       "status": "ok"
     },
     {
       "file": "Cuneo.json",
       "branch": "Cuneo",
-      "records": 6211,
-      "mb": 6.17,
+      "records": 6234,
+      "mb": 8.53,
       "status": "ok"
     },
     {
       "file": "Genova.json",
       "branch": "Genova",
-      "records": 5632,
-      "mb": 5.93,
+      "records": 5667,
+      "mb": 7.99,
       "status": "ok"
     },
     {
       "file": "Sassuolo.json",
       "branch": "Sassuolo",
-      "records": 5554,
-      "mb": 5.72,
+      "records": 5594,
+      "mb": 7.57,
       "status": "ok"
     },
     {
       "file": "Venezia.json",
       "branch": "Venezia",
-      "records": 4793,
-      "mb": 5.17,
+      "records": 4835,
+      "mb": 6.89,
       "status": "ok"
     },
     {
       "file": "Albenga.json",
       "branch": "Albenga",
-      "records": 4693,
-      "mb": 4.89,
+      "records": 4717,
+      "mb": 6.59,
       "status": "ok"
     },
     {
-      "file": "NON_ASSEGNATA.json",
-      "branch": "NON_ASSEGNATA",
-      "records": 2774,
-      "mb": 3.21,
+      "file": "Napoli_part_002.json",
+      "branch": "Napoli_part_002",
+      "records": 4878,
+      "mb": 6.29,
       "status": "ok"
     },
     {
       "file": "Sondrio.json",
       "branch": "Sondrio",
-      "records": 2876,
-      "mb": 2.97,
+      "records": 2891,
+      "mb": 3.97,
+      "status": "ok"
+    },
+    {
+      "file": "Bari_part_002.json",
+      "branch": "Bari_part_002",
+      "records": 3170,
+      "mb": 3.95,
+      "status": "ok"
+    },
+    {
+      "file": "NON_ASSEGNATA.json",
+      "branch": "NON_ASSEGNATA",
+      "records": 2797,
+      "mb": 3.94,
       "status": "ok"
     },
     {
       "file": "Lecco.json",
       "branch": "Lecco",
-      "records": 2754,
-      "mb": 2.79,
+      "records": 2763,
+      "mb": 3.85,
       "status": "ok"
     }
   ],

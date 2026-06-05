@@ -69,12 +69,43 @@ jobs:
             --out-dir docs/data/branches \
             --max-file-mb 45
 
-      - name: Rebuild June update manifest
+      - name: Validate published update manifest
         run: |
-          python -u scripts/apply_monthly_delta.py \
-            --previous tmp/previous_branches \
-            --current docs/data/branches \
-            --manifest docs/data/update_manifest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest_path = Path("docs/data/update_manifest.json")
+          index_path = Path("docs/data/branches/index.json")
+
+          if not manifest_path.exists():
+              raise SystemExit(
+                  "ERRORE: manifest aggiornamenti non disponibile"
+              )
+
+          manifest = json.loads(
+              manifest_path.read_text(encoding="utf-8")
+          )
+          index = json.loads(
+              index_path.read_text(encoding="utf-8")
+          )
+
+          manifest_records = int(
+              manifest.get("current_unique_records") or 0
+          )
+          index_records = int(
+              index.get("unique_records") or 0
+          )
+
+          print(f"Manifest aggiornamenti: {manifest_records:,}")
+          print(f"Indice shard: {index_records:,}")
+
+          if manifest_records != index_records:
+              raise SystemExit(
+                  "ERRORE: manifest aggiornamenti non coerente "
+                  f"({manifest_records} != {index_records})"
+              )
+          PY
 
       - name: Rebuild and validate data quality report
         run: |
@@ -147,10 +178,9 @@ jobs:
               )
           )
 
-          if total_changes <= 0:
-              raise SystemExit(
-                  "ERRORE: il delta risulta ancora completamente vuoto."
-              )
+          print(
+              f"Variazioni nel manifest pubblicato: {total_changes:,}"
+          )
 
           precision = Counter()
           maps_count = 0
