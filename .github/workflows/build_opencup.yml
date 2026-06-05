@@ -158,11 +158,12 @@ jobs:
         run: |
           python -u scripts/apply_anac_levels_to_master.py
 
-      - name: Add strict Google Maps links
+      - name: Add smart Google Maps links
         run: |
-          python -u scripts/add_google_maps_links_from_address_ultra_strict.py \
+          python -u scripts/add_google_maps_links_smart.py \
             --input reports/master_projects.json \
-            --audit reports/google_maps_links_ultra_strict_audit.csv \
+            --audit reports/google_maps_links_smart_audit.csv \
+            --summary reports/google_maps_links_smart_summary.json \
             --apply
 
       - name: Build branch shards
@@ -329,6 +330,8 @@ jobs:
             docs/index.html
             docs/data/branches/index.json
             docs/data/branches/*.json
+            docs/data/update_manifest.json
+            reports/google_maps_links_smart_summary.json
             docs/data/anac_level_stats.json
             docs/national_anac_relevant_awards.html
             docs/national_anac_awards_anomalies.html
@@ -347,5 +350,6 @@ jobs:
           git add reports/national_operational_by_segment.csv docs/national_operational.html || true
           git add docs/national_anac_relevant_awards.html docs/national_anac_awards_anomalies.html docs/national_anac_enriched.html || true
           git add -A docs/data/branches || true
+          git add docs/data/update_manifest.json || true
           git diff --cached --quiet || git commit -m "Update OpenCUP radar outputs"
           git push

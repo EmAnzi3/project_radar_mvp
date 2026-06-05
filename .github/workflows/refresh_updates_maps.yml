@@ -1,0 +1,189 @@
+name: Refresh updates and Maps
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: project-radar-update
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Recover previous published dataset
+        run: |
+          DATA_COMMIT="$(git log -1 --format=%H -- docs/data/branches/index.json)"
+          BASELINE_COMMIT="$(git rev-parse "${DATA_COMMIT}^")"
+
+          echo "Current data commit: ${DATA_COMMIT}"
+          echo "Previous data commit: ${BASELINE_COMMIT}"
+
+          rm -rf tmp/previous_tree tmp/previous_branches
+          mkdir -p tmp/previous_tree tmp/previous_branches
+
+          git archive "${BASELINE_COMMIT}" docs/data/branches \
+            | tar -x -C tmp/previous_tree
+
+          cp -R tmp/previous_tree/docs/data/branches/. \
+            tmp/previous_branches/
+
+          find tmp/previous_branches \
+            -maxdepth 1 \
+            -name "*.json" \
+            | wc -l
+
+      - name: Rebuild temporary master from current shards
+        run: |
+          python -u scripts/merge_branch_shards.py \
+            --input-dir docs/data/branches \
+            --output reports/master_projects_from_shards.json
+
+      - name: Apply smart Google Maps enrichment
+        run: |
+          python -u scripts/add_google_maps_links_smart.py \
+            --input reports/master_projects_from_shards.json \
+            --audit reports/google_maps_links_smart_audit.csv \
+            --summary reports/google_maps_links_smart_summary.json \
+            --apply
+
+      - name: Rebuild branch shards
+        run: |
+          python -u scripts/build_branch_shards.py \
+            --input reports/master_projects_from_shards.json \
+            --out-dir docs/data/branches \
+            --max-file-mb 45
+
+      - name: Rebuild June update manifest
+        run: |
+          python -u scripts/apply_monthly_delta.py \
+            --previous tmp/previous_branches \
+            --current docs/data/branches \
+            --manifest docs/data/update_manifest.json
+
+      - name: Guard maintenance outputs
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          from collections import Counter
+          from pathlib import Path
+
+          manifest_path = Path("docs/data/update_manifest.json")
+          branch_dir = Path("docs/data/branches")
+
+          manifest = json.loads(
+              manifest_path.read_text(encoding="utf-8")
+          )
+
+          print(json.dumps(manifest, ensure_ascii=False, indent=2))
+
+          total_changes = sum(
+              int(manifest.get(key) or 0)
+              for key in (
+                  "new_records",
+                  "updated_records",
+                  "anac_added_records",
+                  "removed_records",
+              )
+          )
+
+          if total_changes <= 0:
+              raise SystemExit(
+                  "ERRORE: il delta risulta ancora completamente vuoto."
+              )
+
+          precision = Counter()
+          maps_count = 0
+
+          for path in branch_dir.glob("*.json"):
+              if path.name == "index.json":
+                  continue
+
+              payload = json.loads(path.read_text(encoding="utf-8"))
+
+              if isinstance(payload, list):
+                  rows = payload
+              else:
+                  rows = (
+                      payload.get("projects")
+                      or payload.get("records")
+                      or payload.get("items")
+                      or payload.get("data")
+                      or payload.get("rows")
+                      or []
+                  )
+
+              for row in rows:
+                  if str(row.get("maps_url") or "").strip():
+                      maps_count += 1
+                      precision[
+                          str(row.get("maps_precision") or "unknown")
+                      ] += 1
+
+              size_mb = path.stat().st_size / 1024 / 1024
+
+              if size_mb >= 50:
+                  raise SystemExit(
+                      f"ERRORE: shard oltre 50 MB: "
+                      f"{path.name} = {size_mb:.2f} MB"
+                  )
+
+          print(f"Record con Maps: {maps_count:,}")
+          print("Precisioni Maps:", dict(precision))
+
+          if maps_count < 45000:
+              raise SystemExit(
+                  f"ERRORE: copertura Maps troppo bassa: {maps_count}"
+              )
+
+          inferred = (
+              precision.get("named_poi_with_street", 0)
+              + precision.get("named_poi", 0)
+              + precision.get("street_without_number", 0)
+          )
+
+          if inferred < 1000:
+              raise SystemExit(
+                  f"ERRORE: arricchimenti smart troppo pochi: {inferred}"
+              )
+
+          print("OK: manutenzione superata.")
+          PY
+
+      - name: Upload maintenance audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: updates-maps-maintenance
+          path: |
+            docs/data/update_manifest.json
+            reports/google_maps_links_smart_audit.csv
+            reports/google_maps_links_smart_summary.json
+
+      - name: Commit maintenance outputs
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add -A docs/data/branches
+          git add docs/data/update_manifest.json
+
+          git diff --cached --quiet \
+            || git commit -m "Refresh update delta and Maps coverage"
+
+          git push
