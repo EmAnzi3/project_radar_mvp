@@ -981,7 +981,7 @@ const els = {
 
 function euro(value) {
   if (!value) return "";
-  return Number(value).toLocaleString("it-IT", { maximumFractionDigits: 0 }) + " &euro;";
+  return formatItalianInteger(value) + " &euro;";
 }
 
 function escapeHtml(str) {
@@ -1442,6 +1442,18 @@ function setSort(key) {
 
 
 
+function formatItalianInteger(value) {
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) return "";
+
+  const rounded = Math.round(n);
+  const sign = rounded < 0 ? "-" : "";
+  const digits = String(Math.abs(rounded));
+
+  return sign + digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 function parseMoneyValue(value) {
   if (value === null || value === undefined || value === "") return 0;
   if (typeof value === "number") return value;
@@ -1482,11 +1494,7 @@ function parseMoneyValue(value) {
 function formatEuro(value) {
   const n = parseMoneyValue(value);
   if (!Number.isFinite(n) || n === 0) return "";
-  return n.toLocaleString("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0
-  });
+  return `${formatItalianInteger(n)} €`;
 }
 
 function escapeAttr(value) {
@@ -1726,9 +1734,9 @@ function updateAnacCoverageBadge() {
   const confirmedPct = total ? ((confirmed / total) * 100).toFixed(1).replace(".", ",") : "0,0";
 
   el.textContent =
-    `CIG ANAC: ${technical.toLocaleString("it-IT")} (${technicalPct}%) | ` +
-    `Affidamenti ANAC: ${enriched.toLocaleString("it-IT")} (${enrichedPct}%) | ` +
-    `ANAC >=100k: ${confirmed.toLocaleString("it-IT")} (${confirmedPct}%)`;
+    `CIG ANAC: ${formatItalianInteger(technical)} (${technicalPct}%) | ` +
+    `Affidamenti ANAC: ${formatItalianInteger(enriched)} (${enrichedPct}%) | ` +
+    `ANAC >=100k: ${formatItalianInteger(confirmed)} (${confirmedPct}%)`;
 }
 
 
@@ -1804,8 +1812,8 @@ function updatePagerControls(totalFiltered, shownCount, startIndex, endIndex) {
   }).join("");
 
   pager.innerHTML = `
-    <div class="pill">Pagina ${currentPage.toLocaleString("it-IT")} di ${totalPages.toLocaleString("it-IT")}</div>
-    <div class="pill">Record ${startIndex.toLocaleString("it-IT")}-${endIndex.toLocaleString("it-IT")} di ${totalFiltered.toLocaleString("it-IT")}</div>
+    <div class="pill">Pagina ${formatItalianInteger(currentPage)} di ${formatItalianInteger(totalPages)}</div>
+    <div class="pill">Record ${formatItalianInteger(startIndex)}-${formatItalianInteger(endIndex)} di ${formatItalianInteger(totalFiltered)}</div>
     <button type="button" onclick="goToPage(1)" ${currentPage === 1 ? "disabled" : ""}>Prima</button>
     <button type="button" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>Prec.</button>
     ${pageButtons}
@@ -2071,7 +2079,7 @@ function renderIndexOnlyMessage(index) {
 
   if (els.total) {
     els.total.textContent = totalRecords
-      ? `Archivio nazionale indicizzato: ${totalRecords.toLocaleString("it-IT")} record`
+      ? `Archivio nazionale indicizzato: ${formatItalianInteger(totalRecords)} record`
       : "Archivio nazionale indicizzato per filiale";
   }
 
@@ -2107,28 +2115,42 @@ function loadBranchIndex() {
   });
 }
 
-function loadShardFiles(entry) {
+async function loadShardFiles(entry) {
   const files = Array.isArray(entry.files) && entry.files.length
     ? entry.files.map(f => f.file)
     : [`${entry.slug}.json`];
 
-  return Promise.all(
-    files.map(file =>
-      fetch(`data/branches/${encodeURIComponent(file)}`).then(r => {
-        if (!r.ok) throw new Error(`Shard non trovato: ${file}`);
-        return r.json();
-      })
-    )
-  ).then(parts => {
-    const all = [];
+  const all = [];
 
-    for (const part of parts) {
-      all.push(...normalizeLoadedProjects(part));
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+
+    if (els.shown && files.length > 1) {
+      els.shown.textContent =
+        `Caricamento ${entry.branch}: parte ${i + 1} di ${files.length}…`;
     }
 
-    return all;
-  });
+    const response = await fetch(
+      `data/branches/${encodeURIComponent(file)}`,
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Shard non trovato: ${file} — HTTP ${response.status}`
+      );
+    }
+
+    const part = await response.json();
+    all.push(...normalizeLoadedProjects(part));
+
+    // Lascia respirare il browser tra una parte e la successiva.
+    await new Promise(resolve => setTimeout(resolve, 0));
+  }
+
+  return all;
 }
+
 
 function loadSearchData() {
   const params = new URLSearchParams(window.location.search);
@@ -2195,7 +2217,10 @@ function showLoadError(err) {
   }
 }
 
-loadSearchData().catch(showLoadError);
+const searchDataReady = loadSearchData().catch(err => {
+  showLoadError(err);
+  return [];
+});
 
 </script>
 <script id="salerno-ui-normalizer">
@@ -2596,7 +2621,7 @@ loadSearchData().catch(showLoadError);
       }
 
       function fmtInt(value) {
-        return Number(value || 0).toLocaleString("it-IT");
+        return formatItalianInteger(value);
       }
 
       function fmtPct(value) {
@@ -2869,12 +2894,11 @@ loadSearchData().catch(showLoadError);
 
       if (!branch) return;
 
-      fetch(`data/branches/${encodeURIComponent(branch)}.json`, { cache: "no-store" })
-        .then(response => {
-          if (!response.ok) throw new Error(`Branch shard non disponibile: ${branch}`);
-          return response.json();
+      Promise.resolve(searchDataReady)
+        .then(() => {
+          const rows = Array.isArray(records) ? records : [];
+          renderBranchDashboard(branch, rows);
         })
-        .then(data => renderBranchDashboard(branch, getRows(data)))
         .catch(err => console.warn("Dashboard filiale non caricata:", err));
     })();
   </script>

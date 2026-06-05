@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
@@ -412,7 +412,7 @@
   </main>
 
   <script>
-    const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+    const fmtInt = n => String(Math.round(Number(n || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     const fmtPct = n => `${Number(n || 0).toFixed(2).replace(".", ",")}%`;
 
     function escapeHtml(value) {
@@ -528,4 +528,3 @@
   </script>
 </body>
 </html>
-

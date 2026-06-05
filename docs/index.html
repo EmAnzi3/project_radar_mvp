@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
@@ -316,7 +316,7 @@
         text-align: left;
       }
     }
-  
+
     .updates-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -677,7 +677,7 @@
     <div class="footer" id="footerInfo">
       Project Radar MVP · OpenCUP + ANAC · Vista interna di lavoro.
     </div>
-  
+
     <section class="card anac-level-kpi-section">
       <div class="anac-level-kpi-header">
         <div>
@@ -982,7 +982,7 @@
 
   <script id="anac-level-home-kpis">
     (function () {
-      const fmtInt = n => Number(n || 0).toLocaleString("it-IT");
+      const fmtInt = n => String(Math.round(Number(n || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       const fmtPct = n => `${Number(n || 0).toFixed(1).replace(".", ",")}%`;
 
       function setText(id, value) {
@@ -1017,4 +1017,3 @@
   </script>
 </body>
 </html>
-

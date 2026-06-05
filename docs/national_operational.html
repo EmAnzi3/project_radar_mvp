@@ -83,7 +83,12 @@ const els = {
 };
 
 function esc(s){return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
-function euro(v){return v ? Number(v).toLocaleString("it-IT",{maximumFractionDigits:0})+" €" : "";}
+function formatItalianInteger(value){
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "";
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+function euro(v){return v ? formatItalianInteger(v)+" €" : "";}
 function opts(values){return ["", ...Array.from(new Set(values.filter(Boolean))).sort()];}
 function fill(sel, values, label){const cur=sel.value; sel.innerHTML=""; for(const v of values){const o=document.createElement("option"); o.value=v; o.textContent=v||label; sel.appendChild(o);} if(values.includes(cur)) sel.value=cur;}
 
