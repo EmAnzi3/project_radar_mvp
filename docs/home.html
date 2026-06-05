@@ -923,13 +923,11 @@
       .then(stats => {
         document.getElementById("heroProjects").textContent = fmtInt(stats.total_records);
         document.getElementById("heroValue").textContent = fmtMoneyShort(stats.total_value_eur);
-        document.getElementById("heroCoverage").textContent = "—";
         document.getElementById("heroBranches").textContent = fmtInt(stats.total_branches);
 
         document.getElementById("kpiProjects").textContent = fmtInt(stats.total_records);
         document.getElementById("kpiTotalValue").textContent = fmtMoneyShort(stats.total_value_eur);
         document.getElementById("kpiAvgValue").textContent = fmtMoneyShort(stats.avg_project_value_eur);
-        document.getElementById("kpiCoverage").textContent = "—";
 
         renderAreas(document.getElementById("areas"), stats.areas);
 
