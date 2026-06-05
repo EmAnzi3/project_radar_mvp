@@ -42,6 +42,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Guard public homepage source
+        run: |
+          if [ ! -s docs/home.html ]; then
+            echo "::error::docs/home.html manca o è vuoto"
+            exit 1
+          fi
+
+          echo "Homepage source OK: $(wc -c < docs/home.html) bytes"
+
       - name: Snapshot previous branch shards
         run: |
           rm -rf tmp/previous_branches
