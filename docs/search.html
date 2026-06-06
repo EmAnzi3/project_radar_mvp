@@ -1010,11 +1010,26 @@ function normFilterValue(value) {
     return "MONZA E DELLA BRIANZA";
   }
 
+  if (v === "ABRUZZI") {
+    return "ABRUZZO";
+  }
+
   return v;
 }
 
 function sameFilterValue(a, b) {
   return normFilterValue(a) === normFilterValue(b);
+}
+
+
+function canonicalRegionLabel(value) {
+  const normalized = normFilterValue(value);
+
+  if (normalized === "ABRUZZO") {
+    return "Abruzzo";
+  }
+
+  return clean(value);
 }
 
 function clean(v) {
@@ -1118,7 +1133,7 @@ function updateDependentFilters() {
   // Se non c'? filiale, vengono dai record disponibili.
   const regionSource = territorySubset || records;
 
-  fillSelect(els.region, optionList(regionSource.map(r => r.region)), "Tutte");
+  fillSelect(els.region, optionList(regionSource.map(r => canonicalRegionLabel(r.region))), "Tutte");
 
   const region = els.region.value;
 
@@ -1889,7 +1904,7 @@ function setSelectIfPresent(select, value) {
   if (!decoded) return;
 
   const options = Array.from(select.options);
-  const found = options.find(o => o.value.toLowerCase() === decoded.toLowerCase());
+  const found = options.find(o => sameFilterValue(o.value, decoded));
 
   if (found) {
     select.value = found.value;
@@ -1904,6 +1919,7 @@ function applyUrlParams() {
   const province = params.get("province");
   const municipality = params.get("municipality");
   const segment = params.get("segment");
+  const change = params.get("change");
 
   const valueMin = params.get("valueMin");
   const valueMax = params.get("valueMax");
@@ -1926,6 +1942,7 @@ function applyUrlParams() {
 
   setSelectIfPresent(els.municipality, municipality);
   setSelectIfPresent(els.segment, segment);
+  setSelectIfPresent(els.changeFilter, change);
 
   if (valueMin) els.valueMin.value = valueMin;
   if (valueMax) els.valueMax.value = valueMax;
