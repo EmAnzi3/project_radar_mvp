@@ -1,0 +1,369 @@
+name: Refresh ANAC only
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: project-radar-update
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install duckdb
+
+      - name: Snapshot OpenCUP update state
+        run: |
+          mkdir -p tmp
+          cp docs/data/update_manifest.json \
+            tmp/update_manifest.before.json
+
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          index = json.loads(
+              Path("docs/data/branches/index.json")
+              .read_text(encoding="utf-8")
+          )
+
+          manifest_path = Path(
+              "docs/data/update_manifest.json"
+          )
+
+          preflight = {
+              "unique_records": int(
+                  index.get("unique_records") or 0
+              ),
+              "manifest_sha256": hashlib.sha256(
+                  manifest_path.read_bytes()
+              ).hexdigest(),
+          }
+
+          Path("tmp/anac_preflight.json").write_text(
+              json.dumps(preflight, indent=2),
+              encoding="utf-8",
+          )
+
+          print(json.dumps(preflight, indent=2))
+          PY
+
+      - name: Download ANAC raw datasets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p data/raw/anac
+
+          gh release download anac-raw-2026 \
+            --pattern "cup.zip" \
+            --dir data/raw/anac \
+            --clobber
+
+          gh release download anac-raw-2026 \
+            --pattern "aggiudicatari.zip" \
+            --dir data/raw/anac \
+            --clobber
+
+          gh release download anac-raw-2026 \
+            --pattern "aggiudicazioni.zip" \
+            --dir data/raw/anac \
+            --clobber
+
+          ls -lh data/raw/anac
+
+      - name: Prepare ANAC CUP targets
+        run: |
+          python -u scripts/national_prepare_anac_targets.py
+
+      - name: Match ANAC CUP-CIG
+        run: |
+          python -u scripts/national_match_anac_cup_cig.py
+
+      - name: Prepare ANAC CIG targets
+        run: |
+          python -u scripts/national_prepare_anac_cig_targets.py
+
+      - name: Match ANAC CIG-aggiudicatari
+        run: |
+          python -u scripts/national_match_anac_aggiudicatari.py
+
+      - name: Match ANAC aggiudicazioni
+        run: |
+          python -u scripts/national_match_anac_aggiudicazioni.py
+
+      - name: Build ANAC relevant awards
+        run: |
+          python -u scripts/national_build_anac_relevant_awards.py
+
+      - name: Build ANAC search pages
+        run: |
+          python -u scripts/build_national_anac_pages_like_search.py
+
+      - name: Rebuild master with new ANAC data
+        run: |
+          python -u scripts/build_master_dataset.py
+
+      - name: Apply ANAC visibility levels
+        run: |
+          python -u scripts/apply_anac_levels_to_master.py
+
+      - name: Rebuild Google Maps links
+        run: |
+          python -u scripts/add_google_maps_links_smart.py \
+            --input reports/master_projects.json \
+            --audit reports/google_maps_links_smart_audit.csv \
+            --summary reports/google_maps_links_smart_summary.json \
+            --apply
+
+      - name: Restore OpenCUP update badges
+        run: |
+          python -u scripts/reapply_change_markers.py \
+            --shards docs/data/branches \
+            --master reports/master_projects.json \
+            --summary tmp/change_markers_summary.json
+
+      - name: Rebuild public branch shards
+        run: |
+          python -u scripts/build_branch_shards.py \
+            --input reports/master_projects.json \
+            --out-dir docs/data/branches \
+            --max-file-mb 45
+
+      - name: Rebuild homepage stats
+        run: |
+          python -u scripts/build_home_stats.py
+
+      - name: Rebuild data quality report
+        run: |
+          python -u scripts/build_data_quality_report.py
+
+      - name: Guard ANAC-only outputs
+        run: |
+          cmp --silent \
+            tmp/update_manifest.before.json \
+            docs/data/update_manifest.json \
+            || {
+              echo "::error::update_manifest.json è stato modificato"
+              exit 1
+            }
+
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, "scripts")
+
+          from reapply_change_markers import (
+              extract_rows,
+              load_json,
+              record_key,
+          )
+
+          preflight = json.loads(
+              Path("tmp/anac_preflight.json")
+              .read_text(encoding="utf-8")
+          )
+
+          marker_summary = json.loads(
+              Path("tmp/change_markers_summary.json")
+              .read_text(encoding="utf-8")
+          )
+
+          branch_dir = Path("docs/data/branches")
+          index = json.loads(
+              (branch_dir / "index.json")
+              .read_text(encoding="utf-8")
+          )
+
+          before_records = int(
+              preflight.get("unique_records") or 0
+          )
+          after_records = int(
+              index.get("unique_records") or 0
+          )
+
+          print(f"Record prima: {before_records:,}")
+          print(f"Record dopo: {after_records:,}")
+
+          if before_records != after_records:
+              raise SystemExit(
+                  "ERRORE: ANAC-only ha modificato il numero "
+                  f"di progetti ({before_records} != {after_records})"
+              )
+
+          manifest_path = Path(
+              "docs/data/update_manifest.json"
+          )
+
+          current_manifest_hash = hashlib.sha256(
+              manifest_path.read_bytes()
+          ).hexdigest()
+
+          if current_manifest_hash != preflight["manifest_sha256"]:
+              raise SystemExit(
+                  "ERRORE: manifest Aggiornamenti modificato"
+              )
+
+          expected_markers = int(
+              marker_summary.get("source_markers") or 0
+          )
+
+          current_marker_keys = set()
+          maps_count = 0
+
+          for path in branch_dir.glob("*.json"):
+              if path.name == "index.json":
+                  continue
+
+              rows, _ = extract_rows(load_json(path))
+
+              for row in rows:
+                  if not isinstance(row, dict):
+                      continue
+
+                  if (
+                      row.get("change_status")
+                      or row.get("change_badges")
+                  ):
+                      current_marker_keys.add(
+                          record_key(row)
+                      )
+
+                  if str(
+                      row.get("maps_url") or ""
+                  ).strip():
+                      maps_count += 1
+
+              size_mb = (
+                  path.stat().st_size / 1024 / 1024
+              )
+
+              if size_mb >= 50:
+                  raise SystemExit(
+                      f"ERRORE: shard oltre 50 MB: "
+                      f"{path.name} = {size_mb:.2f}"
+                  )
+
+          print(
+              "Marker OpenCUP attesi:",
+              f"{expected_markers:,}",
+          )
+          print(
+              "Marker OpenCUP pubblicati:",
+              f"{len(current_marker_keys):,}",
+          )
+
+          if len(current_marker_keys) != expected_markers:
+              raise SystemExit(
+                  "ERRORE: marker OpenCUP non conservati "
+                  f"({len(current_marker_keys)} "
+                  f"!= {expected_markers})"
+              )
+
+          relevant = Path(
+              "reports/national_anac_relevant_awards.csv"
+          )
+
+          with relevant.open(
+              "r",
+              encoding="utf-8-sig",
+              newline="",
+          ) as file:
+              relevant_rows = max(
+                  sum(1 for _ in file) - 1,
+                  0,
+              )
+
+          print(
+              "Affidamenti ANAC rilevanti:",
+              f"{relevant_rows:,}",
+          )
+
+          if relevant_rows < 100000:
+              raise SystemExit(
+                  "ERRORE: output ANAC sospettosamente basso: "
+                  f"{relevant_rows}"
+              )
+
+          quality = json.loads(
+              Path("docs/data/data_quality.json")
+              .read_text(encoding="utf-8")
+          )
+
+          quality_records = int(
+              quality.get("total_records") or 0
+          )
+
+          if quality_records != after_records:
+              raise SystemExit(
+                  "ERRORE: Qualità dati non coerente "
+                  f"({quality_records} != {after_records})"
+              )
+
+          print(f"Google Maps: {maps_count:,}")
+
+          if maps_count < 45000:
+              raise SystemExit(
+                  "ERRORE: copertura Maps troppo bassa"
+              )
+
+          print("OK: aggiornamento ANAC-only validato.")
+          PY
+
+      - name: Upload ANAC audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: anac-only-output
+          path: |
+            tmp/change_markers_summary.json
+            docs/data/anac_level_stats.json
+            docs/data/home_stats.json
+            docs/data/data_quality.json
+            docs/national_anac_relevant_awards.html
+            docs/national_anac_awards_anomalies.html
+            docs/national_anac_enriched.html
+            reports/google_maps_links_smart_summary.json
+
+      - name: Commit ANAC-only outputs
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git diff --exit-code \
+            -- docs/data/update_manifest.json
+
+          git add -A docs/data/branches
+          git add docs/data/anac_level_stats.json
+          git add docs/data/home_stats.json
+          git add docs/data/data_quality.json
+          git add docs/national_anac_relevant_awards.html
+          git add docs/national_anac_awards_anomalies.html
+          git add docs/national_anac_enriched.html
+
+          git diff --cached --quiet \
+            || git commit -m "Refresh ANAC datasets"
+
+          git push
