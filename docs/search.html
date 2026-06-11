@@ -1181,7 +1181,25 @@ function applyFilters() {
     if (segment && !sameFilterValue(r.segment, segment)) return false;
     if (contractorFilter === "with" && !hasAnacContractor(r)) return false;
     if (contractorFilter === "without" && hasAnacContractor(r)) return false;
-    if (changeFilter && String(r.change_status || "") !== changeFilter) return false;
+    if (changeFilter) {
+      const status = String(r.change_status || "").trim();
+      const badges = Array.isArray(r.change_badges)
+        ? r.change_badges.map(value => String(value || "").trim())
+        : [];
+
+      const badgeLabels = {
+        new: "Nuovo nel radar",
+        updated: "Aggiornato",
+        anac_added: "ANAC aggiunto"
+      };
+
+      const matchesStatus = status === changeFilter;
+      const matchesBadge = badges.includes(
+        badgeLabels[changeFilter] || ""
+      );
+
+      if (!matchesStatus && !matchesBadge) return false;
+    }
     if (anacLevelFilter && String(r.anac_level || "none") !== anacLevelFilter) return false;
 
     if (valueMin && Number(r.project_value || 0) < valueMin) return false;
