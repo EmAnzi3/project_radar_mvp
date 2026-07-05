@@ -23,18 +23,37 @@ SKIP_EXTENSIONS = (
 )
 
 INTERESTING_PATH_HINTS = [
-    "trasparenza",
     "bandi-di-gara",
     "bandi_di_gara",
+    "bandi-gara",
     "contratti",
     "attodigara",
-    "atto",
     "gara",
     "affidamento",
+    "affidamenti",
     "aggiudicazione",
-    "dettagli",
-    "download",
-    "allegati",
+    "aggiudicazioni",
+    "appalti",
+    "avcp",
+    "l190",
+    "xml",
+]
+
+BLOCK_PATH_HINTS = [
+    "/personale/",
+    "/performance/",
+    "/organizzazione/",
+    "/consulenti/",
+    "/collaboratori/",
+    "/bilanci/",
+    "/pagamenti/",
+    "/sovvenzioni/",
+    "/beni-immobili/",
+    "/controlli-e-rilievi/",
+    "/servizi-erogati/",
+    "/altri-contenuti/",
+    "/accesso-civico/",
+    "/tassi-di-assenza/",
 ]
 
 ACTOR_LABELS = [
@@ -114,7 +133,14 @@ def fetch_text(url, timeout=30):
 
     with urllib.request.urlopen(request, timeout=timeout) as response:
         content_type = response.headers.get("Content-Type", "")
+        final_url = response.geturl()
         raw = response.read()
+
+    original_host = urllib.parse.urlparse(url).netloc.lower().replace("www.", "")
+    final_host = urllib.parse.urlparse(final_url).netloc.lower().replace("www.", "")
+
+    if original_host != final_host:
+        raise RuntimeError(f"redirect fuori dominio: {final_url}")
 
     # Pilot: per ora saltiamo PDF/binari. Se serve, aggiungiamo estrazione PDF dopo.
     if "pdf" in content_type.lower():
@@ -165,6 +191,10 @@ def same_domain_or_subpath(url, tenant_domain):
 
 def is_interesting_url(url):
     lower = url.lower()
+
+    if any(hint in lower for hint in BLOCK_PATH_HINTS):
+        return False
+
     return any(hint in lower for hint in INTERESTING_PATH_HINTS)
 
 
@@ -296,10 +326,10 @@ def default_start_urls(tenant_domain):
     base = f"https://{tenant_domain}"
 
     return [
-        base,
         base + "/it/trasparenza/bandi-di-gara-e-contratti.html",
-        base + "/it/trasparenza/bandi-di-gara-e-contratti/",
         base + "/it/trasparenza/bandi-di-gara-e-contratti/atti-e-documenti-di-carattere-generale-riferiti-a-tutte-le-procedure.html",
+        base + "/it/trasparenza/bandi-di-gara-e-contratti/informazioni-sulle-singole-procedure-in-formato-tabellare.html",
+        base,
     ]
 
 
@@ -331,8 +361,14 @@ def probe_target(target, max_pages, sleep_seconds):
     errors = []
     pages_checked = 0
 
-    while queue and pages_checked < max_pages:
+    max_attempts = max_pages * 3
+    max_errors = max_pages
+
+    attempts = 0
+
+    while queue and pages_checked < max_pages and attempts < max_attempts and len(errors) < max_errors:
         url, depth = queue.popleft()
+        attempts += 1
 
         if not same_domain_or_subpath(url, tenant):
             continue
