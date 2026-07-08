@@ -1,18 +1,23 @@
 {
-  "run_id": "2026-07-anac",
-  "generated_at_utc": "2026-07-08T22:05:12.632726+00:00",
+  "run_id": "anac-only",
+  "generated_at_utc": "2026-07-08T22:36:06.165431+00:00",
   "anac_added_records": 49,
+  "new_company_match_projects": 49,
+  "unique_company_match_delta": 47,
   "previous_with_contractor": 132517,
   "current_with_contractor": 132564,
-  "new_company_match_projects": 49,
+  "previous_home_total_with_contractor": 145067,
+  "current_home_total_with_contractor": 145118,
+  "home_total_with_contractor_delta": 51,
   "previous_technical_match_projects": 235091,
   "current_technical_match_projects": 237547,
   "new_technical_match_projects": 2456,
+  "previous_enriched_projects": 166169,
+  "current_enriched_projects": 166210,
+  "new_enriched_projects": 41,
   "previous_confirmed_projects": 132533,
   "current_confirmed_projects": 132580,
   "new_confirmed_projects": 47,
-  "previous_home_total_with_contractor": 145067,
-  "current_home_total_with_contractor": 145118,
   "by_branch": [
     {
       "branch": "AMBIGUA",
@@ -249,5 +254,5 @@
       "current_with_contractor": 2482
     }
   ],
-  "note": "Conteggio usato in UI: somma per filiale dei record che hanno acquisito nome azienda/contractor nell'ultimo refresh ANAC."
+  "note": "anac_added_records è la somma per filiale dei record che hanno acquisito nome azienda/contractor nell'ultimo refresh ANAC."
 }

@@ -37,6 +37,15 @@ jobs:
           cp docs/data/update_manifest.json \
             tmp/update_manifest.before.json
 
+          cp docs/data/anac_level_stats.json \
+            tmp/anac_level_stats.before.json
+
+          cp docs/data/home_stats.json \
+            tmp/home_stats.before.json
+
+          cp docs/data/data_quality.json \
+            tmp/data_quality.before.json
+
           python - <<'PY'
           import hashlib
           import json
@@ -161,6 +170,10 @@ jobs:
       - name: Rebuild data quality report
         run: |
           python -u scripts/build_data_quality_report.py
+
+      - name: Build ANAC update manifest
+        run: |
+          python -u scripts/build_anac_update_manifest.py
 
       - name: Guard ANAC-only outputs
         run: |
@@ -345,6 +358,7 @@ jobs:
           path: |
             tmp/change_markers_summary.json
             docs/data/anac_change_markers_summary.json
+            docs/data/anac_update_manifest.json
             docs/data/anac_level_stats.json
             docs/data/home_stats.json
             docs/data/data_quality.json
@@ -366,6 +380,7 @@ jobs:
           git add docs/data/home_stats.json
           git add docs/data/data_quality.json
           git add docs/data/anac_change_markers_summary.json
+          git add docs/data/anac_update_manifest.json
           git add docs/national_anac_relevant_awards.html
           git add docs/national_anac_awards_anomalies.html
           git add docs/national_anac_enriched.html
