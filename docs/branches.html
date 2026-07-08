@@ -1003,20 +1003,9 @@
   const fmtInt = n => String(Math.round(Number(n || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   async function loadManifest() {
-    const manifestResponse = await fetch("data/update_manifest.json", { cache: "no-store" });
-    if (!manifestResponse.ok) throw new Error("Manifest aggiornamenti non disponibile.");
-    const manifest = await manifestResponse.json();
-
-    try {
-      const anacResponse = await fetch("data/anac_change_markers_summary.json", { cache: "no-store" });
-      if (anacResponse.ok) {
-        manifest.anac_applied_markers_summary = await anacResponse.json();
-      }
-    } catch (err) {
-      console.warn("Summary ANAC non disponibile.", err);
-    }
-
-    return manifest;
+    const response = await fetch("data/update_manifest.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+    return response.json();
   }
 
   function setText(id, value) {
@@ -1032,13 +1021,7 @@
     setText("branchUpdatesSubtitle", `generato: ${generated}`);
     setText("branchUpdateNew", `${fmtInt(manifest.new_records)} nuovi`);
     setText("branchUpdateChanged", `${fmtInt(manifest.updated_records)} agg.`);
-    const anacApplied = Number(
-      manifest.anac_applied_markers_summary?.applied_markers
-      || manifest.anac_added_records
-      || 0
-    );
-
-    setText("branchUpdateAnac", `${fmtInt(anacApplied)} ANAC`);
+    setText("branchUpdateAnac", `${fmtInt(manifest.anac_added_records)} ANAC`);
     setText("branchUpdateRemoved", `${fmtInt(manifest.removed_records)} rimossi`);
   }
 

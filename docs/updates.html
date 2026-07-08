@@ -393,20 +393,9 @@
     }
 
     async function loadManifest() {
-      const manifestResponse = await fetch("data/update_manifest.json", { cache: "no-store" });
-      if (!manifestResponse.ok) throw new Error("Manifest aggiornamenti non disponibile.");
-      const manifest = await manifestResponse.json();
-
-      try {
-        const anacResponse = await fetch("data/anac_change_markers_summary.json", { cache: "no-store" });
-        if (anacResponse.ok) {
-          manifest.anac_applied_markers_summary = await anacResponse.json();
-        }
-      } catch (err) {
-        console.warn("Summary ANAC non disponibile.", err);
-      }
-
-      return manifest;
+      const response = await fetch("data/update_manifest.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+      return response.json();
     }
 
     function render(manifest) {
@@ -419,13 +408,7 @@
 
       document.getElementById("kpiNew").textContent = fmtInt(manifest.new_records);
       document.getElementById("kpiUpdated").textContent = fmtInt(manifest.updated_records);
-      const anacApplied = Number(
-        manifest.anac_applied_markers_summary?.applied_markers
-        || manifest.anac_added_records
-        || 0
-      );
-
-      document.getElementById("kpiAnac").textContent = fmtInt(anacApplied);
+      document.getElementById("kpiAnac").textContent = fmtInt(manifest.anac_added_records);
       document.getElementById("kpiRemoved").textContent = fmtInt(manifest.removed_records);
       document.getElementById("kpiBranches").textContent = fmtInt(manifest.branches_with_news);
 
