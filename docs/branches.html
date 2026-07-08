@@ -1021,7 +1021,13 @@
     setText("branchUpdatesSubtitle", `generato: ${generated}`);
     setText("branchUpdateNew", `${fmtInt(manifest.new_records)} nuovi`);
     setText("branchUpdateChanged", `${fmtInt(manifest.updated_records)} agg.`);
-    setText("branchUpdateAnac", `${fmtInt(manifest.anac_added_records)} ANAC`);
+    const anacAdded = Number(
+      manifest.anac_update_manifest?.anac_added_records
+      || manifest.anac_added_records
+      || 0
+    );
+
+    setText("branchUpdateAnac", `${fmtInt(anacAdded)} ANAC`);
     setText("branchUpdateRemoved", `${fmtInt(manifest.removed_records)} rimossi`);
   }
 
@@ -1100,7 +1106,7 @@
   function renderDelta(row) {
     const newCount = Number(row.new || 0);
     const updatedCount = Number(row.updated || 0);
-    const anacCount = Number(row.anac_added || 0);
+    const anacCount = Number(anacByBranch[row.branch] ?? row.anac_added ?? 0);
 
     if (!newCount && !updatedCount && !anacCount) return "";
 
@@ -1149,6 +1155,12 @@
 
   function applyBranchCardDeltas(manifest) {
     const rows = Array.isArray(manifest.by_branch) ? manifest.by_branch : [];
+    const anacByBranch = Object.fromEntries(
+      (manifest.anac_update_manifest?.by_branch || []).map(row => [
+        row.branch,
+        Number(row.anac_added || 0)
+      ])
+    );
 
     document.querySelectorAll(".branch-card-delta").forEach(el => el.remove());
 

@@ -880,6 +880,12 @@
       if (!list) return;
 
       const rows = Array.isArray(manifest.by_branch) ? manifest.by_branch.slice(0, 10) : [];
+      const anacByBranch = Object.fromEntries(
+        (manifest.anac_update_manifest?.by_branch || []).map(row => [
+          row.branch,
+          Number(row.anac_added || 0)
+        ])
+      );
 
       if (!rows.length) {
         list.classList.remove("loading");
@@ -897,13 +903,14 @@
       list.innerHTML = rows.map(row => {
         const branch = branchDisplayName(row.branch);
         const slug = encodeURIComponent(branchSlug(row.branch));
+        const anacCount = Number(anacByBranch[row.branch] ?? row.anac_added ?? 0);
 
         return `
           <div class="update-branch-row">
             <a href="search.html?branch=${slug}">${escapeHtml(branch)}</a>
             <span class="chip chip-new">+${fmtInt(row.new)} nuovi</span>
             <span class="chip chip-updated">${fmtInt(row.updated)} agg.</span>
-            <span class="chip chip-anac">${fmtInt(row.anac_added)} ANAC</span>
+            <span class="chip chip-anac">${fmtInt(anacCount)} ANAC</span>
             <span class="chip chip-removed">${fmtInt(row.removed)} rimossi</span>
           </div>
         `;

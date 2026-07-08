@@ -413,6 +413,12 @@
       document.getElementById("kpiBranches").textContent = fmtInt(manifest.branches_with_news);
 
       const rows = Array.isArray(manifest.by_branch) ? manifest.by_branch : [];
+      const anacByBranch = Object.fromEntries(
+        (manifest.anac_update_manifest?.by_branch || []).map(row => [
+          row.branch,
+          Number(row.anac_added || 0)
+        ])
+      );
       const container = document.getElementById("updatesContent");
 
       if (!rows.length) {
@@ -438,13 +444,14 @@
             ${rows.map(row => {
               const branch = branchDisplayName(row.branch);
               const rawBranch = row.branch;
+              const anacCount = Number(anacByBranch[row.branch] ?? row.anac_added ?? 0);
 
               return `
                 <tr>
                   <td><a class="branch-link" href="${searchLink(rawBranch, "")}">${escapeHtml(branch)}</a></td>
                   <td><span class="chip chip-new">${fmtInt(row.new)}</span></td>
                   <td><span class="chip chip-updated">${fmtInt(row.updated)}</span></td>
-                  <td><span class="chip chip-anac">${fmtInt(row.anac_added)}</span></td>
+                  <td><span class="chip chip-anac">${fmtInt(anacCount)}</span></td>
                   <td><span class="chip chip-removed">${fmtInt(row.removed)}</span></td>
                   <td>
                     <div class="actions">
