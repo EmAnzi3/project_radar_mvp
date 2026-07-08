@@ -1005,7 +1005,18 @@
   async function loadManifest() {
     const response = await fetch("data/update_manifest.json", { cache: "no-store" });
     if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
-    return response.json();
+    const manifest = await response.json();
+
+    try {
+      const anacResponse = await fetch("data/anac_update_manifest.json", { cache: "no-store" });
+      if (anacResponse.ok) {
+        manifest.anac_update_manifest = await anacResponse.json();
+      }
+    } catch (err) {
+      console.warn("Manifest ANAC non disponibile.", err);
+    }
+
+    return manifest;
   }
 
   function setText(id, value) {
@@ -1106,7 +1117,7 @@
   function renderDelta(row) {
     const newCount = Number(row.new || 0);
     const updatedCount = Number(row.updated || 0);
-    const anacCount = Number(anacByBranch[row.branch] ?? row.anac_added ?? 0);
+    const anacCount = Number(row._anac_added ?? row.anac_added ?? 0);
 
     if (!newCount && !updatedCount && !anacCount) return "";
 
@@ -1150,7 +1161,18 @@
   async function loadManifest() {
     const response = await fetch("data/update_manifest.json", { cache: "no-store" });
     if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
-    return response.json();
+    const manifest = await response.json();
+
+    try {
+      const anacResponse = await fetch("data/anac_update_manifest.json", { cache: "no-store" });
+      if (anacResponse.ok) {
+        manifest.anac_update_manifest = await anacResponse.json();
+      }
+    } catch (err) {
+      console.warn("Manifest ANAC non disponibile.", err);
+    }
+
+    return manifest;
   }
 
   function applyBranchCardDeltas(manifest) {
@@ -1165,7 +1187,7 @@
     document.querySelectorAll(".branch-card-delta").forEach(el => el.remove());
 
     rows.forEach(row => {
-      const html = renderDelta(row);
+      const html = renderDelta({ ...row, _anac_added: anacByBranch[row.branch] });
       if (!html) return;
 
       const card = findBranchCard(row.branch);

@@ -852,13 +852,28 @@
     async function loadUpdateManifest() {
       const response = await fetch("data/update_manifest.json", { cache: "no-store" });
       if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
-      return response.json();
+      const manifest = await response.json();
+
+      try {
+        const anacResponse = await fetch("data/anac_update_manifest.json", { cache: "no-store" });
+        if (anacResponse.ok) {
+          manifest.anac_update_manifest = await anacResponse.json();
+        }
+      } catch (err) {
+        console.warn("Manifest ANAC non disponibile.", err);
+      }
+
+      return manifest;
     }
 
     function renderUpdateManifest(manifest) {
       const newRecords = Number(manifest.new_records || 0);
       const updatedRecords = Number(manifest.updated_records || 0);
-      const anacAdded = Number(manifest.anac_added_records || 0);
+      const anacAdded = Number(
+        manifest.anac_update_manifest?.anac_added_records
+        || manifest.anac_added_records
+        || 0
+      );
       const removed = Number(manifest.removed_records || 0);
       const branchesWithNews = Number(manifest.branches_with_news || 0);
 
