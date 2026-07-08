@@ -142,6 +142,11 @@ jobs:
             --master reports/master_projects.json \
             --summary tmp/change_markers_summary.json
 
+      - name: Publish ANAC marker summary
+        run: |
+          mkdir -p docs/data
+          cp tmp/change_markers_summary.json docs/data/anac_change_markers_summary.json
+
       - name: Rebuild public branch shards
         run: |
           python -u scripts/build_branch_shards.py \
@@ -339,6 +344,7 @@ jobs:
           name: anac-only-output
           path: |
             tmp/change_markers_summary.json
+            docs/data/anac_change_markers_summary.json
             docs/data/anac_level_stats.json
             docs/data/home_stats.json
             docs/data/data_quality.json
@@ -359,6 +365,7 @@ jobs:
           git add docs/data/anac_level_stats.json
           git add docs/data/home_stats.json
           git add docs/data/data_quality.json
+          git add docs/data/anac_change_markers_summary.json
           git add docs/national_anac_relevant_awards.html
           git add docs/national_anac_awards_anomalies.html
           git add docs/national_anac_enriched.html

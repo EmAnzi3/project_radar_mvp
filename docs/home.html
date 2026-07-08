@@ -850,15 +850,30 @@
     }
 
     async function loadUpdateManifest() {
-      const response = await fetch("data/update_manifest.json", { cache: "no-store" });
-      if (!response.ok) throw new Error("Manifest aggiornamenti non disponibile.");
-      return response.json();
+      const manifestResponse = await fetch("data/update_manifest.json", { cache: "no-store" });
+      if (!manifestResponse.ok) throw new Error("Manifest aggiornamenti non disponibile.");
+      const manifest = await manifestResponse.json();
+
+      try {
+        const anacResponse = await fetch("data/anac_change_markers_summary.json", { cache: "no-store" });
+        if (anacResponse.ok) {
+          manifest.anac_applied_markers_summary = await anacResponse.json();
+        }
+      } catch (err) {
+        console.warn("Summary ANAC non disponibile.", err);
+      }
+
+      return manifest;
     }
 
     function renderUpdateManifest(manifest) {
       const newRecords = Number(manifest.new_records || 0);
       const updatedRecords = Number(manifest.updated_records || 0);
-      const anacAdded = Number(manifest.anac_added_records || 0);
+      const anacAdded = Number(
+        manifest.anac_applied_markers_summary?.applied_markers
+        || manifest.anac_added_records
+        || 0
+      );
       const removed = Number(manifest.removed_records || 0);
       const branchesWithNews = Number(manifest.branches_with_news || 0);
 
