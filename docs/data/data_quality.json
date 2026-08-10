@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-08-10T14:58:37.605214+00:00",
+  "generated_at_utc": "2026-08-10T15:30:53.101213+00:00",
   "raw_rows": 546317,
   "total_records": 509575,
-  "with_contractor": 132564,
-  "contractor_coverage_pct": 26.01,
+  "with_contractor": 132617,
+  "contractor_coverage_pct": 26.03,
   "duplicate_cups_count": 15587,
   "duplicate_cups_top": [
     {
@@ -396,7 +396,7 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4968,
+      "with_contractor": 4967,
       "contractor_coverage_pct": 31.87
     },
     {
@@ -424,8 +424,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 8694,
-      "contractor_coverage_pct": 18.89
+      "with_contractor": 8701,
+      "contractor_coverage_pct": 18.91
     },
     {
       "branch": "Roma Nomentana",
@@ -438,8 +438,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 7435,
-      "contractor_coverage_pct": 18.61
+      "with_contractor": 7436,
+      "contractor_coverage_pct": 18.62
     },
     {
       "branch": "Napoli",
@@ -452,7 +452,7 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 6838,
+      "with_contractor": 6839,
       "contractor_coverage_pct": 18.4
     },
     {
@@ -466,8 +466,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 10913,
-      "contractor_coverage_pct": 30.8
+      "with_contractor": 10914,
+      "contractor_coverage_pct": 30.81
     },
     {
       "branch": "Rimini",
@@ -480,8 +480,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 8065,
-      "contractor_coverage_pct": 24.46
+      "with_contractor": 8071,
+      "contractor_coverage_pct": 24.48
     },
     {
       "branch": "Cosenza",
@@ -508,8 +508,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4661,
-      "contractor_coverage_pct": 22.66
+      "with_contractor": 4663,
+      "contractor_coverage_pct": 22.67
     },
     {
       "branch": "Torino",
@@ -522,8 +522,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 5643,
-      "contractor_coverage_pct": 31.0
+      "with_contractor": 5646,
+      "contractor_coverage_pct": 31.02
     },
     {
       "branch": "Udine",
@@ -536,8 +536,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4526,
-      "contractor_coverage_pct": 29.11
+      "with_contractor": 4529,
+      "contractor_coverage_pct": 29.13
     },
     {
       "branch": "Firenze",
@@ -550,8 +550,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4451,
-      "contractor_coverage_pct": 32.61
+      "with_contractor": 4455,
+      "contractor_coverage_pct": 32.64
     },
     {
       "branch": "Padova",
@@ -564,8 +564,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4233,
-      "contractor_coverage_pct": 33.21
+      "with_contractor": 4235,
+      "contractor_coverage_pct": 33.22
     },
     {
       "branch": "Perugia",
@@ -592,8 +592,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2868,
-      "contractor_coverage_pct": 24.78
+      "with_contractor": 2870,
+      "contractor_coverage_pct": 24.8
     },
     {
       "branch": "Frosinone",
@@ -606,8 +606,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2314,
-      "contractor_coverage_pct": 20.11
+      "with_contractor": 2315,
+      "contractor_coverage_pct": 20.12
     },
     {
       "branch": "Cagliari",
@@ -620,8 +620,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 3050,
-      "contractor_coverage_pct": 27.12
+      "with_contractor": 3051,
+      "contractor_coverage_pct": 27.13
     },
     {
       "branch": "Brescia",
@@ -648,8 +648,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2995,
-      "contractor_coverage_pct": 30.83
+      "with_contractor": 2997,
+      "contractor_coverage_pct": 30.85
     },
     {
       "branch": "Bologna",
@@ -662,8 +662,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2888,
-      "contractor_coverage_pct": 31.89
+      "with_contractor": 2889,
+      "contractor_coverage_pct": 31.9
     },
     {
       "branch": "Bolzano",
@@ -690,8 +690,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2482,
-      "contractor_coverage_pct": 29.93
+      "with_contractor": 2483,
+      "contractor_coverage_pct": 29.94
     },
     {
       "branch": "Livorno",
@@ -704,8 +704,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2376,
-      "contractor_coverage_pct": 32.38
+      "with_contractor": 2379,
+      "contractor_coverage_pct": 32.42
     },
     {
       "branch": "Parma",
@@ -718,8 +718,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2166,
-      "contractor_coverage_pct": 30.05
+      "with_contractor": 2167,
+      "contractor_coverage_pct": 30.06
     },
     {
       "branch": "Roma Aurelia",
@@ -746,8 +746,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2098,
-      "contractor_coverage_pct": 29.52
+      "with_contractor": 2099,
+      "contractor_coverage_pct": 29.53
     },
     {
       "branch": "Treviso",
@@ -774,8 +774,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2209,
-      "contractor_coverage_pct": 32.81
+      "with_contractor": 2210,
+      "contractor_coverage_pct": 32.82
     },
     {
       "branch": "Milano Nord",
@@ -788,8 +788,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2199,
-      "contractor_coverage_pct": 33.47
+      "with_contractor": 2201,
+      "contractor_coverage_pct": 33.5
     },
     {
       "branch": "Cuneo",
@@ -816,8 +816,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 1947,
-      "contractor_coverage_pct": 31.76
+      "with_contractor": 1949,
+      "contractor_coverage_pct": 31.79
     },
     {
       "branch": "Trento",
@@ -830,8 +830,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2169,
-      "contractor_coverage_pct": 35.46
+      "with_contractor": 2170,
+      "contractor_coverage_pct": 35.48
     },
     {
       "branch": "Genova",
@@ -886,8 +886,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 1536,
-      "contractor_coverage_pct": 32.34
+      "with_contractor": 1537,
+      "contractor_coverage_pct": 32.36
     },
     {
       "branch": "Milano Est",
@@ -900,8 +900,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 1187,
-      "contractor_coverage_pct": 31.93
+      "with_contractor": 1188,
+      "contractor_coverage_pct": 31.95
     },
     {
       "branch": "Sondrio",
@@ -928,51 +928,51 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 813,
-      "contractor_coverage_pct": 29.15
+      "with_contractor": 816,
+      "contractor_coverage_pct": 29.26
     }
   ],
   "shards": [
     {
+      "file": "Bari_part_001.json",
+      "branch": "Bari_part_001",
+      "records": 31775,
+      "mb": 44.97,
+      "status": "ok"
+    },
+    {
       "file": "Catania_part_001.json",
       "branch": "Catania_part_001",
-      "records": 32104,
-      "mb": 45.1,
-      "status": "warning"
+      "records": 31997,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Napoli_part_001.json",
       "branch": "Napoli_part_001",
-      "records": 31950,
-      "mb": 45.05,
-      "status": "warning"
+      "records": 31883,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Roma_Nomentana_part_001.json",
       "branch": "Roma_Nomentana_part_001",
-      "records": 31729,
-      "mb": 45.03,
-      "status": "warning"
-    },
-    {
-      "file": "Bari_part_001.json",
-      "branch": "Bari_part_001",
-      "records": 31823,
-      "mb": 45.02,
-      "status": "warning"
+      "records": 31676,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Rimini.json",
       "branch": "Rimini",
       "records": 32970,
-      "mb": 44.64,
+      "mb": 44.66,
       "status": "ok"
     },
     {
       "file": "Cosenza.json",
       "branch": "Cosenza",
       "records": 28835,
-      "mb": 40.16,
+      "mb": 40.17,
       "status": "ok"
     },
     {
@@ -999,8 +999,8 @@
     {
       "file": "Roma_Nomentana_part_002.json",
       "branch": "Roma_Nomentana_part_002",
-      "records": 20555,
-      "mb": 25.86,
+      "records": 20608,
+      "mb": 25.93,
       "status": "ok"
     },
     {
@@ -1041,8 +1041,8 @@
     {
       "file": "Catania_part_002.json",
       "branch": "Catania_part_002",
-      "records": 13918,
-      "mb": 17.53,
+      "records": 14025,
+      "mb": 17.68,
       "status": "ok"
     },
     {
@@ -1077,7 +1077,7 @@
       "file": "Milano_Nord.json",
       "branch": "Milano_Nord",
       "records": 9355,
-      "mb": 14.12,
+      "mb": 14.13,
       "status": "ok"
     },
     {
@@ -1091,7 +1091,7 @@
       "file": "Milano_Sud.json",
       "branch": "Milano_Sud",
       "records": 9379,
-      "mb": 14.0,
+      "mb": 14.01,
       "status": "ok"
     },
     {
@@ -1105,21 +1105,21 @@
       "file": "Bolzano.json",
       "branch": "Bolzano",
       "records": 8669,
-      "mb": 12.06,
+      "mb": 12.07,
       "status": "ok"
     },
     {
       "file": "Verona.json",
       "branch": "Verona",
       "records": 8292,
-      "mb": 11.77,
+      "mb": 11.78,
       "status": "ok"
     },
     {
       "file": "Livorno.json",
       "branch": "Livorno",
       "records": 7337,
-      "mb": 10.39,
+      "mb": 10.4,
       "status": "ok"
     },
     {
@@ -1182,7 +1182,7 @@
       "file": "Sassuolo.json",
       "branch": "Sassuolo",
       "records": 5640,
-      "mb": 7.63,
+      "mb": 7.64,
       "status": "ok"
     },
     {
@@ -1195,8 +1195,8 @@
     {
       "file": "Napoli_part_002.json",
       "branch": "Napoli_part_002",
-      "records": 5214,
-      "mb": 6.71,
+      "records": 5281,
+      "mb": 6.8,
       "status": "ok"
     },
     {
@@ -1209,8 +1209,8 @@
     {
       "file": "Bari_part_002.json",
       "branch": "Bari_part_002",
-      "records": 3604,
-      "mb": 4.48,
+      "records": 3652,
+      "mb": 4.53,
       "status": "ok"
     },
     {

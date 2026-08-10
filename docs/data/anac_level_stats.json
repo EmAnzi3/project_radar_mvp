@@ -1,33 +1,33 @@
 {
   "total_records": 509575,
   "funnel": {
-    "technical_match_projects": 237428,
-    "technical_match_pct": 46.59,
-    "enriched_projects": 166194,
-    "enriched_pct": 32.61,
-    "confirmed_projects": 132580,
-    "confirmed_pct": 26.02
+    "technical_match_projects": 239626,
+    "technical_match_pct": 47.02,
+    "enriched_projects": 166240,
+    "enriched_pct": 32.62,
+    "confirmed_projects": 132633,
+    "confirmed_pct": 26.03
   },
   "exclusive_levels": {
     "confirmed": {
-      "count": 132580,
-      "pct": 26.02
+      "count": 132633,
+      "pct": 26.03
     },
     "none": {
-      "count": 272147,
-      "pct": 53.41
+      "count": 269949,
+      "pct": 52.98
     },
     "review": {
-      "count": 2536,
+      "count": 2525,
       "pct": 0.5
     },
     "small": {
-      "count": 31078,
+      "count": 31082,
       "pct": 6.1
     },
     "technical": {
-      "count": 71234,
-      "pct": 13.98
+      "count": 73386,
+      "pct": 14.4
     }
   },
   "labels": {
