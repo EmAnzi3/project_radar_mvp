@@ -959,6 +959,8 @@ let currentPage = 1;
 const pageSize = 300;
 let sortKey = "project_value";
 let sortDir = "desc";
+let anacAddedCups = new Set();
+let anacAddedCigs = new Set();
 
 const els = {
   branch: document.getElementById("branch"),
@@ -1108,6 +1110,93 @@ function branchLabel(r) {
 
   return escapeHtml(r.branch);
 }
+
+async function loadAnacAddedRecords() {
+  try {
+    const response = await fetch(
+      "data/anac_added_records.json",
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      console.warn(
+        "Lista record ANAC aggiunti non disponibile:",
+        response.status
+      );
+      return;
+    }
+
+    const data = await response.json();
+    const rows = Array.isArray(data.records)
+      ? data.records
+      : [];
+
+    anacAddedCups = new Set(
+      rows
+        .map(row => String(row.cup || "").trim().toUpperCase())
+        .filter(Boolean)
+    );
+
+    anacAddedCigs = new Set(
+      rows
+        .map(row => String(row.cig || "").trim().toUpperCase())
+        .filter(Boolean)
+    );
+
+    console.log(
+      "ANAC aggiunti caricati:",
+      rows.length
+    );
+  } catch (err) {
+    console.warn(
+      "Errore caricamento record ANAC aggiunti.",
+      err
+    );
+  }
+}
+
+
+function isAnacAddedRecord(record) {
+  if (!record) return false;
+
+  const cup = String(record.cup || "")
+    .trim()
+    .toUpperCase();
+
+  const cig = String(record.cig || "")
+    .trim()
+    .toUpperCase();
+
+  if (cup && anacAddedCups.has(cup)) {
+    return true;
+  }
+
+  if (cig && anacAddedCigs.has(cig)) {
+    return true;
+  }
+
+  return false;
+}
+
+
+function applyAnacAddedMarkers(rows) {
+  for (const record of rows) {
+    if (!isAnacAddedRecord(record)) {
+      continue;
+    }
+
+    const badges = Array.isArray(record.change_badges)
+      ? [...record.change_badges]
+      : [];
+
+    if (!badges.includes("ANAC aggiunto")) {
+      badges.push("ANAC aggiunto");
+    }
+
+    record.change_badges = badges;
+  }
+}
+
 
 function populateFilters() {
   const allBranches = [];
@@ -2193,7 +2282,8 @@ function loadSearchData() {
 
   return Promise.all([
     loadBranchIndex(),
-    fetch("data/branch_territory.json").then(r => r.json())
+    fetch("data/branch_territory.json").then(r => r.json()),
+    loadAnacAddedRecords()
   ]).then(([index, territory]) => {
     branchIndex = index;
     branchTerritory = territory;
@@ -2216,6 +2306,8 @@ function loadSearchData() {
     indexOnlyMode = false;
 
     return loadShardFiles(entry).then(projects => {
+      applyAnacAddedMarkers(projects);
+
       records = projects;
       filtered = projects;
 

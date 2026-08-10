@@ -419,7 +419,11 @@
 
       document.getElementById("kpiNew").textContent = fmtInt(manifest.new_records);
       document.getElementById("kpiUpdated").textContent = fmtInt(manifest.updated_records);
-      document.getElementById("kpiAnac").textContent = fmtInt(manifest.anac_added_records);
+      document.getElementById("kpiAnac").textContent = fmtInt(
+        manifest.anac_update_manifest?.anac_added_records
+        ?? manifest.anac_added_records
+        ?? 0
+      );
       document.getElementById("kpiRemoved").textContent = fmtInt(manifest.removed_records);
       document.getElementById("kpiBranches").textContent = fmtInt(manifest.branches_with_news);
 

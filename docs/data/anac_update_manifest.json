@@ -1,8 +1,8 @@
 {
   "run_id": "anac-only",
   "generated_at_utc": "2026-08-10T15:30:53.195876+00:00",
-  "anac_added_records": 54,
-  "new_company_match_projects": 54,
+  "anac_added_records": 58,
+  "new_company_match_projects": 58,
   "unique_company_match_delta": 53,
   "previous_with_contractor": 132564,
   "current_with_contractor": 132617,
@@ -45,7 +45,7 @@
     },
     {
       "branch": "Bologna",
-      "anac_added": 1,
+      "anac_added": 2,
       "previous_with_contractor": 2888,
       "current_with_contractor": 2889
     },
@@ -75,7 +75,7 @@
     },
     {
       "branch": "Cosenza",
-      "anac_added": 0,
+      "anac_added": 1,
       "previous_with_contractor": 6364,
       "current_with_contractor": 6364
     },
@@ -99,7 +99,7 @@
     },
     {
       "branch": "Genova",
-      "anac_added": 0,
+      "anac_added": 1,
       "previous_with_contractor": 1895,
       "current_with_contractor": 1895
     },
@@ -111,7 +111,7 @@
     },
     {
       "branch": "Livorno",
-      "anac_added": 3,
+      "anac_added": 4,
       "previous_with_contractor": 2376,
       "current_with_contractor": 2379
     },
@@ -254,5 +254,5 @@
       "current_with_contractor": 2483
     }
   ],
-  "note": "anac_added_records è la somma per filiale dei record che hanno acquisito nome azienda/contractor nell'ultimo refresh ANAC."
+  "note": "Conteggio esatto dei record passati da senza contractor a con contractor nell'ultimo refresh ANAC."
 }

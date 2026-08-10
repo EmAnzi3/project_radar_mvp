@@ -46,6 +46,10 @@ jobs:
           cp docs/data/data_quality.json \
             tmp/data_quality.before.json
 
+          python -u scripts/build_anac_added_records.py snapshot \
+            --shards docs/data/branches \
+            --out tmp/anac_contractors_before.json
+
           python - <<'PY'
           import hashlib
           import json
@@ -174,6 +178,14 @@ jobs:
       - name: Build ANAC update manifest
         run: |
           python -u scripts/build_anac_update_manifest.py
+
+      - name: Build exact ANAC added records
+        run: |
+          python -u scripts/build_anac_added_records.py build \
+            --snapshot tmp/anac_contractors_before.json \
+            --shards docs/data/branches \
+            --out docs/data/anac_added_records.json \
+            --sync-manifest docs/data/anac_update_manifest.json
 
       - name: Guard ANAC-only outputs
         run: |
@@ -359,6 +371,7 @@ jobs:
             tmp/change_markers_summary.json
             docs/data/anac_change_markers_summary.json
             docs/data/anac_update_manifest.json
+            docs/data/anac_added_records.json
             docs/data/anac_level_stats.json
             docs/data/home_stats.json
             docs/data/data_quality.json
@@ -381,6 +394,7 @@ jobs:
           git add docs/data/data_quality.json
           git add docs/data/anac_change_markers_summary.json
           git add docs/data/anac_update_manifest.json
+          git add docs/data/anac_added_records.json
           git add docs/national_anac_relevant_awards.html
           git add docs/national_anac_awards_anomalies.html
           git add docs/national_anac_enriched.html

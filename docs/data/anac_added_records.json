@@ -1,0 +1,642 @@
+{
+  "generated_at_utc": "2026-08-10T16:02:15.294546+00:00",
+  "count": 58,
+  "by_branch": [
+    {
+      "branch": "Albenga",
+      "anac_added": 1
+    },
+    {
+      "branch": "Bari",
+      "anac_added": 1
+    },
+    {
+      "branch": "Bergamo",
+      "anac_added": 1
+    },
+    {
+      "branch": "Bologna",
+      "anac_added": 2
+    },
+    {
+      "branch": "Cagliari",
+      "anac_added": 1
+    },
+    {
+      "branch": "Catania",
+      "anac_added": 7
+    },
+    {
+      "branch": "Cosenza",
+      "anac_added": 1
+    },
+    {
+      "branch": "Firenze",
+      "anac_added": 4
+    },
+    {
+      "branch": "Frosinone",
+      "anac_added": 1
+    },
+    {
+      "branch": "Genova",
+      "anac_added": 1
+    },
+    {
+      "branch": "Lecco",
+      "anac_added": 3
+    },
+    {
+      "branch": "Livorno",
+      "anac_added": 4
+    },
+    {
+      "branch": "Lucca",
+      "anac_added": 1
+    },
+    {
+      "branch": "Milano Est",
+      "anac_added": 1
+    },
+    {
+      "branch": "Milano Nord",
+      "anac_added": 2
+    },
+    {
+      "branch": "Milano Ovest",
+      "anac_added": 2
+    },
+    {
+      "branch": "Milano Sud",
+      "anac_added": 2
+    },
+    {
+      "branch": "Napoli",
+      "anac_added": 1
+    },
+    {
+      "branch": "Padova",
+      "anac_added": 2
+    },
+    {
+      "branch": "Parma",
+      "anac_added": 1
+    },
+    {
+      "branch": "Rimini",
+      "anac_added": 6
+    },
+    {
+      "branch": "Roma Nomentana",
+      "anac_added": 1
+    },
+    {
+      "branch": "SALERNO",
+      "anac_added": 2
+    },
+    {
+      "branch": "Sassari",
+      "anac_added": 2
+    },
+    {
+      "branch": "Torino",
+      "anac_added": 3
+    },
+    {
+      "branch": "Trento",
+      "anac_added": 1
+    },
+    {
+      "branch": "Udine",
+      "anac_added": 3
+    },
+    {
+      "branch": "Verona",
+      "anac_added": 1
+    }
+  ],
+  "records": [
+    {
+      "key": "CUP::E17H23001400006",
+      "branch": "Albenga",
+      "cup": "E17H23001400006",
+      "cig": "B0D4EBA37D",
+      "title": "VIA DON BOSCO (PARTE ALTA) E PARCHEGGIO PUBBLICO A RASO.",
+      "contractors": "ZANOTTO MARCO S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01651500082"
+    },
+    {
+      "key": "CUP::G21B10000170002",
+      "branch": "Bari",
+      "cup": "G21B10000170002",
+      "cig": "0687883AFF",
+      "title": "LINEA FERROVIARIA BARI-LECCE",
+      "contractors": "CONDOTTE STRADE SOCIETA' A RESPONSABILITA' LIMITATA, IN SIGLA CONDOTTE STRADE S.R.L.",
+      "contractor_tax_codes": "06278930729"
+    },
+    {
+      "key": "CUP::H12F23000820004",
+      "branch": "Bergamo",
+      "cup": "H12F23000820004",
+      "cig": "B56246CD99",
+      "title": "VERDE SCOLASTICO",
+      "contractors": "MEDITERRANEA SOCIETA' AGRICOLA SRL (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "03882040284"
+    },
+    {
+      "key": "CUP::B57H23002700004",
+      "branch": "Bologna",
+      "cup": "B57H23002700004",
+      "cig": "B6628E3D1F",
+      "title": "VERSANTE ROCCIOSO IN LOCALITÀ CASA CARDELLA",
+      "contractors": "SERCHIO PALI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "02418290462"
+    },
+    {
+      "key": "CUP::F57H24002740001",
+      "branch": "Bologna",
+      "cup": "F57H24002740001",
+      "cig": "B7CC889884",
+      "title": "SS 65 DELLA FUTA",
+      "contractors": "SIAS S.P.A. O SIAS S.P.A. SOCIETA' BENEFIT (IN FORMA ABBREVIATA SIAS S.P.A. SB ) (MANDANTE) | FRANTOIO FONDOVALLE S.R.L. (MANDANTE) | CONSORZIO STABILE MODENESE SOCIETA' CONSORTILE PER AZIONI (MANDATARIA)",
+      "contractor_tax_codes": "00279260368 | 01854400981 | 03126320369"
+    },
+    {
+      "key": "CUP::H89J23000220002",
+      "branch": "Cagliari",
+      "cup": "H89J23000220002",
+      "cig": "B65DAA7D7E",
+      "title": "PERCORSO PEDONALE VIALI DELLA LIBERTA' E INDIPENDENZA",
+      "contractors": "LGROUP SOCIETA' COOPERATIVA SOCIALE (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "03599580929"
+    },
+    {
+      "key": "CUP::B65F23000150006",
+      "branch": "Catania",
+      "cup": "B65F23000150006",
+      "cig": "B9A4B13C71",
+      "title": "AZIENDA OSPEDALIERA PER L'EMERGENZA CANNIZZARO VIA MESSINA 829 CATANIA",
+      "contractors": "POLO STRATEGICO NAZIONALE S.P.A. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "16825251008"
+    },
+    {
+      "key": "CUP::C67G22000090007",
+      "branch": "Catania",
+      "cup": "C67G22000090007",
+      "cig": "9633682DDE",
+      "title": "LAVORI DI RECUPERO E RIQUALIFICAZIONE DEL CASTELLO MEDIEVALE DI VENETICO SUPERIORE",
+      "contractors": "MANNO OLIMPIA EDVIGE (MANDANTE) | FER.AN. ENGINEERING S.R.L. (MANDATARIA) | GITTO ANTONINO (MANDANTE) | COLLOVA' ALBERTO (MANDANTE)",
+      "contractor_tax_codes": "03698870833 | CLLLRT78A18F251P | GTTNNN96P20F158A | MNNLPD80E46F537X"
+    },
+    {
+      "key": "CUP::F46E16000030005",
+      "branch": "Catania",
+      "cup": "F46E16000030005",
+      "cig": "B447B92414",
+      "title": "LAVORI DI RISTRUTTUARZIONE E ADEGUAMENTO DELLA SCUOLA MILI S. PIETRO A SEGUITO DELL' INCENDIO DEL 12/04/2016",
+      "contractors": "CINQUEMANI GIANPEPPINO (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "CNQGPP70H23D514N"
+    },
+    {
+      "key": "CUP::F67H18001040001",
+      "branch": "Catania",
+      "cup": "F67H18001040001",
+      "cig": "844584214E",
+      "title": "A 19 AUTOSTRADA PALERMO CATANIA",
+      "contractors": "FEGOTTO COSTRUZIONI S.R.L. (MANDANTE) | SAFITAL S.R.L. (MANDANTE) | VIASTRADA S.R.L. (MANDATARIA)",
+      "contractor_tax_codes": "02290140819 | 03335270231 | 05541560826"
+    },
+    {
+      "key": "CUP::H45I22000100006",
+      "branch": "Catania",
+      "cup": "H45I22000100006",
+      "cig": "B982A75DC4",
+      "title": "SERVIZI DI COMUNITÀ",
+      "contractors": "GRASSO FORNITURE S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "04872170875"
+    },
+    {
+      "key": "CUP::H55B24000250006",
+      "branch": "Catania",
+      "cup": "H55B24000250006",
+      "cig": "B686580633",
+      "title": "PALESTRA PUBBLICA ISOLA DI LINOSA",
+      "contractors": "FANELLI FILIPPO (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "FNLFPP73E12F839G"
+    },
+    {
+      "key": "CUP::I17G24000150006",
+      "branch": "Catania",
+      "cup": "I17G24000150006",
+      "cig": "B642FC9A70",
+      "title": "RICONVERSIONE DI SPAZI ESISTENTI DA DESTINARE A MENSA SCOLASTICA, PRESSO LA SCUOLA S. QUASIMODO, SITA IN P.ZZA MONS. F. M. DI FRANCIA SNC, COMUNE DI ROCCALUMERA",
+      "contractors": "R.G. COSTRUZIONI SOCIETA' A RESPONSABILITA' LIMITATA SEMPLIFICATA (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "03487960837"
+    },
+    {
+      "key": "CUP::F91D16000000001",
+      "branch": "Cosenza",
+      "cup": "F91D16000000001",
+      "cig": "B764C5E4F3",
+      "title": "RIQUALIFICAZIONE URBANA E SICUREZZA DELLE PERIFERIE",
+      "contractors": "PREFABBRICATI MARTELLI E CARROCCIO S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "03988010876"
+    },
+    {
+      "key": "CUP::B14H22000060006",
+      "branch": "Firenze",
+      "cup": "B14H22000060006",
+      "cig": "B049FD0B5C",
+      "title": "EX CASERMA PIAVE",
+      "contractors": "OMEGA IMPIANTI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "07879760630"
+    },
+    {
+      "key": "CUP::B15F21001550001",
+      "branch": "Firenze",
+      "cup": "B15F21001550001",
+      "cig": "B034EE1F7A",
+      "title": "BIBLIOTECA COMUNALE",
+      "contractors": "CICERO COSTRUZIONI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01393240526"
+    },
+    {
+      "key": "CUP::B96J24000040005",
+      "branch": "Firenze",
+      "cup": "B96J24000040005",
+      "cig": "B00F87BF17",
+      "title": "EDIFICAZIONE DI UN NUOVO EDIFICIO DESTINATO AL TRASFERIMENTO TECNOLOGICO E SCIENTIFICO PRESSO L'AREA DELLA RICERCA DI FIRENZE SITA IN VIA MADONNA DEL PIANO 10 A SESTO FIORENTINO (FIRENZE)",
+      "contractors": "PICCININI PAOLO (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "PCCPLA62L19Z600J"
+    },
+    {
+      "key": "CUP::G41D24002250005",
+      "branch": "Firenze",
+      "cup": "G41D24002250005",
+      "cig": "B374B90BCE",
+      "title": "ACQUEDOTTI DEL SERVIZIO IDRICO INTEGRATO NELL'AMBITO TERRITORIALE TOSCANA NORD",
+      "contractors": "ASW-ATI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "04000550261"
+    },
+    {
+      "key": "CUP::H15F22000570001",
+      "branch": "Frosinone",
+      "cup": "H15F22000570001",
+      "cig": "B6AED90284",
+      "title": "AREE INTERNE MAINARDE RIPARTIZIONE ED UTILIZZO DEI FONDI PER LA MESSA IN SICUREZZA E MANUTENZIONE STRAORDINARIA DELLA RETE VIARIA PER L'ACCESSIBILITÀ DELLE AREE INTERNE - ESERCIZIO 2025 -",
+      "contractors": "GESTIONE INDUSTRIE VENDITTI SRL SOCIETA' A RESPONSABILITA' LIMITA (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01495740621"
+    },
+    {
+      "key": "CUP::D47H20001630001",
+      "branch": "Genova",
+      "cup": "D47H20001630001",
+      "cig": "B2A55FECEC",
+      "title": "SP DELL'UFFICIO VIABILITÀ LEVANTE - INTERVENTI DI MANUTENZIONE STRAORDINARIA MEDIANTE CONSOLIDAMENTI LOCALIZZATI DEI CIGLI E DELLE SCARPATE STRADALI. (COMUNI VARI)",
+      "contractors": "LUSARDI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01593100348"
+    },
+    {
+      "key": "CUP::B67H23000840001",
+      "branch": "Lecco",
+      "cup": "B67H23000840001",
+      "cig": "B1D91F4DE8",
+      "title": "V2407 - LAVORI DI RISANAMENTO CONSERVATIVO DEL PONTE DELLA VITTORIA SULLA SP 64 IN COMUNE DI CREMENO",
+      "contractors": "LOMBARDI INGEGNERIA S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "12151290157"
+    },
+    {
+      "key": "CUP::C78H24000460006",
+      "branch": "Lecco",
+      "cup": "C78H24000460006",
+      "cig": "B2BE180F10",
+      "title": "ASILO NIDO GIROTONDO",
+      "contractors": "ADENTI & ARATA ARCHITETTI ASSOCIATI (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01196730194"
+    },
+    {
+      "key": "CUP::J78H23000750002",
+      "branch": "Lecco",
+      "cup": "J78H23000750002",
+      "cig": "B945ED80D1",
+      "title": "INTERVENTI DI MANUTENZIONE E MESSA IN SICUREZZA IDRAULICA DEL RETICOLO IDRICO MINORE NEL COMUNE DI VALVARRONE",
+      "contractors": "CIDIEFFE COSTRUZIONI SRL (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "00504920141"
+    },
+    {
+      "key": "CUP::E57H24000830001",
+      "branch": "Livorno",
+      "cup": "E57H24000830001",
+      "cig": "B3600FCE91",
+      "title": "FRANE",
+      "contractors": "ROSI LEOPOLDO S.P.A. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "00820700474"
+    },
+    {
+      "key": "CUP::I52B22000510005",
+      "branch": "Livorno",
+      "cup": "I52B22000510005",
+      "cig": "B0AE6A6C1E",
+      "title": "PALAZZINA RIDOLFI - DIP. DI SCIENZE AGRARIE, AGRO AMBIENTALI ED ALIMENTARI - EDIFICIO B10",
+      "contractors": "ELETTROINSTALLAZIONE S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01089120503"
+    },
+    {
+      "key": "CUP::I52B24001040005",
+      "branch": "Livorno",
+      "cup": "I52B24001040005",
+      "cig": "B344F9AB09",
+      "title": "CENTRO DI RICERCHE AGRO-AMBIENTALI ENRICO AVANZI",
+      "contractors": "GAMBINI COSTRUZIONI S.A.S. DI GAMBINI LAURA E ALESSANDRO E C. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01577890500"
+    },
+    {
+      "key": "CUP::J14H20001260001",
+      "branch": "Livorno",
+      "cup": "J14H20001260001",
+      "cig": "9214121530",
+      "title": "PALESTRA SCUOLA ELEMENTARE",
+      "contractors": "ARKEDIL COSTRUZIONI S.R.L.",
+      "contractor_tax_codes": "04179211216"
+    },
+    {
+      "key": "CUP::G57H21000950001",
+      "branch": "Lucca",
+      "cup": "G57H21000950001",
+      "cig": "B0A2CED8BF",
+      "title": "PROGETTO PAESE VERCIANO",
+      "contractors": "BACKA ARBEN (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "BCKRBN60D03Z100L"
+    },
+    {
+      "key": "CUP::B37H20014140001",
+      "branch": "Milano Est",
+      "cup": "B37H20014140001",
+      "cig": "B44763FF48",
+      "title": "STRADE PROVINCIALI",
+      "contractors": "IMPRESA BERGAMELLI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "03692650165"
+    },
+    {
+      "key": "CUP::D58B22001550001",
+      "branch": "Milano Nord",
+      "cup": "D58B22001550001",
+      "cig": "B4B0BF78AA",
+      "title": "P.ZZA S.PIETRO, C.SO ARIBERTO E VIA R. MARGHERITA, VIA PER ALBATE E VIA BRUGNAGO, ROGGIA FOSSARONE",
+      "contractors": "F.LLI LOCATELLI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01621070133"
+    },
+    {
+      "key": "CUP::F37H19001320001",
+      "branch": "Milano Nord",
+      "cup": "F37H19001320001",
+      "cig": "7989268883",
+      "title": "S.S. N. 36 DEL LAGO DI COMO E DELLO SPLUGA- LAVORI DI M.S. PROTEZIONE DEI PUNTI CRITICI DEL TRACCIATO STR. CON INSTALLAZIONE NUOVI DISPOSITIVI E SOSTITUZIONE DI QUELLI DANNEGGIATI PER INCIDENTI TRA IL KM 8+555 E IL KM 49+500",
+      "contractors": "CREZZA S.R.L. (MANDANTE) | SIAS S.P.A. O SIAS S.P.A. SOCIETA' BENEFIT (IN FORMA ABBREVIATA SIAS S.P.A. SB ) (MANDATARIA)",
+      "contractor_tax_codes": "00631810140 | 01854400981"
+    },
+    {
+      "key": "CUP::B14H22000240006",
+      "branch": "Milano Ovest",
+      "cup": "B14H22000240006",
+      "cig": "B4886BC2A6",
+      "title": "AMBITO TERRITORIALE SOCIALE VCO",
+      "contractors": "NEW ALB S.A.S. DI PERHATI KRENAR & C. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "02518280991"
+    },
+    {
+      "key": "CUP::G83J16000770005",
+      "branch": "Milano Ovest",
+      "cup": "G83J16000770005",
+      "cig": "6893509F92",
+      "title": "ALLOGGI DI PROPRIETÀ O IN GESTIONE DI ALER VARESE, COMO, MONZA E BRIANZA, BUSTO ARSIZIO",
+      "contractors": "3F VINCENZO S.R.L.",
+      "contractor_tax_codes": "04654810631"
+    },
+    {
+      "key": "CUP::H27H25000460004",
+      "branch": "Milano Sud",
+      "cup": "H27H25000460004",
+      "cig": "B72ECDEFC1",
+      "title": "VIA TRINITÀ DA LUNGI SPALTO VITTORIO VENETO",
+      "contractors": "COS.MO. - SRL (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01234400065"
+    },
+    {
+      "key": "CUP::H48H25000310006",
+      "branch": "Milano Sud",
+      "cup": "H48H25000310006",
+      "cig": "B72FF7DD9C",
+      "title": "ASILO NIDO COMUNALE",
+      "contractors": "AR.CO ARCHITETTURE COSTRUITE (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "00956570964"
+    },
+    {
+      "key": "CUP::C67H20003610001",
+      "branch": "Napoli",
+      "cup": "C67H20003610001",
+      "cig": "B5979209DC",
+      "title": "AZIENDA OSPEDALIERA UNIVERSITARIA FEDERICO II",
+      "contractors": "MACCHIAROLI & PARTNERS S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "07503060639"
+    },
+    {
+      "key": "CUP::F96F25000060003",
+      "branch": "Padova",
+      "cup": "F96F25000060003",
+      "cig": "B844EB4EAD",
+      "title": "FABBRICATO EX CASA DEL MACCHINISTA ALL'INTERNO DELL'AREA DELL'IMPIANTO IDROVORO DI SANTA MARGHERITA A CODEVIGO (PD)",
+      "contractors": "BRENTA LAVORI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "03623920281"
+    },
+    {
+      "key": "CUP::H43J19000310005",
+      "branch": "Padova",
+      "cup": "H43J19000310005",
+      "cig": "8451364E30",
+      "title": "POLO MULTIFUNZIONALE DI BASSANO DEL GRAPPA, SEDI, CENTRI DI RACCOLTA DIFFERENZIATA DEI RIFIUTI ED ISOLE ECOLOGICHE",
+      "contractors": "IDRAULICA F.LLI SALA S.R.L.",
+      "contractor_tax_codes": "00192240364"
+    },
+    {
+      "key": "CUP::H16G21000180004",
+      "branch": "Parma",
+      "cup": "H16G21000180004",
+      "cig": "86876950B7",
+      "title": "DIVERSI FABBRICATI IN GESTIONE AD ACER PIACENZA",
+      "contractors": "IMPRESA COGNI - S.P.A.",
+      "contractor_tax_codes": "00313780199"
+    },
+    {
+      "key": "CUP::F17H24002620001",
+      "branch": "Rimini",
+      "cup": "F17H24002620001",
+      "cig": "B7CC514E2F",
+      "title": "S.S. 726 SECANTE DI CESENA",
+      "contractors": "S.I.E.I. SOCIETA' IMPIANTI ELETTRICI INDUSTRIALI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "00642570246"
+    },
+    {
+      "key": "CUP::F38H22000410006",
+      "branch": "Rimini",
+      "cup": "F38H22000410006",
+      "cig": "A050C4AF0F",
+      "title": "MITIGAZIONE DEL RISCHIO IDROGEOLOGICO MEDIANTE INTERVENTI DI CONSOLIDAMENTO DI VERSANTI DI ABITATI E DI AREE IN DISSESTO INDIVIDUATE NEL PIANO STRALCIO DI BACINO",
+      "contractors": "CONSORZIO FRA COOPERATIVE DI PRODUZIONE E LAVORO - CONS.COOP.- S OCIETA' COOPERATIVA IN SIGLA CONSCOOP (MANDATARIA) | CONSORZIO NAZIONALE COOPERATIVE DI PRODUZIONE E LAVORO CIRO MENOTTI SOCIETA' COOPERATIVA PER AZIONI (MANDANTE) | CO.I.R. CONSORZIO IMPRESE ROMAGNOLE (MANDANTE)",
+      "contractor_tax_codes": "00140990409 | 00966060378 | 01615190400"
+    },
+    {
+      "key": "CUP::F87H24003060001",
+      "branch": "Rimini",
+      "cup": "F87H24003060001",
+      "cig": "B7CC92379A",
+      "title": "SS 67 TOSCO ROMAGNOLA",
+      "contractors": "CONSORZIO STABILE MODENESE SOCIETA' CONSORTILE PER AZIONI (MANDATARIA) | COSTRUZIONI EDILI BARALDINI QUIRINO S.P.A. (MANDANTE) | MAEG COSTRUZIONI S.P.A. (MANDANTE)",
+      "contractor_tax_codes": "01810030369 | 03030960268 | 03126320369"
+    },
+    {
+      "key": "CUP::F87H24003070001",
+      "branch": "Rimini",
+      "cup": "F87H24003070001",
+      "cig": "B7CC909227",
+      "title": "SS 67 TOSCO ROMAGNOLA",
+      "contractors": "A.G.C. - ANALISI GENERALI PER LE COSTRUZIONI S.R.L. (MANDANTE) | ASE - APPLICAZIONI SPECIALI NELL'EDILIZIA S.R.L. (MANDANTE) | AR.CO. LAVORI SOCIETA' COOPERATIVA CONSORTILE (MANDANTE) | COSTRUZIONI D.O.C. S.R.L. (MANDANTE) | SOCIETA' COOPERATIVA BRACCIANTI RIMINESE (MANDATARIA)",
+      "contractor_tax_codes": "00126420405 | 01108860618 | 01468160393 | 01481830683 | 06568581216"
+    },
+    {
+      "key": "CUP::F87H24003080001",
+      "branch": "Rimini",
+      "cup": "F87H24003080001",
+      "cig": "B7CC8EFCAF",
+      "title": "SS 71 UMBRO CASENTINESE ROMAGNOLA",
+      "contractors": "GEOVERTICAL SRL (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01867380766"
+    },
+    {
+      "key": "CUP::I38H23000220001",
+      "branch": "Rimini",
+      "cup": "I38H23000220001",
+      "cig": "98988472F6",
+      "title": "NOLO DI GRUPPI MOBILI DI POMPAGGIO, NOLO DI MEZZI PER TRASPORTO, MONTAGGIO E SMONTAGGIOPOMPE REPARTO FOSSO VECCHIO ANCHE PER SVUOTAMENTO AREA REDINO - BACINO URBANO E INDUSTRIALE BAGNACAVALLO",
+      "contractors": "ZANZI GIOVANNI, ROBERTO E MASSIMO SOCIETA' AGRICOLA",
+      "contractor_tax_codes": "80109180390"
+    },
+    {
+      "key": "CUP::G47H21050620001",
+      "branch": "Roma Nomentana",
+      "cup": "G47H21050620001",
+      "cig": "B2DAA88687",
+      "title": "INTERVENTO DI RISTRUTTURAZIONE TESO AL RECUPERO DELL'AGIBILITÀ EDIFICIO IN VIA GETULIO A TERAMO.",
+      "contractors": "DI GIUSEPPE OSVALDO S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01598210670"
+    },
+    {
+      "key": "CUP::H18B22000080002",
+      "branch": "SALERNO",
+      "cup": "H18B22000080002",
+      "cig": "B28EF8BFB2",
+      "title": "COMUNE DI MERCATO SAN SEVERINO  ESTENSIONE, RIFUNZIONALIZZAZIONE, RICOSTRUZIONE, RIABILITAZIONE DELLA RETE FOGNARIA INTERNA",
+      "contractors": "S.I.A. - SOCIETA' ITALIANA ACQUE S.R.L. (MANDATARIA) | FESTA S.P.A. - SOCIETA' PER AZIONI (MANDANTE)",
+      "contractor_tax_codes": "01559110620 | 07828831219"
+    },
+    {
+      "key": "CUP::J18H22000750001",
+      "branch": "SALERNO",
+      "cup": "J18H22000750001",
+      "cig": "B277D30F2F",
+      "title": "MITIGAZIONE DEL RISCHIO IDROGEOLOGICO E AMPLIAMENTO E MESSA IN SICUREZZA DELLA STRADA COMUNALE IN LOC. CAMPOMAIURI - 1° STRALCIO",
+      "contractors": "TRIVELLAZIONI CUPO S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "05362940651"
+    },
+    {
+      "key": "CUP::D92B22000480004",
+      "branch": "Sassari",
+      "cup": "D92B22000480004",
+      "cig": "B193E65170",
+      "title": "INTERVENTO DI RISTRUTTURAZIONE DELL'EDIFICIO DI PROPRIETÀ COMUNALE SITO IN VIA MASCAGNI, ADIBITO A SEDE DELL'ASILO NIDO COMUNALE",
+      "contractors": "C.L.M. S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01272170919"
+    },
+    {
+      "key": "CUP::F16G10000890001",
+      "branch": "Sassari",
+      "cup": "F16G10000890001",
+      "cig": "060868920D",
+      "title": "STRADE STATALI",
+      "contractors": "ALMA SRL (MANDANTE) | S.A.GE.S. - SARDA APPALTI E GESTIONE SERVIZI SOCIETA' COOPERATIVA A R.L. (MANDATARIA) | BELVERDE - SOCIETA' COOPERATIVA A R.L. (MANDANTE)",
+      "contractor_tax_codes": "01659180903 | 01860640901 | 02158300901"
+    },
+    {
+      "key": "CUP::F47H11001180007",
+      "branch": "Torino",
+      "cup": "F47H11001180007",
+      "cig": "36265736B5",
+      "title": "STRADA PROVINCIALE",
+      "contractors": "IMPRESA COSTRUZIONI CO.GE.BI. S.R.L.",
+      "contractor_tax_codes": "02163580026"
+    },
+    {
+      "key": "CUP::F97H18003860001",
+      "branch": "Torino",
+      "cup": "F97H18003860001",
+      "cig": "80655828D1",
+      "title": "RA 10 TORINO AEROPORTO DI CASELLE",
+      "contractors": "CIVELLI COSTRUZIONI S.R.L. (MANDATARIA) | CONSORZIO STABILE 3 EMME DIFESA AMBIENTE E TERRITORIO SOC. CONS. A R.L. (MANDANTE) | MOSCONI S.R.L. (MANDANTE)",
+      "contractor_tax_codes": "01502110172 | 02067440129 | 06934780963"
+    },
+    {
+      "key": "CUP::G19J22001310007",
+      "branch": "Torino",
+      "cup": "G19J22001310007",
+      "cig": "B04C7525B4",
+      "title": "A.O.U. CITTA' DELLA SALUTE E DELLA SCIENZA DI TORINO",
+      "contractors": "MISTRETTA S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01429310053"
+    },
+    {
+      "key": "CUP::D62E23001050007",
+      "branch": "Trento",
+      "cup": "D62E23001050007",
+      "cig": "B2670EDEC8",
+      "title": "DORSALE PRINCIPALE ACQUEDOTTO DI TRENTO",
+      "contractors": "EDILTIONE S.P.A. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "00806360228"
+    },
+    {
+      "key": "CUP::E39J19000360002",
+      "branch": "Udine",
+      "cup": "E39J19000360002",
+      "cig": "7986307D03",
+      "title": "SS.RR.TS.: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12A E 12B, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 28, 29A, 29B E 29C, 31, 32, 33, 34, 35; EX. S.S 15 FLAVIA; NODO DI LACOTISCE",
+      "contractors": "ECOEDILMONT SRL",
+      "contractor_tax_codes": "10147330327"
+    },
+    {
+      "key": "CUP::F95B26000050004",
+      "branch": "Udine",
+      "cup": "F95B26000050004",
+      "cig": "9735325456",
+      "title": "NUOVO IMPIANTO SPORTIVO INDOOR DI VIA FRAUSIN",
+      "contractors": "CP COSTRUZIONI S.R.L.",
+      "contractor_tax_codes": "01214830323"
+    },
+    {
+      "key": "CUP::H42F21000110004",
+      "branch": "Udine",
+      "cup": "H42F21000110004",
+      "cig": "B62B260A89",
+      "title": "TORRE RAIMONDA",
+      "contractors": "STYLEDILE SAS DI FABBRO EUGENIO & C. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01127340931"
+    },
+    {
+      "key": "CUP::J12E23000430005",
+      "branch": "Verona",
+      "cup": "J12E23000430005",
+      "cig": "B0EEA6C15F",
+      "title": "ESTENSIONE E ADEGUAMENTO DELLE INFRASTRUTTURE FOGNARIE E IDRICHE DELLA ZONA ALTO LAGO PROGETTO 23207",
+      "contractors": "ITALBETON S.P.A. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "01589120235"
+    }
+  ]
+}
