@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wind Construction Radar</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+:root{--bg:#f3f6f8;--panel:#fff;--text:#16202a;--muted:#667085;--border:#dce3e8;--wind:#087f5b;--wind2:#0ca678;--navy:#102a43;--amber:#b7791f;--red:#b42318;--blue:#175cd3;--shadow:0 12px 28px rgba(16,42,67,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#eef6f2 0,#f7f9fb 420px);color:var(--text)}
+header{background:radial-gradient(circle at 82% 20%,rgba(12,166,120,.28),transparent 28%),linear-gradient(135deg,#0b1f2a,#143d3a 58%,#087f5b);color:#fff;padding:28px 30px 30px;box-shadow:0 14px 36px rgba(8,47,41,.2)}
+.top{max-width:1500px;margin:auto;display:flex;justify-content:space-between;gap:24px;align-items:flex-start}.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#a7f3d0}
+h1{font-size:34px;margin:5px 0 8px;letter-spacing:-.035em}header p{margin:0;max-width:850px;color:#d7f7e8}.stamp{white-space:nowrap;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);padding:8px 11px;border-radius:999px;font-size:12px;font-weight:800}
+main{max-width:1500px;margin:auto;padding:20px}.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:-2px;margin-bottom:16px}.kpi{background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:16px;padding:15px;box-shadow:var(--shadow)}.kpi span{display:block;color:var(--muted);text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.06em}.kpi strong{display:block;font-size:26px;margin-top:3px}.kpi small{color:var(--muted)}
+.panel{background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:15px;margin-bottom:16px}.panel h2{margin:0;font-size:19px}.panel .sub{color:var(--muted);font-size:12px;margin:4px 0 12px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{height:38px;border:1px solid #cfd8df;background:#fff;border-radius:999px;padding:0 12px;font-weight:700;color:#243746}.toolbar input{min-width:260px;flex:1}.grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.chart{height:390px}.chart.short{height:320px}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:850;white-space:nowrap}.b-active{background:#dcfce7;color:#166534}.b-premob{background:#dbeafe;color:#1d4ed8}.b-proc{background:#fef3c7;color:#92400e}.b-adv{background:#ffedd5;color:#9a3412}.b-permit{background:#f1f5f9;color:#475569}.p-a{background:#fee2e2;color:#991b1b}.p-b{background:#fff7ed;color:#9a3412}.p-c{background:#f1f5f9;color:#475569}
+.table-wrap{overflow:auto;max-height:650px;border:1px solid var(--border);border-radius:14px}table{border-collapse:separate;border-spacing:0;width:100%;min-width:1260px;font-size:12px}th{position:sticky;top:0;background:#f8fafc;color:#667085;text-transform:uppercase;font-size:10px;letter-spacing:.04em;z-index:2}th,td{padding:9px 8px;border-bottom:1px solid #e6eaee;text-align:left;vertical-align:top}tbody tr{cursor:pointer}tbody tr:hover{background:#f6fbf8}td.num{text-align:right;font-variant-numeric:tabular-nums}.name{font-weight:850}.muted{color:var(--muted);font-size:11px}.open{color:#b42318;font-weight:800}.resolved{color:#087f5b;font-weight:800}
+.contractors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.contractor{border:1px solid var(--border);border-radius:14px;padding:12px;background:#fbfdfc}.contractor strong{display:block}.contractor small{color:var(--muted)}.contractor .mw{font-size:21px;font-weight:850;margin-top:5px}
+.drawer{position:fixed;inset:0;display:none;background:rgba(15,23,42,.42);z-index:50}.drawer.on{display:block}.drawer-card{margin-left:auto;width:min(720px,94vw);height:100%;background:#fff;padding:20px;overflow:auto;box-shadow:-18px 0 50px rgba(0,0,0,.2)}.drawer-top{display:flex;justify-content:space-between;gap:16px}.close{border:0;background:#eef2f6;width:36px;height:36px;border-radius:999px;font-size:22px;cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.field{border:1px solid var(--border);background:#f8fafc;border-radius:13px;padding:11px}.field span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:800}.field strong{display:block;margin-top:3px}.timeline-list{border-left:2px solid #b7e4d3;margin:12px 0 12px 8px;padding-left:16px}.mile{position:relative;margin:0 0 11px}.mile:before{content:"";position:absolute;left:-22px;top:4px;width:10px;height:10px;background:var(--wind);border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px #b7e4d3}.mile b{font-size:12px}.mile span{display:block;color:var(--muted);font-size:11px}.source a{color:#0b6b53;font-weight:750;text-decoration:none}.source a:hover{text-decoration:underline}.note{padding:11px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:13px;font-size:12px;margin-top:12px}
+footer{max-width:1500px;margin:auto;padding:0 20px 30px;color:var(--muted);font-size:11px}
+@media(max-width:1050px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.contractors{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){header{padding:20px 16px}.top{display:block}.stamp{display:inline-block;margin-top:14px}.kpis{grid-template-columns:1fr}.contractors{grid-template-columns:1fr}main{padding:12px}.detail-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="eyebrow">Alayan · market & construction intelligence</div><h1>Wind Construction Radar</h1><p>Pipeline eolica italiana letta dal punto di vista commerciale: MW, territorio, fase, tempistiche e soprattutto chi realizza fisicamente il cantiere.</p></div><div class="stamp" id="stamp">Seed MVP</div></div></header>
+<main>
+<section class="kpis" id="kpis"></section>
+<section class="panel"><div class="toolbar">
+<input id="q" placeholder="Cerca progetto, developer, contractor, comune...">
+<select id="region"><option value="">Tutte le regioni</option></select>
+<select id="stage"><option value="">Tutte le fasi</option></select>
+<select id="type"><option value="">Tutti i tipi</option></select>
+<select id="contractor"><option value="">Contractor: tutti</option><option value="resolved">almeno uno individuato</option><option value="open">BoP aperto</option></select>
+</div><div class="muted" id="count"></div></section>
+<section class="grid2">
+<article class="panel"><h2>Distribuzione territoriale</h2><div class="sub">Potenza eolica del campione per Regione. Il BESS è escluso dai MW.</div><div id="map" class="chart"></div></article>
+<article class="panel"><h2>Pipeline per maturità</h2><div class="sub">MW e numero di progetti nelle fasi operative/commerciali.</div><div id="stageChart" class="chart"></div></article>
+</section>
+<section class="panel"><h2>Timeline operativa</h2><div class="sub">Milestone con data verificata o dichiarata: opere civili, erection e COD. I progetti senza date certe non vengono forzati nel grafico.</div><div id="timeline" class="chart short"></div></section>
+<section class="panel"><h2>Contractor & intelligence nodes</h2><div class="sub">Rete iniziale ricavata dai progetti filtrati. I nomi “forte evidenza” restano distinti dagli affidamenti confermati.</div><div id="contractorCards" class="contractors"></div></section>
+<section class="panel"><h2>Progetti</h2><div class="sub">Clicca una riga per aprire la scheda completa con tempistiche, catena esecutiva e fonti.</div><div class="table-wrap"><table><thead><tr><th>Progetto</th><th>MW</th><th>Territorio</th><th>Fase</th><th>Developer</th><th>Civil BoP</th><th>Electrical BoP</th><th>OEM</th><th>Prossima milestone</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+</main>
+<footer id="foot"></footer>
+<div class="drawer" id="drawer"><div class="drawer-card"><div class="drawer-top"><div><div class="eyebrow" style="color:#087f5b">Scheda progetto</div><h2 id="dTitle" style="margin:4px 0"></h2><div id="dBadges"></div></div><button class="close" id="close">×</button></div><div id="dBody"></div></div></div>
+<script>
+let DATA=null,filtered=[];
+const charts={}; const fmt=new Intl.NumberFormat('it-IT',{maximumFractionDigits:1});
+const STAGE_ORDER=['ACTIVE','PRE-MOB','PROCUREMENT','ADV-PERMIT','PERMIT'];
+const STAGE_LABEL={'ACTIVE':'Attivo','PRE-MOB':'Pre-mobilisation','PROCUREMENT':'Procurement watch','ADV-PERMIT':'Advanced permitting','PERMIT':'Permitting'};
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function stageBadge(p){let c={'ACTIVE':'b-active','PRE-MOB':'b-premob','PROCUREMENT':'b-proc','ADV-PERMIT':'b-adv','PERMIT':'b-permit'}[p.stage]||'b-permit';return `<span class="badge ${c}">${esc(p.stage_label||p.stage)}</span>`}
+function priorityBadge(p){let c=p.priority?.startsWith('A')?'p-a':p.priority==='B'?'p-b':'p-c';return `<span class="badge ${c}">${esc(p.priority||'')}</span>`}
+function bopKnown(p){return !/^(Da identificare|Non assegnato|Main BoP)/i.test(p.civil_bop||'')}
+function anyContractor(p){return bopKnown(p)||!/^Da identificare/i.test(p.electrical_bop||'')||(p.other_companies||[]).length>0}
+function initChart(id){if(!charts[id])charts[id]=echarts.init(document.getElementById(id));return charts[id]}
+async function loadMap(){try{let r=await fetch('https://cdn.jsdelivr.net/gh/openpolis/geojson-italy@master/geojson/limits_IT_regions.geojson');let g=await r.json();g.features.forEach(f=>{let pr=f.properties||{};f.properties.name=pr.reg_name||pr.regione||pr.name||''});echarts.registerMap('italy_regions',g);return true}catch(e){document.getElementById('map').innerHTML='<div class="note">Mappa geografica non caricata. Gli altri pannelli restano operativi.</div>';return false}}
+function setupFilters(){
+for(const [id,key] of [['region','region'],['stage','stage_label'],['type','type']]){let vals=[...new Set(DATA.projects.map(p=>p[key]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));let s=document.getElementById(id);vals.forEach(v=>s.insertAdjacentHTML('beforeend',`<option>${esc(v)}</option>`))}
+['q','region','stage','type','contractor'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',applyFilters))
+}
+function applyFilters(){
+let q=document.getElementById('q').value.trim().toLowerCase(),r=document.getElementById('region').value,s=document.getElementById('stage').value,t=document.getElementById('type').value,c=document.getElementById('contractor').value;
+filtered=DATA.projects.filter(p=>{
+let hay=[p.name,p.developer,p.spv,p.civil_bop,p.electrical_bop,p.oem,p.region,p.province,...(p.municipalities||[]),...(p.other_companies||[]).map(x=>x.name)].join(' ').toLowerCase();
+return(!q||hay.includes(q))&&(!r||p.region===r)&&(!s||p.stage_label===s)&&(!t||p.type===t)&&(!c||(c==='resolved'?anyContractor(p):!bopKnown(p)))
+});
+renderAll()
+}
+function renderKPIs(){
+let mw=filtered.reduce((a,p)=>a+(+p.mw||0),0),active=filtered.filter(p=>p.stage==='ACTIVE').length,near=filtered.filter(p=>['PRE-MOB','PROCUREMENT'].includes(p.stage)).length,resolved=filtered.filter(anyContractor).length;
+let items=[['Progetti',filtered.length,'record nel filtro'],['MW eolici',fmt.format(mw),'BESS escluso'],['Cantieri attivi',active,'fase ACTIVE'],['Pre-mob / procurement',near,'finestra commerciale'],['Catena esecutiva visibile',filtered.length?Math.round(resolved/filtered.length*100)+'%':'0%','almeno un soggetto oltre developer']];
+document.getElementById('kpis').innerHTML=items.map(x=>`<div class="kpi"><span>${x[0]}</span><strong>${x[1]}</strong><small>${x[2]}</small></div>`).join('')
+}
+function renderMap(mapReady){
+if(!mapReady)return;let by={};filtered.forEach(p=>by[p.region]=(by[p.region]||0)+(+p.mw||0));let vals=Object.entries(by).map(([name,value])=>({name,value})),max=Math.max(...vals.map(x=>x.value),1);
+initChart('map').setOption({tooltip:{trigger:'item',formatter:p=>p.data?`<b>${p.name}</b><br>${fmt.format(p.value)} MW`:`<b>${p.name}</b><br>0 MW`},visualMap:{min:0,max,orient:'horizontal',left:'center',bottom:5,inRange:{color:['#e7f5ef','#74c69d','#087f5b']},text:['MW','']},series:[{type:'map',map:'italy_regions',roam:false,data:vals,itemStyle:{borderColor:'#fff',borderWidth:1},emphasis:{label:{show:true}}}]},true)
+}
+function renderStages(){
+let rows=STAGE_ORDER.map(k=>{let ps=filtered.filter(p=>p.stage===k);return{name:STAGE_LABEL[k],mw:ps.reduce((a,p)=>a+(+p.mw||0),0),n:ps.length}}).filter(x=>x.n);
+initChart('stageChart').setOption({grid:{left:130,right:40,top:20,bottom:30},tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:a=>{let x=a[0].data;return `<b>${x.name}</b><br>${fmt.format(x.value)} MW · ${x.n} progetti`}},xAxis:{type:'value',name:'MW'},yAxis:{type:'category',data:rows.map(x=>x.name)},series:[{type:'bar',data:rows.map(x=>({value:x.mw,name:x.name,n:x.n})),itemStyle:{color:'#0ca678',borderRadius:[0,7,7,0]},label:{show:true,position:'right',formatter:p=>`${fmt.format(p.value)} MW`}}]},true)
+}
+function renderTimeline(){
+let milestones=[['civil_start','Civili','#087f5b'],['erection_start','Erection','#175cd3'],['cod','COD','#b7791f']], series=[];
+milestones.forEach(([key,label,color])=>{let d=[];filtered.forEach(p=>{let v=p.timing?.[key];if(v)d.push([v,p.name,p.mw])});series.push({name:label,type:'scatter',symbolSize:11,itemStyle:{color},data:d,encode:{x:0,y:1},tooltip:{formatter:p=>`<b>${p.value[1]}</b><br>${label}: ${new Date(p.value[0]).toLocaleDateString('it-IT')}<br>${fmt.format(p.value[2])} MW`}})});
+let cats=[...new Set(series.flatMap(s=>s.data.map(x=>x[1])))];
+initChart('timeline').setOption({legend:{top:0},grid:{left:145,right:30,top:42,bottom:45},tooltip:{trigger:'item'},xAxis:{type:'time',axisLabel:{formatter:v=>new Date(v).toLocaleDateString('it-IT',{month:'short',year:'2-digit'})}},yAxis:{type:'category',data:cats,axisLabel:{fontSize:10}},series},true)
+}
+function renderContractors(){
+let m=new Map();filtered.forEach(p=>{let names=[];if(bopKnown(p))names.push([p.civil_bop,'Civil BoP']);if(p.electrical_bop&&!/^Da ident|^Non assegn/i.test(p.electrical_bop))names.push([p.electrical_bop,'Electrical']);if(p.oem&&!/^Da ident|^Non assegn/i.test(p.oem))names.push([p.oem,'OEM']);(p.other_companies||[]).forEach(x=>names.push([x.name,x.role]));names.forEach(([n,role])=>{n=n.replace(/\s*\(.*$/,'').trim();if(!n)return;let x=m.get(n)||{name:n,projects:new Set(),mw:0,roles:new Set()};if(!x.projects.has(p.id)){x.projects.add(p.id);x.mw+=+p.mw||0}x.roles.add(role);m.set(n,x)})});
+let arr=[...m.values()].sort((a,b)=>b.mw-a.mw).slice(0,9);document.getElementById('contractorCards').innerHTML=arr.length?arr.map(x=>`<div class="contractor"><strong>${esc(x.name)}</strong><small>${esc([...x.roles].slice(0,3).join(' · '))}</small><div class="mw">${fmt.format(x.mw)} MW</div><small>${x.projects.size} progetti collegati nel campione</small></div>`).join(''):'<div class="muted">Nessun contractor/intelligence node nel filtro.</div>'
+}
+function renderRows(){
+document.getElementById('count').textContent=`${filtered.length} progetti visualizzati su ${DATA.projects.length}`;
+document.getElementById('rows').innerHTML=filtered.sort((a,b)=>(a.priority>b.priority?1:-1)||b.mw-a.mw).map(p=>`<tr data-id="${p.id}"><td><div class="name">${esc(p.name)}</div><div class="muted">${esc(p.type)}</div></td><td class="num"><b>${fmt.format(p.mw)}</b>${p.bess_mw?`<div class="muted">+ ${fmt.format(p.bess_mw)} BESS</div>`:''}</td><td>${esc(p.region)}<div class="muted">${esc(p.province)} · ${esc((p.municipalities||[]).join(', ')||'comuni n.d.')}</div></td><td>${stageBadge(p)} ${priorityBadge(p)}</td><td>${esc(p.developer)}</td><td class="${bopKnown(p)?'resolved':'open'}">${esc(p.civil_bop)}</td><td>${esc(p.electrical_bop)}</td><td>${esc(p.oem)}</td><td>${esc(p.next_milestone)}</td></tr>`).join('');
+document.querySelectorAll('#rows tr').forEach(tr=>tr.onclick=()=>openProject(tr.dataset.id))
+}
+function niceKey(k){return ({site_open:'Apertura cantiere',civil_start:'Avvio civili',civil_end:'Fine civili',cables_start:'Avvio cavidotti',sse_start:'Avvio SSE',electrical_end:'Fine elettrico',wtg_delivery_start:'Consegna WTG',wtg_delivery_end:'Fine consegna WTG',erection_start:'Avvio erection',erection_end:'Fine erection',energization:'Energizzazione',cod:'COD / messa in esercizio',authorization:'Autorizzazione'}[k]||k.replaceAll('_',' '))}
+function openProject(id){let p=DATA.projects.find(x=>x.id===id);if(!p)return;document.getElementById('dTitle').textContent=`${p.name} · ${fmt.format(p.mw)} MW`;document.getElementById('dBadges').innerHTML=stageBadge(p)+' '+priorityBadge(p);
+let companies=(p.other_companies||[]).map(x=>`${esc(x.name)} — ${esc(x.role)} <span class="muted">(${esc(x.confidence)})</span>`).join('<br>')||'—';
+let area=p.area_ha?`${fmt.format(p.area_ha)} ha`:'n.d.';
+let fields=[['Developer / SPV',`${p.developer}${p.spv&&p.spv!==p.developer?` / ${p.spv}`:''}`],['Territorio',`${p.region} · ${p.province}<br>${(p.municipalities||[]).join(', ')||'comuni n.d.'}`],['Area coinvolta',area],['MYTERNA',p.myterna||'n.d.'],['Civil BoP',p.civil_bop],['Electrical BoP',p.electrical_bop],['OEM',p.oem],['Erection / logistics',`${p.erection} / ${p.logistics}`]];
+let miles=Object.entries(p.timing||{}).filter(([k,v])=>v).sort((a,b)=>String(a[1]).localeCompare(String(b[1]))).map(([k,v])=>`<div class="mile"><b>${esc(niceKey(k))}</b><span>${new Date(v).toLocaleDateString('it-IT')}</span></div>`).join('')||'<div class="muted">Nessuna data puntuale consolidata.</div>';
+let sources=(p.sources||[]).map(s=>s.url?`<div class="source"><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></div>`:`<div class="source">${esc(s.label)}</div>`).join('');
+document.getElementById('dBody').innerHTML=`<div class="note">${esc(p.status_note)}</div><div class="detail-grid">${fields.map(f=>`<div class="field"><span>${f[0]}</span><strong>${f[1]}</strong></div>`).join('')}</div><h3>Altre aziende / intelligence</h3><div>${companies}</div><h3>Timeline</h3><div class="timeline-list">${miles}</div><h3>Prossima milestone</h3><div class="field"><strong>${esc(p.next_milestone)}</strong></div><h3>Fonti</h3>${sources||'<div class="muted">Da consolidare.</div>'}`;
+document.getElementById('drawer').classList.add('on')
+}
+function renderAll(){renderKPIs();renderMap(window.mapReady);renderStages();renderTimeline();renderContractors();renderRows();Object.values(charts).forEach(c=>c.resize())}
+document.getElementById('close').onclick=()=>document.getElementById('drawer').classList.remove('on');document.getElementById('drawer').addEventListener('click',e=>{if(e.target.id==='drawer')e.currentTarget.classList.remove('on')});
+window.addEventListener('resize',()=>Object.values(charts).forEach(c=>c.resize()));
+(async()=>{DATA=await fetch('data.json',{cache:'no-store'}).then(r=>r.json());document.getElementById('stamp').textContent=`Aggiornato ${new Date(DATA.meta.generated).toLocaleDateString('it-IT')}`;document.getElementById('foot').textContent=DATA.meta.note;setupFilters();window.mapReady=await loadMap();filtered=[...DATA.projects];renderAll()})().catch(e=>{document.querySelector('main').innerHTML=`<div class="panel"><h2>Errore caricamento dati</h2><div class="note">${esc(e.message)}</div></div>`})
+</script>
+</body></html>
