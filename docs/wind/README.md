@@ -9,6 +9,7 @@ Radar commerciale eolico italiano orientato alle fasi di costruzione e alla supp
 - `index.html` — shell della dashboard;
 - `assets/app.js` — filtri, KPI, mappa, timeline, viste progetto/contractor ed export CSV;
 - `assets/style.css` — layout responsive senza tabella operativa a scroll orizzontale;
+- `assets/review-fixes.js` / `review-fixes.css` — rifiniture della review: tooltip, precisione geografica, scroll opportunità e selettore contractor;
 - `assets/italy-base.svg` — base cartografica locale;
 - `data/projects.json` — manifest canonico;
 - `data/meta.json` — scala E0–E8, evidenze A1–D e ruoli esecutivi;
@@ -54,6 +55,10 @@ Ogni progetto conserva separatamente:
 - fonti/evidenze;
 - eventuale nota GlobalData, marcata esclusivamente come enrichment/lead source.
 
+### Precisione geografica
+
+I marker della mappa MVP sono **riferimenti territoriali indicativi del progetto**. Non devono essere interpretati come coordinate delle singole WTG. La UI li segnala esplicitamente come proxy territoriali; una posizione viene promossa a layout verificato solo dopo riscontro su corografia/elaborato ufficiale.
+
 ### Scala maturità
 
 - E0 Universe
@@ -83,19 +88,20 @@ I segnali `B` e `C` restano intelligence e non diventano assegnazioni contrattua
 La home include:
 
 - 7 KPI operativi;
-- mappa Italia con marker progetto e tooltip;
+- mappa Italia con marker progetto e tooltip, con precisione geografica esplicitata;
 - filtri per regione, E0–E8, tipo, developer, contractor, MW e finestra temporale;
-- pipeline MW per maturità;
-- timeline di cantiere;
-- opportunità prioritarie responsive;
-- contractor view inversa azienda → progetti → MW → ruolo → stato → timing;
+- pipeline MW per maturità con tooltip;
+- timeline di cantiere con tooltip per fase/data/confidenza;
+- opportunità prioritarie responsive con scorrimento interno al box;
+- contractor view inversa con selettore azienda → progetti → MW → ruolo → stato → timing;
 - scheda progetto con anagrafica, timing, supply chain, gap, fonti e storico configurazioni;
 - export CSV del filtro corrente.
 
 ## Prossimi passi
 
-1. consolidare i contractor mancanti sui progetti A+/A;
-2. aggiungere ingestione/normalizzazione Terna Econnextion, MASE e atti regionali;
-3. automatizzare il versioning di configurazioni e milestone;
-4. aggiungere alert su procurement, mobilitazione e nuovi segnali contractor;
-5. estendere progressivamente il seed senza abbassare la soglia di evidenza.
+1. verificare i marker contro corografie/layout ufficiali e registrare il livello di precisione;
+2. consolidare i contractor mancanti sui progetti A+/A;
+3. aggiungere ingestione/normalizzazione Terna Econnextion, MASE e atti regionali;
+4. automatizzare il versioning di configurazioni e milestone;
+5. aggiungere alert su procurement, mobilitazione e nuovi segnali contractor;
+6. estendere progressivamente il seed senza abbassare la soglia di evidenza.
