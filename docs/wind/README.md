@@ -1,107 +1,55 @@
-# Wind Project & Contractor Radar — MVP
+# Wind Project & Contractor Radar
 
-## Scopo
+MVP operativo del radar eolico nazionale, isolato in `docs/wind/` e costruito per leggere la pipeline dal punto di vista commerciale e della supply chain esecutiva.
 
-Radar commerciale eolico italiano orientato alle fasi di costruzione e alla supply chain esecutiva. La vista serve a capire **dove**, **quanti MW**, **a che punto**, **quando entra il cantiere** e **chi realizza fisicamente le opere**.
+## Seed e KPI
 
-## Struttura
-
-- `index.html` — shell della dashboard;
-- `assets/app.js` — filtri, KPI, mappa, timeline, viste progetto/contractor ed export CSV;
-- `assets/style.css` — layout responsive senza tabella operativa a scroll orizzontale;
-- `assets/review-fixes.js` / `review-fixes.css` — rifiniture della review: tooltip, precisione geografica, scroll opportunità e selettore contractor;
-- `assets/italy-base.svg` — base cartografica locale;
-- `data/projects.json` — manifest canonico;
-- `data/meta.json` — scala E0–E8, evidenze A1–D e ruoli esecutivi;
-- `data/projects-1.json` … `projects-3.json` — 17 record seed normalizzati.
-
-Il vecchio `docs/wind/data.json` è stato rimosso per evitare due dataset divergenti. La dashboard non dipende da librerie JavaScript esterne.
-
-## Seed MVP
-
-Il dataset contiene 17 progetti:
-
-- Andretta-Bisaccia;
-- Alia-Sclafani;
-- Serra Giannina;
-- Serra Palino;
-- Venusia;
-- ALAS;
-- Greci-Montaguto;
-- Carlentini;
-- Nulvi-Ploaghe;
-- Tricarico;
-- Tarsia Ovest;
-- Fenice;
-- Sava-Maruggio;
-- Toritto;
-- Volturino;
-- Lama Cupa;
-- Castelfranco in Miscano / CER.
-
-## Modello dati
-
-Ogni progetto conserva separatamente:
-
-- identità e ID procedurali disponibili;
-- geografia e coordinate indicative per la mappa;
-- MW eolici e MW BESS separati;
-- numero/potenza WTG quando disponibili;
+- 17 progetti seed verificati;
+- 1.496,9 MW eolici monitorati;
+- BESS sempre separato dai MW wind;
 - maturità osservabile `E0–E8`;
-- timing per fase (`civil`, `sse`, `cables`, `wtg_delivery`, `erection`, `commissioning`, `cod`, ecc.);
-- supply chain con `company`, `role`, `status`, `confidence` e `source_id`;
+- evidence grading `A1/A2/B/C/D`;
+- contractor esecutivo conteggiato nei KPI solo con ruolo esecutivo `confirmed` e confidenza `A1/A2`.
+
+## Dataset
+
+Il manifest canonico è `data/projects.json`, con metadati in `data/meta.json` e progetti suddivisi in chunk. GlobalData è esclusivamente enrichment/lead source e non prevale su atti, developer, contractor o documentazione di cantiere.
+
+Ogni progetto conserva, dove disponibili:
+
+- anagrafica e potenza wind/BESS;
+- developer/SPV e identificativi;
+- fase E0–E8;
+- timing e milestone;
+- relazioni progetto ↔ azienda con ruolo, stato, fonte e confidenza;
 - contractor gap;
-- configurazioni storiche con data e fonte;
-- fonti/evidenze;
-- eventuale nota GlobalData, marcata esclusivamente come enrichment/lead source.
+- storico delle configurazioni MW/WTG;
+- fonti/evidenze.
 
-### Precisione geografica
+## Mappa
 
-I marker della mappa MVP sono **riferimenti territoriali indicativi del progetto**. Non devono essere interpretati come coordinate delle singole WTG. La UI li segnala esplicitamente come proxy territoriali; una posizione viene promossa a layout verificato solo dopo riscontro su corografia/elaborato ufficiale.
+I marker usano coordinate territoriali indicative del progetto e **non** rappresentano le coordinate delle singole WTG. La promozione a layout verificato richiede una corografia o un elaborato ufficiale.
 
-### Scala maturità
+La basemap regionale viene disegnata sullo stesso piano WGS84 e sugli stessi bounds (`6.3–19 E`, `35.2–47.3 N`) usati dai marker. I confini regionali provengono dal dataset `geojson-italy`, derivato dai limiti amministrativi ISTAT e pubblicato in WGS84/CC-BY. Se la risorsa remota non è disponibile resta visibile la basemap locale di fallback.
 
-- E0 Universe
-- E1 Developing
-- E2 Permitting
-- E3 Advanced permitting
-- E4 Authorized
-- E5 Market committed
-- E6 Procurement
-- E7 Construction
-- E8 Operating
+## Contractor view
 
-Non vengono usate percentuali di avanzamento arbitrarie.
+La vista inversa mostra una sola azienda alla volta. Il selettore:
 
-## Regola contractor
+- è ordinato alfabeticamente con locale italiano;
+- viene ricostruito dall'insieme completo delle card disponibili nel filtro corrente;
+- ignora e azzera l'eventuale valore ripristinato dal browser nel vecchio campo di ricerca nascosto, evitando il precedente caso in cui compariva soltanto `Vestas`.
 
-Un ruolo esecutivo non viene mai attribuito per deduzione. Il KPI **MW con contractor esecutivo** considera solo relazioni:
+Nel seed completo risultano 11 aziende/nodi distinti.
 
-1. su un ruolo esecutivo definito in `meta.json`;
-2. con `status = confirmed`;
-3. con confidenza `A1` o `A2`.
+## Responsive
 
-I segnali `B` e `C` restano intelligence e non diventano assegnazioni contrattuali.
+`Opportunità prioritarie` usa scroll interno su desktop, ma sotto i 760 px torna nello scroll normale della pagina per evitare scroll-trap su touch.
 
-## Dashboard
+## Regole di attribuzione
 
-La home include:
+Non assegnare mai un ruolo esecutivo per deduzione. Segnali B/C restano intelligence e non diventano affidamenti. GlobalData non è fonte canonica.
 
-- 7 KPI operativi;
-- mappa Italia con marker progetto e tooltip, con precisione geografica esplicitata;
-- filtri per regione, E0–E8, tipo, developer, contractor, MW e finestra temporale;
-- pipeline MW per maturità con tooltip;
-- timeline di cantiere con tooltip per fase/data/confidenza;
-- opportunità prioritarie responsive con scorrimento interno al box;
-- contractor view inversa con selettore azienda → progetti → MW → ruolo → stato → timing;
-- scheda progetto con anagrafica, timing, supply chain, gap, fonti e storico configurazioni;
-- export CSV del filtro corrente.
+## Stato
 
-## Prossimi passi
-
-1. verificare i marker contro corografie/layout ufficiali e registrare il livello di precisione;
-2. consolidare i contractor mancanti sui progetti A+/A;
-3. aggiungere ingestione/normalizzazione Terna Econnextion, MASE e atti regionali;
-4. automatizzare il versioning di configurazioni e milestone;
-5. aggiungere alert su procurement, mobilitazione e nuovi segnali contractor;
-6. estendere progressivamente il seed senza abbassare la soglia di evidenza.
+MVP in Draft PR per preview/revisione. Nessun merge e nessuna pubblicazione senza approvazione esplicita.
