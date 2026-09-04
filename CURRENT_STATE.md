@@ -1,71 +1,57 @@
-# CURRENT STATE — Project Radar MVP
+# Current State
 
-## Obiettivo
+## Wind Project & Contractor Radar MVP
 
-Radar commerciale multi-settore per gestire grandi moli di candidati, con logica di sharding e vista web filtrata.
+Branch di lavoro: `feat/wind-radar-mvp`.
 
-Sul branch `feat/wind-radar-mvp` è presente un MVP isolato per il mercato eolico in `docs/wind/`.
+Stato: Draft / preview, non pubblicato e non mergiato.
 
-## Workflow operativo
+### Seed operativo
 
-Acquisizione dati; normalizzazione; arricchimento; sharding logico per filiale/area; generazione sito consultabile.
+- 17 progetti;
+- 1.496,9 MW eolici;
+- BESS separato dal wind;
+- scala maturità E0–E8;
+- evidence grading A1/A2/B/C/D;
+- GlobalData solo enrichment/lead source.
 
-Per il Wind Radar il seed è curato con separazione esplicita tra fatti confermati, segnali di intelligence e campi ancora aperti. GlobalData è solo enrichment/lead source e non prevale sulle fonti canoniche.
+### Funzioni presenti
 
-## File e cartelle critiche
+- 7 KPI operativi;
+- filtri per regione, maturità, tipo, developer, contractor, MW e finestra temporale;
+- mappa progetti;
+- pipeline per maturità con tooltip;
+- timeline di cantiere con tooltip;
+- opportunità prioritarie;
+- contractor view inversa;
+- scheda progetto con timing, supply chain, gap, storico configurazioni e fonti;
+- export CSV.
 
-- `scripts/build_master_dataset.py`
-- `data/`
-- `docs/`
-- `docs/wind/index.html`
-- `docs/wind/assets/app.js`
-- `docs/wind/assets/style.css`
-- `docs/wind/assets/review-fixes.js`
-- `docs/wind/assets/review-fixes.css`
-- `docs/wind/assets/italy-base.svg`
-- `docs/wind/data/projects.json`
-- `docs/wind/data/meta.json`
-- `docs/wind/data/projects-1.json` … `projects-3.json`
-- `reports/`
-- `requirements.txt`
+### Review 04/09/2026
 
-## Cose da non rompere
+Correzioni applicate dopo la revisione visuale:
 
-- Archivio completo e vista web non sono la stessa cosa.
-- Non ridurre il numero di candidati pubblicabili senza esplicita richiesta.
-- Preservare sharding logico per filiale.
-- Evitare scroll orizzontale nelle viste operative.
-- Nel Wind Radar non attribuire contractor come confermati senza evidenza sufficiente.
-- Mantenere separati MW eolici ed eventuale BESS.
-- Conservare le configurazioni storiche del progetto invece di sovrascrivere semplicemente MW/WTG.
-- Usare esclusivamente la scala osservabile `E0–E8`, senza percentuali arbitrarie di maturità.
-- Non rappresentare i marker mappa come coordinate delle WTG quando sono solo riferimenti territoriali.
+- mappa: piano marker e base cartografica allineati sul medesimo canvas/bounds WGS84;
+- aggiunti confini regionali derivati dai limiti amministrativi ISTAT tramite `geojson-italy`, proiettati con la stessa trasformazione usata dai marker;
+- i marker restano proxy territoriali e non coordinate WTG/layout verificati;
+- `Opportunità prioritarie`: scroll interno desktop, nessuno scroll verticale annidato su mobile;
+- `Contractor view`: selettore alfabetico compatto; corretto il bug causato dal valore ripristinato dal browser nel vecchio campo nascosto che poteva ridurre l'elenco alla sola `Vestas`;
+- seed completo contractor: 11 aziende/nodi distinti.
 
-## Stato corrente
+### Verifiche
 
-- Wind Radar MVP evoluto a **17 progetti seed / 1.496,9 MW eolici**.
-- Dataset normalizzato e suddiviso in manifest + metadata + 3 chunk progetto.
-- Dashboard con 7 KPI, mappa a marker progetto, pipeline per maturità, timeline di cantiere, opportunità prioritarie, contractor view inversa, schede progetto, filtri ed export CSV.
-- KPI contractor rigoroso: contano solo relazioni esecutive `confirmed` A1/A2; B/C restano intelligence.
-- Review UI applicata: tooltip su pipeline e timeline, scroll interno alle opportunità e contractor view con selettore di una singola azienda.
-- Precisione geografica esplicitata in UI: i marker correnti sono **proxy territoriali del progetto, non coordinate WTG**; la promozione a layout verificato richiede corografia/elaborato ufficiale.
-- `docs/wind/data.json` precedente rimosso per evitare una seconda fonte dati divergente.
-- Main/master non modificato: lavoro isolato sul branch `feat/wind-radar-mvp`.
-- Nessun merge o pubblicazione eseguiti.
+- 17 ID progetto univoci;
+- totale wind 1.496,9 MW;
+- stage ammessi E0–E8;
+- riferimenti fonte risolti;
+- KPI contractor esecutivo rigoroso = 133,9 MW;
+- JavaScript della preview standalone validato con `node --check`;
+- elenco contractor derivato dal seed: 11 nominativi distinti, non solo Vestas.
 
-## Problemi aperti
+### Pass aperto
 
-- verificare progressivamente le ubicazioni puntuali contro corografie/layout ufficiali e conservare il livello di precisione geografica;
-- consolidare i contractor mancanti, soprattutto sui progetti A+/A;
-- completare localizzazione/area dove ancora n.d.;
-- definire ingestione automatica Terna/MASE/Regioni;
-- automatizzare storico delle configurazioni e delle milestone;
-- ampliare il seed mantenendo la soglia di evidenza.
+Audit puntuale delle coordinate territoriali dei 17 progetti contro corografie/layout ufficiali. Questo pass riguarda la precisione del dato geografico, non il rendering cartografico.
 
-## Prossimo passo consigliato
+### Vincoli
 
-1. revisionare la preview aggiornata del Wind Radar;
-2. eseguire un pass specifico di geolocalizzazione sulle corografie/layout ufficiali dei 17 progetti;
-3. consolidare i contractor prioritari;
-4. solo dopo progettare l'ingestione automatica;
-5. eseguire `.\scripts\check_before_publish.ps1` prima di qualsiasi merge/pubblicazione in un ambiente PowerShell disponibile.
+Nessuna modifica a `master`, nessun merge e nessuna pubblicazione finché non viene data approvazione esplicita.
