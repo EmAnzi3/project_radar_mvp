@@ -1,49 +1,101 @@
-# Wind Construction Radar — MVP
+# Wind Project & Contractor Radar — MVP
 
 ## Scopo
 
-Radar commerciale per il mercato eolico italiano, con priorità alle informazioni utili per intercettare il cantiere e le imprese esecutrici.
+Radar commerciale eolico italiano orientato alle fasi di costruzione e alla supply chain esecutiva. La vista serve a capire **dove**, **quanti MW**, **a che punto**, **quando entra il cantiere** e **chi realizza fisicamente le opere**.
 
-## Campi chiave
+## Struttura
 
-- MW eolici, con BESS separato;
-- Regione, Provincia, Comuni e area coinvolta quando disponibile;
-- stato/maturità commerciale;
-- developer e SPV;
-- Civil BoP, Electrical BoP, OEM, erection/logistics;
-- altre aziende coinvolte con ruolo e livello di evidenza;
-- milestone operative: apertura cantiere, civili, cavidotti/SSE, consegna WTG, erection, COD;
-- prossima milestone e fonti.
+- `index.html` — shell della dashboard;
+- `assets/app.js` — filtri, KPI, mappa, timeline, viste progetto/contractor ed export CSV;
+- `assets/style.css` — layout responsive senza tabella operativa a scroll orizzontale;
+- `assets/italy-base.svg` — base cartografica locale;
+- `data/projects.json` — manifest canonico;
+- `data/meta.json` — scala E0–E8, evidenze A1–D e ruoli esecutivi;
+- `data/projects-1.json` … `projects-3.json` — 17 record seed normalizzati.
 
-## Regola di qualità
+Il vecchio `docs/wind/data.json` è stato rimosso per evitare due dataset divergenti. La dashboard non dipende da librerie JavaScript esterne.
 
-Un contractor non viene attribuito come confermato senza evidenza sufficiente. I segnali forti ma non contrattuali restano esplicitamente marcati come tali.
+## Seed MVP
 
-## Seed dataset
-
-Il primo dataset contiene 15 progetti emersi dal probe del 4 settembre 2026, inclusi i tre casi documentali approfonditi:
+Il dataset contiene 17 progetti:
 
 - Andretta-Bisaccia;
 - Alia-Sclafani;
-- Serra Giannina.
+- Serra Giannina;
+- Serra Palino;
+- Venusia;
+- ALAS;
+- Greci-Montaguto;
+- Carlentini;
+- Nulvi-Ploaghe;
+- Tricarico;
+- Tarsia Ovest;
+- Fenice;
+- Sava-Maruggio;
+- Toritto;
+- Volturino;
+- Lama Cupa;
+- Castelfranco in Miscano / CER.
 
-## Vista grafica
+## Modello dati
 
-`index.html` include:
+Ogni progetto conserva separatamente:
 
-- KPI dinamici;
-- filtri per Regione, fase, tipo e stato contractor;
-- mappa regionale per MW;
+- identità e ID procedurali disponibili;
+- geografia e coordinate indicative per la mappa;
+- MW eolici e MW BESS separati;
+- numero/potenza WTG quando disponibili;
+- maturità osservabile `E0–E8`;
+- timing per fase (`civil`, `sse`, `cables`, `wtg_delivery`, `erection`, `commissioning`, `cod`, ecc.);
+- supply chain con `company`, `role`, `status`, `confidence` e `source_id`;
+- contractor gap;
+- configurazioni storiche con data e fonte;
+- fonti/evidenze;
+- eventuale nota GlobalData, marcata esclusivamente come enrichment/lead source.
+
+### Scala maturità
+
+- E0 Universe
+- E1 Developing
+- E2 Permitting
+- E3 Advanced permitting
+- E4 Authorized
+- E5 Market committed
+- E6 Procurement
+- E7 Construction
+- E8 Operating
+
+Non vengono usate percentuali di avanzamento arbitrarie.
+
+## Regola contractor
+
+Un ruolo esecutivo non viene mai attribuito per deduzione. Il KPI **MW con contractor esecutivo** considera solo relazioni:
+
+1. su un ruolo esecutivo definito in `meta.json`;
+2. con `status = confirmed`;
+3. con confidenza `A1` o `A2`.
+
+I segnali `B` e `C` restano intelligence e non diventano assegnazioni contrattuali.
+
+## Dashboard
+
+La home include:
+
+- 7 KPI operativi;
+- mappa Italia con marker progetto e tooltip;
+- filtri per regione, E0–E8, tipo, developer, contractor, MW e finestra temporale;
 - pipeline MW per maturità;
-- timeline di civili / erection / COD;
-- contractor & intelligence nodes;
-- tabella filtrabile;
-- scheda progetto laterale con timeline, catena esecutiva e fonti.
+- timeline di cantiere;
+- opportunità prioritarie responsive;
+- contractor view inversa azienda → progetti → MW → ruolo → stato → timing;
+- scheda progetto con anagrafica, timing, supply chain, gap, fonti e storico configurazioni;
+- export CSV del filtro corrente.
 
 ## Prossimi passi
 
-1. consolidare e verificare il seed dataset;
-2. completare i contractor mancanti sui progetti prioritari;
-3. introdurre ingestione normalizzata da Terna/MASE/Regioni;
-4. mantenere storico delle configurazioni e delle milestone;
-5. aggiungere vista contractor → progetti e alert su nuovi segnali di procurement/mobilitazione.
+1. consolidare i contractor mancanti sui progetti A+/A;
+2. aggiungere ingestione/normalizzazione Terna Econnextion, MASE e atti regionali;
+3. automatizzare il versioning di configurazioni e milestone;
+4. aggiungere alert su procurement, mobilitazione e nuovi segnali contractor;
+5. estendere progressivamente il seed senza abbassare la soglia di evidenza.
