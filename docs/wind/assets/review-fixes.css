@@ -16,6 +16,8 @@
 .pipeline-fallback [data-review-tip],.timeline-fallback [data-review-tip]{outline:none}.pipeline-fallback [data-review-tip]:hover .fallback-track,.pipeline-fallback [data-review-tip]:focus .fallback-track{box-shadow:0 0 0 2px rgba(8,127,91,.12)}.timeline-fallback .fallback-bar[data-review-tip]:hover,.timeline-fallback .fallback-bar[data-review-tip]:focus{filter:brightness(.92);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 4px rgba(22,50,71,.15)}
 .contractor-search input#contractorQ{display:none}.contractor-search select#contractorFocus{height:37px;width:100%;border:1px solid #cfdad5;background:#fff;color:#263730;border-radius:10px;padding:0 10px;outline:none}.contractor-search select#contractorFocus:focus{border-color:#62b99a;box-shadow:0 0 0 3px rgba(12,166,120,.09)}
 .contractor-view{display:block}.contractor-view .contractor-card{display:none;width:100%}.contractor-view .contractor-card.review-selected{display:block}.contractor-view .contractor-card.review-selected .contractor-project{padding:8px 12px}.contractor-view .contractor-card.review-selected .contractor-roles{padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid #e6ece9}
+/* Dataset-driven contractor card must stay visible even if legacy observer toggles review-selected. */
+.contractor-view .contractor-card.direct-contractor-card{display:block!important}
 .geo-detail b{font-weight:650!important;color:var(--muted)}
 @media(max-width:760px){
   /* No nested vertical scroll on touch: the opportunity list becomes part of the page flow. */
