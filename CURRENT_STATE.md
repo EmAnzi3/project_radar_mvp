@@ -59,7 +59,8 @@ Il branch aggiunge:
 - KPI `Scope esecutivi coperti`;
 - chip scope coverage in Opportunità prioritarie;
 - scheda progetto con Commercial Window, completezza intelligence, matrice scope, investigation queue e document intelligence;
-- Contractor view arricchita con relazioni tecniche/esecutive senza promuovere segnali B/C a contractor confermati.
+- Contractor view arricchita con relazioni tecniche/esecutive senza promuovere segnali B/C a contractor confermati;
+- pannello `Deep document & public-source pass` nel drawer, ora alimentato anche dai registri di fonti regionali e comunali.
 
 ### Deep-document — full text acquisito
 
@@ -84,7 +85,7 @@ I dati incrementali sono in `docs/wind/data/enrichment-docpass2-2026-09-04.json`
 
 ### Nuova classe fonti: enti pubblici territoriali
 
-Il radar inizia a interrogare sistematicamente, limitatamente ai 17 seed:
+Il radar interroga sistematicamente, limitatamente ai 17 seed:
 
 1. Regione — VIA/AU, trasparenza, pubblicità legale/albo, BUR/BURP;
 2. Provincia/Città metropolitana — viabilità, attraversamenti, occupazioni, trasporti eccezionali;
@@ -92,22 +93,39 @@ Il radar inizia a interrogare sistematicamente, limitatamente ai 17 seed:
 4. Terna/ANAS/gestori infrastrutturali;
 5. portali corporate di proponenti/contractor come fonti dirette o lead, senza sostituire A1.
 
-Primi riscontri:
+Registri dati:
 
-- Comune di Ittiri pubblica documentazione specifica sul progetto ALAS e sui rapporti con Regione Sardegna;
-- Regione Puglia espone Toritto, Fenice e Lama Cupa nel BURP e pubblica gli atti anche su Trasparenza e Albo Telematico;
-- gli stessi elaborati Fenice/Andretta mostrano che viabilità, attraversamenti e trasporti richiedono atti di enti comunali/provinciali, rendendo questi portali fonti operative ad alto valore.
+- `docs/wind/data/public-entity-sources-2026-09-04.json` — fonti ufficiali regionali;
+- `docs/wind/data/local-entity-sources-2026-09-04.json` — primi hit comunali;
+- `docs/wind/research/2026-09-04-public-entity-source-pass.md` — metodo e audit.
 
-Audit: `docs/wind/research/2026-09-04-public-entity-source-pass.md`.
+Primi riscontri ufficiali ad alto valore:
+
+- **ALAS:** Comune di Ittiri pubblica documentazione specifica e la lettera del Sindaco alla Regione Sardegna sulle attività ALAS;
+- **Tarsia Ovest:** Comune di Tarsia ha pubblicato all'Albo un avvio procedimento specifico del parco, utile per usi civici/particelle e la catena amministrativa pre-voltura;
+- **Greci-Montaguto:** Regione Campania documenta variante 42 MW, connessione, ottimizzazione piazzole/viabilità ed espropri, con elaborati disponibili presso UOD 500203;
+- **Serra Giannina:** Regione Basilicata espone il procedimento espropriativo del medesimo progetto, ma su configurazione autorizzativa precedente;
+- **Serra Palino:** Regione Puglia espone AU, SSE utente e connessione Deliceto; configurazione autorizzativa storica 48 MW;
+- **Venusia:** Regione Basilicata conferma lavori in corso 45 MW Venosa/Maschito;
+- **Tarsia Ovest:** Regione Calabria 2026 conferma variante favorevole e voltura a ENI Plenitude Renewables Italy;
+- **Nulvi-Ploaghe:** BURAS riemette AU n.463/2026, 27 WTG / 121,5 MW e codice SUAPEE 496419;
+- **Carlentini:** Regione Siciliana documenta gli attraversamenti idraulici della configurazione autorizzativa precedente;
+- **Castelfranco/CER:** Regione Campania/BURC documenta espropri, servitù e occupazione temporanea per il repowering Difesa Vecchia.
+
+### Regola identity/versioning
+
+Gli atti territoriali spesso descrivono una configurazione autorizzativa precedente a quella corrente. Ogni fonte viene quindi marcata con uno stato identità (`same-project-current`, `same-project-historical-config`, `conflict-to-reconcile`) e **non aggiorna MW/WTG automaticamente**.
+
+Caso aperto più importante: **Andretta-Bisaccia** — Regione Campania luglio 2026 descrive 13 WTG / 85,8 MW e smantellamento di 18 macchine, mentre il record corrente del radar è diverso. La fonte resta una pista amministrativa finché l'identità/versione non è riconciliata.
 
 ### Pass aperti prima di proporre merge
 
-- integrare il secondo overlay documentale nella UI/drawer e validarlo;
-- contractor hunt sui gap Priority 1 usando anche atti regionali/provinciali/comunali;
+- contractor hunt sui gap Priority 1 usando anche albi/trasparenza/ordinanze;
 - cercare un cronoprogramma Fenice nel restante corpus MASE;
 - cercare l'anchor reale di avvio Toritto quando emergerà;
 - seguire la filiera della SE Casamassima senza trasferire automaticamente contractor condivisi a Lama Cupa;
-- preview visuale desktop/mobile;
+- ampliare il pass comunale/provinciale sugli altri progetti ACTIVE/OPEN;
+- preview visuale desktop/mobile del nuovo pannello pubblico/documentale;
 - audit puntuale delle coordinate territoriali contro corografie/layout ufficiali resta separato.
 
 ### Vincoli
