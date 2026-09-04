@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "wind" / "data"
 MANIFEST = DATA / "projects.json"
 ENRICHMENT = DATA / "enrichment-2026-09-04.json"
+ENRICHMENT2 = DATA / "enrichment-docpass2-2026-09-04.json"
 
 
 def load_json(path: Path):
@@ -96,6 +97,17 @@ def main() -> None:
         fail("gli ID dell'enrichment non coincidono con i 17 seed")
 
     merged = [merge_overlay(project, overlay_projects.get(project["id"], {})) for project in projects]
+
+    if ENRICHMENT2.exists():
+        enrichment2 = load_json(ENRICHMENT2)
+        overlay2 = enrichment2.get("projects", {})
+        expected_docpass_ids = {"alas", "toritto", "fenice", "lama-cupa"}
+        if set(overlay2) != expected_docpass_ids:
+            fail(f"docpass2: ID inattesi {sorted(overlay2)}")
+        if not set(overlay2).issubset(set(ids)):
+            fail("docpass2 contiene progetti fuori dal seed")
+        merged = [merge_overlay(project, overlay2.get(project["id"], {})) for project in merged]
+
     core_scopes = enrichment["method"]["core_scopes"]
     role_map = enrichment["method"]["scope_role_map"]
 
@@ -140,7 +152,7 @@ def main() -> None:
 
     mw_with_scope = sum(float(project.get("mw") or 0) for project in projects_with_scope)
 
-    # Regression guards: B/C signals must not close an execution scope.
+    # Regression guards: B/C signals and technical roles must not close execution scopes.
     serra = next(project for project in merged if project["id"] == "serra-giannina")
     if any(scope_covered(serra, scope) for scope in applicable(serra)):
         fail("Serra Giannina: un segnale B sta chiudendo indebitamente uno scope")
@@ -152,10 +164,27 @@ def main() -> None:
     if carlentini_covered != {"foundation"}:
         fail(f"Carlentini: coverage inattesa {sorted(carlentini_covered)}; attesa solo foundation")
 
+    alas = next(project for project in merged if project["id"] == "alas")
+    if any(scope_covered(alas, scope) for scope in applicable(alas)):
+        fail("ALAS: ruolo Hydro di progettazione sta chiudendo indebitamente uno scope esecutivo")
+    fenice = next(project for project in merged if project["id"] == "fenice")
+    if any(scope_covered(fenice, scope) for scope in applicable(fenice)):
+        fail("Fenice: ruolo ATS Engineering sta chiudendo indebitamente uno scope esecutivo")
+    lama = next(project for project in merged if project["id"] == "lama-cupa")
+    if any(relation.get("company") == "Brulli Trasmissione" for relation in lama.get("relations", [])):
+        fail("Lama Cupa: Brulli è stata attribuita al progetto invece che mantenuta come contesto SE condivisa")
+
+    if covered_slots != 8 or total_slots != 108:
+        fail(f"scope coverage inattesa dopo docpass2: {covered_slots}/{total_slots}; attesa 8/108")
+    if not math.isclose(mw_with_scope, 230.9, abs_tol=0.01):
+        fail(f"MW con scope inattesi dopo docpass2: {mw_with_scope:.1f}; attesi 230.9")
+
     print(f"[OK] seed Wind: 17 progetti / {total_mw:.1f} MW")
     print(f"[OK] scope coverage: {covered_slots}/{total_slots} ({covered_slots / total_slots * 100:.1f}%)")
     print(f"[OK] MW con almeno uno scope A1/A2: {mw_with_scope:.1f}")
-    print("[OK] segnali B/C separati dagli scope esecutivi confermati")
+    print("[OK] segnali B/C e ruoli tecnici separati dagli scope esecutivi confermati")
+    if ENRICHMENT2.exists():
+        print("[OK] docpass2: ALAS/Toritto/Fenice/Lama Cupa validati; Brulli non attribuita a Lama Cupa")
 
 
 if __name__ == "__main__":
