@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from .models import AgentRunPlan, AgentTask
 
@@ -116,13 +116,13 @@ def _company_tasks(as_of: date) -> list[AgentTask]:
     return sorted(out, key=lambda t: (_priority_rank(t.priority), t.target.get("name") or ""))
 
 
-def _institutional_tasks(as_of: date) -> list[AgentTask]:
+def _institutional_tasks(as_of: date, include_not_due: bool = False) -> list[AgentTask]:
     _, sources = _merge_institutional_registries()
     out: list[AgentTask] = []
 
     for source in sources:
         cadence = int(source.get("cadence_days") or 7)
-        if not _is_due(source.get("last_checked"), cadence, as_of):
+        if not include_not_due and not _is_due(source.get("last_checked"), cadence, as_of):
             continue
         urls = [source.get(key) for key in ("official_url", "discovery_url", "secondary_url")]
         urls = [url for url in urls if url]
@@ -147,6 +147,16 @@ def _institutional_tasks(as_of: date) -> list[AgentTask]:
         )
 
     return sorted(out, key=lambda t: (_priority_rank(t.priority), t.target.get("region") or "", t.task_id))
+
+
+def build_institutional_watch_catalog(as_of: date | None = None) -> list[AgentTask]:
+    """Return all institutional watch definitions regardless of due state.
+
+    Runtime scheduling can combine these declared cadences with persistent
+    `watch_status` timestamps without rewriting registry JSON after every run.
+    """
+
+    return _institutional_tasks(as_of or date.today(), include_not_due=True)
 
 
 def _project_tasks(as_of: date) -> list[AgentTask]:
