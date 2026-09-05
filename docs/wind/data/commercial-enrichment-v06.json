@@ -1,7 +1,7 @@
 {
   "version": "0.6.0-commercial-enrichment",
   "as_of": "2026-09-06",
-  "note": "Project-specific commercial intelligence found during v0.6 execution hunt. Non-execution support, supervision, advisory and staffing roles never close execution scopes; explicit A1/A2 execution evidence may do so.",
+  "note": "Project-specific commercial intelligence found during v0.6 execution hunt. Non-execution support, supervision, advisory, development and staffing roles never close execution scopes; explicit A1/A2 execution evidence may do so.",
   "projects": {
     "andretta-bisaccia": {
       "relations": [
@@ -166,6 +166,44 @@
           "title": "Vestas announces four new orders for a total of 289 MW",
           "date": "2025-12-30",
           "url": "https://www.vestas.com/en/media/company-news/2025/vestas-announces-four-new-orders-for-a-total-of-289-mw-c4287390"
+        }
+      ]
+    },
+    "nulvi-ploaghe": {
+      "relations": [
+        {
+          "company": "Hydro Engineering",
+          "role": "Repowering project development / engineering",
+          "status": "confirmed",
+          "confidence": "A2",
+          "scope": "Hydro Engineering directly states that it developed the Nulvi-Ploaghe repowering project for the ERG project now fully authorised at 121.5 MW. This identifies a project-specific development/engineering participant only; it does not attribute Civil BoP, foundations, grid, logistics, erection or OEM execution.",
+          "source_id": "nulvi-hydro-development-a2"
+        }
+      ],
+      "signals": [
+        {
+          "type": "development-chain",
+          "grade": "A2",
+          "title": "Hydro Engineering identified in the Nulvi-Ploaghe development chain",
+          "note": "Direct Hydro Engineering evidence links the engineering company to development of the repowering design. The project remains E4 with all execution/procurement scopes open until direct award evidence appears."
+        }
+      ],
+      "sources": [
+        {
+          "id": "nulvi-hydro-development-a2",
+          "publisher": "Hydro Engineering",
+          "grade": "A2",
+          "title": "Nulvi-Ploaghe repowering — project developed by Hydro Engineering",
+          "date": "2026-04",
+          "url": "https://it.linkedin.com/posts/hydro-engineering-s-s_repowering-hydroengineering-erg-activity-7445475651026972672-0tTB"
+        },
+        {
+          "id": "nulvi-erg-authorized-a2",
+          "publisher": "ERG",
+          "grade": "A2",
+          "title": "ERG Q1 2026 — Nulvi-Ploaghe fully authorised and eligible for Route to Market",
+          "date": "2026-05",
+          "url": "https://www.erg.eu/it/-/il-consiglio-di-amministrazione-di-erg-s.p.a.-approva-i-risultati-consolidati-del-primo-trimestre-2026"
         }
       ]
     }

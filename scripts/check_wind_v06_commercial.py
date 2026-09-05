@@ -16,7 +16,7 @@ by_id = {p["id"]: p for p in projects}
 payload = json.loads((DATA / "commercial-enrichment-v06.json").read_text(encoding="utf-8"))
 assert payload["version"] == "0.6.0-commercial-enrichment"
 assert set(payload["projects"]).issubset(by_id), set(payload["projects"]) - set(by_id)
-required_projects = {"andretta-bisaccia", "carlentini", "tricarico", "greci-montaguto"}
+required_projects = {"andretta-bisaccia", "carlentini", "tricarico", "greci-montaguto", "nulvi-ploaghe"}
 assert required_projects.issubset(payload["projects"])
 
 execution_roles = set(meta.get("execution_roles") or [])
@@ -81,6 +81,19 @@ assert "four Vestas V117" in config["note"]
 assert service["grade"] == "A2"
 assert "AOM 5000" in service["title"]
 
+# Nulvi-Ploaghe: direct engineering-company evidence identifies Hydro in the
+# development chain, but E4 procurement/execution scopes remain fully open.
+nulvi = payload["projects"]["nulvi-ploaghe"]
+nulvi_relations = nulvi.get("relations") or []
+assert len(nulvi_relations) == 1, nulvi_relations
+nulvi_hydro = nulvi_relations[0]
+assert nulvi_hydro["company"] == "Hydro Engineering"
+assert nulvi_hydro["confidence"] == "A2"
+assert nulvi_hydro["status"] == "confirmed"
+assert nulvi_hydro["role"] not in execution_roles, "project development/engineering must stay non-execution"
+assert "does not attribute Civil BoP" in nulvi_hydro["scope"], "Nulvi development evidence must retain execution guard"
+assert any(s.get("type") == "development-chain" for s in nulvi.get("signals") or [])
+
 # All current commercial-enrichment sources must be attributable and navigable.
 for project_id, project_payload in payload["projects"].items():
     sources = project_payload.get("sources") or []
@@ -124,6 +137,14 @@ assert any(
     for r in (canonical_greci.get("relations") or [])
 ), "existing Greci-Montaguto OEM evidence must remain canonical"
 
+canonical_nulvi = by_id["nulvi-ploaghe"]
+assert not any(
+    r.get("company") == "Hydro Engineering"
+    for r in (canonical_nulvi.get("relations") or [])
+), "Nulvi development-chain evidence must stay additive"
+assert canonical_nulvi.get("stage") == "E4"
+assert len(canonical_nulvi.get("gaps") or []) >= 8, "Nulvi execution/procurement gaps must stay open"
+
 execution_relations = [
     (project_id, relation)
     for project_id, project_payload in payload["projects"].items()
@@ -138,5 +159,5 @@ assert execution_relations[0][0] == "carlentini"
 print(
     f"v0.6 commercial enrichment OK: {len(payload['projects'])} projects, "
     f"{len(execution_relations)} A1/A2 execution relation; "
-    "Tricarico lender monitoring and Greci WTG configuration remain non-execution"
+    "Tricarico monitoring, Greci configuration and Nulvi development stay non-execution"
 )

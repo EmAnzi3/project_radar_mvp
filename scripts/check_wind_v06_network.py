@@ -49,8 +49,8 @@ for update in tranche_e.get("updates", []):
     by_id[cid] = merged
 
 companies = list(by_id.values())
-assert len(companies) >= 60, f"expanded network too small: {len(companies)}"
-assert sum(bool(c.get("watch_urls")) for c in companies) >= 52, "company watch URL coverage too low"
+assert len(companies) >= 61, f"expanded network too small: {len(companies)}"
+assert sum(bool(c.get("watch_urls")) for c in companies) >= 53, "company watch URL coverage too low"
 
 for c in companies:
     assert c["commercial_priority"] in {"A", "B", "C"}, c["id"]
@@ -71,7 +71,7 @@ for required in [
     "yce-blades", "engie-italia", "alerion", "goldwind-energy-italy",
     "blu-costruzioni", "egm-project", "barone-costruzione", "gruppo-novello",
     "la-molisana-trasporti", "pizzulo-costruzioni", "simic", "fc-wind-service",
-    "progeco-group", "socep"
+    "progeco-group", "socep", "vector-renewables"
 ]:
     assert required in by_id, f"missing required network node {required}"
 
@@ -138,16 +138,25 @@ assert socep["relationship_status"] == "historical_same_site_supplier"
 assert "civil_works" in socep["cluster"]
 assert "historical" in socep["relationship_status"], "old-site reference must remain explicitly historical"
 
+vector = by_id["vector-renewables"]
+assert vector["commercial_priority"] == "A"
+assert vector["project_links"] == ["tricarico"]
+assert vector["relationship_status"] == "confirmed_project_support"
+assert "construction_monitoring" in vector["cluster"]
+assert "wind_full_bop" not in vector["cluster"], "lender-side advisor must not become execution contractor"
+
 mammana = by_id["mammana-michelangelo"]
 assert set(mammana["project_links"]) >= {"tarsia-ovest", "carlentini"}
 assert mammana["relationship_status"] == "proven_in_radar_multi_project"
 assert "current WTG foundation concrete execution" in mammana["known_capabilities"]
 
 hydro = by_id["hydro-engineering"]
-assert hydro["relationship_status"] == "confirmed_project_support"
-assert "carlentini" in hydro["project_links"]
+assert hydro["relationship_status"] == "confirmed_project_support_multi_project"
+assert set(hydro["project_links"]) >= {"carlentini", "nulvi-ploaghe"}
 assert "Direzione Lavori" in hydro["known_capabilities"]
+assert "wind repowering project development" in hydro["known_capabilities"]
 assert any("hydroeng.it/settori/eolico" in u for u in hydro["watch_urls"])
+assert any("7445475651026972672" in u for u in hydro["watch_urls"]), "Nulvi-Ploaghe direct project reference must be watched"
 
 # New nodes and current-update overlays must be operationally actionable.
 for payload in (tranche_b, tranche_c, tranche_d):
@@ -156,7 +165,7 @@ for payload in (tranche_b, tranche_c, tranche_d):
         assert c.get("next_action"), f"{c['id']}: missing next_action"
         assert c.get("watch_urls"), f"{c['id']}: missing watch_urls"
 for update in tranche_e["updates"]:
-    assert update.get("last_checked") == "2026-09-05", update["id"]
+    assert update.get("last_checked") in {"2026-09-05", "2026-09-06"}, update["id"]
     assert update.get("next_action"), f"{update['id']}: missing next_action"
     assert update.get("watch_urls"), f"{update['id']}: missing watch_urls"
 
