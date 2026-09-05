@@ -28,7 +28,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install runtime dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
 
       - name: Restore persistent wind-agent state
         uses: actions/cache@v4
