@@ -39,6 +39,7 @@ jobs:
             scripts/check_wind_v06_network.py
             scripts/check_wind_v06_institutional.py
             scripts/check_wind_v06_agents.py
+            scripts/check_wind_v06_commercial.py
             scripts/run_wind_agents.py
             scripts/wind_discovery_engine.py
 
@@ -96,6 +97,9 @@ jobs:
 
       - name: Wind agent architecture v0.6 validation
         run: python scripts/check_wind_v06_agents.py
+
+      - name: Project-specific commercial signals v0.6 validation
+        run: python scripts/check_wind_v06_commercial.py
 
       - name: JavaScript syntax
         run: |
