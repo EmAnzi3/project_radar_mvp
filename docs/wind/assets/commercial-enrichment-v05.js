@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
+const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const COMMERCIAL_FILES=['commercial-enrichment-v05.json','commercial-enrichment-v05b.json','commercial-enrichment-v05c.json','commercial-enrichment-v05d.json','commercial-enrichment-v06.json'];
 let registry={projects:{}},byName=new Map(),body=null,timer=null;
 function mergeRegistry(docs){const out={projects:{}};docs.forEach(doc=>Object.entries(doc?.projects||{}).forEach(([id,payload])=>{const target=out.projects[id]||(out.projects[id]={relations:[],signals:[],sources:[]});['relations','signals','sources'].forEach(key=>(payload[key]||[]).forEach(item=>{const sig=JSON.stringify(item);if(!target[key].some(x=>JSON.stringify(x)===sig))target[key].push(item)}))}));return out}
