@@ -3,12 +3,13 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Any
 
-from .adapters import MaseWindAgent
+from .adapters import LazioWindAgent, MaseWindAgent
 from .planner import build_run_plan
 from .state import begin_run, finish_run, upsert_finding
 
 
 AGENT_FACTORIES = {
+    "lazio-via": LazioWindAgent,
     "mase-via": MaseWindAgent,
 }
 
