@@ -112,7 +112,8 @@ def main() -> None:
     if CONTRACTOR_LEADS.exists():
         leads = load_json(CONTRACTOR_LEADS)
         lead_projects = leads.get("projects", {})
-        if set(lead_projects) != {"tricarico"}:
+        expected_lead_ids = {"andretta-bisaccia", "tricarico"}
+        if set(lead_projects) != expected_lead_ids:
             fail(f"contractor leads: ID inattesi {sorted(lead_projects)}")
         merged = [merge_overlay(project, lead_projects.get(project["id"], {})) for project in merged]
 
@@ -161,6 +162,18 @@ def main() -> None:
     mw_with_scope = sum(float(project.get("mw") or 0) for project in projects_with_scope)
 
     # Regression guards: B/C signals and technical roles must not close execution scopes.
+    andretta = next(project for project in merged if project["id"] == "andretta-bisaccia")
+    progeco = [
+        relation for relation in andretta.get("relations", [])
+        if relation.get("source_id") == "andr-progeco-site-manager"
+    ]
+    if len(progeco) != 1:
+        fail("Andretta-Bisaccia: lead Progeco site-management mancante o duplicato")
+    if progeco[0].get("confidence") != "B" or progeco[0].get("status") != "signal":
+        fail("Andretta-Bisaccia: Progeco deve restare signal/B")
+    if any(scope_covered(andretta, scope) for scope in applicable(andretta)):
+        fail("Andretta-Bisaccia: Progeco/site management sta chiudendo indebitamente uno scope")
+
     serra = next(project for project in merged if project["id"] == "serra-giannina")
     if any(scope_covered(serra, scope) for scope in applicable(serra)):
         fail("Serra Giannina: un segnale B sta chiudendo indebitamente uno scope")
@@ -204,7 +217,7 @@ def main() -> None:
     if ENRICHMENT2.exists():
         print("[OK] docpass2: ALAS/Toritto/Fenice/Lama Cupa validati; Brulli non attribuita a Lama Cupa")
     if CONTRACTOR_LEADS.exists():
-        print("[OK] contractor leads: Vestas/Tricarico installation resta segnale B e non chiude erection")
+        print("[OK] contractor leads: Progeco/Andretta e Vestas/Tricarico restano segnali B e non chiudono scope")
 
 
 if __name__ == "__main__":
