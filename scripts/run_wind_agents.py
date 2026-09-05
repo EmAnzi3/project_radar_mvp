@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.company_watch import due_company_ids, run_company_watch
+from app.wind_agents.execution_watch import build_execution_queue
 from app.wind_agents.planner import build_run_plan
 from app.wind_agents.reconcile import build_digest
 from app.wind_agents.runner import due_agent_ids, executable_agent_ids, run_agents
@@ -33,6 +34,13 @@ def main() -> None:
     plan_cmd = sub.add_parser("plan", help="build the due queues without network collection")
     plan_cmd.add_argument("--as-of", help="YYYY-MM-DD; defaults to today")
     plan_cmd.add_argument("--output", help="optional JSON output path")
+
+    execution_cmd = sub.add_parser(
+        "execution-queue",
+        help="build review-only contractor-hunt queue for canonical E4-E7 projects",
+    )
+    execution_cmd.add_argument("--as-of", help="YYYY-MM-DD; defaults to today")
+    execution_cmd.add_argument("--output", help="optional JSON output path")
 
     due_cmd = sub.add_parser("due", help="show executable institutional adapters due by runtime cadence")
     due_cmd.add_argument("--as-of", help="YYYY-MM-DD; defaults to today")
@@ -86,6 +94,11 @@ def main() -> None:
     if args.command == "plan":
         as_of = date.fromisoformat(args.as_of) if args.as_of else None
         _emit(build_run_plan(as_of=as_of).as_dict(), args.output)
+        return
+
+    if args.command == "execution-queue":
+        as_of = date.fromisoformat(args.as_of) if args.as_of else None
+        _emit(build_execution_queue(as_of=as_of), args.output)
         return
 
     if args.command == "due":
