@@ -20,6 +20,7 @@ from app.wind_agents.planner import (
     build_institutional_watch_catalog,
     build_run_plan,
 )
+from app.wind_agents.reconcile import build_digest, reconcile_finding
 from app.wind_agents.runner import due_agent_ids, executable_agent_ids
 from app.wind_agents import state
 
@@ -95,6 +96,56 @@ assert can_close_execution_scope(
 )
 assert evidence_layer(project_specific=False, execution_scope=None) == "network_intelligence"
 
+# Reconciliation is conservative and advisory only.
+synthetic_canonical = [
+    {
+        "id": "andretta-bisaccia",
+        "name": "Andretta-Bisaccia",
+        "mw": 88.5,
+        "region": "Campania",
+        "municipalities": ["Andretta", "Bisaccia", "Vallata"],
+        "developer": "Edison Rinnovabili",
+        "stage": "E6",
+        "priority": "A+",
+        "sources": [],
+    }
+]
+project_finding = {
+    "source_url": "https://example.com/andretta",
+    "title": "Andretta-Bisaccia",
+    "finding_type": "project_source",
+    "payload": {
+        "project_name": "Andretta-Bisaccia",
+        "proponent": "Edison Rinnovabili",
+        "region": "Campania",
+        "municipalities": ["Andretta"],
+        "power_mw": 88.5,
+        "project_specific": True,
+    },
+}
+project_match = reconcile_finding(project_finding, canonical=synthetic_canonical, discovery=[])
+assert project_match["status"] == "high_confidence_match", project_match
+assert project_match["auto_reconciled"] is True, project_match
+assert project_match["best"]["target_id"] == "andretta-bisaccia", project_match
+
+company_finding = {
+    "source_url": "https://example.com/company",
+    "title": "Edison direct source",
+    "finding_type": "company_source_snapshot",
+    "payload": {
+        "company_name": "Edison Rinnovabili",
+        "project_name": "Andretta-Bisaccia",
+        "region": "Campania",
+        "project_links_registry": ["andretta-bisaccia"],
+        "project_specific": False,
+        "signal_excerpt": "Wind construction project update.",
+    },
+}
+company_match = reconcile_finding(company_finding, canonical=synthetic_canonical, discovery=[])
+assert company_match["best"]["target_id"] == "andretta-bisaccia", company_match
+assert company_match["auto_reconciled"] is False, company_match
+assert reconcile_finding(project_finding, canonical=[], discovery=[])["best"] is None
+
 # PV-Agent-style raw/history persistence must detect new / unchanged / changed.
 # Operational cursors and live watch timestamps are separate from canonical data.
 with tempfile.TemporaryDirectory() as tmp:
@@ -140,6 +191,14 @@ with tempfile.TemporaryDirectory() as tmp:
     )
     assert state.upsert_finding(run_id, "test_agent", changed) == "changed"
     state.finish_run(run_id, findings=3, changed_items=2)
+
+    events = state.get_run_events(run_id)
+    assert [event["event_type"] for event in events] == ["new", "changed"], events
+    digest = build_digest([run_id])
+    assert digest["events"] == 2, digest
+    assert digest["actionable_events"] == 2, digest
+    assert all(item["action_type"] == "new_project_lead" for item in digest["items"]), digest
+    assert "review-only" in digest["guard"].lower(), digest
 
 print(
     f"v0.6 wind agents OK: {len(companies)} companies, {len(sources)} institutional nodes, "
