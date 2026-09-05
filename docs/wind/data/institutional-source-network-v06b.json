@@ -1,0 +1,131 @@
+{
+  "version": "0.6.0-b",
+  "as_of": "2026-09-05",
+  "purpose": "Additive audit of priority regional public-source endpoints inherited from PV Agent or found on official regional portals.",
+  "sources": [
+    {
+      "id": "liguria-via-procedimenti",
+      "institution": "Regione Liguria",
+      "level": "regional",
+      "region": "Liguria",
+      "channel": "Banca dati procedimenti VIA / PAUR",
+      "priority": "A",
+      "status": "audited_official_endpoint",
+      "cadence_days": 3,
+      "official_url": "https://servizi.regione.liguria.it/page/welcome/VIA",
+      "discovery_url": "https://www.regione.liguria.it/homepage-ambiente/cosa-cerchi/via-vas-aia-aua/valutazione-impatto-ambientale-via.html",
+      "origin_collector": null,
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Directly wind-relevant. Regione Liguria exposes a dedicated VIA database and specific preliminary-assessment forms for wind-project changes. Build a wind collector around project/procedure listings and documents; do not infer construction from VIA alone.",
+      "audit_note": "Closes the previous institutional coverage gap at source-discovery level; collector implementation still required."
+    },
+    {
+      "id": "molise-au-eolico",
+      "institution": "Regione Molise — Servizio Programmazione Politiche Energetiche",
+      "level": "regional",
+      "region": "Molise",
+      "channel": "Autorizzazioni FER + procedimenti depositati eolico",
+      "priority": "A",
+      "status": "audited_official_endpoint",
+      "cadence_days": 3,
+      "official_url": "https://www.regione.molise.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/15585",
+      "discovery_url": "https://ambienteeterritorio.regione.molise.it/filed-documents-wind",
+      "secondary_url": "https://ambienteeterritorio.regione.molise.it/filed-documents-wind-via",
+      "origin_collector": null,
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Directly wind-specific: the regional energy office exposes deposited wind proceedings and national-VIA wind proceedings. Monitor authorization applications, variants, volture, proroghe and project documents.",
+      "audit_note": "Closes the previous Molise institutional coverage gap at source-discovery level; particularly important because Molise already hosts canonical projects."
+    },
+    {
+      "id": "lazio-via-project-list",
+      "institution": "Regione Lazio",
+      "level": "regional",
+      "region": "Lazio",
+      "channel": "VIA / PAUR project list and downloadable project registers",
+      "priority": "A",
+      "status": "audited_inherited_endpoint",
+      "cadence_days": 3,
+      "official_url": "https://www.regione.lazio.it/imprese/tutela-ambientale-difesa-suolo/valutazione-impatto-ambientale-progetti",
+      "origin_collector": "app/collectors/lazio.py",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "PV Agent already paginates the project list and parses date, procedure, proponent, municipality, province and status. Replace PV keyword gate and explicit eolico exclusion with wind/repowering/onshore/offshore terms.",
+      "audit_note": "The regional VIA section publishes 2026 project registers and PAUR material; project-specific determinations can provide configuration and outcome evidence."
+    },
+    {
+      "id": "emilia-romagna-viavasweb",
+      "institution": "Regione Emilia-Romagna",
+      "level": "regional",
+      "region": "Emilia-Romagna",
+      "channel": "VIA/VAS web project database",
+      "priority": "B",
+      "status": "audited_inherited_endpoint",
+      "cadence_days": 7,
+      "official_url": "https://serviziambiente.regione.emilia-romagna.it/viavasweb/",
+      "origin_collector": "app/collectors/emilia_romagna.py",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Reuse the working VIAVASWeb navigation/parser; replace PV-only keyword filtering with wind terms and retain procedure/document metadata."
+    },
+    {
+      "id": "umbria-via-list",
+      "institution": "Regione Umbria",
+      "level": "regional",
+      "region": "Umbria",
+      "channel": "Elenco VIA with project detail and final measures",
+      "priority": "B",
+      "status": "audited_official_endpoint",
+      "cadence_days": 7,
+      "official_url": "https://www.va.regione.umbria.it/via/elenco-dei-procedimenti-di-valutazione-di-impatto-ambientale",
+      "secondary_url": "https://accessounico.regione.umbria.it/it/enti-partecipanti/enti/regione-umbria/energia/richiedere-l-autorizzazione-unica-per-impianti-di-produzione-di-energia-da-fonti-rinnovabili/",
+      "origin_collector": "app/collectors/umbria.py",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "The public VIA list already exposes eolico projects, proponent, authority and procedure status; pair it with the regional FER authorization service."
+    },
+    {
+      "id": "veneto-fer-procedures",
+      "institution": "Regione del Veneto",
+      "level": "regional",
+      "region": "Veneto",
+      "channel": "FER authorization procedures / PAUR",
+      "priority": "B",
+      "status": "audited_official_endpoint",
+      "cadence_days": 7,
+      "official_url": "https://www.regione.veneto.it/web/energia/procedimenti-autorizzativi",
+      "secondary_url": "https://www.regione.veneto.it/web/energia/fotovoltaico-eolico",
+      "origin_collector": "app/collectors/veneto.py",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Monitor regional AU/PAUR and wind-specific authorization material; use project/act pages rather than generic regulatory pages as project evidence."
+    },
+    {
+      "id": "piemonte-sivia",
+      "institution": "Regione Piemonte / Province / ARPA Piemonte",
+      "level": "regional",
+      "region": "Piemonte",
+      "channel": "SIVIA environmental-assessment information system + BUR acts",
+      "priority": "B",
+      "status": "audited_endpoint_access_limited",
+      "cadence_days": 7,
+      "official_url": "https://servizi.regione.piemonte.it/catalogo/sistema-informativo-valutazione-impatto-ambientale-sivia",
+      "origin_collector": "app/collectors/piemonte.py",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "SIVIA is an official project-information system but the service page indicates operator access; keep BUR/provincial public acts as fallback and audit the public collector endpoint before relying on automated SIVIA access."
+    }
+  ],
+  "resolved_coverage_gaps": [
+    {
+      "region": "Liguria",
+      "resolution": "official VIA proceedings database identified; collector still to implement"
+    },
+    {
+      "region": "Molise",
+      "resolution": "official wind deposited-proceedings and wind national-VIA channels identified; collector still to implement"
+    }
+  ],
+  "remaining_priority_gap_order": [
+    "Abruzzo",
+    "Marche",
+    "Lombardia public endpoint deep-audit",
+    "Friuli-Venezia Giulia",
+    "Trentino-Alto Adige",
+    "Valle d'Aosta"
+  ]
+}
