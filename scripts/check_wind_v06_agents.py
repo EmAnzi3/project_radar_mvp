@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import sys
 import tempfile
 from datetime import date
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.base import AgentFinding
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
