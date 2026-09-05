@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const FILES=['data/discovery-v04.json','data/discovery-census-v04.json'];
+const FILES=['data/discovery-v04.json','data/discovery-census-v04.json','data/discovery-census-v04b.json'];
 let candidates=[];
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])),mw=v=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:2}).format(+v||0);
 function cls(c){if(c.status==='rejected')return'rejected';if(c.activity_class==='stale_scoping')return'stale';return'current'}
