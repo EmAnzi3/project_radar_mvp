@@ -35,27 +35,62 @@ def _priority_rank(value: str | None) -> int:
     return {"A+": 0, "A": 1, "B": 2, "C": 3}.get(value or "C", 9)
 
 
+def _merge_company_row(previous: dict[str, Any], row: dict[str, Any]) -> dict[str, Any]:
+    merged = {**previous, **row}
+    for key in ("cluster", "known_capabilities", "project_links", "watch_urls"):
+        merged[key] = list(dict.fromkeys([*(previous.get(key) or []), *(row.get(key) or [])]))
+    return merged
+
+
 def _merge_company_registries() -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Merge new-node tranches plus explicit current-update overlays.
+
+    v06/b/c/d introduce nodes and therefore must have unique IDs. v06e is the
+    controlled exception: its `updates` may only enrich an already-known node.
+    This keeps current project links/watch URLs additive without rewriting the
+    original evidence tranche.
+    """
+
     base = _load_json(DATA / "company-network-v06.json")
-    paths = [
+    order: list[str] = []
+    by_id: dict[str, dict[str, Any]] = {}
+
+    for row in base.get("companies", []):
+        cid = row["id"]
+        if cid in by_id:
+            raise ValueError(f"duplicate company id in base registry: {cid}")
+        order.append(cid)
+        by_id[cid] = dict(row)
+
+    for path in [
         DATA / "company-network-v06b.json",
         DATA / "company-network-v06c.json",
         DATA / "company-network-v06d.json",
-    ]
-    companies = list(base.get("companies", []))
-    seen = {row["id"] for row in companies}
-
-    for path in paths:
+    ]:
         if not path.exists():
             continue
         extra = _load_json(path)
         for row in extra.get("companies", []):
-            if row["id"] in seen:
-                raise ValueError(f"duplicate company id across registries: {row['id']}")
-            seen.add(row["id"])
-            companies.append(row)
+            cid = row["id"]
+            if cid in by_id:
+                raise ValueError(f"duplicate company id across new-node registries: {cid}")
+            order.append(cid)
+            by_id[cid] = dict(row)
 
-    return base, companies
+    update_path = DATA / "company-network-v06e.json"
+    if update_path.exists():
+        updates = _load_json(update_path)
+        seen_updates: set[str] = set()
+        for row in updates.get("updates", []):
+            cid = row["id"]
+            if cid in seen_updates:
+                raise ValueError(f"duplicate company id in current-update overlay: {cid}")
+            seen_updates.add(cid)
+            if cid not in by_id:
+                raise ValueError(f"company update references unknown node: {cid}")
+            by_id[cid] = _merge_company_row(by_id[cid], row)
+
+    return base, [by_id[cid] for cid in order]
 
 
 def _merge_institutional_registries() -> tuple[dict[str, Any], list[dict[str, Any]]]:
