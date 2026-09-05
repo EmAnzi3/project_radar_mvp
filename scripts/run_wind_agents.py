@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
 
 from app.wind_agents.company_watch import due_company_ids, run_company_watch
 from app.wind_agents.planner import build_run_plan
+from app.wind_agents.reconcile import build_digest
 from app.wind_agents.runner import due_agent_ids, executable_agent_ids, run_agents
 
 
@@ -68,6 +69,18 @@ def main() -> None:
     )
     company_run_cmd.add_argument("--output", help="optional JSON report path")
 
+    digest_cmd = sub.add_parser(
+        "digest",
+        help="reconcile new/changed findings from one or more runs and emit review-only commercial digest",
+    )
+    digest_cmd.add_argument(
+        "--run-id",
+        action="append",
+        required=True,
+        help="agent/company run id to include; repeatable",
+    )
+    digest_cmd.add_argument("--output", help="optional JSON digest path")
+
     args = parser.parse_args()
 
     if args.command == "plan":
@@ -103,6 +116,10 @@ def main() -> None:
             run_company_watch(args.company, due_only=args.due),
             args.output,
         )
+        return
+
+    if args.command == "digest":
+        _emit(build_digest(args.run_id), args.output)
         return
 
     result = run_agents(args.source, due_only=args.due)
