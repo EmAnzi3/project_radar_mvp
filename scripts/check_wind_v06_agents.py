@@ -42,6 +42,7 @@ required_adapters = {
     "toscana-atos",
     "sardegna-sira",
     "sicilia-sivvi",
+    "sistema-puglia",
 }
 assert required_adapters.issubset(implemented), implemented
 
@@ -73,8 +74,14 @@ assert can_close_execution_scope(
 assert evidence_layer(project_specific=False, execution_scope=None) == "network_intelligence"
 
 # PV-Agent-style raw/history persistence must detect new / unchanged / changed.
+# Operational source cursors are persisted separately and must not modify canonicals.
 with tempfile.TemporaryDirectory() as tmp:
     state.DB_PATH = Path(tmp) / "wind_agent_test.sqlite"
+    assert state.get_source_cursor("test-cursor") is None
+    assert state.get_source_cursor("test-cursor", "100") == "100"
+    state.set_source_cursor("test-cursor", 123, {"kind": "validator"})
+    assert state.get_source_cursor("test-cursor") == "123"
+
     run_id = state.begin_run(plan.total_tasks, note="validator")
     finding = AgentFinding(
         external_id="test-1",
