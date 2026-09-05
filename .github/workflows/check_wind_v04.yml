@@ -27,6 +27,7 @@ jobs:
             scripts/check_wind_v05.py
             scripts/check_wind_v05_enrichment.py
             scripts/check_wind_v06_network.py
+            scripts/check_wind_v06_institutional.py
             scripts/wind_discovery_engine.py
 
       - name: Set up Python
@@ -75,6 +76,9 @@ jobs:
       - name: Company network v0.6 validation
         run: python scripts/check_wind_v06_network.py
 
+      - name: Institutional source network v0.6 validation
+        run: python scripts/check_wind_v06_institutional.py
+
       - name: JavaScript syntax
         run: |
           node --check docs/wind/assets/app.js
@@ -84,3 +88,4 @@ jobs:
           node --check docs/wind/assets/commercial-enrichment-v05.js
           node --check docs/wind/assets/contractor-direct-fix.js
           node --check docs/wind/assets/company-network-v06.js
+          node --check docs/wind/assets/institutional-network-v06.js
