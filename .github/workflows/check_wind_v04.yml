@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - 'docs/wind/**'
+      - 'app/wind_agents/**'
       - 'scripts/check_wind_*.py'
+      - 'scripts/run_wind_agents.py'
       - 'scripts/wind_discovery_engine.py'
       - '.github/workflows/check_wind_v04.yml'
   workflow_dispatch:
@@ -20,6 +22,10 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             docs/wind/**
+            app/__init__.py
+            app/models.py
+            app/collectors/mase_via.py
+            app/wind_agents/**
             scripts/check_wind_radar.py
             scripts/check_wind_industry_press.py
             scripts/check_wind_stages.py
@@ -28,12 +34,17 @@ jobs:
             scripts/check_wind_v05_enrichment.py
             scripts/check_wind_v06_network.py
             scripts/check_wind_v06_institutional.py
+            scripts/check_wind_v06_agents.py
+            scripts/run_wind_agents.py
             scripts/wind_discovery_engine.py
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Install agent-check dependencies
+        run: pip install requests beautifulsoup4 lxml pydantic
 
       - name: Preserve v0.5 manifest
         run: cp docs/wind/data/projects.json /tmp/projects-v05.json
@@ -78,6 +89,9 @@ jobs:
 
       - name: Institutional source network v0.6 validation
         run: python scripts/check_wind_v06_institutional.py
+
+      - name: Wind agent architecture v0.6 validation
+        run: python scripts/check_wind_v06_agents.py
 
       - name: JavaScript syntax
         run: |
