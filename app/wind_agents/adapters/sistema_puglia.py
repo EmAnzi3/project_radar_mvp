@@ -33,8 +33,9 @@ class SistemaPugliaWindAgent(BaseWindAgent):
 
     The mature PV collector scanned a fixed ~1,500-detail-id range. For periodic
     wind monitoring this adapter uses a persistent high-water cursor plus a
-    forward probe and a short lookback, so routine runs stay bounded. A future
-    explicit backfill can widen the range without changing the live cadence.
+    bounded forward probe and lookback, so routine runs stay finite even when
+    individual legacy portal pages are slow. A future explicit backfill can
+    widen the range without changing the live cadence.
     """
 
     agent_name = "institutional_watch"
@@ -43,14 +44,16 @@ class SistemaPugliaWindAgent(BaseWindAgent):
 
     def __init__(
         self,
-        forward_probe: int = 60,
-        lookback: int = 120,
-        request_sleep: float = 0.08,
+        forward_probe: int = 30,
+        lookback: int = 60,
+        request_sleep: float = 0.05,
+        request_timeout: float = 8.0,
     ) -> None:
         super().__init__()
         self.forward_probe = max(1, forward_probe)
         self.lookback = max(0, lookback)
         self.request_sleep = max(0.0, request_sleep)
+        self.request_timeout = max(2.0, request_timeout)
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -97,7 +100,7 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                     "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
                     "Referer": BASE_URL,
                 },
-                timeout=45,
+                timeout=self.request_timeout,
                 allow_redirects=True,
             )
         except Exception:
@@ -298,6 +301,7 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                 "scanned_upper": upper,
                 "wind_findings": len(findings),
                 "strategy": "incremental_forward_probe_plus_lookback",
+                "request_timeout_seconds": self.request_timeout,
             },
         )
         return findings
