@@ -26,13 +26,11 @@ def merge_overlay(project: dict, overlay: dict) -> dict:
     project = copy.deepcopy(project)
     project.setdefault("relations", [])
     project.setdefault("sources", [])
-
     for source in overlay.get("sources", []):
         if not any(item.get("id") == source.get("id") for item in project["sources"]):
             project["sources"].append(copy.deepcopy(source))
-
     for spec in overlay.get("relations", []):
-        relation = {key: value for key, value in spec.items() if key not in {"action", "match"}}
+        relation = {k: v for k, v in spec.items() if k not in {"action", "match"}}
         found = None
         if spec.get("action") == "upgrade_or_add" and spec.get("match"):
             match = spec["match"]
@@ -59,16 +57,16 @@ def merge_overlay(project: dict, overlay: dict) -> dict:
 def main() -> None:
     manifest = load_json(MANIFEST)
     meta = load_json(DATA / manifest["meta"])
-    projects: list[dict] = []
+    projects = []
     for chunk in manifest["chunks"]:
         projects.extend(load_json(DATA / chunk))
 
     if len(projects) != 17:
         fail(f"seed Wind inatteso: {len(projects)} progetti, attesi 17")
-    ids = [project["id"] for project in projects]
+    ids = [p["id"] for p in projects]
     if len(set(ids)) != len(ids):
         fail("ID progetto duplicati")
-    total_mw = sum(float(project.get("mw") or 0) for project in projects)
+    total_mw = sum(float(p.get("mw") or 0) for p in projects)
     if not math.isclose(total_mw, 1496.9, abs_tol=0.01):
         fail(f"totale MW inatteso: {total_mw:.1f}, attesi 1496.9")
 
@@ -76,148 +74,133 @@ def main() -> None:
     for project in projects:
         if project.get("stage") not in stage_codes:
             fail(f"stage non valido per {project['id']}: {project.get('stage')}")
-        source_ids = {source.get("id") for source in project.get("sources", [])}
+        source_ids = {s.get("id") for s in project.get("sources", [])}
         refs = []
         if project.get("next", {}).get("source_id"):
             refs.append(project["next"]["source_id"])
-        refs.extend(item.get("source_id") for item in project.get("timing", []) if item.get("source_id"))
-        refs.extend(item.get("source_id") for item in project.get("relations", []) if item.get("source_id"))
-        refs.extend(item.get("source_id") for item in project.get("configs", []) if item.get("source_id"))
+        refs += [x.get("source_id") for x in project.get("timing", []) if x.get("source_id")]
+        refs += [x.get("source_id") for x in project.get("relations", []) if x.get("source_id")]
+        refs += [x.get("source_id") for x in project.get("configs", []) if x.get("source_id")]
         missing = sorted(set(refs) - source_ids)
         if missing:
             fail(f"source_id non risolti in {project['id']}: {', '.join(missing)}")
 
-    if not ENRICHMENT.exists():
-        print(f"[OK] seed Wind: 17 progetti / {total_mw:.1f} MW")
-        print("[INFO] enrichment v0.3 non presente")
-        return
-
     enrichment = load_json(ENRICHMENT)
-    overlay_projects = enrichment.get("projects", {})
-    if set(overlay_projects) != set(ids):
+    if set(enrichment.get("projects", {})) != set(ids):
         fail("gli ID dell'enrichment non coincidono con i 17 seed")
-
-    merged = [merge_overlay(project, overlay_projects.get(project["id"], {})) for project in projects]
+    merged = [merge_overlay(p, enrichment["projects"].get(p["id"], {})) for p in projects]
 
     if ENRICHMENT2.exists():
-        enrichment2 = load_json(ENRICHMENT2)
-        overlay2 = enrichment2.get("projects", {})
-        expected_docpass_ids = {"alas", "toritto", "fenice", "lama-cupa"}
-        if set(overlay2) != expected_docpass_ids:
-            fail(f"docpass2: ID inattesi {sorted(overlay2)}")
-        if not set(overlay2).issubset(set(ids)):
-            fail("docpass2 contiene progetti fuori dal seed")
-        merged = [merge_overlay(project, overlay2.get(project["id"], {})) for project in merged]
+        docpass = load_json(ENRICHMENT2)
+        expected_docpass = {"alas", "toritto", "fenice", "lama-cupa"}
+        if set(docpass.get("projects", {})) != expected_docpass:
+            fail(f"docpass2: ID inattesi {sorted(docpass.get('projects', {}))}")
+        merged = [merge_overlay(p, docpass["projects"].get(p["id"], {})) for p in merged]
 
     if CONTRACTOR_LEADS.exists():
         leads = load_json(CONTRACTOR_LEADS)
-        lead_projects = leads.get("projects", {})
-        expected_lead_ids = {"andretta-bisaccia", "tricarico"}
-        if set(lead_projects) != expected_lead_ids:
-            fail(f"contractor leads: ID inattesi {sorted(lead_projects)}")
-        merged = [merge_overlay(project, lead_projects.get(project["id"], {})) for project in merged]
+        expected_leads = {"andretta-bisaccia", "tricarico", "venusia", "serra-palino", "tarsia-ovest"}
+        if set(leads.get("projects", {})) != expected_leads:
+            fail(f"contractor leads: ID inattesi {sorted(leads.get('projects', {}))}")
+        merged = [merge_overlay(p, leads["projects"].get(p["id"], {})) for p in merged]
 
     core_scopes = enrichment["method"]["core_scopes"]
     role_map = enrichment["method"]["scope_role_map"]
 
     def applicable(project: dict) -> list[dict]:
-        is_repowering = "repowering" in str(project.get("type", "")).lower()
-        return [
-            scope
-            for scope in core_scopes
-            if scope["applicable"] == "all" or (scope["applicable"] == "repowering" and is_repowering)
-        ]
+        repowering = "repowering" in str(project.get("type", "")).lower()
+        return [s for s in core_scopes if s["applicable"] == "all" or (s["applicable"] == "repowering" and repowering)]
 
     def scope_covered(project: dict, scope: dict) -> bool:
         roles = set(role_map[scope["id"]])
         return any(
-            relation.get("role") in roles
-            and relation.get("status") == "confirmed"
-            and relation.get("confidence") in {"A1", "A2"}
-            for relation in project.get("relations", [])
+            r.get("role") in roles
+            and r.get("status") == "confirmed"
+            and r.get("confidence") in {"A1", "A2"}
+            for r in project.get("relations", [])
         )
+
+    def project(project_id: str) -> dict:
+        return next(p for p in merged if p["id"] == project_id)
+
+    def coverage(project_id: str) -> set[str]:
+        p = project(project_id)
+        return {s["id"] for s in applicable(p) if scope_covered(p, s)}
 
     covered_slots = 0
     total_slots = 0
-    projects_with_scope: list[dict] = []
-    for project in merged:
-        scopes = applicable(project)
-        covered = [scope for scope in scopes if scope_covered(project, scope)]
-        total_slots += len(scopes)
+    with_scope = []
+    for p in merged:
+        scopes = applicable(p)
+        covered = [s for s in scopes if scope_covered(p, s)]
         covered_slots += len(covered)
+        total_slots += len(scopes)
         if covered:
-            projects_with_scope.append(project)
-
-        source_ids = {source.get("id") for source in project.get("sources", [])}
-        missing = sorted(
-            {
-                relation.get("source_id")
-                for relation in project.get("relations", [])
-                if relation.get("source_id") and relation.get("source_id") not in source_ids
-            }
-        )
+            with_scope.append(p)
+        source_ids = {s.get("id") for s in p.get("sources", [])}
+        missing = sorted({r.get("source_id") for r in p.get("relations", []) if r.get("source_id") and r.get("source_id") not in source_ids})
         if missing:
-            fail(f"source_id enrichment non risolti in {project['id']}: {', '.join(missing)}")
+            fail(f"source_id enrichment non risolti in {p['id']}: {', '.join(missing)}")
 
-    mw_with_scope = sum(float(project.get("mw") or 0) for project in projects_with_scope)
+    # Regression guards: segnali e ruoli tecnici non devono gonfiare gli scope esecutivi.
+    andretta = project("andretta-bisaccia")
+    progeco = [r for r in andretta.get("relations", []) if r.get("source_id") == "andr-progeco-site-manager"]
+    if len(progeco) != 1 or progeco[0].get("confidence") != "B" or progeco[0].get("status") != "signal":
+        fail("Andretta-Bisaccia: Progeco deve esistere una volta e restare signal/B")
+    if coverage("andretta-bisaccia"):
+        fail("Andretta-Bisaccia: site management Progeco sta chiudendo indebitamente uno scope")
 
-    # Regression guards: B/C signals and technical roles must not close execution scopes.
-    andretta = next(project for project in merged if project["id"] == "andretta-bisaccia")
-    progeco = [
-        relation for relation in andretta.get("relations", [])
-        if relation.get("source_id") == "andr-progeco-site-manager"
-    ]
-    if len(progeco) != 1:
-        fail("Andretta-Bisaccia: lead Progeco site-management mancante o duplicato")
-    if progeco[0].get("confidence") != "B" or progeco[0].get("status") != "signal":
-        fail("Andretta-Bisaccia: Progeco deve restare signal/B")
-    if any(scope_covered(andretta, scope) for scope in applicable(andretta)):
-        fail("Andretta-Bisaccia: Progeco/site management sta chiudendo indebitamente uno scope")
+    tri = project("tricarico")
+    tri_install = [r for r in tri.get("relations", []) if r.get("source_id") == "tri-vestas-install-lead"]
+    if len(tri_install) != 1 or tri_install[0].get("confidence") != "B" or tri_install[0].get("scope_hint") != "erection":
+        fail("Tricarico: Vestas installation deve restare B con scope_hint erection")
+    if coverage("tricarico"):
+        fail("Tricarico: un lead/advisory sta chiudendo indebitamente uno scope")
 
-    serra = next(project for project in merged if project["id"] == "serra-giannina")
-    if any(scope_covered(serra, scope) for scope in applicable(serra)):
+    venusia = project("venusia")
+    if coverage("venusia") != {"civil"}:
+        fail(f"Venusia: coverage inattesa {sorted(coverage('venusia'))}; attesa solo civil")
+    nordex_ven = [r for r in venusia.get("relations", []) if r.get("source_id") == "ven-rwe-ceo-nordex"]
+    newdev = [r for r in venusia.get("relations", []) if r.get("source_id") == "ven-newdev-cosviluppo"]
+    if len(nordex_ven) != 1 or nordex_ven[0].get("role") != "OEM" or nordex_ven[0].get("confidence") != "A2":
+        fail("Venusia: Nordex OEM A2 mancante o duplicato")
+    if len(newdev) != 1 or newdev[0].get("confidence") != "A2":
+        fail("Venusia: New Developments co-development A2 mancante o duplicato")
+
+    if coverage("serra-palino") != {"civil", "electrical"}:
+        fail(f"Serra Palino: coverage inattesa {sorted(coverage('serra-palino'))}")
+    nordex_sp = [r for r in project("serra-palino").get("relations", []) if r.get("source_id") == "sp-rwe-ceo-nordex"]
+    if len(nordex_sp) != 1 or nordex_sp[0].get("role") != "OEM" or nordex_sp[0].get("confidence") != "A2":
+        fail("Serra Palino: Nordex OEM A2 mancante o duplicato")
+
+    if coverage("tarsia-ovest") != {"civil", "electrical", "sse_grid"}:
+        fail(f"Tarsia Ovest: coverage inattesa {sorted(coverage('tarsia-ovest'))}")
+    mammana = [r for r in project("tarsia-ovest").get("relations", []) if r.get("source_id") == "tars-mammana-civil-lead"]
+    if len(mammana) != 1 or mammana[0].get("confidence") != "B" or mammana[0].get("scope_hint") != "civil":
+        fail("Tarsia Ovest: Mammana individual civil deve restare B con scope_hint civil")
+
+    if coverage("serra-giannina"):
         fail("Serra Giannina: un segnale B sta chiudendo indebitamente uno scope")
+    if coverage("carlentini") != {"foundation"}:
+        fail(f"Carlentini: coverage inattesa {sorted(coverage('carlentini'))}; attesa solo foundation")
+    if coverage("alas"):
+        fail("ALAS: progettazione Hydro sta chiudendo indebitamente uno scope")
+    if coverage("fenice"):
+        fail("Fenice: engineering ATS sta chiudendo indebitamente uno scope")
+    if any(r.get("company") == "Brulli Trasmissione" for r in project("lama-cupa").get("relations", [])):
+        fail("Lama Cupa: Brulli è stata attribuita al parco invece che alla SE condivisa")
 
-    tricarico = next(project for project in merged if project["id"] == "tricarico")
-    if any(scope_covered(tricarico, scope) for scope in applicable(tricarico)):
-        fail("Tricarico: un segnale advisory/installation B sta chiudendo indebitamente uno scope")
-    tricarico_install = [
-        relation for relation in tricarico.get("relations", [])
-        if relation.get("source_id") == "tri-vestas-install-lead"
-    ]
-    if len(tricarico_install) != 1:
-        fail("Tricarico: lead Vestas installation mancante o duplicato")
-    if tricarico_install[0].get("confidence") != "B" or tricarico_install[0].get("scope_hint") != "erection":
-        fail("Tricarico: lead Vestas installation deve restare B con scope_hint erection")
-
-    carlentini = next(project for project in merged if project["id"] == "carlentini")
-    carlentini_covered = {scope["id"] for scope in applicable(carlentini) if scope_covered(carlentini, scope)}
-    if carlentini_covered != {"foundation"}:
-        fail(f"Carlentini: coverage inattesa {sorted(carlentini_covered)}; attesa solo foundation")
-
-    alas = next(project for project in merged if project["id"] == "alas")
-    if any(scope_covered(alas, scope) for scope in applicable(alas)):
-        fail("ALAS: ruolo Hydro di progettazione sta chiudendo indebitamente uno scope esecutivo")
-    fenice = next(project for project in merged if project["id"] == "fenice")
-    if any(scope_covered(fenice, scope) for scope in applicable(fenice)):
-        fail("Fenice: ruolo ATS Engineering sta chiudendo indebitamente uno scope esecutivo")
-    lama = next(project for project in merged if project["id"] == "lama-cupa")
-    if any(relation.get("company") == "Brulli Trasmissione" for relation in lama.get("relations", [])):
-        fail("Lama Cupa: Brulli è stata attribuita al progetto invece che mantenuta come contesto SE condivisa")
-
+    mw_with_scope = sum(float(p.get("mw") or 0) for p in with_scope)
     if covered_slots != 8 or total_slots != 108:
-        fail(f"scope coverage inattesa dopo enrichment ausiliari: {covered_slots}/{total_slots}; attesa 8/108")
+        fail(f"scope coverage inattesa: {covered_slots}/{total_slots}; attesa 8/108")
     if not math.isclose(mw_with_scope, 230.9, abs_tol=0.01):
-        fail(f"MW con scope inattesi dopo enrichment ausiliari: {mw_with_scope:.1f}; attesi 230.9")
+        fail(f"MW con scope inattesi: {mw_with_scope:.1f}; attesi 230.9")
 
     print(f"[OK] seed Wind: 17 progetti / {total_mw:.1f} MW")
     print(f"[OK] scope coverage: {covered_slots}/{total_slots} ({covered_slots / total_slots * 100:.1f}%)")
     print(f"[OK] MW con almeno uno scope A1/A2: {mw_with_scope:.1f}")
-    print("[OK] segnali B/C e ruoli tecnici separati dagli scope esecutivi confermati")
-    if ENRICHMENT2.exists():
-        print("[OK] docpass2: ALAS/Toritto/Fenice/Lama Cupa validati; Brulli non attribuita a Lama Cupa")
-    if CONTRACTOR_LEADS.exists():
-        print("[OK] contractor leads: Progeco/Andretta e Vestas/Tricarico restano segnali B e non chiudono scope")
+    print("[OK] Priority 1 leads: Progeco/Vestas/Mammana restano segnali; Nordex OEM e New Developments non gonfiano gli scope")
+    print("[OK] ruoli tecnici/engineering separati dagli scope esecutivi confermati")
 
 
 if __name__ == "__main__":
