@@ -110,6 +110,16 @@ def due_agent_ids(as_of: date | None = None) -> list[str]:
     return sorted(due)
 
 
+def _source_health(counters: dict[str, Any]) -> str:
+    if counters.get("status") == "error":
+        return "error"
+    if int(counters.get("project_specific_findings") or 0) > 0:
+        return "project_data"
+    if int(counters.get("findings") or 0) > 0:
+        return "channel_or_market_only"
+    return "empty_success"
+
+
 def run_agents(
     source_ids: Iterable[str] | None = None,
     *,
@@ -120,6 +130,10 @@ def run_agents(
     One external portal failure no longer aborts the entire watch. Errors are
     recorded per source and the remaining due adapters continue. Canonical Wind
     JSON is never written by this runner.
+
+    `data_health` deliberately distinguishes successful project-level extraction
+    from channel/market snapshots and empty-but-reachable sources. A green HTTP
+    run therefore cannot be mistaken for project-data coverage.
     """
 
     plan = build_run_plan()
@@ -153,7 +167,10 @@ def run_agents(
                 "new": 0,
                 "changed": 0,
                 "unchanged": 0,
+                "project_specific_findings": 0,
+                "finding_types": {},
                 "status": "running",
+                "data_health": "running",
             }
             try:
                 findings = agent.fetch()
@@ -161,10 +178,15 @@ def run_agents(
                     event = upsert_finding(run_id, agent.agent_name, finding)
                     counters["findings"] += 1
                     counters[event] += 1
+                    finding_type = str(finding.finding_type or "unknown")
+                    counters["finding_types"][finding_type] = counters["finding_types"].get(finding_type, 0) + 1
+                    if bool((finding.payload or {}).get("project_specific")):
+                        counters["project_specific_findings"] += 1
                     findings_count += 1
                     if event in {"new", "changed"}:
                         changed_count += 1
                 counters["status"] = "success"
+                counters["data_health"] = _source_health(counters)
                 mark_watch_attempt(
                     source_id,
                     run_id,
@@ -173,11 +195,15 @@ def run_agents(
                         "findings": counters["findings"],
                         "new": counters["new"],
                         "changed": counters["changed"],
+                        "project_specific_findings": counters["project_specific_findings"],
+                        "finding_types": counters["finding_types"],
+                        "data_health": counters["data_health"],
                     },
                 )
             except Exception as exc:
                 message = f"{type(exc).__name__}: {exc}"
                 counters["status"] = "error"
+                counters["data_health"] = "error"
                 counters["error"] = message
                 errors[source_id] = message
                 mark_watch_attempt(
@@ -185,11 +211,21 @@ def run_agents(
                     run_id,
                     success=False,
                     error=message,
-                    metadata={"findings_before_error": counters["findings"]},
+                    metadata={
+                        "findings_before_error": counters["findings"],
+                        "project_specific_findings": counters["project_specific_findings"],
+                        "finding_types": counters["finding_types"],
+                        "data_health": "error",
+                    },
                 )
             per_agent[source_id] = counters
     finally:
         finish_run(run_id, findings=findings_count, changed_items=changed_count)
+
+    health_counts: dict[str, int] = {}
+    for counters in per_agent.values():
+        health = str(counters.get("data_health") or "unknown")
+        health_counts[health] = health_counts.get(health, 0) + 1
 
     return {
         "run_id": run_id,
@@ -199,5 +235,6 @@ def run_agents(
         "findings": findings_count,
         "new_or_changed": changed_count,
         "errors": errors,
+        "data_health": health_counts,
         "per_agent": per_agent,
     }
