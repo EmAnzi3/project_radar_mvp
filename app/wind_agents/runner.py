@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from typing import Any
 
 from .adapters import (
+    CampaniaWindAgent,
     LazioWindAgent,
     MaseWindAgent,
     SardegnaWindAgent,
@@ -17,6 +18,7 @@ from .state import begin_run, finish_run, upsert_finding
 
 
 AGENT_FACTORIES = {
+    "campania-via": CampaniaWindAgent,
     "lazio-via": LazioWindAgent,
     "mase-via": MaseWindAgent,
     "sardegna-sira": SardegnaWindAgent,
