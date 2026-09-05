@@ -1,0 +1,33 @@
+{
+  "version": "0.6.0-e",
+  "as_of": "2026-09-05",
+  "tranche": "company-network-v06e-current-updates",
+  "purpose": "Additive updates to existing company nodes when new project-specific evidence changes project links, monitoring URLs or known capability without rewriting the original registry tranche.",
+  "updates": [
+    {
+      "id": "mammana-michelangelo",
+      "relationship_status": "proven_in_radar_multi_project",
+      "known_capabilities": ["current WTG foundation concrete execution"],
+      "project_links": ["carlentini"],
+      "watch_urls": [
+        "https://it.linkedin.com/in/gruppo-mammana-9b873b254",
+        "https://www.gruppomammana.it/"
+      ],
+      "last_checked": "2026-09-05",
+      "next_action": "Treat Carlentini foundations as a current A2-confirmed execution reference and monitor Mammana for repeat ERG/repowering awards, while keeping the rest of Carlentini Civil BoP unattributed."
+    },
+    {
+      "id": "hydro-engineering",
+      "relationship_status": "confirmed_project_support",
+      "known_capabilities": ["Direzione Lavori", "wind foundation design", "construction quality control", "project permitting and grid engineering"],
+      "project_links": ["carlentini"],
+      "watch_urls": [
+        "https://www.hydroeng.it/settori/eolico/",
+        "https://it.linkedin.com/company/hydro-engineering-s-s"
+      ],
+      "public_contact": "info@hydroeng.it",
+      "last_checked": "2026-09-05",
+      "next_action": "Monitor Hydro Engineering as a high-value project-support intelligence node: its Direzione Lavori and foundation-control activity can expose active contractors and construction milestones without treating Hydro itself as the execution contractor."
+    }
+  ]
+}
