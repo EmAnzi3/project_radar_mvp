@@ -1,0 +1,43 @@
+{
+  "version": "0.6.0-commercial-enrichment",
+  "as_of": "2026-09-05",
+  "note": "Project-specific commercial intelligence found during v0.6 execution hunt. Non-execution support, supervision and staffing roles never close execution scopes.",
+  "projects": {
+    "andretta-bisaccia": {
+      "relations": [
+        {
+          "company": "Progeco Group / Progeco SE",
+          "role": "Project management / construction supervision support",
+          "status": "signal",
+          "confidence": "A2",
+          "scope": "Current company recruitment is explicitly for Deputy/Site Manager support on the 88.5 MW Andretta-Bisaccia repowering, supervising civil/infrastructure works. This is project-support intelligence, not an execution contractor award.",
+          "source_id": "andretta-progeco-site-manager-202609"
+        }
+      ],
+      "signals": [
+        {
+          "type": "project-support-recruitment",
+          "grade": "A2",
+          "title": "Andretta-Bisaccia site-management recruitment signal",
+          "note": "Progeco Group is recruiting a Deputy/Site Manager for specialist support on the Andretta-Bisaccia wind repowering. The posting describes 18 WTG / 88.5 MW, a new SSE and MT/AT interconnection cables, with supervision of foundations, roads and civil works."
+        },
+        {
+          "type": "commercial-window",
+          "grade": "A2",
+          "title": "24-month site-support requirement",
+          "note": "The current recruitment signal indicates a multi-year site-support window around the project. It strengthens mobilisation timing but does not identify the executing civil, electrical, foundation or logistics contractors."
+        }
+      ],
+      "sources": [
+        {
+          "id": "andretta-progeco-site-manager-202609",
+          "publisher": "Progeco Group",
+          "grade": "A2",
+          "title": "Deputy - Site Manager — Renewable Energy / Wind Repowering — Andretta e Bisaccia",
+          "date": "2026-09-04",
+          "url": "https://it.linkedin.com/jobs/view/deputy-site-manager-at-progeco-group-4461062499"
+        }
+      ]
+    }
+  }
+}
