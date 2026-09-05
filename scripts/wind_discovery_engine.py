@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "wind" / "data"
-REGISTRIES = [DATA / "discovery-v04.json", DATA / "discovery-census-v04.json"]
+REGISTRIES = [DATA / "discovery-v04.json", DATA / "discovery-census-v04.json", DATA / "discovery-census-v04b.json"]
 RULES = DATA / "identity-rules-v04.json"
 INDEX = DATA / "discovery-index-v04.json"
 REFRESH_LOG = DATA / "refresh-log-v04.json"
@@ -93,7 +93,7 @@ def combined_registry() -> dict:
             row["activity_class"] = activity_class(row)
             candidates.append(row)
     return {
-        "version": "0.4.1-combined-registry",
+        "version": "0.4.2-combined-registry",
         "as_of": max(str(x.get("as_of") or "") for x in payloads),
         "candidates": candidates,
     }
@@ -114,7 +114,7 @@ def build_index(registry: dict, rules: dict) -> dict:
     non_rejected = current + stale
 
     return {
-        "version": "0.4.1-index",
+        "version": "0.4.2-index",
         "as_of": registry.get("as_of"),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "candidate_count": len(rows),
@@ -215,7 +215,7 @@ def main() -> None:
 
     if args.write:
         dump(INDEX, current)
-        log = load(REFRESH_LOG, {"version": "0.4.1-refresh-log", "runs": []})
+        log = load(REFRESH_LOG, {"version": "0.4.2-refresh-log", "runs": []})
         log["runs"].append({
             "as_of": registry.get("as_of"),
             "generated_at": current["generated_at"],
@@ -227,6 +227,7 @@ def main() -> None:
             "current_bess_mw": current["current_bess_mw"],
             "events": events,
         })
+        dump(INDEX, current)
         dump(REFRESH_LOG, log)
         print(f"[OK] scritto {INDEX.relative_to(ROOT)}")
         print(f"[OK] scritto {REFRESH_LOG.relative_to(ROOT)}")
