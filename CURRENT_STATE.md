@@ -139,56 +139,111 @@ Audit:
 Promotion gate machine-readable:
 - `docs/wind/data/promotion-gate-v05.json`
 
-## Prossima fase — v0.6
+# Fase corrente — v0.6
 
-La priorità non è aumentare indiscriminatamente il numero di progetti, ma aumentare la **profondità commerciale ed esecutiva** sui 51 canonici.
+Branch:
+`feat/wind-radar-v0.6-execution-intelligence`
 
-Ordine di lavoro:
-1. progetti E4–E7 e progetti con finestra di cantiere / procurement nei prossimi 12–18 mesi;
-2. ricerca di award e contractor A1/A2 per singolo scope;
-3. timing di civili, grid, fondazioni, erection, logistica e commissioning;
-4. procurement/OEM solo quando documentato, senza deduzioni;
-5. refresh dei 4 blocked e degli stale/rejected solo in presenza di nuova evidenza;
-6. revisione del ranking commerciale solo dopo avere abbastanza evidenza oggettiva da superare il neutro `C / 50`.
+Draft PR:
+**#5 — Wind Radar v0.6 — execution intelligence e commercial timing**.
 
-### Architettura agent-style v0.6
+Nessun merge o pubblicazione v0.6 senza revisione esplicita.
 
-La v0.6 riusa esplicitamente il pattern operativo già collaudato in `pv_agent_mvp`, adattato all'eolico:
+La v0.6 sviluppa tre reti collegate ma probatoriamente separate:
+1. **Project Execution Intelligence**;
+2. **Company / Commercial Network**;
+3. **Institutional & Source Network**.
+
+## Network v0.6
+
+Stato registri:
+- **50 player commerciali** classificati per capability/priorità;
+- **31 nodi istituzionali/pubblici** censiti;
+- le capability generiche aziendali non vengono mai trasformate in award di progetto;
+- una fonte istituzionale è un canale: solo lo specifico atto project-specific può sostenere evidenza A1.
+
+ESPE resta target commerciale A adiacente ad alto valore, senza attribuirle Full BoP utility-scale wind in assenza di prova.
+
+## Architettura agent-style v0.6
+
+La v0.6 riusa il pattern operativo già collaudato in `pv_agent_mvp`, adattato all'eolico:
 
 `fonti -> agent/collector -> raw findings -> change history -> reconciliation/evidence gate -> canonico/UI`
 
-Implementato nel branch:
-- `app/wind_agents/base.py`: contract comune per gli agenti sorgente;
-- `app/wind_agents/planner.py`: code separate per **Institutional Watch**, **Company Watch** e **Project Execution Watch**, con cadenze proprie;
-- `app/wind_agents/state.py`: persistenza SQLite separata per raw findings e change events; il canonico non viene modificato automaticamente;
-- `app/wind_agents/evidence.py`: gate strutturale unico, per cui solo evidenza project-specific A1/A2 può chiudere uno scope esecutivo;
-- `app/wind_agents/runner.py` + `scripts/run_wind_agents.py`: orchestrazione e CLI;
-- `scripts/check_wind_v06_agents.py`: regressione dedicata.
+Implementato:
+- `app/wind_agents/base.py`: contract comune per i finding sorgente;
+- `app/wind_agents/planner.py`: code e cataloghi separati per Institutional Watch, Company Watch e Project Execution Watch;
+- `app/wind_agents/state.py`: SQLite separato per raw finding, eventi, cursori sorgente e runtime `watch_status`;
+- `app/wind_agents/evidence.py`: solo evidenza project-specific A1/A2 può chiudere uno scope esecutivo;
+- `app/wind_agents/runner.py`: runner istituzionale resiliente e cadence-aware;
+- `app/wind_agents/company_watch.py`: monitor diretto delle fonti dei player commerciali;
+- `scripts/run_wind_agents.py`: CLI per plan, due queue, source run e company run;
+- `scripts/check_wind_v06_agents.py`: regressioni architetturali e probatorie.
 
-Adapter istituzionali attualmente eseguibili:
-1. `mase-via` — MASE VIA, tarato su eolico / repowering / offshore;
-2. `lazio-via` — Regione Lazio VIA/PAUR, derivato dal collector `pv_agent_mvp/lazio.py`;
-3. `toscana-gea` — Regione Toscana GeA, derivato dal collector `pv_agent_mvp/toscana.py`;
-4. `toscana-atos` — ATOS Toscana FER, derivato da `pv_agent_mvp/toscana_atos.py` e filtrato su eolico senza dipendere da codici numerici tecnologia non documentati;
-5. `sardegna-sira` — Sardegna SIRA VIA/PAUR, con news + ricerca JSF adattate da `pv_agent_mvp/sardegna.py`;
-6. `sicilia-sivvi` — Sicilia SI-VVI, prima tranche sul CSV regionale ufficiale derivata da `pv_agent_mvp/sicilia.py`; dettaglio/GIS resta un arricchimento additivo successivo.
+### Adapter istituzionali eseguibili — 10
 
-Il planner usa i registri v0.6 correnti:
-- Company Network base + tranche B;
-- Institutional Source Network base + tranche B;
-- canonico progetti per generare la coda E4–E7 con scope ancora aperti.
+Gli ID coincidono con il registry istituzionale:
+1. `mase-via` — MASE VIA, eolico / repowering / offshore;
+2. `lazio-regional` — Regione Lazio VIA/PAUR;
+3. `toscana-gea` — Regione Toscana GeA;
+4. `toscana-atos` — ATOS Toscana FER;
+5. `sardegna-sira` — Sardegna SIRA VIA/PAUR;
+6. `sicilia-sivvi` — Sicilia SI-VVI, prima tranche CSV ufficiale;
+7. `puglia-sistema-energia` — Sistema Puglia Energia;
+8. `campania-viavas` — Regione Campania VIA/PAUR;
+9. `calabria-via` — Regione Calabria VIA/PAUR;
+10. `basilicata-via` — Regione Basilicata VIA/Screening.
 
-Regola di trasparenza: un nodo fonte presente nel registry ma senza adapter eseguibile resta **visibile come lavoro dovuto**, non viene considerato falsamente monitorato. Anche un adapter registrato non viene dichiarato live-validato finché non è stato eseguito contro la fonte corrente; il workflow PR valida architettura, import, gate e regressioni, non la disponibilità esterna del portale.
+Sistema Puglia non ripete il backfill fisso di circa 1.500 ID ad ogni ciclo: usa un **high-water cursor persistente**, forward probe e lookback breve. Il backfill storico potrà essere eseguito separatamente.
 
-Prossima estensione del motore:
-1. portare/adattare i collector **Sistema Puglia, Campania, Calabria e Basilicata**;
-2. completare l'arricchimento dettaglio/GIS Sicilia;
-3. aggiungere adapter company-watch per press/news/supplier pages dei player A;
-4. riconciliare automaticamente i finding con canonico/discovery senza promozione automatica;
-5. generare digest delle sole variazioni utili commercialmente;
-6. predisporre l'esecuzione periodica con stato persistente e reporting delle sole variazioni.
+### Company Watch
 
-Branch di lavoro v0.6:
-`feat/wind-radar-v0.6-execution-intelligence`.
+Il monitor commerciale usa le `watch_urls` dei 50 player e applica le cadenze del registry:
+- A/A+: 7 giorni;
+- B: 14 giorni;
+- C / universe refresh: 30 giorni, salvo override specifici.
 
-Nessun merge o pubblicazione v0.6 senza revisione esplicita.
+Per ridurre falsi cambi, non conserva l'intera pagina dinamica: estrae heading e segmenti contenenti segnali wind/commerciali (award, contract, construction, BoP, civili, elettrico, grid, fondazioni, erection, logistica, commissioning, procurement ecc.).
+
+Un finding da fonte diretta aziendale resta:
+- `source_grade_ceiling = A2`;
+- `project_specific = false`;
+- `execution_scope = null`;
+- layer `network_intelligence`.
+
+Quindi **non chiude scope** finché un successivo pass di reconciliation non trova una dichiarazione esplicita riferita a un progetto e a un ruolo esecutivo.
+
+## Esecuzione periodica
+
+È predisposto `.github/workflows/wind_agent_watch.yml`:
+- trigger giornaliero alle 05:40 UTC;
+- il trigger giornaliero non significa controllo giornaliero di tutto: `--due` applica le cadenze 1/3/7/14/30 giorni;
+- stato SQLite persistente via cache GitHub Actions;
+- un singolo portale indisponibile viene registrato come errore ma non interrompe gli altri watch;
+- output JSON e artifact di run, retention 30 giorni;
+- nessuna scrittura automatica del canonico e nessun commit automatico.
+
+**Importante:** il workflow `schedule` diventa operativo solo quando il file è presente sul branch di default. Finché la v0.6 resta nella Draft PR #5, è configurazione da revisionare, non un monitor schedulato già attivo.
+
+## Regola di trasparenza sui test
+
+Il workflow PR verifica:
+- import e sintassi;
+- registrazione adapter/registry;
+- planner e cadence state;
+- persistence `new / changed / unchanged`;
+- cursori/high-water;
+- gate probatorio;
+- regressioni v0.3/v0.4/v0.5.
+
+Non equivale a una prova live che ogni portale esterno sia raggiungibile in quel momento. Un adapter è dichiarato **eseguibile**, ma la sua disponibilità live viene attestata solo da un run effettivo contro la fonte.
+
+## Lavoro ancora aperto v0.6
+
+1. aggiungere adapter per **MASE Provvedimenti** e **Terna Econnextion** come intelligence aggregata, senza trasformare aggregati in progetti;
+2. portare/adattare altri collector regionali prioritari di `pv_agent_mvp` (Emilia-Romagna, Lombardia, Piemonte, Umbria, Veneto) e i canali auditati Abruzzo/Liguria/Marche/Molise;
+3. completare dettaglio/GIS Sicilia;
+4. implementare la **reconciliation automatica dei finding** con canonico/discovery senza promozione automatica;
+5. generare un **digest delle sole variazioni commercialmente utili**, distinguendo nuovo progetto, cambio stage/configurazione, nuovo player e potenziale execution evidence;
+6. sviluppare Project Execution Watch specifico per i progetti E4–E7 e continuare la contractor hunt A1/A2 su Andretta-Bisaccia, Tricarico, Nulvi-Ploaghe, Serra Giannina, Greci-Montaguto, Carlentini e Alia-Sclafani;
+7. completare il census ANEV/non-ANEV e ampliare ulteriormente il network commerciale quando emergono nuovi player dalle fonti istituzionali e dai documenti di progetto.
