@@ -1,7 +1,7 @@
 {
   "version": "0.6.0-commercial-enrichment",
   "as_of": "2026-09-05",
-  "note": "Project-specific commercial intelligence found during v0.6 execution hunt. Non-execution support, supervision and staffing roles never close execution scopes.",
+  "note": "Project-specific commercial intelligence found during v0.6 execution hunt. Non-execution support, supervision and staffing roles never close execution scopes; explicit A1/A2 execution evidence may do so.",
   "projects": {
     "andretta-bisaccia": {
       "relations": [
@@ -36,6 +36,58 @@
           "title": "Deputy - Site Manager — Renewable Energy / Wind Repowering — Andretta e Bisaccia",
           "date": "2026-09-04",
           "url": "https://it.linkedin.com/jobs/view/deputy-site-manager-at-progeco-group-4461062499"
+        }
+      ]
+    },
+    "carlentini": {
+      "relations": [
+        {
+          "company": "Mammana Michelangelo S.p.A.",
+          "role": "Foundation contractor",
+          "status": "confirmed",
+          "confidence": "A2",
+          "scope": "Execution of WTG foundation concrete works at the current Carlentini repowering. Hydro Engineering, acting as Direzione Lavori and foundation designer/quality-control specialist, explicitly identifies Gruppo Mammana as the company carrying out the first foundation pour; a Mammana team member subsequently reports completion of the second plinth.",
+          "source_id": "car-hydro-mammana-foundation-a2"
+        },
+        {
+          "company": "Hydro Engineering",
+          "role": "Direzione Lavori / foundation engineering & quality control",
+          "status": "confirmed",
+          "confidence": "A2",
+          "scope": "Current project-specific Direzione Lavori plus foundation design and technical quality-control support. Non-execution role.",
+          "source_id": "car-hydro-dl-a2"
+        }
+      ],
+      "signals": [
+        {
+          "type": "foundation-execution",
+          "grade": "A2",
+          "title": "Carlentini foundation contractor identified",
+          "note": "Current direct project-participant evidence attributes the R-CA01 foundation concrete pour to Gruppo Mammana; subsequent Mammana-side evidence reports completion of the second plinth. Foundation execution can therefore be treated as A2-confirmed without extending that attribution to the full Civil BoP."
+        },
+        {
+          "type": "construction-progress",
+          "grade": "A2",
+          "title": "WTG foundations actively being poured",
+          "note": "At least the first two turbine plinth pours are publicly documented in the current repowering construction phase."
+        }
+      ],
+      "sources": [
+        {
+          "id": "car-hydro-mammana-foundation-a2",
+          "publisher": "Hydro Engineering",
+          "grade": "A2",
+          "title": "Repowering Carlentini — first WTG foundation pour R-CA01",
+          "date": "2026-08",
+          "url": "https://it.linkedin.com/company/hydro-engineering-s-s"
+        },
+        {
+          "id": "car-hydro-dl-a2",
+          "publisher": "Hydro Engineering",
+          "grade": "A2",
+          "title": "Carlentini repowering — Direzione Lavori kick-off and current foundation supervision",
+          "date": "2026-03-26",
+          "url": "https://it.linkedin.com/company/hydro-engineering-s-s"
         }
       ]
     }
