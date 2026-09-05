@@ -8,6 +8,9 @@ on:
       - 'scripts/check_wind_*.py'
       - 'scripts/run_wind_agents.py'
       - 'scripts/wind_discovery_engine.py'
+      - 'CURRENT_STATE.md'
+      - 'CHANGELOG.md'
+      - 'README.md'
       - '.github/workflows/check_wind_v04.yml'
       - '.github/workflows/wind_agent_watch.yml'
   workflow_dispatch:
