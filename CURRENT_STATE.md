@@ -2,36 +2,34 @@
 
 ## Wind Project & Contractor Radar
 
-Baseline pubblicata su `master`: **v0.3**, merge commit `5cb4f00c3d9206e3b08eb224dd8751928ac44022`.
+Baseline pubblicata su `master`: **v0.4.0**.
 
-Baseline canonica pubblicata:
+Merge v0.4:
+- PR **#3 — Wind Radar v0.4 — discovery, refresh engine e onshore/offshore**;
+- merge commit `d49142068848ddc8d92414044ae4a43202ff4653`;
+- metadata pubblicazione v0.4: commit `373e486a08c7944901d8f0512a20373453d15ba2`.
+
+Stato: **mergiato e pubblicato da `master/docs`**.
+
+## Baseline canonica
+
+Il dataset canonico resta separato dal discovery layer:
 - **17 progetti / 1.496,9 MW wind**;
 - **230,9 MW** con almeno uno scope esecutivo A1/A2;
 - **8 / 108** core scope applicabili coperti = **7,4%**;
 - **437,7 MW** in costruzione E7.
 
-Branch corrente: `feat/wind-radar-v0.4-discovery-refresh`.
-Draft PR: **#3 — Wind Radar v0.4 — discovery, refresh engine e onshore/offshore**.
-Stato: **Draft, non mergiato e non pubblicato**.
+Il discovery corpus non modifica questi KPI finché un candidato non supera il promotion gate.
 
-## Obiettivo v0.4
+## Perimetro v0.4
 
-Trasformare il Radar da seed curato di 17 progetti a sistema di discovery/refresh riproducibile, mantenendo separati:
-1. dataset canonico;
-2. candidati discovery;
-3. guardie storiche/rejected;
-4. change detection;
-5. promotion gate.
+La v0.4 include **onshore + offshore**.
 
-La v0.4 include **onshore + offshore**. L'offshore non viene escluso a priori.
-
-## Site type
-
-Campo canonico v0.4:
+Campo canonico:
 - `onshore`
 - `offshore`
 
-I 17 record v0.3 privi del campo esplicito ricevono fallback legacy `onshore`. Ogni nuovo record dovrà dichiarare `site_type`.
+I 17 record legacy privi del campo esplicito ricevono fallback `onshore`. Ogni nuovo record deve dichiarare `site_type`.
 
 UI:
 - `Onshore + offshore`
@@ -42,7 +40,7 @@ Il campo `type` resta separato e continua a indicare Greenfield, Repowering, Gre
 
 ## Discovery corpus al 05/09/2026
 
-Tre registri:
+Registri:
 - `docs/wind/data/discovery-v04.json`
 - `docs/wind/data/discovery-census-v04.json`
 - `docs/wind/data/discovery-census-v04b.json`
@@ -64,20 +62,19 @@ Stale scoping:
 - **3.195 MW wind**;
 - ultimo avanzamento individuato nel 2022–2023 senza procedura successiva trovata nel pass corrente.
 
-Rejected/guardie:
+Rejected / guardie:
 - 5 candidati;
 - **1.195,4 MW wind**;
 - non entrano nella pipeline corrente.
 
-Importante: il discovery corpus **non modifica** i KPI canonici v0.3.
-
 ## Limite fonte MASE
 
-Alcune rotte di ricerca del portale MASE riportano temporanea disabilitazione per revisione dei requisiti di sicurezza informatica. La v0.4 è quindi un **censimento corrente indicizzato e refreshable**, non una dichiarazione di completezza assoluta di ogni pratica storica MASE.
+Alcune rotte di ricerca del portale MASE risultano temporaneamente disabilitate per revisione dei requisiti di sicurezza informatica. La v0.4 è quindi un **censimento corrente indicizzato e refreshable**, non una dichiarazione di completezza assoluta di ogni pratica storica MASE.
 
 Il motore è predisposto per estendere il corpus senza cambiare identità o perdere storico quando le rotte tornano pienamente interrogabili.
 
-Audit: `docs/wind/research/2026-09-05-v04-discovery-census-audit.md`.
+Audit:
+`docs/wind/research/2026-09-05-v04-discovery-census-audit.md`.
 
 ## Activity class
 
@@ -85,11 +82,12 @@ Audit: `docs/wind/research/2026-09-05-v04-discovery-census-audit.md`.
 - `stale_scoping`: scoping datato senza procedura successiva trovata;
 - `rejected`: archiviazione/esito negativo conservato come guardia.
 
-`status != rejected` non viene più usato come sinonimo di progetto attivo.
+`status != rejected` non viene usato come sinonimo di progetto attivo.
 
 ## Identity reconciliation
 
-Regole: `docs/wind/data/identity-rules-v04.json`.
+Regole:
+`docs/wind/data/identity-rules-v04.json`.
 
 Priorità:
 1. `explicit_identity_group`;
@@ -97,10 +95,9 @@ Priorità:
 3. operation anchor MASE;
 4. fallback `site_type + nome + area` normalizzati.
 
-Gli ID procedura MASE non sono identità progetto.
-MW, BESS, WTG, developer/SPV, stage e stato procedura sono campi mutabili e appartengono al change fingerprint, non all'identità.
+Gli ID procedura MASE non sono identità progetto. MW, BESS, WTG, developer/SPV, stage e stato procedura sono campi mutabili e appartengono al change fingerprint.
 
-Identity guards già protette:
+Identity guards protette:
 - NURAX: più procedure = una opera da 462 MW;
 - Atis: scoping + VIA = una opera;
 - Poseidon: scoping/PUA/oggetto 2026 = una opera da 1.008 MW;
@@ -112,7 +109,8 @@ Identity guards già protette:
 
 ## Change / refresh engine
 
-Script: `scripts/wind_discovery_engine.py`.
+Script:
+`scripts/wind_discovery_engine.py`.
 
 Funzioni:
 - combina i tre registri;
@@ -122,12 +120,13 @@ Funzioni:
 - produce eventi `baseline`, `discovered`, `changed`, `missing_from_refresh`;
 - con `--write` aggiorna index derivato e refresh log.
 
-Baseline refresh:
+Refresh log:
 `docs/wind/data/refresh-log-v04.json`.
 
 ## Scope profile
 
-File: `docs/wind/data/scope-profiles-v04.json`.
+File:
+`docs/wind/data/scope-profiles-v04.json`.
 
 ### Onshore
 Restano i 7 core scope v0.3:
@@ -149,7 +148,7 @@ Gli offshore non entrano nel denominatore 8/108 del canonico onshore.
 
 ## UI v0.4
 
-Nuova sezione:
+Sezione:
 **Discovery · nuovi progetti da verificare**.
 
 Regole:
@@ -159,7 +158,7 @@ Regole:
 - 12 candidati visibili di default, `Mostra tutti` per evitare una pagina eccessivamente lunga;
 - non alimenta Contractor View né scope coverage.
 
-Test browser locale con corpus equivalente completo di 47 candidati:
+Test browser locale:
 - desktop 1440 px: PASS;
 - mobile 390 px: PASS;
 - nessun overflow orizzontale;
@@ -176,10 +175,12 @@ Regression guards:
 - `scripts/check_wind_v04.py`
 - `scripts/wind_discovery_engine.py`
 
-Workflow riproducibile:
+Workflow:
 `.github/workflows/check_wind_v04.yml`.
 
-Il workflow esegue anche `node --check` su JS core e discovery.
+Ultimo run PR sul head approvato `24b402b21cfbd6124fbb6f8f6315471aa0734c31`:
+- run `33957582017`;
+- **SUCCESS**.
 
 ## Promotion gate
 
@@ -196,6 +197,6 @@ Per entrare nel canonico servono:
 
 ## Stato v0.4
 
-Architettura, discovery corpus, identity/change engine, scope profile offshore e UI Discovery implementati. Resta come gate finale l'esito dei regression check riproducibili sul branch e la sincronizzazione conclusiva della Draft PR #3.
+**v0.4.0 pubblicata.**
 
-Nessun merge e nessuna pubblicazione senza approvazione esplicita.
+Il prossimo sviluppo deve concentrarsi sull'ampliamento e refresh del corpus, sulla promozione controllata dei candidati nel canonico e sull'arricchimento contractor/timing dei progetti che superano il gate.
