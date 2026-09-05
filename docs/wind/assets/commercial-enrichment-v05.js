@@ -1,7 +1,9 @@
 (()=>{'use strict';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-let registry={},byName=new Map(),body=null,timer=null;
-async function load(){const manifest=await fetch('data/projects.json',{cache:'no-store'}).then(r=>r.json()),chunks=await Promise.all(manifest.chunks.map(x=>fetch('data/'+x,{cache:'no-store'}).then(r=>r.json())));byName=new Map(chunks.flat().map(p=>[p.name,p.id]));registry=await fetch('data/commercial-enrichment-v05.json',{cache:'no-store'}).then(r=>r.json())}
+const COMMERCIAL_FILES=['commercial-enrichment-v05.json','commercial-enrichment-v05b.json','commercial-enrichment-v05c.json'];
+let registry={projects:{}},byName=new Map(),body=null,timer=null;
+function mergeRegistry(docs){const out={projects:{}};docs.forEach(doc=>Object.entries(doc?.projects||{}).forEach(([id,payload])=>{const target=out.projects[id]||(out.projects[id]={relations:[],signals:[],sources:[]});['relations','signals','sources'].forEach(key=>(payload[key]||[]).forEach(item=>{const sig=JSON.stringify(item);if(!target[key].some(x=>JSON.stringify(x)===sig))target[key].push(item)}))}));return out}
+async function load(){const manifest=await fetch('data/projects.json',{cache:'no-store'}).then(r=>r.json()),[chunks,commercial]=await Promise.all([Promise.all(manifest.chunks.map(x=>fetch('data/'+x,{cache:'no-store'}).then(r=>r.json()))),Promise.all(COMMERCIAL_FILES.map(x=>fetch('data/'+x,{cache:'no-store'}).then(r=>r.json())))]);byName=new Map(chunks.flat().map(p=>[p.name,p.id]));registry=mergeRegistry(commercial)}
 function rel(r){return `<div class="doc2-rel"><div><b>${esc(r.company)}</b><span>${esc(r.role)} · ${esc(r.scope||'')}</span></div><span class="confidence ${esc(r.confidence||'D')}">${esc(r.confidence||'D')}</span></div>`}
 function signal(s){return `<div class="doc2-public-row"><span class="doc2-level">${esc(s.grade||'B')}</span><div><b>${esc(s.title||s.type)}</b><span>${esc(s.note||'')}</span></div></div>`}
 function source(s){return `<div class="doc2-public-row"><span class="doc2-level">${esc(s.grade||'B')}</span><div><b>${esc(s.publisher||'Fonte')}</b><span>${esc(s.title||'')}</span>${s.date?`<span>${esc(s.date)}</span>`:''}${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">Apri fonte</a>`:''}</div></div>`}
