@@ -9,6 +9,7 @@ base = json.loads((DATA / "company-network-v06.json").read_text(encoding="utf-8"
 tranche_b = json.loads((DATA / "company-network-v06b.json").read_text(encoding="utf-8"))
 tranche_c = json.loads((DATA / "company-network-v06c.json").read_text(encoding="utf-8"))
 tranche_d = json.loads((DATA / "company-network-v06d.json").read_text(encoding="utf-8"))
+tranche_e = json.loads((DATA / "company-network-v06e.json").read_text(encoding="utf-8"))
 manifest = json.loads((DATA / "projects.json").read_text(encoding="utf-8"))
 projects = []
 for chunk in manifest["chunks"]:
@@ -20,28 +21,34 @@ assert base["version"] == "0.6.0"
 assert tranche_b["version"] == "0.6.0"
 assert tranche_c["version"] == "0.6.0-c"
 assert tranche_d["version"] == "0.6.0-d"
+assert tranche_e["version"] == "0.6.0-e"
 assert base["monitoring"]["high_priority_cadence_days"] == 7
 assert base["monitoring"]["standard_cadence_days"] == 14
 assert base["monitoring"]["universe_refresh_days"] == 30
 assert any("anev.org/soci" in s.get("url", "") for s in base["discovery_sources"])
 
-# Merge additive tranches by company id, matching planner/UI behaviour.
-parts = (base, tranche_b, tranche_c, tranche_d)
+# v06/b/c/d are new-node tranches and therefore keep unique IDs. v06e is an
+# explicit update overlay and may only reference nodes already introduced.
+new_node_parts = (base, tranche_b, tranche_c, tranche_d)
+new_node_ids = [c["id"] for payload in new_node_parts for c in payload.get("companies", [])]
+assert len(new_node_ids) == len(set(new_node_ids)), "duplicate company ids across new-node tranches"
+update_ids = [row["id"] for row in tranche_e.get("updates", [])]
+assert len(update_ids) == len(set(update_ids)), "duplicate company ids inside current-update overlay"
+assert set(update_ids).issubset(set(new_node_ids)), f"overlay references unknown nodes: {set(update_ids)-set(new_node_ids)}"
+
 by_id = {}
-for payload in parts:
+for payload in new_node_parts:
     for company in payload.get("companies", []):
-        cid = company["id"]
-        if cid not in by_id:
-            by_id[cid] = dict(company)
-            continue
-        merged = {**by_id[cid], **company}
-        for key in ["cluster", "known_capabilities", "project_links", "watch_urls"]:
-            merged[key] = list(dict.fromkeys([*(by_id[cid].get(key) or []), *(company.get(key) or [])]))
-        by_id[cid] = merged
+        by_id[company["id"]] = dict(company)
+for update in tranche_e.get("updates", []):
+    cid = update["id"]
+    previous = by_id[cid]
+    merged = {**previous, **update}
+    for key in ["cluster", "known_capabilities", "project_links", "watch_urls"]:
+        merged[key] = list(dict.fromkeys([*(previous.get(key) or []), *(update.get(key) or [])]))
+    by_id[cid] = merged
 
 companies = list(by_id.values())
-raw_ids = [c["id"] for payload in parts for c in payload.get("companies", [])]
-assert len(raw_ids) == len(set(raw_ids)), "duplicate company ids across v06 tranches"
 assert len(companies) >= 60, f"expanded network too small: {len(companies)}"
 assert sum(bool(c.get("watch_urls")) for c in companies) >= 52, "company watch URL coverage too low"
 
@@ -131,18 +138,35 @@ assert socep["relationship_status"] == "historical_same_site_supplier"
 assert "civil_works" in socep["cluster"]
 assert "historical" in socep["relationship_status"], "old-site reference must remain explicitly historical"
 
-# All expansion nodes must be operationally actionable, not just names.
+mammana = by_id["mammana-michelangelo"]
+assert set(mammana["project_links"]) >= {"tarsia-ovest", "carlentini"}
+assert mammana["relationship_status"] == "proven_in_radar_multi_project"
+assert "current WTG foundation concrete execution" in mammana["known_capabilities"]
+
+hydro = by_id["hydro-engineering"]
+assert hydro["relationship_status"] == "confirmed_project_support"
+assert "carlentini" in hydro["project_links"]
+assert "Direzione Lavori" in hydro["known_capabilities"]
+assert any("hydroeng.it/settori/eolico" in u for u in hydro["watch_urls"])
+
+# New nodes and current-update overlays must be operationally actionable.
 for payload in (tranche_b, tranche_c, tranche_d):
     for c in payload["companies"]:
         assert c.get("last_checked") == "2026-09-05", c["id"]
         assert c.get("next_action"), f"{c['id']}: missing next_action"
         assert c.get("watch_urls"), f"{c['id']}: missing watch_urls"
+for update in tranche_e["updates"]:
+    assert update.get("last_checked") == "2026-09-05", update["id"]
+    assert update.get("next_action"), f"{update['id']}: missing next_action"
+    assert update.get("watch_urls"), f"{update['id']}: missing watch_urls"
 
-# Network intelligence must remain structurally separate from canonical execution relations.
+# Network intelligence remains separate from canonical project data; execution
+# attribution is carried by the project-specific evidence/enrichment layer.
 assert "companies" not in manifest
 
 print(
     f"v0.6 company network OK: {len(companies)} players, "
     f"{sum(c['commercial_priority']=='A' for c in companies)} priority A, "
-    f"{len(tranche_b['companies']) + len(tranche_c['companies']) + len(tranche_d['companies'])} operational expansion nodes"
+    f"{len(tranche_b['companies']) + len(tranche_c['companies']) + len(tranche_d['companies'])} new expansion nodes, "
+    f"{len(tranche_e['updates'])} current node updates"
 )
