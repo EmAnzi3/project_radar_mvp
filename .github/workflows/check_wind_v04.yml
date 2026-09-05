@@ -1,4 +1,4 @@
-name: Wind Radar v0.5 checks
+name: Wind Radar v0.6 checks
 
 on:
   pull_request:
@@ -26,6 +26,7 @@ jobs:
             scripts/check_wind_v04.py
             scripts/check_wind_v05.py
             scripts/check_wind_v05_enrichment.py
+            scripts/check_wind_v06_network.py
             scripts/wind_discovery_engine.py
 
       - name: Set up Python
@@ -71,6 +72,9 @@ jobs:
       - name: Commercial enrichment v0.5 validation
         run: python scripts/check_wind_v05_enrichment.py
 
+      - name: Company network v0.6 validation
+        run: python scripts/check_wind_v06_network.py
+
       - name: JavaScript syntax
         run: |
           node --check docs/wind/assets/app.js
@@ -79,3 +83,4 @@ jobs:
           node --check docs/wind/assets/timeline-coherence.js
           node --check docs/wind/assets/commercial-enrichment-v05.js
           node --check docs/wind/assets/contractor-direct-fix.js
+          node --check docs/wind/assets/company-network-v06.js
