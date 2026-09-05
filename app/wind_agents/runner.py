@@ -9,10 +9,12 @@ from .adapters import (
     CalabriaWindAgent,
     CampaniaWindAgent,
     LazioWindAgent,
+    MaseProvvedimentiWindAgent,
     MaseWindAgent,
     SardegnaWindAgent,
     SiciliaWindAgent,
     SistemaPugliaWindAgent,
+    TernaEconnextionWindAgent,
     ToscanaAtosWindAgent,
     ToscanaWindAgent,
 )
@@ -33,10 +35,12 @@ AGENT_FACTORIES = {
     "calabria-via": CalabriaWindAgent,
     "campania-viavas": CampaniaWindAgent,
     "lazio-regional": LazioWindAgent,
+    "mase-provvedimenti": MaseProvvedimentiWindAgent,
     "mase-via": MaseWindAgent,
     "puglia-sistema-energia": SistemaPugliaWindAgent,
     "sardegna-sira": SardegnaWindAgent,
     "sicilia-sivvi": SiciliaWindAgent,
+    "terna-econnextion": TernaEconnextionWindAgent,
     "toscana-atos": ToscanaAtosWindAgent,
     "toscana-gea": ToscanaWindAgent,
 }
@@ -72,8 +76,6 @@ def due_agent_ids(as_of: date | None = None) -> list[str]:
     for source_id in executable_agent_ids():
         task = catalog.get(source_id)
         if task is None:
-            # Unmapped executable sources are treated as due, making registry
-            # drift visible rather than silently skipping monitoring.
             due.append(source_id)
             continue
 
