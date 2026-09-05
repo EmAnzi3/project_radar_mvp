@@ -9,6 +9,7 @@ COMMERCIAL_FILES = [
     "commercial-enrichment-v05.json",
     "commercial-enrichment-v05b.json",
     "commercial-enrichment-v05c.json",
+    "commercial-enrichment-v05d.json",
 ]
 VALID_GRADES = {"A1", "A2", "B", "C", "D"}
 OFFSHORE_EXECUTION_ROLES = {
@@ -32,6 +33,12 @@ def fail(message: str) -> None:
     raise SystemExit(f"[FAIL] {message}")
 
 
+def merge_item(target: list, item: dict) -> None:
+    signature = json.dumps(item, ensure_ascii=False, sort_keys=True)
+    if not any(json.dumps(existing, ensure_ascii=False, sort_keys=True) == signature for existing in target):
+        target.append(item)
+
+
 def main() -> None:
     manifest = load("projects.json")
     meta = load(manifest["meta"])
@@ -47,9 +54,10 @@ def main() -> None:
     for filename in COMMERCIAL_FILES:
         doc = load(filename)
         for project_id, payload in doc.get("projects", {}).items():
-            if project_id in combined:
-                fail(f"commercial enrichment duplicato tra tranche: {project_id}")
-            combined[project_id] = payload
+            target = combined.setdefault(project_id, {"relations": [], "signals": [], "sources": []})
+            for key in ("relations", "signals", "sources"):
+                for item in payload.get(key, []):
+                    merge_item(target[key], item)
 
     if set(combined) != set(promoted):
         missing = sorted(set(promoted) - set(combined))
@@ -86,8 +94,8 @@ def main() -> None:
                 if relation.get("status") != "confirmed" or relation.get("confidence") not in {"A1", "A2"}:
                     fail(f"{project_id}: execution relation senza A1/A2 confirmed")
 
-    # In questa tranche non è stato trovato alcun award esecutivo verificabile.
-    # Engineering, owner, developer e survey restano commercial intelligence.
+    # Nel commercial enrichment corrente non è stato trovato alcun award esecutivo verificabile.
+    # Engineering, owner, developer, survey e project-management restano commercial intelligence.
     if execution_relations:
         fail(f"execution relation inattesa nella tranche corrente: {[x[0] for x in execution_relations]}")
 
@@ -108,6 +116,15 @@ def main() -> None:
         if any("Saipem" in str(company) for company in companies):
             fail(f"{project_id}: Saipem attribuita per deduzione")
 
+    tramontana_relations = combined["off-tramontana"].get("relations", [])
+    tramontana_companies = {r.get("company") for r in tramontana_relations}
+    expected_tramontana = {"OWC Ltd.", "MPOWER S.r.l.", "WSP ITALIA S.r.l."}
+    if not expected_tramontana.issubset(tramontana_companies):
+        fail(f"Tramontana: engineering enrichment incompleto {sorted(tramontana_companies)}")
+    for relation in tramontana_relations:
+        if relation.get("company") in expected_tramontana and relation.get("role") in execution_roles:
+            fail(f"Tramontana: engineering relation classificata indebitamente execution {relation}")
+
     # Commercial enrichment non deve alterare ranking neutro né popolare le relations canoniche.
     for project_id, project in promoted.items():
         if project.get("priority") != "C" or project.get("score") != 50:
@@ -121,6 +138,7 @@ def main() -> None:
     print("[OK] Lujentu: Nardò / Copertino / Galatina")
     print("[OK] Leonardo Engineering registrata; Siemens Gamesa resta design reference, non OEM award")
     print("[OK] Poseidon/NURAX: COP/Divento enrichment senza estensione Saipem")
+    print("[OK] Tramontana: OWC + MPOWER project design; WSP impact assessment, tutti non-execution")
 
 
 if __name__ == "__main__":
