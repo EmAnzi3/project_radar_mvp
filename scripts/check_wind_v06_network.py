@@ -11,6 +11,7 @@ projects = []
 for chunk in manifest["chunks"]:
     projects.extend(json.loads((DATA / chunk).read_text(encoding="utf-8")))
 project_ids = {p["id"] for p in projects}
+project_aliases = {"on-lama-cupa": "lama-cupa"}
 
 assert registry["version"] == "0.6.0"
 assert registry["monitoring"]["high_priority_cadence_days"] == 7
@@ -29,7 +30,8 @@ for c in companies:
     assert c.get("wind_relevance"), c["id"]
     assert c.get("relationship_status"), c["id"]
     for pid in c.get("project_links", []):
-        assert pid in project_ids, f"{c['id']}: unknown project link {pid}"
+        canonical_pid = project_aliases.get(pid, pid)
+        assert canonical_pid in project_ids, f"{c['id']}: unknown project link {pid}"
     for url in c.get("watch_urls", []):
         parsed = urlparse(url)
         assert parsed.scheme in {"http", "https"} and parsed.netloc, f"{c['id']}: invalid URL {url}"
