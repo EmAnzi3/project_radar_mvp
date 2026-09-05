@@ -1,0 +1,116 @@
+name: Wind Radar live source smoke
+
+on:
+  pull_request:
+    paths:
+      - 'app/wind_agents/adapters/abruzzo.py'
+      - 'app/wind_agents/adapters/liguria.py'
+      - 'app/wind_agents/adapters/marche.py'
+      - 'app/wind_agents/adapters/molise.py'
+      - 'app/wind_agents/runner.py'
+      - 'docs/wind/data/institutional-source-network-v06b.json'
+      - 'scripts/run_wind_agents.py'
+      - '.github/workflows/wind_agent_live_smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  priority-regional-live-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install runtime dependencies
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+
+      - name: Run four priority regional adapters live
+        run: |
+          mkdir -p reports/wind-agent-live
+          python scripts/run_wind_agents.py run \
+            --source abruzzo-via \
+            --source liguria-via-procedimenti \
+            --source marche-via-regional \
+            --source molise-au-eolico \
+            --output reports/wind-agent-live/priority-regional.json
+
+      - name: Validate live result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('reports/wind-agent-live/priority-regional.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          expected = {
+              'abruzzo-via',
+              'liguria-via-procedimenti',
+              'marche-via-regional',
+              'molise-au-eolico',
+          }
+          executed = set(data.get('executed_agents') or [])
+          assert executed == expected, (executed, expected)
+
+          per_agent = data.get('per_agent') or {}
+          failures = {
+              source_id: row.get('error') or row.get('status')
+              for source_id, row in per_agent.items()
+              if row.get('status') != 'success'
+          }
+          if failures or data.get('errors'):
+              raise SystemExit(f'live source failures: {failures or data.get("errors")}')
+
+          print('live source smoke OK')
+          for source_id in sorted(expected):
+              row = per_agent[source_id]
+              print(
+                  f"{source_id}: findings={row.get('findings', 0)} "
+                  f"new={row.get('new', 0)} changed={row.get('changed', 0)}"
+              )
+          PY
+
+      - name: Publish live smoke summary
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = Path('reports/wind-agent-live/priority-regional.json')
+          lines = ['## Wind Radar priority regional live smoke']
+          if report.exists():
+              data = json.loads(report.read_text(encoding='utf-8'))
+              for source_id, row in sorted((data.get('per_agent') or {}).items()):
+                  lines.append(
+                      f"- `{source_id}` — {row.get('status')}; findings {row.get('findings', 0)}; "
+                      f"new {row.get('new', 0)}; changed {row.get('changed', 0)}"
+                  )
+              if data.get('errors'):
+                  lines.append(f"- Errors: {data['errors']}")
+          else:
+              lines.append('- Live report missing.')
+          text = '\n'.join(lines) + '\n'
+          print(text)
+          summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              Path(summary).write_text(text, encoding='utf-8')
+          PY
+
+      - name: Upload live smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-priority-regional-live-${{ github.run_id }}
+          path: reports/wind-agent-live/
+          if-no-files-found: warn
+          retention-days: 14
