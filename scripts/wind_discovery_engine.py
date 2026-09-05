@@ -42,6 +42,15 @@ def myterna_ids(candidate: dict) -> list[str]:
     return sorted(dict.fromkeys(str(x) for x in values if str(x).strip()))
 
 
+def activity_class(candidate: dict) -> str:
+    if candidate.get("status") == "rejected":
+        return "rejected"
+    value = candidate.get("activity_class")
+    if value in {"current", "stale_scoping"}:
+        return value
+    return "current"
+
+
 def identity_key(candidate: dict) -> str:
     if candidate.get("identity_group"):
         anchor = "group:" + norm(candidate["identity_group"])
@@ -66,6 +75,7 @@ def identity_key(candidate: dict) -> str:
 def fingerprint(candidate: dict, fields: list[str]) -> str:
     body = {field: candidate.get(field) for field in fields}
     body["myterna_ids"] = myterna_ids(candidate)
+    body["activity_class"] = activity_class(candidate)
     raw = json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
@@ -80,9 +90,10 @@ def combined_registry() -> dict:
         for candidate in payload.get("candidates", []):
             row = dict(candidate)
             row["registry_source"] = path.name
+            row["activity_class"] = activity_class(row)
             candidates.append(row)
     return {
-        "version": "0.4.0-combined-registry",
+        "version": "0.4.1-combined-registry",
         "as_of": max(str(x.get("as_of") or "") for x in payloads),
         "candidates": candidates,
     }
@@ -96,17 +107,27 @@ def build_index(registry: dict, rules: dict) -> dict:
         row["identity_key"] = identity_key(candidate)
         row["change_fingerprint"] = fingerprint(candidate, fields)
         rows.append(row)
-    active = [x for x in rows if x.get("status") != "rejected"]
+
+    current = [x for x in rows if x["activity_class"] == "current"]
+    stale = [x for x in rows if x["activity_class"] == "stale_scoping"]
+    rejected = [x for x in rows if x["activity_class"] == "rejected"]
+    non_rejected = current + stale
+
     return {
-        "version": "0.4.0-index",
+        "version": "0.4.1-index",
         "as_of": registry.get("as_of"),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "candidate_count": len(rows),
-        "active_candidate_count": len(active),
-        "onshore_count": sum(x.get("site_type") == "onshore" and x.get("status") != "rejected" for x in rows),
-        "offshore_count": sum(x.get("site_type") == "offshore" and x.get("status") != "rejected" for x in rows),
-        "active_wind_mw": round(sum(float(x.get("wind_mw") or 0) for x in active), 3),
-        "active_bess_mw": round(sum(float(x.get("bess_mw") or 0) for x in active), 3),
+        "current_candidate_count": len(current),
+        "stale_candidate_count": len(stale),
+        "rejected_candidate_count": len(rejected),
+        "non_rejected_candidate_count": len(non_rejected),
+        "current_onshore_count": sum(x.get("site_type") == "onshore" for x in current),
+        "current_offshore_count": sum(x.get("site_type") == "offshore" for x in current),
+        "current_wind_mw": round(sum(float(x.get("wind_mw") or 0) for x in current), 3),
+        "current_bess_mw": round(sum(float(x.get("bess_mw") or 0) for x in current), 3),
+        "stale_wind_mw": round(sum(float(x.get("wind_mw") or 0) for x in stale), 3),
+        "rejected_wind_mw": round(sum(float(x.get("wind_mw") or 0) for x in rejected), 3),
         "candidates": rows,
     }
 
@@ -121,6 +142,8 @@ def validate(index: dict) -> None:
         by_identity.setdefault(row["identity_key"], []).append(row)
         if row.get("site_type") not in {"onshore", "offshore"}:
             raise SystemExit(f"[FAIL] {row['candidate_id']}: site_type non valido")
+        if row.get("activity_class") not in {"current", "stale_scoping", "rejected"}:
+            raise SystemExit(f"[FAIL] {row['candidate_id']}: activity_class non valida")
         if not row.get("sources"):
             raise SystemExit(f"[FAIL] {row['candidate_id']}: nessuna fonte")
 
@@ -182,22 +205,26 @@ def main() -> None:
     validate(current)
     events = diff(previous, current)
 
-    print(f"[OK] candidati discovery: {current['candidate_count']} ({current['active_candidate_count']} non rejected)")
-    print(f"[OK] active onshore/offshore: {current['onshore_count']}/{current['offshore_count']}")
-    print(f"[OK] active wind/BESS: {current['active_wind_mw']:.1f} MW / {current['active_bess_mw']:.1f} MW")
+    print(f"[OK] discovery: {current['candidate_count']} candidati")
+    print(f"[OK] current/stale/rejected: {current['current_candidate_count']}/{current['stale_candidate_count']}/{current['rejected_candidate_count']}")
+    print(f"[OK] current onshore/offshore: {current['current_onshore_count']}/{current['current_offshore_count']}")
+    print(f"[OK] current wind/BESS: {current['current_wind_mw']:.1f} MW / {current['current_bess_mw']:.1f} MW")
+    print(f"[OK] stale/rejected wind: {current['stale_wind_mw']:.1f} / {current['rejected_wind_mw']:.1f} MW")
     print(f"[OK] identity keys uniche: {len({x['identity_key'] for x in current['candidates']})}")
     print(f"[OK] eventi refresh: {len(events)}")
 
     if args.write:
         dump(INDEX, current)
-        log = load(REFRESH_LOG, {"version": "0.4.0-refresh-log", "runs": []})
+        log = load(REFRESH_LOG, {"version": "0.4.1-refresh-log", "runs": []})
         log["runs"].append({
             "as_of": registry.get("as_of"),
             "generated_at": current["generated_at"],
             "candidate_count": current["candidate_count"],
-            "active_candidate_count": current["active_candidate_count"],
-            "active_wind_mw": current["active_wind_mw"],
-            "active_bess_mw": current["active_bess_mw"],
+            "current_candidate_count": current["current_candidate_count"],
+            "stale_candidate_count": current["stale_candidate_count"],
+            "rejected_candidate_count": current["rejected_candidate_count"],
+            "current_wind_mw": current["current_wind_mw"],
+            "current_bess_mw": current["current_bess_mw"],
             "events": events,
         })
         dump(REFRESH_LOG, log)
