@@ -15,9 +15,10 @@ from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.planner import (
     _merge_company_registries,
     _merge_institutional_registries,
+    build_institutional_watch_catalog,
     build_run_plan,
 )
-from app.wind_agents.runner import executable_agent_ids
+from app.wind_agents.runner import due_agent_ids, executable_agent_ids
 from app.wind_agents import state
 
 
@@ -28,27 +29,31 @@ assert len(sources) >= 31, len(sources)
 assert company_base["monitoring"]["high_priority_cadence_days"] == 7
 assert institutional_base["monitoring"]["priority_regional_cadence_days"] == 3
 
-plan = build_run_plan(as_of=date(2026, 9, 5))
+as_of = date(2026, 9, 5)
+plan = build_run_plan(as_of=as_of)
 project_ids = {task.task_id for task in plan.projects}
 for required in ["andretta-bisaccia", "alia-sclafani", "serra-giannina"]:
     assert required in project_ids, f"priority project missing from wind-agent plan: {required}"
 assert plan.institutional, "institutional due queue empty"
 assert plan.companies, "company due queue empty"
+
+catalog = {task.task_id: task for task in build_institutional_watch_catalog(as_of)}
 implemented = set(executable_agent_ids())
 required_adapters = {
     "basilicata-via",
     "calabria-via",
-    "campania-via",
-    "lazio-via",
+    "campania-viavas",
+    "lazio-regional",
     "mase-via",
+    "puglia-sistema-energia",
     "sardegna-sira",
     "sicilia-sivvi",
-    "sistema-puglia",
     "toscana-atos",
     "toscana-gea",
 }
 assert required_adapters.issubset(implemented), implemented
 assert len(implemented) >= 10, implemented
+assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
@@ -78,7 +83,7 @@ assert can_close_execution_scope(
 assert evidence_layer(project_specific=False, execution_scope=None) == "network_intelligence"
 
 # PV-Agent-style raw/history persistence must detect new / unchanged / changed.
-# Operational source cursors are persisted separately and must not modify canonicals.
+# Operational cursors and live watch timestamps are separate from canonical data.
 with tempfile.TemporaryDirectory() as tmp:
     state.DB_PATH = Path(tmp) / "wind_agent_test.sqlite"
     assert state.get_source_cursor("test-cursor") is None
@@ -86,7 +91,15 @@ with tempfile.TemporaryDirectory() as tmp:
     state.set_source_cursor("test-cursor", 123, {"kind": "validator"})
     assert state.get_source_cursor("test-cursor") == "123"
 
+    initial_due = set(due_agent_ids(as_of=as_of))
+    assert required_adapters.issubset(initial_due), initial_due
+
     run_id = state.begin_run(plan.total_tasks, note="validator")
+    state.mark_watch_attempt("mase-via", run_id, success=True, metadata={"validator": True})
+    assert state.get_watch_status("mase-via")["last_success"]
+    # Same-day cadence suppression: a successful live run supersedes registry baseline.
+    assert "mase-via" not in set(due_agent_ids(as_of=as_of))
+
     finding = AgentFinding(
         external_id="test-1",
         source_name="validator",
