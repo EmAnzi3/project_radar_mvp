@@ -22,8 +22,15 @@ jobs:
     timeout-minutes: 25
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Wind agent runtime
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            app/**
+            docs/wind/data/**
+            scripts/run_wind_agents.py
 
       - name: Set up Python
         uses: actions/setup-python@v5
