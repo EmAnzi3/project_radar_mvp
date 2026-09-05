@@ -62,7 +62,53 @@ def init_db() -> None:
                 payload_json TEXT NOT NULL,
                 created_at TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS source_cursors (
+                source_id TEXT PRIMARY KEY,
+                cursor_value TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                metadata_json TEXT
+            );
             """
+        )
+        conn.commit()
+
+
+def get_source_cursor(source_id: str, default: str | None = None) -> str | None:
+    """Return a persistent collector cursor/high-water mark.
+
+    Cursors are operational state only. They never affect canonical evidence or
+    project promotion and are safe to discard/rebuild from a backfill run.
+    """
+
+    init_db()
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT cursor_value FROM source_cursors WHERE source_id = ?",
+            (source_id,),
+        ).fetchone()
+    return str(row["cursor_value"]) if row else default
+
+
+def set_source_cursor(
+    source_id: str,
+    cursor_value: str | int,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    init_db()
+    now = datetime.now().isoformat(timespec="seconds")
+    metadata_json = json.dumps(metadata or {}, ensure_ascii=False, sort_keys=True, default=str)
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO source_cursors (source_id, cursor_value, updated_at, metadata_json)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(source_id) DO UPDATE SET
+                cursor_value = excluded.cursor_value,
+                updated_at = excluded.updated_at,
+                metadata_json = excluded.metadata_json
+            """,
+            (source_id, str(cursor_value), now, metadata_json),
         )
         conn.commit()
 
