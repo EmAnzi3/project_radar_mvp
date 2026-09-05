@@ -16,7 +16,8 @@ by_id = {p["id"]: p for p in projects}
 payload = json.loads((DATA / "commercial-enrichment-v06.json").read_text(encoding="utf-8"))
 assert payload["version"] == "0.6.0-commercial-enrichment"
 assert set(payload["projects"]).issubset(by_id), set(payload["projects"]) - set(by_id)
-assert {"andretta-bisaccia", "carlentini"}.issubset(payload["projects"])
+required_projects = {"andretta-bisaccia", "carlentini", "tricarico", "greci-montaguto"}
+assert required_projects.issubset(payload["projects"])
 
 execution_roles = set(meta.get("execution_roles") or [])
 
@@ -33,10 +34,9 @@ assert "supervision" in progeco["role"].lower()
 assert any(s.get("type") == "project-support-recruitment" for s in andretta.get("signals") or [])
 assert any("24-month" in s.get("title", "") for s in andretta.get("signals") or [])
 
-# Carlentini: direct project-participant evidence now explicitly names Mammana
-# as executor of current WTG foundation concrete works. This is the one v0.6
-# relation allowed to close an execution scope in this tranche; it must not be
-# widened to the whole Civil BoP.
+# Carlentini: direct project-participant evidence explicitly names Mammana
+# as executor of current WTG foundation concrete works. It must not be widened
+# to the whole Civil BoP.
 carlentini = payload["projects"]["carlentini"]
 car_relations = carlentini.get("relations") or []
 foundation = next(r for r in car_relations if r.get("company") == "Mammana Michelangelo S.p.A.")
@@ -52,16 +52,49 @@ assert hydro["role"] not in execution_roles, "Direzione Lavori / engineering mus
 assert any(s.get("type") == "foundation-execution" for s in carlentini.get("signals") or [])
 assert any(s.get("type") == "construction-progress" for s in carlentini.get("signals") or [])
 
+# Tricarico: financial close + lender-side construction monitoring are useful
+# execution-timing intelligence but do not identify an executing contractor.
+tricarico = payload["projects"]["tricarico"]
+tri_relations = tricarico.get("relations") or []
+assert len(tri_relations) == 1, tri_relations
+vector = tri_relations[0]
+assert vector["company"] == "Vector Renewables"
+assert vector["confidence"] == "A2"
+assert vector["status"] == "confirmed"
+assert vector["role"] not in execution_roles, "Lender's Technical Advisor must stay non-execution"
+assert "no EPC" in vector["scope"], "Tricarico advisory relation must preserve execution-scope guard"
+tri_signals = tricarico.get("signals") or []
+assert any(s.get("type") == "financial-close" for s in tri_signals)
+assert any(s.get("type") == "construction-monitoring" for s in tri_signals)
+assert any("46.5m" in s.get("title", "") or "46,5" in s.get("title", "") for s in tri_signals)
+
+# Greci-Montaguto: use the official regional act to resolve the WTG split.
+# This configuration evidence must not create a new execution contractor.
+greci = payload["projects"]["greci-montaguto"]
+assert not (greci.get("relations") or []), "configuration/service intelligence must not create a contractor relation"
+greci_signals = greci.get("signals") or []
+config = next(s for s in greci_signals if s.get("type") == "wtg-configuration")
+service = next(s for s in greci_signals if s.get("type") == "long-term-service")
+assert config["grade"] == "A1"
+assert "six Vestas V136" in config["note"]
+assert "four Vestas V117" in config["note"]
+assert service["grade"] == "A2"
+assert "AOM 5000" in service["title"]
+
 # All current commercial-enrichment sources must be attributable and navigable.
 for project_id, project_payload in payload["projects"].items():
     sources = project_payload.get("sources") or []
     assert sources, f"{project_id}: no sources"
+    source_ids = {s.get("id") for s in sources}
     for source in sources:
         assert source.get("grade") in {"A1", "A2", "B", "C"}, (project_id, source)
+        assert source.get("id"), (project_id, source)
         parsed = urlparse(source.get("url") or "")
         assert parsed.scheme in {"http", "https"} and parsed.netloc, (project_id, source)
+    for relation in project_payload.get("relations") or []:
+        assert relation.get("source_id") in source_ids, (project_id, relation)
 
-# Additive enrichment must not silently rewrite the canonical relation graph.
+# Additive enrichment must not silently rewrite the canonical relation/config graph.
 canonical_andretta = by_id["andretta-bisaccia"]
 assert not any(
     r.get("company") == "Progeco Group / Progeco SE"
@@ -73,6 +106,23 @@ assert any(
     r.get("company") == "Gruppo Mammana" and r.get("confidence") == "B"
     for r in (canonical_carlentini.get("relations") or [])
 ), "historical seed signal must remain unchanged; v0.6 A2 upgrade is additive and reversible"
+
+canonical_tricarico = by_id["tricarico"]
+assert not any(
+    r.get("company") == "Vector Renewables"
+    for r in (canonical_tricarico.get("relations") or [])
+), "Tricarico lender-side advisor must stay in additive enrichment"
+assert any(
+    r.get("company") == "Vestas" and r.get("confidence") == "A2"
+    for r in (canonical_tricarico.get("relations") or [])
+), "existing Tricarico OEM evidence must remain canonical"
+
+canonical_greci = by_id["greci-montaguto"]
+assert canonical_greci.get("wtg") is None, "v0.6 configuration evidence must not silently rewrite the seed"
+assert any(
+    r.get("company") == "Vestas" and r.get("confidence") == "A2"
+    for r in (canonical_greci.get("relations") or [])
+), "existing Greci-Montaguto OEM evidence must remain canonical"
 
 execution_relations = [
     (project_id, relation)
@@ -87,5 +137,6 @@ assert execution_relations[0][0] == "carlentini"
 
 print(
     f"v0.6 commercial enrichment OK: {len(payload['projects'])} projects, "
-    f"{len(execution_relations)} A1/A2 execution relation; Carlentini foundation contractor confirmed"
+    f"{len(execution_relations)} A1/A2 execution relation; "
+    "Tricarico lender monitoring and Greci WTG configuration remain non-execution"
 )
