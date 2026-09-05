@@ -14,10 +14,14 @@ for chunk in manifest["chunks"]:
 by_id = {p["id"]: p for p in projects}
 
 payload = json.loads((DATA / "commercial-enrichment-v06.json").read_text(encoding="utf-8"))
+extra = json.loads((DATA / "commercial-enrichment-v06b.json").read_text(encoding="utf-8"))
 assert payload["version"] == "0.6.0-commercial-enrichment"
+assert extra["version"] == "0.6.0-commercial-enrichment-b"
 assert set(payload["projects"]).issubset(by_id), set(payload["projects"]) - set(by_id)
+assert set(extra["projects"]).issubset(by_id), set(extra["projects"]) - set(by_id)
 required_projects = {"andretta-bisaccia", "carlentini", "tricarico", "greci-montaguto", "nulvi-ploaghe"}
 assert required_projects.issubset(payload["projects"])
+assert {"andretta-bisaccia", "serra-giannina"}.issubset(extra["projects"])
 
 execution_roles = set(meta.get("execution_roles") or [])
 
@@ -33,6 +37,20 @@ assert progeco["role"] not in execution_roles, "project-support relation must no
 assert "supervision" in progeco["role"].lower()
 assert any(s.get("type") == "project-support-recruitment" for s in andretta.get("signals") or [])
 assert any("24-month" in s.get("title", "") for s in andretta.get("signals") or [])
+
+# Latest official MASE compliance metadata resolves the stale 118.80 MW title:
+# the current Edison filing explicitly states reduction to 88.5 MW and turbine
+# replacement. It is configuration/timing evidence, not an execution award.
+andretta_extra = extra["projects"]["andretta-bisaccia"]
+assert not (andretta_extra.get("relations") or [])
+andretta_extra_signals = andretta_extra.get("signals") or []
+current_config = next(s for s in andretta_extra_signals if s.get("type") == "configuration-current")
+works_readiness = next(s for s in andretta_extra_signals if s.get("type") == "works-readiness")
+assert current_config["grade"] == "A1"
+assert "88.5 MW" in current_config["title"] or "88.5 MW" in current_config["note"]
+assert "118.80 MW" in current_config["note"], "configuration-history guard must retain stale-title context"
+assert works_readiness["grade"] == "A1"
+assert "does not by itself prove" in works_readiness["note"], "works-readiness must not become construction-start proof"
 
 # Carlentini: direct project-participant evidence explicitly names Mammana
 # as executor of current WTG foundation concrete works. It must not be widened
@@ -94,18 +112,36 @@ assert nulvi_hydro["role"] not in execution_roles, "project development/engineer
 assert "does not attribute Civil BoP" in nulvi_hydro["scope"], "Nulvi development evidence must retain execution guard"
 assert any(s.get("type") == "development-chain" for s in nulvi.get("signals") or [])
 
-# All current commercial-enrichment sources must be attributable and navigable.
-for project_id, project_payload in payload["projects"].items():
-    sources = project_payload.get("sources") or []
-    assert sources, f"{project_id}: no sources"
-    source_ids = {s.get("id") for s in sources}
-    for source in sources:
-        assert source.get("grade") in {"A1", "A2", "B", "C"}, (project_id, source)
-        assert source.get("id"), (project_id, source)
-        parsed = urlparse(source.get("url") or "")
-        assert parsed.scheme in {"http", "https"} and parsed.netloc, (project_id, source)
-    for relation in project_payload.get("relations") or []:
-        assert relation.get("source_id") in source_ids, (project_id, relation)
+# Serra Giannina: direct EGM material confirms construction-phase technical
+# presence. D'Agostino is a project-specific B mobilisation lead only until a
+# direct contractor/developer award source states the execution package.
+serra = extra["projects"]["serra-giannina"]
+serra_relations = serra.get("relations") or []
+assert len(serra_relations) == 2, serra_relations
+egm = next(r for r in serra_relations if r.get("company") == "EGM Project")
+dagostino = next(r for r in serra_relations if r.get("company") == "D'Agostino Costruzioni Generali")
+assert egm["confidence"] == "A2" and egm["status"] == "confirmed"
+assert egm["role"] not in execution_roles
+assert "does not attribute Civil BoP" in egm["scope"]
+assert dagostino["confidence"] == "B" and dagostino["status"] == "signal"
+assert dagostino["role"] not in execution_roles
+assert "no Civil BoP" in dagostino["scope"], "B mobilisation signal must not close Civil BoP"
+assert any(s.get("type") == "construction-progress" and s.get("grade") == "A2" for s in serra.get("signals") or [])
+assert any(s.get("type") == "contractor-mobilisation-lead" and s.get("grade") == "B" for s in serra.get("signals") or [])
+
+# All v0.6 commercial-enrichment sources must be attributable and navigable.
+for document in (payload, extra):
+    for project_id, project_payload in document["projects"].items():
+        sources = project_payload.get("sources") or []
+        assert sources, f"{project_id}: no sources"
+        source_ids = {s.get("id") for s in sources}
+        for source in sources:
+            assert source.get("grade") in {"A1", "A2", "B", "C"}, (project_id, source)
+            assert source.get("id"), (project_id, source)
+            parsed = urlparse(source.get("url") or "")
+            assert parsed.scheme in {"http", "https"} and parsed.netloc, (project_id, source)
+        for relation in project_payload.get("relations") or []:
+            assert relation.get("source_id") in source_ids, (project_id, relation)
 
 # Additive enrichment must not silently rewrite the canonical relation/config graph.
 canonical_andretta = by_id["andretta-bisaccia"]
@@ -147,7 +183,8 @@ assert len(canonical_nulvi.get("gaps") or []) >= 8, "Nulvi execution/procurement
 
 execution_relations = [
     (project_id, relation)
-    for project_id, project_payload in payload["projects"].items()
+    for document in (payload, extra)
+    for project_id, project_payload in document["projects"].items()
     for relation in project_payload.get("relations") or []
     if relation.get("role") in execution_roles
     and relation.get("status") == "confirmed"
@@ -156,8 +193,9 @@ execution_relations = [
 assert len(execution_relations) == 1, execution_relations
 assert execution_relations[0][0] == "carlentini"
 
+covered_projects = set(payload["projects"]) | set(extra["projects"])
 print(
-    f"v0.6 commercial enrichment OK: {len(payload['projects'])} projects, "
+    f"v0.6 commercial enrichment OK: {len(covered_projects)} projects, "
     f"{len(execution_relations)} A1/A2 execution relation; "
-    "Tricarico monitoring, Greci configuration and Nulvi development stay non-execution"
+    "Andretta configuration, Serra mobilisation, Tricarico monitoring, Greci configuration and Nulvi development preserve execution guards"
 )
