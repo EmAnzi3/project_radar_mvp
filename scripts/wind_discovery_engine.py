@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "wind" / "data"
-REGISTRY = DATA / "discovery-v04.json"
+REGISTRIES = [DATA / "discovery-v04.json", DATA / "discovery-census-v04.json"]
 RULES = DATA / "identity-rules-v04.json"
 INDEX = DATA / "discovery-index-v04.json"
 REFRESH_LOG = DATA / "refresh-log-v04.json"
@@ -70,6 +70,24 @@ def fingerprint(candidate: dict, fields: list[str]) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
+def combined_registry() -> dict:
+    payloads = [load(path) for path in REGISTRIES]
+    if any(not payload for payload in payloads):
+        missing = [str(path) for path, payload in zip(REGISTRIES, payloads) if not payload]
+        raise SystemExit(f"[FAIL] registry mancanti: {missing}")
+    candidates = []
+    for path, payload in zip(REGISTRIES, payloads):
+        for candidate in payload.get("candidates", []):
+            row = dict(candidate)
+            row["registry_source"] = path.name
+            candidates.append(row)
+    return {
+        "version": "0.4.0-combined-registry",
+        "as_of": max(str(x.get("as_of") or "") for x in payloads),
+        "candidates": candidates,
+    }
+
+
 def build_index(registry: dict, rules: dict) -> dict:
     fields = rules["change_fingerprint_fields"]
     rows = []
@@ -78,11 +96,17 @@ def build_index(registry: dict, rules: dict) -> dict:
         row["identity_key"] = identity_key(candidate)
         row["change_fingerprint"] = fingerprint(candidate, fields)
         rows.append(row)
+    active = [x for x in rows if x.get("status") != "rejected"]
     return {
         "version": "0.4.0-index",
         "as_of": registry.get("as_of"),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "candidate_count": len(rows),
+        "active_candidate_count": len(active),
+        "onshore_count": sum(x.get("site_type") == "onshore" and x.get("status") != "rejected" for x in rows),
+        "offshore_count": sum(x.get("site_type") == "offshore" and x.get("status") != "rejected" for x in rows),
+        "active_wind_mw": round(sum(float(x.get("wind_mw") or 0) for x in active), 3),
+        "active_bess_mw": round(sum(float(x.get("bess_mw") or 0) for x in active), 3),
         "candidates": rows,
     }
 
@@ -148,17 +172,19 @@ def main() -> None:
     parser.add_argument("--write", action="store_true", help="write derived index and refresh log")
     args = parser.parse_args()
 
-    registry = load(REGISTRY)
+    registry = combined_registry()
     rules = load(RULES)
-    if not registry or not rules:
-        raise SystemExit("[FAIL] discovery registry o identity rules mancanti")
+    if not rules:
+        raise SystemExit("[FAIL] identity rules mancanti")
 
     previous = load(INDEX)
     current = build_index(registry, rules)
     validate(current)
     events = diff(previous, current)
 
-    print(f"[OK] candidati discovery: {current['candidate_count']}")
+    print(f"[OK] candidati discovery: {current['candidate_count']} ({current['active_candidate_count']} non rejected)")
+    print(f"[OK] active onshore/offshore: {current['onshore_count']}/{current['offshore_count']}")
+    print(f"[OK] active wind/BESS: {current['active_wind_mw']:.1f} MW / {current['active_bess_mw']:.1f} MW")
     print(f"[OK] identity keys uniche: {len({x['identity_key'] for x in current['candidates']})}")
     print(f"[OK] eventi refresh: {len(events)}")
 
@@ -169,6 +195,9 @@ def main() -> None:
             "as_of": registry.get("as_of"),
             "generated_at": current["generated_at"],
             "candidate_count": current["candidate_count"],
+            "active_candidate_count": current["active_candidate_count"],
+            "active_wind_mw": current["active_wind_mw"],
+            "active_bess_mw": current["active_bess_mw"],
             "events": events,
         })
         dump(REFRESH_LOG, log)
