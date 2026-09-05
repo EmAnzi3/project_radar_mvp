@@ -32,14 +32,19 @@ Stato operativo dettagliato:
 La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`, mantenendo raw finding, storico variazioni, planner/cadenze, reconciliation ed evidence gate separati dal canonico.
 
 Stato corrente della Draft PR #5:
-- **50 player commerciali** nel Company Network;
+- **58 player commerciali** nel Company Network;
 - **31 nodi istituzionali** nel Source Network;
-- **17 adapter istituzionali eseguibili**: MASE VIA, MASE Provvedimenti, Terna Econnextion, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria, Basilicata, Emilia-Romagna, Lombardia, Piemonte, Umbria e Veneto;
+- **21 adapter istituzionali eseguibili**: MASE VIA, MASE Provvedimenti, Terna Econnextion, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria, Basilicata, Emilia-Romagna, Lombardia, Piemonte, Umbria, Veneto, Abruzzo, Liguria, Marche e Molise;
 - Company Watch diretto sulle `watch_urls` con cadenze 7/14/30 giorni;
 - stato runtime persistente per `new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
 - reconciliation conservativa dei finding verso canonico/Discovery **senza promozione automatica**;
 - digest review-only delle sole variazioni commercialmente utili;
+- **Project Execution investigation queue** per i canonici E4–E7 con open scope, urgency score e playbook di contractor hunt per singolo scope;
 - workflow periodico predisposto con trigger giornaliero e selezione `--due`, senza commit automatici né modifiche automatiche al canonico.
+
+La nuova tranche commerciale aggiunge player execution-oriented come Blu Costruzioni, EGM Project, Barone Costruzione, Gruppo Novello, La Molisana Trasporti, Pizzulo Costruzioni, SIMIC e F&C Wind Service. I riferimenti storici, la prossimità geografica o la presenza tecnica in sito restano **lead di rete**, non award: ad esempio non si deduce Blu sul repowering Carlentini corrente, Pizzulo su Andretta-Bisaccia o EGM come contractor esecutivo di Serra Giannina.
+
+Gli adapter Abruzzo e Molise includono un fallback trasparente `source_channel_snapshot` quando il portale non espone righe progetto server-side: in quel caso il canale resta monitorabile ma non viene falsamente dichiarata acquisizione di dati progetto. Liguria e Marche lavorano sui registri pubblici regionali correnti.
 
 Terna Econnextion resta intelligence aggregata di mercato e non genera progetti. Una VIA positiva MASE non viene interpretata come autorizzazione complessiva, procurement o costruzione. I finding company-direct restano network intelligence finché non esiste evidenza project-specific sul ruolo esecutivo.
 
