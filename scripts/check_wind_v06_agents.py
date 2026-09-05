@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
 from app.wind_agents.base import AgentFinding
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
+from app.wind_agents.execution_watch import build_execution_queue
 from app.wind_agents.planner import (
     _merge_company_registries,
     _merge_institutional_registries,
@@ -40,6 +41,14 @@ for required in ["andretta-bisaccia", "alia-sclafani", "serra-giannina"]:
 assert plan.institutional, "institutional due queue empty"
 assert plan.companies, "company due queue empty"
 
+execution_queue = build_execution_queue(as_of=as_of)
+execution_ids = {row["project_id"] for row in execution_queue["priority_projects"]}
+assert {"andretta-bisaccia", "alia-sclafani", "serra-giannina"}.issubset(execution_ids)
+assert execution_queue["projects"] == len(plan.projects), execution_queue
+assert execution_queue["open_scope_count"] > 0
+assert execution_queue["priority_projects"][0]["urgency_score"] >= 90
+assert "A1/A2" in execution_queue["guard"]
+
 catalog = {task.task_id: task for task in build_institutional_watch_catalog(as_of)}
 company_catalog = build_company_watch_catalog(as_of)
 assert len(company_catalog) >= 50, len(company_catalog)
@@ -47,14 +56,18 @@ assert sum(bool(task.watch_urls) for task in company_catalog) >= 40, "company wa
 
 implemented = set(executable_agent_ids())
 required_adapters = {
+    "abruzzo-via",
     "basilicata-via",
     "calabria-via",
     "campania-viavas",
     "emilia-romagna-regional",
     "lazio-regional",
+    "liguria-via-procedimenti",
     "lombardia-regional",
+    "marche-via-regional",
     "mase-provvedimenti",
     "mase-via",
+    "molise-au-eolico",
     "piemonte-regional",
     "puglia-sistema-energia",
     "sardegna-sira",
@@ -66,7 +79,7 @@ required_adapters = {
     "veneto-regional",
 }
 assert required_adapters.issubset(implemented), implemented
-assert len(implemented) >= 17, implemented
+assert len(implemented) >= 21, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
 
 # Evidence discipline: generic capability / weak signals never close scope.
