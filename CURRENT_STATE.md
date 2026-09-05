@@ -151,6 +151,34 @@ Ordine di lavoro:
 5. refresh dei 4 blocked e degli stale/rejected solo in presenza di nuova evidenza;
 6. revisione del ranking commerciale solo dopo avere abbastanza evidenza oggettiva da superare il neutro `C / 50`.
 
+### Architettura agent-style v0.6
+
+La v0.6 riusa esplicitamente il pattern operativo già collaudato in `pv_agent_mvp`, adattato all'eolico:
+
+`fonti -> agent/collector -> raw findings -> change history -> reconciliation/evidence gate -> canonico/UI`
+
+Implementato nel branch:
+- `app/wind_agents/base.py`: contract comune per gli agenti sorgente;
+- `app/wind_agents/planner.py`: code separate per **Institutional Watch**, **Company Watch** e **Project Execution Watch**, con cadenze proprie;
+- `app/wind_agents/state.py`: persistenza SQLite separata per raw findings e change events; il canonico non viene modificato automaticamente;
+- `app/wind_agents/evidence.py`: gate strutturale unico, per cui solo evidenza project-specific A1/A2 può chiudere uno scope esecutivo;
+- `app/wind_agents/adapters/mase.py`: primo adapter realmente eseguibile, che riusa il collector MASE esistente ma lo restringe a eolico / repowering / offshore;
+- `app/wind_agents/runner.py` + `scripts/run_wind_agents.py`: orchestrazione e CLI;
+- `scripts/check_wind_v06_agents.py`: regressione dedicata.
+
+Il planner usa i registri v0.6 correnti:
+- Company Network base + tranche B;
+- Institutional Source Network base + tranche B;
+- canonico progetti per generare la coda E4–E7 con scope ancora aperti.
+
+Regola di trasparenza: un nodo fonte presente nel registry ma senza adapter eseguibile resta **visibile come lavoro dovuto**, non viene considerato falsamente monitorato.
+
+Prossima estensione del motore:
+1. portare/adattare dal PV Agent i collector regionali ad alta priorità, iniziando da Lazio, Toscana/ATOS, Sardegna, Sicilia, Puglia, Campania, Calabria e Basilicata;
+2. aggiungere adapter company-watch per press/news/supplier pages dei player A;
+3. riconciliare automaticamente i finding con canonico/discovery senza promozione automatica;
+4. generare digest delle sole variazioni utili commercialmente.
+
 Branch di lavoro v0.6:
 `feat/wind-radar-v0.6-execution-intelligence`.
 
