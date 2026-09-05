@@ -56,7 +56,7 @@
 <section class="overview-grid">
 <article class="panel map-panel">
 <div class="panel-heading">
-<div><h2>Mappa progetti</h2><p>Marker per progetto. Le coordinate indicative usano un riferimento territoriale, non la posizione delle WTG.</p></div>
+<div><h2>Mappa progetti</h2><p>Marker solo per i progetti con coordinate territoriali già verificate. I nuovi canonici privi di coordinate restano nel Radar ma non vengono posizionati per stima; le coordinate mostrate non sono posizioni WTG.</p></div>
 <div class="legend-inline" id="stageLegend"></div>
 </div>
 <div class="map-shell" id="projectMap">
@@ -82,11 +82,11 @@
 </section>
 <section class="panel discovery-panel">
 <div class="panel-heading">
-<div class="discovery-note"><h2>Discovery · nuovi progetti da verificare</h2><p>Registro separato dal Radar canonico: mostra candidati MASE onshore e offshore prima della promozione. Non modifica KPI, Contractor View o scope coverage finché identità e stato non superano il gate di verifica.</p></div>
+<div class="discovery-note"><h2>Discovery · candidati non ancora promossi</h2><p>Coda separata dal Radar canonico. I candidati che hanno superato il promotion gate v0.5 sono già nel Radar e non vengono duplicati qui; restano visibili solo i casi da completare, gli scoping datati e le guardie escluse.</p></div>
 </div>
 <div class="discovery-summary" id="discoverySummary"></div>
 <div class="discovery-grid" id="discoveryRows"><div class="discovery-empty">Caricamento discovery…</div></div>
-<div class="scale-note"><b>Corrente</b> = procedura recente/in corso · <b>Scoping datato</b> = ultimo avanzamento individuato nel 2022–2023 senza procedura successiva trovata · <b>Escluso / guardia</b> = esito negativo o archiviazione conservati solo per evitare falsi positivi.</div>
+<div class="scale-note"><b>Da completare</b> = progetto corrente che non ha ancora superato tutti i requisiti del canonico · <b>Scoping datato</b> = ultimo avanzamento individuato nel 2022–2023 senza procedura successiva trovata · <b>Escluso / guardia</b> = esito negativo o archiviazione conservati per evitare falsi positivi.</div>
 </section>
 <section class="panel opportunity-panel">
 <div class="panel-heading">
