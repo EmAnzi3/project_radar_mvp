@@ -21,12 +21,29 @@ def main() -> None:
     meta = load("meta.json")
     scale = meta.get("maturity_scale", [])
     expected_codes = [f"E{i}" for i in range(9)]
+    expected_labels = {
+        "E0": "Pre-sviluppo",
+        "E1": "Sviluppo",
+        "E2": "Iter autorizzativo",
+        "E3": "Iter autorizzativo avanzato",
+        "E4": "Autorizzato",
+        "E5": "FID / investimento impegnato",
+        "E6": "Procurement / affidamenti",
+        "E7": "Costruzione",
+        "E8": "In esercizio",
+    }
     codes = [item.get("code") for item in scale]
     if codes != expected_codes:
         fail(f"scala maturità inattesa: {codes}; attesa {expected_codes}")
     for item in scale:
-        if not item.get("label") or not item.get("description"):
-            fail(f"{item.get('code')}: label/description canonica mancante")
+        code = item.get("code")
+        if item.get("label") != expected_labels.get(code):
+            fail(f"{code}: label inattesa {item.get('label')!r}; attesa {expected_labels.get(code)!r}")
+        if not item.get("description"):
+            fail(f"{code}: description canonica mancante")
+
+    if "scala interna del Radar" not in str(meta.get("note", "")):
+        fail("meta: deve essere esplicito che E0-E8 è una scala interna del Radar")
 
     manifest = load("projects.json")
     projects = []
@@ -72,10 +89,22 @@ def main() -> None:
     if "lavori fisici" not in by_id["castelfranco-cer"].get("status_note", "").lower():
         fail("Castelfranco/CER: E7 deve essere motivato esplicitamente da lavori fisici osservati")
 
+    glossary = load("glossary.json")
+    stage_terms = [x for x in glossary.get("terms", []) if x.get("term") == "E0–E8"]
+    if len(stage_terms) != 1:
+        fail("glossario: voce E0–E8 mancante o duplicata")
+    definition = stage_terms[0].get("definition", "")
+    for label in expected_labels.values():
+        if label not in definition:
+            fail(f"glossario: manca la label canonica {label!r}")
+    if "scala interna del Radar" not in definition:
+        fail("glossario: deve chiarire che E0-E8 non è una nomenclatura tecnica universale")
+
     print("[OK] scala E0-E8 canonica, sequenziale e completa")
+    print("[OK] label sector-aligned: Pre-sviluppo → In esercizio")
     print(f"[OK] distribuzione 17 seed: {actual}")
-    print("[OK] Castelfranco/CER corretto a E7; Andretta e Tricarico restano E6; Nulvi E4")
-    print("[OK] fasi a zero conservate: E0, E1, E5, E8")
+    print("[OK] Castelfranco/CER E7; Andretta e Tricarico E6; Nulvi E4")
+    print("[OK] glossario e meta dichiarano E0-E8 come scala interna del Radar")
 
 
 if __name__ == "__main__":
