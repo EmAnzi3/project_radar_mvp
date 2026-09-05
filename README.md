@@ -29,7 +29,17 @@ Stato operativo dettagliato:
 
 ### Sviluppo v0.6
 
-La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`: raw findings, storico variazioni, planner per cadenza ed evidence gate restano separati dal canonico. Gli adapter istituzionali eseguibili correnti sono **MASE VIA, Lazio VIA/PAUR, Toscana GeA, ATOS Toscana FER, Sardegna SIRA e Sicilia SI-VVI**. Ulteriori fonti regionali, company-watch e scheduling persistente sono ancora in sviluppo sul Draft PR #5. Il workflow PR valida architettura e regressioni; la disponibilità live dei portali viene verificata solo con l'esecuzione degli adapter.
+La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`, mantenendo raw finding, storico variazioni, planner/cadenze ed evidence gate separati dal canonico.
+
+Stato corrente della Draft PR #5:
+- **50 player commerciali** nel Company Network;
+- **31 nodi istituzionali** nel Source Network;
+- **10 adapter istituzionali eseguibili**: MASE, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria e Basilicata;
+- Company Watch diretto sulle `watch_urls` con cadenze 7/14/30 giorni;
+- stato runtime persistente per `new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
+- workflow periodico predisposto con trigger giornaliero e selezione `--due`, senza commit automatici né modifiche automatiche al canonico.
+
+Il workflow PR valida architettura e regressioni; la disponibilità live dei portali viene verificata solo da un'esecuzione effettiva degli adapter. Il workflow schedulato diventerà attivo solo se la v0.6 verrà approvata e il relativo file entrerà nel branch di default.
 
 ## Altri output repository
 
