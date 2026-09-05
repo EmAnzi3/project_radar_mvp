@@ -8,6 +8,7 @@ from .adapters import (
     MaseWindAgent,
     SardegnaWindAgent,
     SiciliaWindAgent,
+    SistemaPugliaWindAgent,
     ToscanaAtosWindAgent,
     ToscanaWindAgent,
 )
@@ -20,6 +21,7 @@ AGENT_FACTORIES = {
     "mase-via": MaseWindAgent,
     "sardegna-sira": SardegnaWindAgent,
     "sicilia-sivvi": SiciliaWindAgent,
+    "sistema-puglia": SistemaPugliaWindAgent,
     "toscana-gea": ToscanaWindAgent,
     "toscana-atos": ToscanaAtosWindAgent,
 }
