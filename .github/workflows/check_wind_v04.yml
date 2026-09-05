@@ -25,6 +25,7 @@ jobs:
             scripts/check_wind_stages.py
             scripts/check_wind_v04.py
             scripts/check_wind_v05.py
+            scripts/check_wind_v05_enrichment.py
             scripts/wind_discovery_engine.py
 
       - name: Set up Python
@@ -67,9 +68,14 @@ jobs:
       - name: Canonical promotion v0.5 validation
         run: python scripts/check_wind_v05.py
 
+      - name: Commercial enrichment v0.5 validation
+        run: python scripts/check_wind_v05_enrichment.py
+
       - name: JavaScript syntax
         run: |
           node --check docs/wind/assets/app.js
           node --check docs/wind/assets/discovery-v04.js
           node --check docs/wind/assets/stage-consistency.js
           node --check docs/wind/assets/timeline-coherence.js
+          node --check docs/wind/assets/commercial-enrichment-v05.js
+          node --check docs/wind/assets/contractor-direct-fix.js
