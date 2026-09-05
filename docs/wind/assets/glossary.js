@@ -2,7 +2,8 @@
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 let glossary=null,modal=null,query=null,list=null,count=null,lastFocus=null;
 function normalize(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
-function render(){if(!glossary||!list)return;const q=normalize(query?.value);const terms=(glossary.terms||[]).filter(x=>!q||normalize([x.term,x.full,x.category,x.definition].join(' ')).includes(q));count.textContent=q?`${terms.length} termini trovati`:`${terms.length} termini`;
+function countLabel(n,filtered){if(n===1)return filtered?'1 termine trovato':'1 termine';return filtered?`${n} termini trovati`:`${n} termini`}
+function render(){if(!glossary||!list)return;const q=normalize(query?.value);const terms=(glossary.terms||[]).filter(x=>!q||normalize([x.term,x.full,x.category,x.definition].join(' ')).includes(q));count.textContent=countLabel(terms.length,!!q);
  if(!terms.length){list.innerHTML='<div class="glossary-empty">Nessun termine trovato. Prova con una sigla o una parola più semplice.</div>';return}
  const groups=new Map();terms.forEach(x=>{const k=x.category||'Altro';if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)});
  list.innerHTML=[...groups.entries()].map(([category,items])=>`<section class="glossary-group"><h3>${esc(category)}</h3><div class="glossary-items">${items.map(x=>`<article class="glossary-item"><div class="glossary-term"><b>${esc(x.term)}</b>${x.full?`<span>${esc(x.full)}</span>`:''}</div><p>${esc(x.definition)}</p></article>`).join('')}</div></section>`).join('')}
