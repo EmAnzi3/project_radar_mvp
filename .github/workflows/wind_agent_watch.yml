@@ -55,6 +55,40 @@ jobs:
         run: |
           python scripts/run_wind_agents.py company-run --due --output reports/wind-agent/company-run.json
 
+      - name: Build review-only commercial digest
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          report_dir = Path("reports/wind-agent")
+          run_ids = []
+          for name in ("institutional-run.json", "company-run.json"):
+              path = report_dir / name
+              if not path.exists():
+                  continue
+              data = json.loads(path.read_text(encoding="utf-8"))
+              run_id = data.get("run_id")
+              if run_id:
+                  run_ids.append(str(run_id))
+
+          if not run_ids:
+              (report_dir / "digest.json").write_text(
+                  json.dumps({"run_ids": [], "events": 0, "actionable_events": 0, "items": []}, indent=2) + "\n",
+                  encoding="utf-8",
+              )
+              sys.exit(0)
+
+          cmd = [sys.executable, "scripts/run_wind_agents.py", "digest"]
+          for run_id in run_ids:
+              cmd.extend(["--run-id", run_id])
+          cmd.extend(["--output", str(report_dir / "digest.json")])
+          subprocess.run(cmd, check=True)
+          PY
+
       - name: Publish run summary
         if: always()
         shell: bash
@@ -97,6 +131,20 @@ jobs:
                   lines.append(f"  - `{company_id}`: {text[:500]}")
           else:
               lines.extend(["### Company network", "- Run report missing."])
+
+          digest = Path("reports/wind-agent/digest.json")
+          if digest.exists():
+              data = json.loads(digest.read_text(encoding="utf-8"))
+              lines.extend([
+                  "### Reconciliation digest",
+                  f"- New/changed events evaluated: {data.get('events', 0)}",
+                  f"- Actionable review items: {data.get('actionable_events', 0)}",
+                  f"- Non-actionable events retained only in raw history: {data.get('non_actionable_events', 0)}",
+              ])
+              for action_type, count in sorted((data.get("action_types") or {}).items()):
+                  lines.append(f"  - `{action_type}`: {count}")
+          else:
+              lines.extend(["### Reconciliation digest", "- Digest report missing."])
 
           text = "\n".join(lines) + "\n"
           print(text)
