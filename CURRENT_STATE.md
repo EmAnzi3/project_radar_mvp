@@ -21,7 +21,7 @@ Stato branch: enrichment / preview, **non mergiato e non pubblicato**.
 
 ### Enrichment v0.3 in review
 
-Obiettivo: trasformare il contractor gap binario in **scope coverage** e integrare contractor hunt, deep-document e una nuova classe di fonti pubbliche territoriali.
+Obiettivo: trasformare il contractor gap binario in **scope coverage** e integrare contractor hunt, deep-document e fonti pubbliche territoriali.
 
 Core scope normalizzati:
 
@@ -33,12 +33,12 @@ Core scope normalizzati:
 6. Logistics / heavy transport;
 7. Dismantling per i repowering.
 
-Metriche dopo l'enrichment corrente:
+Metriche correnti:
 
 - **230,9 MW** con almeno uno scope esecutivo A1/A2 identificato;
 - **8 / 108 scope applicabili** coperti A1/A2 = **7,4%**;
 - il KPI MW indica soltanto la presenza di almeno uno scope confermato, non un BoP completamente assegnato;
-- il secondo pass documentale aggiunge intelligence e soggetti tecnici, ma **non aumenta artificialmente gli scope esecutivi coperti**.
+- i pass documentali e territoriali aumentano l'intelligence senza promuovere automaticamente segnali B/C o soggetti tecnici a contractor esecutivi.
 
 Nuove evidenze contractor/tecniche già censite:
 
@@ -60,7 +60,7 @@ Il branch aggiunge:
 - chip scope coverage in Opportunità prioritarie;
 - scheda progetto con Commercial Window, completezza intelligence, matrice scope, investigation queue e document intelligence;
 - Contractor view arricchita con relazioni tecniche/esecutive senza promuovere segnali B/C a contractor confermati;
-- pannello `Deep document & public-source pass` nel drawer, ora alimentato anche dai registri di fonti regionali e comunali.
+- pannello `Deep document & public-source pass` nel drawer, alimentato anche dai registri di fonti regionali e comunali.
 
 ### Deep-document — full text acquisito
 
@@ -69,21 +69,19 @@ Già letti in profondità:
 - Andretta-Bisaccia — Piano di cantierizzazione;
 - Alia-Sclafani — cronoprogramma repowering;
 - Serra Giannina — cronoprogramma BoP WTG-by-WTG;
-- **ALAS — `PEALAS_PE_00016_01_00` Cronoprogramma dei lavori / Progetto Esecutivo Opere Civili**;
-- **Toritto — `C24PU001WP010R00` Cronoprogramma**;
-- **Fenice — REL101 Relazione Generale + REL102 Relazione tecnica impianto, integrazioni aprile 2026**;
-- **Lama Cupa / connessione — `74402A` Cronoprogramma SE 380/150/36 kV Casamassima**.
+- ALAS — `PEALAS_PE_00016_01_00` Cronoprogramma dei lavori / Progetto Esecutivo Opere Civili;
+- Toritto — `C24PU001WP010R00` Cronoprogramma;
+- Fenice — REL101 Relazione Generale + REL102 Relazione tecnica impianto, integrazioni aprile 2026;
+- Lama Cupa / connessione — `74402A` Cronoprogramma SE 380/150/36 kV Casamassima.
 
-### Risultati del secondo pass documentale
+Risultati principali:
 
-- **ALAS:** il cronoprogramma è una baseline pianificata emessa ad agosto 2024; contiene anchor cage, trasformatore, SSE/cavidotto, erection e COD pianificati, ma non va sovrapposto allo stato reale successivo comunicato da RWE. Hydro è progettista delle opere civili, non contractor esecutivo.
-- **Toritto:** programma di **503 giorni relativi**. Apertura 1–10, strade/piazzole fino a ~214, fondazioni ~170–266, erection ~237–306, cavidotti 71–300, SSE 301–450, commissioning SSE 450–489, smobilizzo 489–503. Nessuna conversione a date finché manca un anchor reale di avvio cantiere.
-- **Fenice:** REL101/102 confermano 51 WTG / 367,2 MW, ATS Engineering, opere civili, cavidotti e stazione/connessione; nessun contractor esecutivo e nessun cronoprogramma di costruzione trovato in questi due elaborati.
-- **Lama Cupa:** `74402A` è nel corpus integrativo ma il frontespizio identifica FLYNIS PV 34 come committente e Brulli Trasmissione come engineering & construction della SE Casamassima. **Brulli non viene attribuita a Lama Cupa.** Il file è trattato come intelligence sull'infrastruttura RTN condivisa/relata e sulla `RdO e subappalto opere civili` della stazione.
+- **ALAS:** cronoprogramma baseline agosto 2024; contiene fondazioni/piazzole, SSE/cavidotto, anchor cage, erection e COD, ma non sostituisce lo stato reale RWE 2026. Hydro è progettista, non Civil BoP.
+- **Toritto:** programma di 503 giorni relativi; apertura 1–10, strade/piazzole fino a ~214, fondazioni ~170–266, erection ~237–306, cavidotti 71–300, SSE 301–450, commissioning SSE 450–489, smobilizzo 489–503. Nessuna data calendario senza anchor reale.
+- **Fenice:** REL101/102 confermano 51 WTG / 367,2 MW, ATS Engineering, opere civili, cavidotti e stazione/connessione; nessun contractor esecutivo identificato.
+- **Lama Cupa:** `74402A` riguarda la SE Casamassima, con FLYNIS PV 34 committente e Brulli Trasmissione engineering & construction. **Brulli non viene attribuita a Lama Cupa.**
 
-I dati incrementali sono in `docs/wind/data/enrichment-docpass2-2026-09-04.json`.
-
-### Nuova classe fonti: enti pubblici territoriali
+### Fonti pubbliche territoriali
 
 Il radar interroga sistematicamente, limitatamente ai 17 seed:
 
@@ -93,40 +91,49 @@ Il radar interroga sistematicamente, limitatamente ai 17 seed:
 4. Terna/ANAS/gestori infrastrutturali;
 5. portali corporate di proponenti/contractor come fonti dirette o lead, senza sostituire A1.
 
-Registri dati:
+Registri:
 
-- `docs/wind/data/public-entity-sources-2026-09-04.json` — fonti ufficiali regionali;
-- `docs/wind/data/local-entity-sources-2026-09-04.json` — primi hit comunali;
-- `docs/wind/research/2026-09-04-public-entity-source-pass.md` — metodo e audit.
+- `docs/wind/data/public-entity-sources-2026-09-04.json`;
+- `docs/wind/data/local-entity-sources-2026-09-04.json`;
+- `docs/wind/research/2026-09-04-public-entity-source-pass.md`;
+- `docs/wind/research/2026-09-05-local-source-pass-2.md`;
+- `docs/wind/research/2026-09-05-identity-reconciliation.md`.
 
-Primi riscontri ufficiali ad alto valore:
+### Pass locale/pubblico 2026-09-05
 
-- **ALAS:** Comune di Ittiri pubblica documentazione specifica e la lettera del Sindaco alla Regione Sardegna sulle attività ALAS;
-- **Tarsia Ovest:** Comune di Tarsia ha pubblicato all'Albo un avvio procedimento specifico del parco, utile per usi civici/particelle e la catena amministrativa pre-voltura;
-- **Greci-Montaguto:** Regione Campania documenta variante 42 MW, connessione, ottimizzazione piazzole/viabilità ed espropri, con elaborati disponibili presso UOD 500203;
-- **Serra Giannina:** Regione Basilicata espone il procedimento espropriativo del medesimo progetto, ma su configurazione autorizzativa precedente;
-- **Serra Palino:** Regione Puglia espone AU, SSE utente e connessione Deliceto; configurazione autorizzativa storica 48 MW;
-- **Venusia:** Regione Basilicata conferma lavori in corso 45 MW Venosa/Maschito;
-- **Tarsia Ovest:** Regione Calabria 2026 conferma variante favorevole e voltura a ENI Plenitude Renewables Italy;
-- **Nulvi-Ploaghe:** BURAS riemette AU n.463/2026, 27 WTG / 121,5 MW e codice SUAPEE 496419;
-- **Carlentini:** Regione Siciliana documenta gli attraversamenti idraulici della configurazione autorizzativa precedente;
-- **Castelfranco/CER:** Regione Campania/BURC documenta espropri, servitù e occupazione temporanea per il repowering Difesa Vecchia.
+- **Andretta-Bisaccia:** identity reconciliation chiusa. Il record operativo resta Edison Rinnovabili **18 WTG / 88,5 MW**. Il procedimento regionale 13 WTG / 85,8 MW è una pista amministrativa/progettuale distinta e correlata, non un aggiornamento del record corrente.
+- **ALAS:** introdotto identity guard tra `ALAS` 66 MW e il distinto `Alas 2` 50,4 MW negli stessi comuni; nessun atto o contractor viene trasferito tra i due senza verifica di procedura/configurazione.
+- **Serra Giannina:** gli elaborati esecutivi MASE 2026 confermano la configurazione corrente **42 MW / 6 WTG**; configurazioni precedenti restano storico amministrativo.
+- **Tarsia Ovest:** ricostruita la catena locale/amministrativa PLT → Eni Plenitude. Comune di Tarsia: convenzione PLT 2023 e ordine del giorno 01/12/2025 per la nuova convenzione con Plenitude; Regione Calabria: voltura 2025 e variante 2026. Resta da recuperare la delibera finale 2025 con allegato convenzione.
+- **Nulvi-Ploaghe:** Comune di Osilo, Delibera Consiglio n.29 del 30/07/2026, dedicata al potenziamento. Il registro ordinanze Osilo 2026 non mostra ancora un atto chiaramente attribuibile al cantiere eolico. Il progetto resta Priority 1 perché ERG dichiara un rilevante ricorso a imprese/fornitori locali senza ancora nominarli.
+- **Tricarico:** genealogia amministrativa `Corona Prima`/Adest separata dalle configurazioni storiche; il record corrente resta 42 MW. Nessuna deduzione `Idoka proprietaria = Idoka Civil BoP`.
+- **Greci-Montaguto:** variante, espropri e cantiere sono confermati, ma Civil BoP/fondazioni restano aperti.
 
 ### Regola identity/versioning
 
-Gli atti territoriali spesso descrivono una configurazione autorizzativa precedente a quella corrente. Ogni fonte viene quindi marcata con uno stato identità (`same-project-current`, `same-project-historical-config`, `conflict-to-reconcile`) e **non aggiorna MW/WTG automaticamente**.
+Ogni fonte viene classificata rispetto al record operativo (`same-project-current`, `same-project-historical-config`, `same-project-current-plus-parallel-track`, ecc.). MW/WTG non vengono mai sovrascritti automaticamente sulla sola base del nome/località.
 
-Caso aperto più importante: **Andretta-Bisaccia** — Regione Campania luglio 2026 descrive 13 WTG / 85,8 MW e smantellamento di 18 macchine, mentre il record corrente del radar è diverso. La fonte resta una pista amministrativa finché l'identità/versione non è riconciliata.
+### Stato contractor hunt
+
+Il pass locale/pubblico del 5 settembre **non chiude nuovi scope esecutivi A1/A2**. I target con maggior valore investigativo restano:
+
+- Nulvi-Ploaghe — procurement locale dichiarato, fornitori non nominati;
+- ALAS — cantiere attivo, impresa esecutrice non identificata;
+- Serra Giannina — D’Agostino resta forte segnale B;
+- Greci-Montaguto — cantiere attivo, BoP/fondazioni aperti;
+- Tricarico — financing e construction monitoring osservati, BoP aperto.
 
 ### Pass aperti prima di proporre merge
 
-- contractor hunt sui gap Priority 1 usando anche albi/trasparenza/ordinanze;
+- recuperare delibera finale + convenzione 2025 Tarsia–Plenitude;
+- cercare Nulvi/Ploaghe/Osilo: ordinanze viabilità, occupazioni e trasporti eccezionali;
+- cercare Ittiri/Villanova Monteleone: atti locali ALAS su viabilità/mezzi pesanti/cantiere;
+- cercare Greci/Montaguto e Provincia Avellino: viabilità e trasporti del repowering;
+- cercare Tricarico/Adest: apertura cantiere, connessione e accessi;
 - cercare un cronoprogramma Fenice nel restante corpus MASE;
-- cercare l'anchor reale di avvio Toritto quando emergerà;
-- seguire la filiera della SE Casamassima senza trasferire automaticamente contractor condivisi a Lama Cupa;
-- ampliare il pass comunale/provinciale sugli altri progetti ACTIVE/OPEN;
-- preview visuale desktop/mobile del nuovo pannello pubblico/documentale;
-- audit puntuale delle coordinate territoriali contro corografie/layout ufficiali resta separato.
+- cercare l'anchor reale di avvio Toritto;
+- preview visuale desktop/mobile del nuovo pannello prima di qualsiasi merge;
+- audit coordinate territoriali contro corografie/layout ufficiali resta separato.
 
 ### Vincoli
 
