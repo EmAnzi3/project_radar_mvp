@@ -2,18 +2,26 @@
 const $=s=>document.querySelector(s), all=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const fmt=v=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:1}).format(+v||0);
-let baseMeta={},overlay={},projects=[],byId=new Map(),contractorChosen='',contractorView=null,contractorSummary=null,contractorSelect=null,renderLock=false;
+let baseMeta={},overlay={},auxOverlays=[],projects=[],byId=new Map(),contractorChosen='',contractorView=null,contractorSummary=null,contractorSelect=null,renderLock=false;
 async function load(){
   const manifest=await fetch('data/projects.json',{cache:'no-store'}).then(r=>r.json());
   const [meta,...chunks]=await Promise.all([fetch('data/'+manifest.meta,{cache:'no-store'}).then(r=>r.json()),...manifest.chunks.map(x=>fetch('data/'+x,{cache:'no-store'}).then(r=>r.json()))]);
   baseMeta=meta;
   try{overlay=await fetch('data/enrichment-2026-09-04.json',{cache:'no-store'}).then(r=>r.json())}catch(err){console.warn('scope-intelligence: enrichment non disponibile',err);overlay={projects:{},method:{core_scopes:[],scope_role_map:{}}}}
-  projects=chunks.flat().map(p=>mergeProject(structuredClone(p),overlay.projects?.[p.id]));
+  auxOverlays=await Promise.all([
+    fetch('data/enrichment-docpass2-2026-09-04.json',{cache:'no-store'}).then(r=>r.json()).catch(err=>{console.warn('scope-intelligence: docpass2 non disponibile',err);return{projects:{}}}),
+    fetch('data/contractor-leads-2026-09-05.json',{cache:'no-store'}).then(r=>r.json()).catch(err=>{console.warn('scope-intelligence: contractor leads non disponibili',err);return{projects:{}}})
+  ]);
+  projects=chunks.flat().map(p=>{
+    let merged=mergeProject(structuredClone(p),overlay.projects?.[p.id],true);
+    auxOverlays.forEach(a=>{merged=mergeProject(merged,a.projects?.[p.id],false)});
+    return merged
+  });
   byId=new Map(projects.map(p=>[p.id,p]));
 }
-function mergeProject(p,o){
+function mergeProject(p,o,primary=false){
   if(!o)return p;
-  p._intel=o;
+  if(primary)p._intel=o;
   p.sources=p.sources||[]; p.relations=p.relations||[];
   (o.sources||[]).forEach(s=>{if(!p.sources.some(x=>x.id===s.id))p.sources.push(s)});
   (o.relations||[]).forEach(spec=>{
@@ -51,8 +59,13 @@ function injectDrawer(){const body=$('#detailBody'),title=$('#detailTitle');if(!
   const scopeHtml=cov.states.map(({scope,state})=>{let detail='OPEN';if(state.status==='covered')detail=state.rels.map(r=>`${esc(r.company)} ${esc(r.confidence)}`).join(' · ');if(state.status==='signal')detail='SIGNAL '+state.rels.map(r=>`${esc(r.company)} ${esc(r.confidence)}`).join(' · ');return `<div class="scope-item ${state.status}"><span>${esc(scope.label)}</span><b>${detail}</b></div>`}).join('');
   const inv=(intel.investigation||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>Nessuna azione investigativa specifica censita.</li>';
   const docs=(intel.documents||[]).map(d=>`<div class="doc-intel"><div><b>${esc(d.title)}</b><span>${esc(d.note||'')}</span></div><span class="doc-status ${esc(d.status)}">${esc(d.status)}</span></div>`).join('');
-  const overlayRels=(intel.relations||[]).map(spec=>{const r=(p.relations||[]).find(x=>x.company===spec.company&&x.source_id===spec.source_id&&x.role===spec.role)||spec;return relationLine(r)}).join('');
-  const html=`<section class="detail-section scope-intel-section"><h3>Commercial & scope intelligence</h3><div class="intel-head"><span class="commercial-window ${windowClass(win.code)}">${esc(win.code||'N.D.')}</span><span class="intel-score">Completezza intelligence ${comp.n}/${comp.total} · ${comp.pct}%</span><span class="intel-score">Scope A1/A2 ${cov.covered}/${cov.total}</span></div>${win.reason?`<div class="detail-note">${esc(win.reason)}</div>`:''}<div class="scope-grid">${scopeHtml}</div>${overlayRels?`<h4>Nuove evidenze / segnali</h4><div class="intel-rel-list">${overlayRels}</div>`:''}<h4>Investigation queue</h4><ul class="investigation-list">${inv}</ul>${docs?`<h4>Document intelligence</h4><div class="doc-intel-list">${docs}</div>`:''}</section>`;
+  const primaryRels=(intel.relations||[]).map(spec=>{const r=(p.relations||[]).find(x=>x.company===spec.company&&x.source_id===spec.source_id&&x.role===spec.role)||spec;return relationLine(r)});
+  const auxSpecs=auxOverlays.flatMap(a=>a.projects?.[p.id]?.relations||[]);
+  const auxRels=auxSpecs.map(spec=>{const r=(p.relations||[]).find(x=>x.company===spec.company&&x.source_id===spec.source_id&&x.role===spec.role)||spec;return relationLine(r)});
+  const overlayRels=[...primaryRels,...auxRels].join('');
+  const extraInv=auxOverlays.flatMap(a=>a.projects?.[p.id]?.investigation||[]);
+  const allInv=[...(intel.investigation||[]),...extraInv].filter((x,i,a)=>a.indexOf(x)===i).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>Nessuna azione investigativa specifica censita.</li>';
+  const html=`<section class="detail-section scope-intel-section"><h3>Commercial & scope intelligence</h3><div class="intel-head"><span class="commercial-window ${windowClass(win.code)}">${esc(win.code||'N.D.')}</span><span class="intel-score">Completezza intelligence ${comp.n}/${comp.total} · ${comp.pct}%</span><span class="intel-score">Scope A1/A2 ${cov.covered}/${cov.total}</span></div>${win.reason?`<div class="detail-note">${esc(win.reason)}</div>`:''}<div class="scope-grid">${scopeHtml}</div>${overlayRels?`<h4>Nuove evidenze / segnali</h4><div class="intel-rel-list">${overlayRels}</div>`:''}<h4>Investigation queue</h4><ul class="investigation-list">${allInv}</ul>${docs?`<h4>Document intelligence</h4><div class="doc-intel-list">${docs}</div>`:''}</section>`;
   const first=body.querySelector('.detail-section');if(first)first.insertAdjacentHTML('beforebegin',html);else body.insertAdjacentHTML('beforeend',html)
 }
 function waitFor(sel,ms=2500){return new Promise(resolve=>{const hit=$(sel);if(hit)return resolve(hit);const start=Date.now(),t=setInterval(()=>{const el=$(sel);if(el||Date.now()-start>ms){clearInterval(t);resolve(el)}},40)})}
