@@ -10,6 +10,7 @@ DATA = ROOT / "docs" / "wind" / "data"
 MANIFEST = DATA / "projects.json"
 ENRICHMENT = DATA / "enrichment-2026-09-04.json"
 ENRICHMENT2 = DATA / "enrichment-docpass2-2026-09-04.json"
+CONTRACTOR_LEADS = DATA / "contractor-leads-2026-09-05.json"
 
 
 def load_json(path: Path):
@@ -108,6 +109,13 @@ def main() -> None:
             fail("docpass2 contiene progetti fuori dal seed")
         merged = [merge_overlay(project, overlay2.get(project["id"], {})) for project in merged]
 
+    if CONTRACTOR_LEADS.exists():
+        leads = load_json(CONTRACTOR_LEADS)
+        lead_projects = leads.get("projects", {})
+        if set(lead_projects) != {"tricarico"}:
+            fail(f"contractor leads: ID inattesi {sorted(lead_projects)}")
+        merged = [merge_overlay(project, lead_projects.get(project["id"], {})) for project in merged]
+
     core_scopes = enrichment["method"]["core_scopes"]
     role_map = enrichment["method"]["scope_role_map"]
 
@@ -156,9 +164,19 @@ def main() -> None:
     serra = next(project for project in merged if project["id"] == "serra-giannina")
     if any(scope_covered(serra, scope) for scope in applicable(serra)):
         fail("Serra Giannina: un segnale B sta chiudendo indebitamente uno scope")
+
     tricarico = next(project for project in merged if project["id"] == "tricarico")
     if any(scope_covered(tricarico, scope) for scope in applicable(tricarico)):
-        fail("Tricarico: relazione societaria/advisory sta chiudendo indebitamente uno scope")
+        fail("Tricarico: un segnale advisory/installation B sta chiudendo indebitamente uno scope")
+    tricarico_install = [
+        relation for relation in tricarico.get("relations", [])
+        if relation.get("source_id") == "tri-vestas-install-lead"
+    ]
+    if len(tricarico_install) != 1:
+        fail("Tricarico: lead Vestas installation mancante o duplicato")
+    if tricarico_install[0].get("confidence") != "B" or tricarico_install[0].get("scope_hint") != "erection":
+        fail("Tricarico: lead Vestas installation deve restare B con scope_hint erection")
+
     carlentini = next(project for project in merged if project["id"] == "carlentini")
     carlentini_covered = {scope["id"] for scope in applicable(carlentini) if scope_covered(carlentini, scope)}
     if carlentini_covered != {"foundation"}:
@@ -175,9 +193,9 @@ def main() -> None:
         fail("Lama Cupa: Brulli è stata attribuita al progetto invece che mantenuta come contesto SE condivisa")
 
     if covered_slots != 8 or total_slots != 108:
-        fail(f"scope coverage inattesa dopo docpass2: {covered_slots}/{total_slots}; attesa 8/108")
+        fail(f"scope coverage inattesa dopo enrichment ausiliari: {covered_slots}/{total_slots}; attesa 8/108")
     if not math.isclose(mw_with_scope, 230.9, abs_tol=0.01):
-        fail(f"MW con scope inattesi dopo docpass2: {mw_with_scope:.1f}; attesi 230.9")
+        fail(f"MW con scope inattesi dopo enrichment ausiliari: {mw_with_scope:.1f}; attesi 230.9")
 
     print(f"[OK] seed Wind: 17 progetti / {total_mw:.1f} MW")
     print(f"[OK] scope coverage: {covered_slots}/{total_slots} ({covered_slots / total_slots * 100:.1f}%)")
@@ -185,6 +203,8 @@ def main() -> None:
     print("[OK] segnali B/C e ruoli tecnici separati dagli scope esecutivi confermati")
     if ENRICHMENT2.exists():
         print("[OK] docpass2: ALAS/Toritto/Fenice/Lama Cupa validati; Brulli non attribuita a Lama Cupa")
+    if CONTRACTOR_LEADS.exists():
+        print("[OK] contractor leads: Vestas/Tricarico installation resta segnale B e non chiude erection")
 
 
 if __name__ == "__main__":
