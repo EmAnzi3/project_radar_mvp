@@ -2,7 +2,7 @@
   "version": "0.6.0-d",
   "as_of": "2026-09-05",
   "tranche": "company-network-v06d",
-  "purpose": "Current project-support signals that expand the commercial network without converting supervision or staffing evidence into execution awards.",
+  "purpose": "Project-support and same-site supplier signals that expand the commercial network without converting supervision, staffing or historical references into current execution awards.",
   "companies": [
     {
       "id": "progeco-group",
@@ -21,6 +21,20 @@
       "last_checked": "2026-09-05",
       "next_action": "Use the current Andretta-Bisaccia site-management recruitment signal to identify the client-side supervision chain and, separately, the actual civil/electrical/foundation contractors; do not treat Progeco as execution contractor without project-specific award evidence.",
       "notes": "A current Progeco Group job posting is explicitly for Deputy/Site Manager support on the 88.5 MW Andretta-Bisaccia wind repowering and describes supervision of civil works, WTG foundations, roads, MT/AT cable ducts and the new SSE. This is project-specific support/supervision intelligence, not an execution-scope award."
+    },
+    {
+      "id": "socep",
+      "name": "SOCEP S.r.l.",
+      "cluster": ["civil_works", "site_preparation", "substation_civil", "mv_cable_works"],
+      "commercial_priority": "B",
+      "wind_relevance": "core_local_supplier",
+      "relationship_status": "historical_same_site_supplier",
+      "known_capabilities": ["wind site civil works", "platform and earthworks", "substation civil/naturalistic works", "medium-voltage cable works"],
+      "project_links": ["alia-sclafani"],
+      "watch_urls": ["https://www.socep.it/?page_id=66"],
+      "last_checked": "2026-09-05",
+      "next_action": "Verify whether the historical Asja relationship and works at the Alia-Sclafani site have continued into the current 55 MW repowering; current Civil BoP, foundations and cable packages remain open until a new project-specific award is found.",
+      "notes": "SOCEP's public work references include piazzole and substation-related civil works for the pre-existing Alia-Sclafani wind plant for Asja Ambiente Italia, plus MT cable work for another wind client. This is a same-site/client historical supplier signal, not evidence of a role in the current repowering."
     }
   ]
 }
