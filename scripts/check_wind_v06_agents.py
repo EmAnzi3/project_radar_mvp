@@ -34,7 +34,8 @@ for required in ["andretta-bisaccia", "alia-sclafani", "serra-giannina"]:
     assert required in project_ids, f"priority project missing from wind-agent plan: {required}"
 assert plan.institutional, "institutional due queue empty"
 assert plan.companies, "company due queue empty"
-assert "mase-via" in executable_agent_ids()
+implemented = set(executable_agent_ids())
+assert {"mase-via", "lazio-via"}.issubset(implemented), implemented
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
