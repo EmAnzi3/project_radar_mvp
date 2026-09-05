@@ -11,10 +11,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.base import AgentFinding
+from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.planner import (
     _merge_company_registries,
     _merge_institutional_registries,
+    build_company_watch_catalog,
     build_institutional_watch_catalog,
     build_run_plan,
 )
@@ -38,6 +40,10 @@ assert plan.institutional, "institutional due queue empty"
 assert plan.companies, "company due queue empty"
 
 catalog = {task.task_id: task for task in build_institutional_watch_catalog(as_of)}
+company_catalog = build_company_watch_catalog(as_of)
+assert len(company_catalog) >= 50, len(company_catalog)
+assert sum(bool(task.watch_urls) for task in company_catalog) >= 40, "company watch URL coverage too low"
+
 implemented = set(executable_agent_ids())
 required_adapters = {
     "basilicata-via",
@@ -93,12 +99,19 @@ with tempfile.TemporaryDirectory() as tmp:
 
     initial_due = set(due_agent_ids(as_of=as_of))
     assert required_adapters.issubset(initial_due), initial_due
+    future_company_due = set(due_company_ids(as_of=date(2026, 10, 5)))
+    assert future_company_due, "company watch future due queue unexpectedly empty"
 
     run_id = state.begin_run(plan.total_tasks, note="validator")
     state.mark_watch_attempt("mase-via", run_id, success=True, metadata={"validator": True})
     assert state.get_watch_status("mase-via")["last_success"]
     # Same-day cadence suppression: a successful live run supersedes registry baseline.
     assert "mase-via" not in set(due_agent_ids(as_of=as_of))
+
+    first_company = next(task for task in company_catalog if task.watch_urls)
+    company_watch_id = f"company:{first_company.task_id}"
+    state.mark_watch_attempt(company_watch_id, run_id, success=True, metadata={"validator": True})
+    assert state.get_watch_status(company_watch_id)["last_success"]
 
     finding = AgentFinding(
         external_id="test-1",
