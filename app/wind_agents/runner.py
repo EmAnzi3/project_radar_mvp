@@ -5,14 +5,18 @@ from datetime import date, datetime
 from typing import Any
 
 from .adapters import (
+    AbruzzoWindAgent,
     BasilicataWindAgent,
     CalabriaWindAgent,
     CampaniaWindAgent,
     EmiliaRomagnaWindAgent,
     LazioWindAgent,
+    LiguriaWindAgent,
     LombardiaWindAgent,
+    MarcheWindAgent,
     MaseProvvedimentiWindAgent,
     MaseWindAgent,
+    MoliseWindAgent,
     PiemonteWindAgent,
     SardegnaWindAgent,
     SiciliaWindAgent,
@@ -36,14 +40,18 @@ from .state import (
 # IDs deliberately match institutional-source-network-v06*.json so cadence,
 # runtime status and adapter identity share the same stable key.
 AGENT_FACTORIES = {
+    "abruzzo-via": AbruzzoWindAgent,
     "basilicata-via": BasilicataWindAgent,
     "calabria-via": CalabriaWindAgent,
     "campania-viavas": CampaniaWindAgent,
     "emilia-romagna-regional": EmiliaRomagnaWindAgent,
     "lazio-regional": LazioWindAgent,
+    "liguria-via-procedimenti": LiguriaWindAgent,
     "lombardia-regional": LombardiaWindAgent,
+    "marche-via-regional": MarcheWindAgent,
     "mase-provvedimenti": MaseProvvedimentiWindAgent,
     "mase-via": MaseWindAgent,
+    "molise-au-eolico": MoliseWindAgent,
     "piemonte-regional": PiemonteWindAgent,
     "puglia-sistema-energia": SistemaPugliaWindAgent,
     "sardegna-sira": SardegnaWindAgent,
