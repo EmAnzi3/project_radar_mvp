@@ -327,3 +327,46 @@ def finish_run(run_id: str, findings: int, changed_items: int) -> None:
             (now, findings, changed_items, run_id),
         )
         conn.commit()
+
+
+def get_run_events(run_id: str) -> list[dict[str, Any]]:
+    """Return only new/changed findings emitted by one run.
+
+    This is the input boundary for reconciliation and digests. Reading events
+    does not mutate raw state or canonical Wind Radar data.
+    """
+
+    init_db()
+    with _connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, run_id, agent_name, source_name, external_id, event_type,
+                   previous_hash, new_hash, payload_json, created_at
+            FROM finding_events
+            WHERE run_id = ?
+            ORDER BY id ASC
+            """,
+            (run_id,),
+        ).fetchall()
+
+    events: list[dict[str, Any]] = []
+    for row in rows:
+        try:
+            finding_payload = json.loads(row["payload_json"] or "{}")
+        except json.JSONDecodeError:
+            finding_payload = {}
+        events.append(
+            {
+                "id": row["id"],
+                "run_id": row["run_id"],
+                "agent_name": row["agent_name"],
+                "source_name": row["source_name"],
+                "external_id": row["external_id"],
+                "event_type": row["event_type"],
+                "previous_hash": row["previous_hash"],
+                "new_hash": row["new_hash"],
+                "created_at": row["created_at"],
+                "finding": finding_payload,
+            }
+        )
+    return events
