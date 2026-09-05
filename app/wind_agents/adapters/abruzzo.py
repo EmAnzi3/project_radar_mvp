@@ -9,7 +9,8 @@ from bs4 import BeautifulSoup
 from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
-BASE_URL = "https://ambiente.regione.abruzzo.it/"
+PRIMARY_URL = "https://ambiente.regione.abruzzo.it/"
+FALLBACK_URL = "https://trasparenza.regione.abruzzo.it/servizi-erogati/carta-servizi/rilascio-dei-pareri-sui-progetti-assoggettati-verifica-di"
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
 PROJECT_CUES = ("progetto", "proponente", "via", "paur", "assoggettabil", "comune", "mw", "pratica")
 
@@ -17,16 +18,16 @@ PROJECT_CUES = ("progetto", "proponente", "via", "paur", "assoggettabil", "comun
 class AbruzzoWindAgent(BaseWindAgent):
     """First-pass adapter for Regione Abruzzo environmental procedures.
 
-    The official platform exposes active projects publicly, but its presentation
-    can change. The adapter therefore follows only same-host VIA/project links
-    discovered from the public landing page and keeps a non-project channel
-    snapshot if no server-rendered wind rows are available. This makes portal
-    drift visible without inventing project data.
+    The official transparency service confirms that active VIA/PAUR projects are
+    exposed by the dedicated environmental platform. If that platform is not
+    resolvable/reachable from the runner, the adapter records an explicit
+    degraded channel snapshot from the official transparency fallback instead
+    of reporting project data that was not actually collected.
     """
 
     agent_name = "institutional_watch"
     source_name = "Regione Abruzzo VIA"
-    base_url = BASE_URL
+    base_url = PRIMARY_URL
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -78,14 +79,56 @@ class AbruzzoWindAgent(BaseWindAgent):
         response.raise_for_status()
         return BeautifulSoup(response.text, "html.parser")
 
+    def _channel_snapshot(self, *, primary_error: str | None = None) -> AgentFinding:
+        source_url = PRIMARY_URL
+        fallback_verified = False
+        fallback_text = ""
+        try:
+            fallback = self._get(FALLBACK_URL)
+            fallback_verified = True
+            fallback_text = self._clean(fallback.get_text(" ", strip=True))[:4000]
+            source_url = FALLBACK_URL
+        except Exception as exc:
+            if primary_error:
+                primary_error = f"{primary_error}; fallback={type(exc).__name__}: {exc}"
+            else:
+                primary_error = f"fallback={type(exc).__name__}: {exc}"
+
+        return AgentFinding(
+            external_id="ABRUZZO-VIA-CHANNEL",
+            source_name=self.source_name,
+            source_url=source_url,
+            title="Regione Abruzzo — canale Valutazioni Ambientali",
+            finding_type="source_channel_snapshot",
+            payload={
+                "region": "Abruzzo",
+                "sector": "eolico",
+                "source_grade_ceiling": "A1",
+                "project_specific": False,
+                "execution_scope": None,
+                "evidence_layer": "institutional_channel",
+                "availability": "degraded_primary_unavailable" if primary_error else "channel_only",
+                "primary_url": PRIMARY_URL,
+                "fallback_url": FALLBACK_URL,
+                "fallback_verified": fallback_verified,
+                "primary_fetch_error": primary_error,
+                "official_service_excerpt": fallback_text,
+                "runtime_note": "No project rows were collected. Official fallback confirms the VIA/PAUR service and active-project platform; endpoint/DNS deepening remains required.",
+            },
+        )
+
     def fetch(self) -> list[AgentFinding]:
-        root = self._get(BASE_URL)
-        host = urlparse(BASE_URL).netloc
-        urls = [BASE_URL]
+        try:
+            root = self._get(PRIMARY_URL)
+        except Exception as exc:
+            return [self._channel_snapshot(primary_error=f"{type(exc).__name__}: {exc}")]
+
+        host = urlparse(PRIMARY_URL).netloc
+        urls = [PRIMARY_URL]
         for anchor in root.find_all("a", href=True):
             label = self._clean(anchor.get_text(" ", strip=True)).lower()
             href = anchor.get("href") or ""
-            absolute = urljoin(BASE_URL, href)
+            absolute = urljoin(PRIMARY_URL, href)
             if urlparse(absolute).netloc != host:
                 continue
             if any(token in (label + " " + absolute.lower()) for token in ("via", "paur", "progett", "valutaz")):
@@ -98,7 +141,7 @@ class AbruzzoWindAgent(BaseWindAgent):
         parsed_project_rows = 0
         for url in urls:
             try:
-                soup = root if url == BASE_URL else self._get(url)
+                soup = root if url == PRIMARY_URL else self._get(url)
             except Exception:
                 continue
             nodes = soup.find_all(["tr", "li", "article"])
@@ -139,21 +182,6 @@ class AbruzzoWindAgent(BaseWindAgent):
                 )
 
         if parsed_project_rows == 0:
-            findings["ABRUZZO-VIA-CHANNEL"] = AgentFinding(
-                external_id="ABRUZZO-VIA-CHANNEL",
-                source_name=self.source_name,
-                source_url=BASE_URL,
-                title="Regione Abruzzo — piattaforma Valutazioni Ambientali",
-                finding_type="source_channel_snapshot",
-                payload={
-                    "region": "Abruzzo",
-                    "sector": "eolico",
-                    "source_grade_ceiling": "A1",
-                    "project_specific": False,
-                    "execution_scope": None,
-                    "evidence_layer": "institutional_channel",
-                    "runtime_note": "No server-rendered wind project rows parsed in this run; active-project platform remains monitored and requires endpoint enrichment if SPA rendering is encountered.",
-                },
-            )
+            findings["ABRUZZO-VIA-CHANNEL"] = self._channel_snapshot()
 
         return list(findings.values())
