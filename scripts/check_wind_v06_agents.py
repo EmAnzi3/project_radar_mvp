@@ -35,7 +35,13 @@ for required in ["andretta-bisaccia", "alia-sclafani", "serra-giannina"]:
 assert plan.institutional, "institutional due queue empty"
 assert plan.companies, "company due queue empty"
 implemented = set(executable_agent_ids())
-required_adapters = {"mase-via", "lazio-via", "toscana-gea", "toscana-atos"}
+required_adapters = {
+    "mase-via",
+    "lazio-via",
+    "toscana-gea",
+    "toscana-atos",
+    "sardegna-sira",
+}
 assert required_adapters.issubset(implemented), implemented
 
 # Evidence discipline: generic capability / weak signals never close scope.
