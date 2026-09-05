@@ -3,12 +3,8 @@ name: Wind Radar live source smoke
 on:
   pull_request:
     paths:
-      - 'app/wind_agents/adapters/abruzzo.py'
-      - 'app/wind_agents/adapters/liguria.py'
-      - 'app/wind_agents/adapters/marche.py'
-      - 'app/wind_agents/adapters/molise.py'
-      - 'app/wind_agents/runner.py'
-      - 'docs/wind/data/institutional-source-network-v06b.json'
+      - 'app/wind_agents/**'
+      - 'docs/wind/data/institutional-source-network-v06*.json'
       - 'scripts/run_wind_agents.py'
       - '.github/workflows/wind_agent_live_smoke.yml'
   workflow_dispatch:
@@ -17,9 +13,25 @@ permissions:
   contents: read
 
 jobs:
-  priority-regional-live-smoke:
+  institutional-live-smoke:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: priority-regional
+            sources: 'abruzzo-via liguria-via-procedimenti marche-via-regional molise-au-eolico'
+          - group: national-market
+            sources: 'mase-via mase-provvedimenti terna-econnextion'
+          - group: south-islands
+            sources: 'basilicata-via calabria-via campania-viavas puglia-sistema-energia sardegna-sira sicilia-sivvi'
+          - group: centre-north
+            sources: 'emilia-romagna-regional lazio-regional lombardia-regional piemonte-regional toscana-atos toscana-gea umbria-regional veneto-regional'
+
+    env:
+      WIND_SMOKE_GROUP: ${{ matrix.group }}
+      WIND_SMOKE_SOURCES: ${{ matrix.sources }}
 
     steps:
       - name: Checkout Wind agent runtime
@@ -40,32 +52,32 @@ jobs:
       - name: Install runtime dependencies
         run: pip install requests beautifulsoup4 lxml pydantic openpyxl
 
-      - name: Run four priority regional adapters live
+      - name: Run adapter group live
+        shell: bash
         run: |
           mkdir -p reports/wind-agent-live
+          args=()
+          for source in $WIND_SMOKE_SOURCES; do
+            args+=(--source "$source")
+          done
           python scripts/run_wind_agents.py run \
-            --source abruzzo-via \
-            --source liguria-via-procedimenti \
-            --source marche-via-regional \
-            --source molise-au-eolico \
-            --output reports/wind-agent-live/priority-regional.json
+            "${args[@]}" \
+            --output "reports/wind-agent-live/${WIND_SMOKE_GROUP}.json"
 
       - name: Validate live result
+        shell: bash
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
-          path = Path('reports/wind-agent-live/priority-regional.json')
+          group = os.environ['WIND_SMOKE_GROUP']
+          expected = set(os.environ['WIND_SMOKE_SOURCES'].split())
+          path = Path(f'reports/wind-agent-live/{group}.json')
           data = json.loads(path.read_text(encoding='utf-8'))
-          expected = {
-              'abruzzo-via',
-              'liguria-via-procedimenti',
-              'marche-via-regional',
-              'molise-au-eolico',
-          }
           executed = set(data.get('executed_agents') or [])
-          assert executed == expected, (executed, expected)
+          assert executed == expected, (group, executed, expected)
 
           per_agent = data.get('per_agent') or {}
           failures = {
@@ -74,9 +86,9 @@ jobs:
               if row.get('status') != 'success'
           }
           if failures or data.get('errors'):
-              raise SystemExit(f'live source failures: {failures or data.get("errors")}')
+              raise SystemExit(f'{group} live source failures: {failures or data.get("errors")}')
 
-          print('live source smoke OK')
+          print(f'{group} live source smoke OK')
           for source_id in sorted(expected):
               row = per_agent[source_id]
               print(
@@ -87,14 +99,16 @@ jobs:
 
       - name: Publish live smoke summary
         if: always()
+        shell: bash
         run: |
           python - <<'PY'
           import json
           import os
           from pathlib import Path
 
-          report = Path('reports/wind-agent-live/priority-regional.json')
-          lines = ['## Wind Radar priority regional live smoke']
+          group = os.environ['WIND_SMOKE_GROUP']
+          report = Path(f'reports/wind-agent-live/{group}.json')
+          lines = [f'## Wind Radar live smoke — {group}']
           if report.exists():
               data = json.loads(report.read_text(encoding='utf-8'))
               for source_id, row in sorted((data.get('per_agent') or {}).items()):
@@ -117,7 +131,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wind-priority-regional-live-${{ github.run_id }}
+          name: wind-live-${{ matrix.group }}-${{ github.run_id }}
           path: reports/wind-agent-live/
           if-no-files-found: warn
           retention-days: 14
