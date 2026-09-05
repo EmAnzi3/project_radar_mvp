@@ -1,22 +1,22 @@
-name: Wind Radar institutional watch
+name: Wind Radar source and company watch
 
 on:
   workflow_dispatch:
   schedule:
-    # Runs daily; the runner itself enforces each source's 1/3/7/30-day cadence.
+    # Daily trigger; runtime state enforces 1/3/7/14/30-day source/company cadences.
     - cron: "40 5 * * *"
 
 permissions:
   contents: read
 
 concurrency:
-  group: wind-radar-institutional-watch
+  group: wind-radar-source-company-watch
   cancel-in-progress: false
 
 jobs:
-  institutional-watch:
+  source-company-watch:
     runs-on: ubuntu-24.04
-    timeout-minutes: 75
+    timeout-minutes: 105
 
     steps:
       - name: Checkout repository
@@ -41,11 +41,19 @@ jobs:
       - name: Show due institutional adapters
         run: |
           mkdir -p reports/wind-agent
-          python scripts/run_wind_agents.py due --output reports/wind-agent/due.json
+          python scripts/run_wind_agents.py due --output reports/wind-agent/institutional-due.json
 
       - name: Run due institutional adapters
         run: |
-          python scripts/run_wind_agents.py run --due --output reports/wind-agent/run.json
+          python scripts/run_wind_agents.py run --due --output reports/wind-agent/institutional-run.json
+
+      - name: Show due company watches
+        run: |
+          python scripts/run_wind_agents.py company-due --output reports/wind-agent/company-due.json
+
+      - name: Run due company watches
+        run: |
+          python scripts/run_wind_agents.py company-run --due --output reports/wind-agent/company-run.json
 
       - name: Publish run summary
         if: always()
@@ -56,21 +64,40 @@ jobs:
           import os
           from pathlib import Path
 
-          report_path = Path("reports/wind-agent/run.json")
           summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
-          lines = ["## Wind Radar institutional watch"]
-          if not report_path.exists():
-              lines.append("Run report missing: the runner did not complete.")
-          else:
-              data = json.loads(report_path.read_text(encoding="utf-8"))
+          lines = ["## Wind Radar source + company watch"]
+
+          institutional = Path("reports/wind-agent/institutional-run.json")
+          if institutional.exists():
+              data = json.loads(institutional.read_text(encoding="utf-8"))
               lines.extend([
+                  "### Institutional",
                   f"- Executed adapters: {len(data.get('executed_agents', []))}",
                   f"- Findings: {data.get('findings', 0)}",
                   f"- New or changed: {data.get('new_or_changed', 0)}",
                   f"- Source errors: {len(data.get('errors', {}))}",
               ])
               for source_id, error in data.get("errors", {}).items():
-                  lines.append(f"  - `{source_id}`: {error[:500]}")
+                  lines.append(f"  - `{source_id}`: {str(error)[:500]}")
+          else:
+              lines.extend(["### Institutional", "- Run report missing."])
+
+          company = Path("reports/wind-agent/company-run.json")
+          if company.exists():
+              data = json.loads(company.read_text(encoding="utf-8"))
+              lines.extend([
+                  "### Company network",
+                  f"- Companies checked: {len(data.get('executed_companies', []))}",
+                  f"- Source snapshots: {data.get('findings', 0)}",
+                  f"- New or changed: {data.get('new_or_changed', 0)}",
+                  f"- Companies with URL errors: {len(data.get('errors', {}))}",
+              ])
+              for company_id, errors in data.get("errors", {}).items():
+                  text = "; ".join(errors) if isinstance(errors, list) else str(errors)
+                  lines.append(f"  - `{company_id}`: {text[:500]}")
+          else:
+              lines.extend(["### Company network", "- Run report missing."])
+
           text = "\n".join(lines) + "\n"
           print(text)
           if summary_path:
