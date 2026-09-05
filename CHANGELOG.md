@@ -4,6 +4,7 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-09-05 — Portata nella v0.6 l'architettura operativa già collaudata in `pv_agent_mvp`: pianificazione per cadenza, contract comune degli agenti/collector, persistenza raw separata dal canonico, change history e gate probatorio centralizzato. Primo adapter eseguibile: MASE VIA tarato su eolico/repowering/offshore; company, institutional e project watch vengono pianificati come code distinte.
 - 2026-09-05 — Avviata **Wind Radar v0.6 — execution intelligence**: nuova baseline di lavoro dai 51 canonici pubblicati in v0.5, priorità a progetti E4–E7 e finestre di procurement/cantiere nei prossimi 12–18 mesi, con ricerca contractor A1/A2 per singolo scope e revisione del ranking solo su evidenza oggettiva.
 
 ## v0.5.0 — 2026-09-05
