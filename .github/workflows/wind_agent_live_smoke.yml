@@ -92,7 +92,8 @@ jobs:
           for source_id in sorted(expected):
               row = per_agent[source_id]
               print(
-                  f"{source_id}: findings={row.get('findings', 0)} "
+                  f"{source_id}: health={row.get('data_health', 'legacy')} "
+                  f"findings={row.get('findings', 0)} project_specific={row.get('project_specific_findings', 0)} "
                   f"new={row.get('new', 0)} changed={row.get('changed', 0)}"
               )
           PY
@@ -111,9 +112,13 @@ jobs:
           lines = [f'## Wind Radar live smoke — {group}']
           if report.exists():
               data = json.loads(report.read_text(encoding='utf-8'))
+              health = data.get('data_health') or {}
+              if health:
+                  lines.append('- Data health: ' + ', '.join(f'`{k}` {v}' for k, v in sorted(health.items())))
               for source_id, row in sorted((data.get('per_agent') or {}).items()):
                   lines.append(
-                      f"- `{source_id}` — {row.get('status')}; findings {row.get('findings', 0)}; "
+                      f"- `{source_id}` — {row.get('status')}; health `{row.get('data_health', 'legacy')}`; "
+                      f"findings {row.get('findings', 0)}; project-specific {row.get('project_specific_findings', 0)}; "
                       f"new {row.get('new', 0)}; changed {row.get('changed', 0)}"
                   )
               if data.get('errors'):
