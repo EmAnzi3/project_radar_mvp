@@ -80,7 +80,7 @@ def _load_projects() -> list[dict[str, Any]]:
     return projects
 
 
-def _company_tasks(as_of: date) -> list[AgentTask]:
+def _company_tasks(as_of: date, include_not_due: bool = False) -> list[AgentTask]:
     base, companies = _merge_company_registries()
     monitoring = base.get("monitoring", {})
     high = int(monitoring.get("high_priority_cadence_days", 7))
@@ -91,7 +91,7 @@ def _company_tasks(as_of: date) -> list[AgentTask]:
     for company in companies:
         priority = company.get("commercial_priority", "C")
         cadence = int(company.get("cadence_days") or (high if priority in {"A", "A+"} else standard if priority == "B" else universe))
-        if not _is_due(company.get("last_checked"), cadence, as_of):
+        if not include_not_due and not _is_due(company.get("last_checked"), cadence, as_of):
             continue
         urls = [url for url in company.get("watch_urls", []) if url]
         next_action = company.get("next_action") or "Review direct company sources for awards, mobilisations, hiring and capability changes."
@@ -114,6 +114,12 @@ def _company_tasks(as_of: date) -> list[AgentTask]:
         )
 
     return sorted(out, key=lambda t: (_priority_rank(t.priority), t.target.get("name") or ""))
+
+
+def build_company_watch_catalog(as_of: date | None = None) -> list[AgentTask]:
+    """Return all company-watch definitions regardless of due state."""
+
+    return _company_tasks(as_of or date.today(), include_not_due=True)
 
 
 def _institutional_tasks(as_of: date, include_not_due: bool = False) -> list[AgentTask]:
