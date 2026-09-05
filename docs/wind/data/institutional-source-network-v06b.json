@@ -10,13 +10,13 @@
       "region": "Abruzzo",
       "channel": "VIA / verifica di assoggettabilità / PAUR / procedimenti attivi",
       "priority": "A",
-      "status": "audited_official_platform",
+      "status": "runtime_adapter_first_pass",
       "cadence_days": 3,
       "official_url": "https://ambiente.regione.abruzzo.it/",
       "origin_collector": "new_wind_source_audit",
       "evidence_ceiling": "A1",
-      "wind_adaptation": "The official environmental platform exposes active projects without login. Filter for eolico/repowering and retain project documents, outcomes and consultation milestones.",
-      "audit_note": "Closes the Abruzzo environmental-procedure gap at source-discovery level; wind collector implementation still required."
+      "wind_adaptation": "Runtime first pass follows same-host VIA/PAUR/project links and filters wind. If no server-rendered project rows are parseable, emit a non-project source_channel_snapshot instead of inventing project data.",
+      "audit_note": "First-pass adapter implemented. SPA/API deepening is still required if the public platform exposes project rows only client-side."
     },
     {
       "id": "abruzzo-fer-au",
@@ -40,14 +40,14 @@
       "region": "Liguria",
       "channel": "Banca dati procedimenti VIA / PAUR / screening / cartography",
       "priority": "A",
-      "status": "audited_official_endpoint",
+      "status": "runtime_adapter",
       "cadence_days": 3,
       "official_url": "https://servizi.regione.liguria.it/page/welcome/VIA",
       "discovery_url": "https://www.regione.liguria.it/homepage-ambiente/102249-ambiente-opendata/6538-procedimenti-via_6538.html",
       "origin_collector": "new_wind_source_audit",
       "evidence_ceiling": "A1",
-      "wind_adaptation": "Directly wind-relevant. Regione Liguria exposes a dynamic VIA database, ongoing/concluded procedures, cartography and a dedicated checklist route for wind projects.",
-      "audit_note": "Closes the previous institutional coverage gap at source-discovery level; collector implementation still required."
+      "wind_adaptation": "Runtime adapter monitors the public SIRAVIAVAS in-progress VIA registry, filters wind/repowering rows and keeps national-VIA mirror entries behind a MASE reconciliation guard.",
+      "audit_note": "Current public registry exposes multiple wind rows; adapter implemented but live runtime behavior still requires controlled execution."
     },
     {
       "id": "molise-au-eolico",
@@ -56,13 +56,13 @@
       "region": "Molise",
       "channel": "Autorizzazioni FER + procedimenti depositati eolico + eolico VIA nazionale",
       "priority": "A",
-      "status": "audited_official_wind_endpoint",
+      "status": "runtime_adapter_first_pass",
       "cadence_days": 3,
       "official_url": "https://www.regione.molise.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/15585",
       "origin_collector": "new_wind_source_audit",
       "evidence_ceiling": "A1",
-      "wind_adaptation": "Directly wind-specific: monitor authorization applications, variants, volture, proroghe and state-VIA cross-references.",
-      "audit_note": "Closes the previous Molise institutional coverage gap at source-discovery level; particularly important because Molise already hosts canonical projects."
+      "wind_adaptation": "Runtime adapter discovers the dedicated Eolico and Eolico-VIA nazionale routes. It emits project findings only for parseable rows; otherwise it records a non-project channel snapshot for SPA/API follow-up.",
+      "audit_note": "First-pass adapter implemented; endpoint/API deepening remains necessary where the dedicated route is client-rendered."
     },
     {
       "id": "marche-via-regional",
@@ -71,13 +71,13 @@
       "region": "Marche",
       "channel": "Avvio procedimenti VIA / regional wind projects",
       "priority": "A",
-      "status": "audited_official_registry",
+      "status": "runtime_adapter",
       "cadence_days": 3,
       "official_url": "https://contenuti.regione.marche.it/Regione-Utile/Ambiente/Valutazioni-e-Autorizzazioni-Ambientali/Valutazioni-di-Impatto-Ambientale-VIA/Avvio-Procedimenti-VIA",
       "origin_collector": "new_wind_source_audit",
       "evidence_ceiling": "A1",
-      "wind_adaptation": "The registry exposes wind project IDs, MW, municipalities, proponents and procedure milestones. Ingest eolico rows and follow linked project documents.",
-      "audit_note": "A 2026 regional entry already exposes a 34 MW wind project in Pieve Torina, Serravalle di Chienti and Montecavallo, confirming the feed is operationally useful."
+      "wind_adaptation": "Runtime adapter filters the official procedure-start registry for wind and extracts project text, MW, municipalities, proponent, procedure and protocol/date when present.",
+      "audit_note": "The registry exposes concrete wind entries and the first-pass runtime adapter is implemented."
     },
     {
       "id": "marche-via-state-mirror",
@@ -196,12 +196,15 @@
     }
   ],
   "resolved_coverage_gaps": [
-    {"region": "Abruzzo", "resolution": "official VIA platform plus regional FER AU service identified; wind collector still to implement"},
-    {"region": "Liguria", "resolution": "official dynamic VIA proceedings database identified; collector still to implement"},
-    {"region": "Marche", "resolution": "regional VIA, state-VIA mirror and energy AU channels identified; wind collector still to implement"},
-    {"region": "Molise", "resolution": "official wind deposited-proceedings and wind national-VIA channels identified; collector still to implement"}
+    {"region": "Abruzzo", "resolution": "first-pass VIA runtime adapter implemented; AU/BURA and SPA/API deepening still open"},
+    {"region": "Liguria", "resolution": "runtime adapter implemented on public SIRAVIAVAS in-progress registry"},
+    {"region": "Marche", "resolution": "runtime adapter implemented on regional VIA-start registry; state mirror/AU remain additive sources"},
+    {"region": "Molise", "resolution": "first-pass wind-specific runtime adapter implemented; SPA/API deepening still open"}
   ],
   "remaining_priority_gap_order": [
+    "Abruzzo AU/BURA runtime adapter",
+    "Molise SPA/API endpoint deepening",
+    "Marche state-VIA mirror and AU runtime adapters",
     "Friuli-Venezia Giulia",
     "Trentino-Alto Adige",
     "Valle d'Aosta",
