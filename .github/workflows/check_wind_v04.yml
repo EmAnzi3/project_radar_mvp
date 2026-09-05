@@ -13,8 +13,18 @@ jobs:
   validate-wind-radar:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Wind files only
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            docs/wind/**
+            scripts/check_wind_radar.py
+            scripts/check_wind_industry_press.py
+            scripts/check_wind_stages.py
+            scripts/check_wind_v04.py
+            scripts/wind_discovery_engine.py
 
       - name: Set up Python
         uses: actions/setup-python@v5
