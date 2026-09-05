@@ -69,6 +69,15 @@ def init_db() -> None:
                 updated_at TEXT NOT NULL,
                 metadata_json TEXT
             );
+
+            CREATE TABLE IF NOT EXISTS watch_status (
+                watch_id TEXT PRIMARY KEY,
+                last_attempt TEXT,
+                last_success TEXT,
+                last_error TEXT,
+                last_run_id TEXT,
+                metadata_json TEXT
+            );
             """
         )
         conn.commit()
@@ -109,6 +118,78 @@ def set_source_cursor(
                 metadata_json = excluded.metadata_json
             """,
             (source_id, str(cursor_value), now, metadata_json),
+        )
+        conn.commit()
+
+
+def get_watch_status(watch_id: str) -> dict[str, Any] | None:
+    init_db()
+    with _connect() as conn:
+        row = conn.execute(
+            """
+            SELECT watch_id, last_attempt, last_success, last_error, last_run_id, metadata_json
+            FROM watch_status WHERE watch_id = ?
+            """,
+            (watch_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    metadata = {}
+    try:
+        metadata = json.loads(row["metadata_json"] or "{}")
+    except json.JSONDecodeError:
+        pass
+    return {
+        "watch_id": row["watch_id"],
+        "last_attempt": row["last_attempt"],
+        "last_success": row["last_success"],
+        "last_error": row["last_error"],
+        "last_run_id": row["last_run_id"],
+        "metadata": metadata,
+    }
+
+
+def mark_watch_attempt(
+    watch_id: str,
+    run_id: str,
+    *,
+    success: bool,
+    error: str | None = None,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    """Persist live execution state independently from source registries.
+
+    Registry `last_checked` values document the audited baseline. This table is
+    the runtime truth used by periodic execution, avoiding commits merely to
+    advance monitoring timestamps.
+    """
+
+    init_db()
+    now = datetime.now().isoformat(timespec="seconds")
+    previous = get_watch_status(watch_id) or {}
+    last_success = now if success else previous.get("last_success")
+    metadata_json = json.dumps(metadata or {}, ensure_ascii=False, sort_keys=True, default=str)
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO watch_status (
+                watch_id, last_attempt, last_success, last_error, last_run_id, metadata_json
+            ) VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(watch_id) DO UPDATE SET
+                last_attempt = excluded.last_attempt,
+                last_success = excluded.last_success,
+                last_error = excluded.last_error,
+                last_run_id = excluded.last_run_id,
+                metadata_json = excluded.metadata_json
+            """,
+            (
+                watch_id,
+                now,
+                last_success,
+                None if success else (error or "unknown error")[:2000],
+                run_id,
+                metadata_json,
+            ),
         )
         conn.commit()
 
