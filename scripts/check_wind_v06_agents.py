@@ -41,6 +41,7 @@ required_adapters = {
     "toscana-gea",
     "toscana-atos",
     "sardegna-sira",
+    "sicilia-sivvi",
 }
 assert required_adapters.issubset(implemented), implemented
 
