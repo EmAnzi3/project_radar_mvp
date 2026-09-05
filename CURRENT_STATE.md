@@ -7,7 +7,7 @@ Branch corrente: `feat/wind-radar-enrichment-v0.3`.
 Draft PR: **#2 — Wind Radar v0.3 — contractor hunt, scope coverage e document intelligence**.  
 Stato: **non mergiato e non pubblicato**.
 
-## Regola v0.3
+## Regola metodologica v0.3
 
 Core scope:
 1. Civil BoP;
@@ -22,7 +22,7 @@ Solo A1/A2 con `azienda + progetto + ruolo esecutivo` possono chiudere un core s
 
 ## Metriche correnti
 
-Invariate dopo Priority 1 + Public Pass 6 + Industry Press Pass 7:
+Invariate dopo Priority 1 + Public Pass 6 + Industry Press Pass 7 + glossario:
 
 - **230,9 MW** con almeno uno scope esecutivo A1/A2;
 - **8 / 108** core scope applicabili coperti = **7,4%**;
@@ -35,107 +35,23 @@ Coperture correnti:
 - Tarsia Ovest: Civil + Electrical + SSE/grid;
 - Castelfranco/CER: SSE/grid.
 
-## Contractor / technical intelligence consolidata
+## Intelligence consolidata
 
-### Andretta-Bisaccia
-- Edison Rinnovabili **18 WTG / 88,5 MW** come baseline operativa da riconciliare con pista Edison 13 WTG / 85,8 MW;
-- Progeco Group / Progeco SE: **B — site/construction management & works supervision**, non Civil BoP;
-- GEKO: engineering/cantierizzazione A1;
-- apertura cantiere 02/11/2026; civili dal 13/11/2026;
-- distinto MERAL 30 MW / 5 WTG negli stessi Comuni = collision guard.
-
-### Serra Giannina
-- corrente **42 MW / 6 WTG**, costruzione RWE avviata 21/05/2026;
-- D'Agostino B construction/site presence; EGM Project B tecnica;
-- nessun Civil/Foundation/Electrical/SSE A1/A2;
-- 45 MW / 10 WTG = storico autorizzativo.
-
-### ALAS
-- RWE **66 MW / 10 WTG**;
-- Hydro Engineering A1 progettista Progetto Esecutivo Opere Civili, non Civil BoP;
-- impresa esecutrice nominale non trovata;
-- distinto `Alas 2` RWE 50,4 MW / 7 WTG negli stessi Comuni.
-
-### Greci-Montaguto
-- ERG **43,8 MW**, costruzione marzo 2026 → estate 2027;
-- Vestas OEM A2; RINA B inspection;
-- Civil/Foundation/Dismantling/Logistics/SSE aperti.
-
-### Nulvi-Ploaghe
-- ERG **121,5 MW / 27 WTG**, autorizzato e Route-to-Market eligible;
-- Hydro Engineering A2 development/engineering, non BoP;
-- ERG/stampa confermano circa **40 mln €** destinati a imprese/fornitori locali e circa 60 risorse locali durante la costruzione, ma nessun nome esecutivo verificato;
-- DUVRI ERG 43,35 MW / 51 Vestas V52 escluso: sito legacy, non repowering;
-- distinto Nulvi-Tergu 99 MW / FRI-EL Anglona = identity guard.
-
-### Tricarico
-- Adest **42 MW / 7 × Vestas V162-6MW**;
-- Vestas OEM A2; `WTG supply + installation` resta B perché la fonte diretta non esplicita installation;
-- Vector Renewables A2 LTA/construction monitoring, non esecutore;
-- **Industry Pass 7:** UniCredit ha perfezionato il **green mini-perm project financing da 46,5 mln €** l'11/06/2026; costruzione/messa in esercizio finanziate e target operativo entro **H2 2027**. È market/financial intelligence, non execution scope;
-- distinto Dolomiti Windfarm 79,2 MW / 12 WTG e precedente `Tricarico Italy` Siemens = collision/history guards.
-
-### Venusia
-- Idoka A2 Civil/site preparation, fase civile conclusa;
-- EGM Project A2 engineering/DL;
-- Nordex Group A2 OEM corrente;
-- New Developments A2 co-development/engineering;
-- record corretto a **8 WTG × 5,6 MW**;
-- Electrical/SSE, Erection, Logistics e Foundation ancora da provare.
-
-### Serra Palino
-- D'Agostino A2 Civil + Electrical/electromechanical;
-- Nordex Group A2 OEM corrente;
-- SSE/grid, Erection, Logistics, Foundation ancora aperti.
-
-### Tarsia Ovest
-- RTI Idoka / Michelangelo Mammana / PLC / Delta A2 Civil + Electrical infrastructure;
-- PLC A2 SSE/grid;
-- Michelangelo Mammana B individual Civil hint; manca originale diretto per upgrade;
-- Concessioni Provincia Cosenza 85/2025 e 111/2025: cavi MT; 139/2026: possibile accesso SP176, ma titolo non prova Tarsia Ovest né Logistics;
-- distinta Deaway Solar sulla SP176 = collision guard.
-
-### Castelfranco in Miscano / CER
-- CER / Campana Energie Rinnovabili / IP Gruppo api — **CUP 9439 / Difesa Vecchia / 5 WTG**;
-- Vestas OEM A2; PLC A2 SSE/grid;
-- Energy& B repowering engineering/site involvement, non Civil/Foundation/Dismantling/Erection per deduzione;
-- **Industry Pass 7:** distinto **Fri-El / progetto Miscano 29,4 MW / CUP 9207**, stessa località e potenza quasi coincidente. Nessun atto/contractor/supply-chain può essere trasferito tra CUP 9207 e CUP 9439.
-
-### Carlentini
-- Gruppo Mammana Foundation/concrete; Hydro foundation engineering/quality + DL; BFP CSP/CSE;
-- solo Foundation chiude un core scope;
-- industry press non aggiunge nuovi soggetti.
-
-### Alia-Sclafani
-- corrente 55 MW / 9 Vestas, erection prevista 21/08/2026–05/11/2026;
-- Staffetta 2019 riguarda un precedente potenziamento con due Gamesa G114: **same-site historical config**, non prova del repowering corrente;
-- FM Service Group: vacancy portierato/vigilanza nell'area Alia-Sclafani = **C candidate site-services**, progetto non nominato, research-only.
-
-### Fenice
-- NVA Fenice 51 WTG / 367,2 MW, advanced permitting / in attesa concerto;
-- ATS Engineering A1 design, non contractor;
-- REL101/REL102 letti; nessun cronoprogramma distinto emerso nel corpus indicizzato;
-- query `Fenice` da sola produce falsi positivi FuturaSun: usare sempre NVA Fenice / MYTERNA / Comuni.
-
-### Toritto
-- 108 MW wind + 50 MW BESS, permitting/VIA;
-- cronoprogramma 503 giorni **solo relativo**;
-- non cercare un anchor reale di cantiere finché non esiste autorizzazione/avvio lavori osservato.
-
-### Sava-Maruggio / Volturino / Lama Cupa
-- nessun nuovo lead contractor utile dal pass stampa;
-- Lama Cupa: Brulli resta riferita alla SE Casamassima / FLYNIS PV 34, non al parco.
-
-## Deep-document acquisito
-
-Full text già letto:
-- Andretta-Bisaccia — Piano di cantierizzazione;
-- Alia-Sclafani — cronoprogramma repowering;
-- Serra Giannina — cronoprogramma BoP WTG-by-WTG;
-- ALAS — `PEALAS_PE_00016_01_00`;
-- Toritto — `C24PU001WP010R00`;
-- Fenice — REL101 + REL102;
-- Lama Cupa / connessione — `74402A` SE Casamassima.
+- **Andretta-Bisaccia** — Edison 18 WTG / 88,5 MW come baseline operativa da riconciliare con pista Edison 13 WTG / 85,8 MW; Progeco B site/construction management; GEKO A1 engineering/cantierizzazione; apertura cantiere 02/11/2026.
+- **Serra Giannina** — 42 MW / 6 WTG, costruzione RWE avviata; D'Agostino B site presence; EGM B tecnica; nessun BoP A1/A2.
+- **ALAS** — 66 MW / 10 WTG; Hydro A1 progettista opere civili, non Civil BoP; distinta Alas 2 50,4 MW / 7 WTG.
+- **Greci-Montaguto** — 43,8 MW, costruzione marzo 2026 → estate 2027; Vestas OEM A2; RINA B inspection.
+- **Nulvi-Ploaghe** — 121,5 MW / 27 WTG; Hydro A2 development/engineering; circa 40 mln € a imprese/fornitori locali ma nessun nome esecutivo verificato; DUVRI legacy escluso; distinto Nulvi-Tergu.
+- **Tricarico** — 42 MW / 7 Vestas V162-6MW; installation Vestas resta B; Vector A2 LTA/construction monitoring; UniCredit financial close 46,5 mln €, target operativo H2 2027; distinto Dolomiti Windfarm 79,2 MW.
+- **Venusia** — Idoka A2 Civil; EGM A2 engineering/DL; Nordex OEM A2; New Developments A2; record corretto a 8 × 5,6 MW.
+- **Serra Palino** — D'Agostino A2 Civil + Electrical/electromechanical; Nordex OEM A2.
+- **Tarsia Ovest** — RTI A2 Civil + Electrical; PLC A2 SSE/grid; Michelangelo Mammana B civil hint; Concessione 139/2026 resta access lead, non Logistics.
+- **Castelfranco/CER** — CER / CUP 9439 / 5 WTG; Vestas OEM A2; PLC A2 SSE/grid; Energy& B; distinto Fri-El / Miscano 29,4 MW / CUP 9207.
+- **Carlentini** — Gruppo Mammana Foundation/concrete; Hydro foundation engineering/quality + DL; BFP CSP/CSE; solo Foundation chiude scope.
+- **Alia-Sclafani** — 55 MW / 9 Vestas; storico Staffetta 2019 separato dal repowering corrente; FM Service Group resta C candidate site-services.
+- **Fenice** — NVA Fenice 51 WTG / 367,2 MW; ATS Engineering A1 design, non contractor; REL101/REL102 letti; nessun cronoprogramma distinto emerso.
+- **Toritto** — 108 MW wind + 50 MW BESS; permitting/VIA; cronoprogramma 503 giorni solo relativo.
+- **Sava-Maruggio / Volturino / Lama Cupa** — nessun nuovo lead contractor utile; Brulli resta riferita alla SE Casamassima / FLYNIS PV 34, non a Lama Cupa.
 
 ## Pass conclusi il 5 settembre
 
@@ -143,45 +59,57 @@ Full text già letto:
 - `docs/wind/research/2026-09-05-public-pass-6.md`
 - `docs/wind/research/2026-09-05-industry-press-pass-7.md`
 - `docs/wind/research/2026-09-05-identity-reconciliation.md`
+- `docs/wind/research/2026-09-05-v03-final-validation.md`
+- `docs/wind/research/2026-09-05-glossary-validation.md`
 
-### Industry Press Pass 7
+## Industry & market intelligence
 
-Audit **17/17** su pv magazine Italia, Rinnovabili.it, QualEnergia.it, Staffetta, Quotidiano Energia e stampa internazionale di settore, con query anche per BoP/foundation/SSE/erection/logistics/financing/supplier/commissioning.
+Audit 17/17 su pv magazine Italia, Rinnovabili.it, QualEnergia.it, Staffetta, Quotidiano Energia e stampa internazionale.
 
-Nuovo registro:
+Registro:
 `docs/wind/data/industry-press-intelligence-2026-09-05.json`
 
-Il drawer carica ora una sezione separata **Industry & market intelligence** tramite `docpass2-intelligence.js`. Financing, lead C, storico e identity collision non entrano nella Contractor View e non influiscono sugli execution scope.
+Il drawer mostra una sezione separata **Industry & market intelligence**. Financing, lead C, storico e identity collision non entrano nella Contractor View e non influiscono sugli execution scope.
 
-Risultati materiali:
-- Tricarico: financial close UniCredit 46,5 mln € + target H2 2027;
-- Castelfranco/CER: nuovo collision guard CUP 9207 Fri-El/Miscano vs CUP 9439 CER/Difesa Vecchia;
-- Alia-Sclafani: storico 2019 separato + candidate site-services C;
-- Nulvi: procurement locale riconfermato ma fornitori ancora anonimi;
-- 0 nuovi core execution scope A1/A2.
+## Glossario per utenti non tecnici
 
-## Regression guards / verifiche
+Aggiunto nella v0.3:
+- `docs/wind/data/glossary.json` — **37 termini**;
+- `docs/wind/assets/glossary.js`;
+- `docs/wind/assets/glossary.css`;
+- pulsante **Glossario** accanto a **Legenda fonti A1–D**.
 
-`scripts/check_wind_radar.py` continua a proteggere coverage e ruoli tecnici.
+Categorie: Impianto, Cantiere, Rete, Tempi, Mercato, Soggetti, Ruoli tecnici, Autorizzazioni, Metodo Radar.
 
-Nuovo `scripts/check_wind_industry_press.py` verifica che:
-- il registro Industry contenga solo seed ammessi;
-- non contenga `relations`, `scope_hint`, `execution_scope` o `covered_scope`;
-- Tricarico mantenga il financial close A2 come market intelligence;
-- Castelfranco mantenga collision guard A1 con fonti regionali;
-- Alia site-services resti C;
-- nessuna stampa di settore possa gonfiare automaticamente 8/108 o 230,9 MW.
+Le definizioni usano linguaggio comune e chiariscono esplicitamente le distinzioni utili a evitare false interpretazioni, ad esempio OEM ≠ erection, DL/LTA ≠ esecutore, RTI ≠ scope individuale.
 
-Il runtime git/browser di questa sessione è limitato: non risolve il clone GitHub e Chromium blocca anche file/localhost. Non serve azione utente. I due validator end-to-end e la preview visuale finale restano gate obbligatori prima di proporre merge.
+### Validazione glossario
 
-## Prossimo blocco
+PASS desktop 1440 px + mobile 390 px:
+- 37 termini / 9 categorie;
+- ricerca funzionante (`BoP`, `WTG`, `autorizzazione`, `OEM`);
+- singolare/plurale corretto;
+- `Esc` chiude e restituisce il focus;
+- nessun overflow orizzontale;
+- JavaScript passa `node --check`.
 
-1. non ripetere Priority 1 / Industry Pass con le stesse query;
-2. continuare solo su **nuove fonti site-specific**: subappalti, viabilità, trasporti, accessi, SUAP, pubblicazioni contractor/OEM;
-3. quando il runtime lo consente, eseguire `python scripts/check_wind_radar.py` e `python scripts/check_wind_industry_press.py`;
-4. preview visuale desktop/mobile finale del branch corrente;
-5. solo dopo questi gate, presentare la v0.3 per revisione e decisione di merge.
+## Final validation v0.3
 
-## Vincoli
+Data/regression gate:
+- 17 progetti / 1.496,9 MW;
+- 8/108 scope / 230,9 MW invariati;
+- guardie Progeco, Vestas-installation, Nordex, Mammana, Energy&, Carlentini, ALAS, Fenice e Lama Cupa passate;
+- Industry registry privo di chiavi che possano trasformare il discovery layer in execution scope.
 
-Nessun merge e nessuna pubblicazione senza approvazione esplicita.
+Browser gate Chromium/Playwright:
+- desktop: Tricarico, Castelfranco/CER, Alia-Sclafani, Venusia e glossario verificati;
+- mobile 390 px: Tricarico, Venusia e glossario verificati;
+- nessun overflow orizzontale;
+- nessun errore console attribuibile alle nuove funzioni;
+- KPI visivi coerenti con 230,9 MW e 8/108.
+
+## Stato
+
+**v0.3 conclusa per enrichment/research, rappresentazione UI e glossario; pronta per revisione utente e step successivi.**
+
+La PR resta **Draft, non mergiata e non pubblicata**. Nessun merge senza approvazione esplicita.
