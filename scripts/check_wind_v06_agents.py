@@ -28,7 +28,7 @@ from app.wind_agents import state
 
 company_base, companies = _merge_company_registries()
 institutional_base, sources = _merge_institutional_registries()
-assert len(companies) >= 50, len(companies)
+assert len(companies) >= 58, len(companies)
 assert len(sources) >= 31, len(sources)
 assert company_base["monitoring"]["high_priority_cadence_days"] == 7
 assert institutional_base["monitoring"]["priority_regional_cadence_days"] == 3
@@ -51,8 +51,8 @@ assert "A1/A2" in execution_queue["guard"]
 
 catalog = {task.task_id: task for task in build_institutional_watch_catalog(as_of)}
 company_catalog = build_company_watch_catalog(as_of)
-assert len(company_catalog) >= 50, len(company_catalog)
-assert sum(bool(task.watch_urls) for task in company_catalog) >= 40, "company watch URL coverage too low"
+assert len(company_catalog) >= 58, len(company_catalog)
+assert sum(bool(task.watch_urls) for task in company_catalog) >= 50, "company watch URL coverage too low"
 
 implemented = set(executable_agent_ids())
 required_adapters = {
@@ -176,7 +176,6 @@ with tempfile.TemporaryDirectory() as tmp:
     run_id = state.begin_run(plan.total_tasks, note="validator")
     state.mark_watch_attempt("mase-via", run_id, success=True, metadata={"validator": True})
     assert state.get_watch_status("mase-via")["last_success"]
-    # Same-day cadence suppression: a successful live run supersedes registry baseline.
     assert "mase-via" not in set(due_agent_ids(as_of=as_of))
 
     first_company = next(task for task in company_catalog if task.watch_urls)
