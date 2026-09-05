@@ -122,6 +122,7 @@ def _company_tasks(as_of: date, include_not_due: bool = False) -> list[AgentTask
 
 def build_company_watch_catalog(as_of: date | None = None) -> list[AgentTask]:
     """Return all company-watch definitions regardless of due state."""
+
     return _company_tasks(as_of or date.today(), include_not_due=True)
 
 
@@ -133,30 +134,38 @@ def _institutional_tasks(as_of: date, include_not_due: bool = False) -> list[Age
         cadence = int(source.get("cadence_days") or 7)
         if not include_not_due and not _is_due(source.get("last_checked"), cadence, as_of):
             continue
-        url = source.get("official_url") or source.get("url")
+        urls = [source.get(key) for key in ("official_url", "discovery_url", "secondary_url")]
+        urls = [url for url in urls if url]
         out.append(
             AgentTask(
                 agent="institutional_watch",
                 task_id=source["id"],
-                priority=source.get("priority", "B"),
+                priority=source.get("priority", "C"),
                 cadence_days=cadence,
-                reason=source.get("wind_adaptation") or source.get("audit_note") or "Monitor official wind source.",
+                reason=source.get("wind_adaptation") or "Check the public source for new wind procedures, acts and project documents.",
                 target={
                     "institution": source.get("institution"),
                     "region": source.get("region"),
                     "channel": source.get("channel"),
                     "status": source.get("status"),
+                    "evidence_ceiling": source.get("evidence_ceiling"),
+                    "origin_collector": source.get("origin_collector"),
                     "last_checked": source.get("last_checked"),
                 },
-                watch_urls=[url] if url else [],
+                watch_urls=urls,
             )
         )
 
-    return sorted(out, key=lambda t: (_priority_rank(t.priority), t.task_id))
+    return sorted(out, key=lambda t: (_priority_rank(t.priority), t.target.get("region") or "", t.task_id))
 
 
 def build_institutional_watch_catalog(as_of: date | None = None) -> list[AgentTask]:
-    """Return all institutional source definitions regardless of due state."""
+    """Return all institutional watch definitions regardless of due state.
+
+    Runtime scheduling can combine these declared cadences with persistent
+    `watch_status` timestamps without rewriting registry JSON after every run.
+    """
+
     return _institutional_tasks(as_of or date.today(), include_not_due=True)
 
 
@@ -164,37 +173,52 @@ def _project_tasks(as_of: date) -> list[AgentTask]:
     projects = _load_projects()
     out: list[AgentTask] = []
     for project in projects:
-        stage = str(project.get("stage") or "")
-        if stage not in {"E4", "E5", "E6", "E7"}:
+        stage = project.get("stage")
+        gaps = project.get("gaps") or []
+        if stage not in {"E4", "E5", "E6", "E7"} or not gaps:
             continue
-        open_scopes = [scope for scope in (project.get("scopes") or []) if scope.get("status") != "covered"]
-        if not open_scopes:
-            continue
-        priority = project.get("priority", "C")
-        cadence = 7 if priority in {"A", "A+"} or stage in {"E6", "E7"} else 14
+
+        priority = project.get("priority") or "C"
+        cadence = 3 if stage in {"E6", "E7"} or priority in {"A", "A+"} else 7
+        next_item = project.get("next") or {}
+        next_label = next_item.get("label")
+        next_date = next_item.get("date")
+        reason_bits = [f"{stage} with {len(gaps)} open execution scopes"]
+        if next_label:
+            reason_bits.append(f"next milestone: {next_label}{' ' + next_date if next_date else ''}")
+        urls = [source.get("url") for source in project.get("sources", []) if source.get("url")]
+
         out.append(
             AgentTask(
                 agent="project_execution_watch",
                 task_id=project["id"],
                 priority=priority,
                 cadence_days=cadence,
-                reason=f"{stage}: {len(open_scopes)} execution scopes still open; hunt only project-specific A1/A2 evidence.",
+                reason="; ".join(reason_bits),
                 target={
                     "name": project.get("name"),
                     "stage": stage,
                     "region": project.get("region"),
+                    "mw": project.get("mw"),
                     "developer": project.get("developer"),
-                    "open_scopes": [scope.get("id") for scope in open_scopes],
-                    "timing": project.get("timing"),
+                    "gaps": gaps,
+                    "next": next_item,
                 },
-                watch_urls=[s.get("url") for s in project.get("sources", []) if s.get("url")],
+                watch_urls=urls,
             )
         )
 
-    return sorted(out, key=lambda t: (_priority_rank(t.priority), t.target.get("stage") or "", t.target.get("name") or ""))
+    return sorted(out, key=lambda t: (_priority_rank(t.priority), 0 if t.target.get("stage") == "E7" else 1, -(float(t.target.get("mw") or 0))))
 
 
 def build_run_plan(as_of: date | None = None) -> AgentRunPlan:
+    """Build the due queue without altering canonical Wind Radar data.
+
+    This is the Wind equivalent of the PV Agent run orchestration: source watches,
+    company watches and project execution watches are planned independently and
+    can later feed a shared normalisation/reconciliation/history pipeline.
+    """
+
     as_of = as_of or date.today()
     return AgentRunPlan(
         as_of=as_of.isoformat(),
