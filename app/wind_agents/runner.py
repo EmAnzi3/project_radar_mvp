@@ -8,15 +8,20 @@ from .adapters import (
     BasilicataWindAgent,
     CalabriaWindAgent,
     CampaniaWindAgent,
+    EmiliaRomagnaWindAgent,
     LazioWindAgent,
+    LombardiaWindAgent,
     MaseProvvedimentiWindAgent,
     MaseWindAgent,
+    PiemonteWindAgent,
     SardegnaWindAgent,
     SiciliaWindAgent,
     SistemaPugliaWindAgent,
     TernaEconnextionWindAgent,
     ToscanaAtosWindAgent,
     ToscanaWindAgent,
+    UmbriaWindAgent,
+    VenetoWindAgent,
 )
 from .planner import build_institutional_watch_catalog, build_run_plan
 from .state import (
@@ -34,15 +39,20 @@ AGENT_FACTORIES = {
     "basilicata-via": BasilicataWindAgent,
     "calabria-via": CalabriaWindAgent,
     "campania-viavas": CampaniaWindAgent,
+    "emilia-romagna-regional": EmiliaRomagnaWindAgent,
     "lazio-regional": LazioWindAgent,
+    "lombardia-regional": LombardiaWindAgent,
     "mase-provvedimenti": MaseProvvedimentiWindAgent,
     "mase-via": MaseWindAgent,
+    "piemonte-regional": PiemonteWindAgent,
     "puglia-sistema-energia": SistemaPugliaWindAgent,
     "sardegna-sira": SardegnaWindAgent,
     "sicilia-sivvi": SiciliaWindAgent,
     "terna-econnextion": TernaEconnextionWindAgent,
     "toscana-atos": ToscanaAtosWindAgent,
     "toscana-gea": ToscanaWindAgent,
+    "umbria-regional": UmbriaWindAgent,
+    "veneto-regional": VenetoWindAgent,
 }
 
 
