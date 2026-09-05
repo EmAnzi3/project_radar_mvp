@@ -1,0 +1,202 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import sqlite3
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+from .base import AgentFinding
+
+ROOT = Path(__file__).resolve().parents[2]
+DB_PATH = Path(os.environ.get("WIND_AGENT_DB", ROOT / "data" / "wind_agent.sqlite"))
+
+
+def _connect() -> sqlite3.Connection:
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db() -> None:
+    with _connect() as conn:
+        conn.executescript(
+            """
+            CREATE TABLE IF NOT EXISTS agent_runs (
+                run_id TEXT PRIMARY KEY,
+                started_at TEXT NOT NULL,
+                completed_at TEXT,
+                planned_tasks INTEGER NOT NULL DEFAULT 0,
+                findings INTEGER NOT NULL DEFAULT 0,
+                changed_items INTEGER NOT NULL DEFAULT 0,
+                note TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS raw_findings (
+                agent_name TEXT NOT NULL,
+                source_name TEXT NOT NULL,
+                external_id TEXT NOT NULL,
+                source_url TEXT,
+                title TEXT,
+                finding_type TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                content_hash TEXT NOT NULL,
+                first_seen TEXT NOT NULL,
+                last_seen TEXT NOT NULL,
+                last_run_id TEXT,
+                PRIMARY KEY (agent_name, source_name, external_id)
+            );
+
+            CREATE TABLE IF NOT EXISTS finding_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT NOT NULL,
+                agent_name TEXT NOT NULL,
+                source_name TEXT NOT NULL,
+                external_id TEXT NOT NULL,
+                event_type TEXT NOT NULL,
+                previous_hash TEXT,
+                new_hash TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            );
+            """
+        )
+        conn.commit()
+
+
+def begin_run(planned_tasks: int, note: str | None = None) -> str:
+    init_db()
+    run_id = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    now = datetime.now().isoformat(timespec="seconds")
+    with _connect() as conn:
+        conn.execute(
+            "INSERT INTO agent_runs (run_id, started_at, planned_tasks, note) VALUES (?, ?, ?, ?)",
+            (run_id, now, planned_tasks, note),
+        )
+        conn.commit()
+    return run_id
+
+
+def _finding_payload(finding: AgentFinding) -> dict[str, Any]:
+    return {
+        "external_id": finding.external_id,
+        "source_name": finding.source_name,
+        "source_url": finding.source_url,
+        "title": finding.title,
+        "finding_type": finding.finding_type,
+        "payload": finding.payload,
+    }
+
+
+def _hash_payload(payload: dict[str, Any]) -> str:
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
+    """Persist a raw source finding and return new/changed/unchanged.
+
+    This mirrors the PV Agent raw/history separation. It intentionally does not
+    update docs/wind canonical JSON.
+    """
+
+    init_db()
+    now = datetime.now().isoformat(timespec="seconds")
+    payload = _finding_payload(finding)
+    payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
+    content_hash = _hash_payload(payload)
+
+    with _connect() as conn:
+        previous = conn.execute(
+            """
+            SELECT content_hash, first_seen
+            FROM raw_findings
+            WHERE agent_name = ? AND source_name = ? AND external_id = ?
+            """,
+            (agent_name, finding.source_name, finding.external_id),
+        ).fetchone()
+
+        if previous is None:
+            event_type = "new"
+            first_seen = now
+            previous_hash = None
+        elif previous["content_hash"] != content_hash:
+            event_type = "changed"
+            first_seen = previous["first_seen"]
+            previous_hash = previous["content_hash"]
+        else:
+            event_type = "unchanged"
+            first_seen = previous["first_seen"]
+            previous_hash = previous["content_hash"]
+
+        conn.execute(
+            """
+            INSERT INTO raw_findings (
+                agent_name, source_name, external_id, source_url, title,
+                finding_type, payload_json, content_hash, first_seen, last_seen, last_run_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(agent_name, source_name, external_id) DO UPDATE SET
+                source_url = excluded.source_url,
+                title = excluded.title,
+                finding_type = excluded.finding_type,
+                payload_json = excluded.payload_json,
+                content_hash = excluded.content_hash,
+                last_seen = excluded.last_seen,
+                last_run_id = excluded.last_run_id
+            """,
+            (
+                agent_name,
+                finding.source_name,
+                finding.external_id,
+                finding.source_url,
+                finding.title,
+                finding.finding_type,
+                payload_json,
+                content_hash,
+                first_seen,
+                now,
+                run_id,
+            ),
+        )
+
+        if event_type in {"new", "changed"}:
+            conn.execute(
+                """
+                INSERT INTO finding_events (
+                    run_id, agent_name, source_name, external_id, event_type,
+                    previous_hash, new_hash, payload_json, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    run_id,
+                    agent_name,
+                    finding.source_name,
+                    finding.external_id,
+                    event_type,
+                    previous_hash,
+                    content_hash,
+                    payload_json,
+                    now,
+                ),
+            )
+
+        conn.commit()
+
+    return event_type
+
+
+def finish_run(run_id: str, findings: int, changed_items: int) -> None:
+    now = datetime.now().isoformat(timespec="seconds")
+    with _connect() as conn:
+        conn.execute(
+            """
+            UPDATE agent_runs
+            SET completed_at = ?, findings = ?, changed_items = ?
+            WHERE run_id = ?
+            """,
+            (now, findings, changed_items, run_id),
+        )
+        conn.commit()
