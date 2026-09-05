@@ -1,5 +1,5 @@
 {
-  "version": "0.3.1",
+  "version": "0.3.2",
   "title": "Glossario del Wind Radar",
   "intro": "Termini e sigle usati nel Radar, spiegati in modo sintetico anche per chi non lavora nel settore eolico.",
   "terms": [
@@ -37,7 +37,7 @@
     {"term":"SUAP / SUAPEE","full":"Sportello Unico per le Attività Produttive / Energia","category":"Autorizzazioni","definition":"Canale amministrativo usato per pratiche e autorizzazioni locali o regionali. La denominazione varia tra territori e procedure."},
     {"term":"MYTERNA","full":"Codice pratica Terna","category":"Rete","definition":"Identificativo usato da Terna per una pratica di connessione alla rete. È utile per distinguere progetti con nomi o località simili."},
     {"term":"A1 / A2 / B / C / D","full":"Livelli di confidenza del Radar","category":"Metodo Radar","definition":"Scala usata per indicare la forza dell'evidenza. A1 e A2 sono le prove più solide; B e C sono segnali utili da verificare; D è una semplice deduzione e non basta per attribuire un ruolo."},
-    {"term":"E0–E8","full":"Scala di maturità del progetto","category":"Metodo Radar","definition":"Scala unica e sequenziale del Radar. E0 Universo; E1 Sviluppo; E2 Iter autorizzativo; E3 Iter autorizzativo avanzato; E4 Autorizzato; E5 Investimento impegnato; E6 Acquisti / affidamenti; E7 Costruzione; E8 In esercizio. Il Radar assegna sempre la fase più avanzata direttamente osservata: se una fase ha 0 progetti non significa che sia stata saltata."},
+    {"term":"E0–E8","full":"Scala di maturità del progetto","category":"Metodo Radar","definition":"I codici E0–E8 sono una scala interna del Radar, mentre le etichette usano terminologia di settore. E0 Pre-sviluppo; E1 Sviluppo; E2 Iter autorizzativo; E3 Iter autorizzativo avanzato; E4 Autorizzato; E5 FID / investimento impegnato; E6 Procurement / affidamenti; E7 Costruzione; E8 In esercizio. Il Radar assegna la fase più avanzata direttamente osservata: se una fase ha 0 progetti non significa che sia stata saltata."},
     {"term":"Scope","full":"Perimetro di lavoro","category":"Metodo Radar","definition":"La specifica parte di lavori attribuita a un soggetto, per esempio opere civili, fondazioni, sottostazione o montaggio turbine. Nel Radar uno scope è considerato coperto solo quando l'attribuzione è sufficientemente provata."},
     {"term":"Contractor gap","full":"Lavori ancora senza contractor identificato","category":"Metodo Radar","definition":"Indica quali parti operative del progetto risultano ancora prive di un'impresa esecutrice pubblicamente identificata con sufficiente certezza."}
   ]
