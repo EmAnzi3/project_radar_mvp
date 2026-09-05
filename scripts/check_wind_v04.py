@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,14 +18,25 @@ def load_json(path: Path):
         return json.load(handle)
 
 
+def activity_class(candidate: dict) -> str:
+    if candidate.get("status") == "rejected":
+        return "rejected"
+    return candidate.get("activity_class") or "current"
+
+
 def main() -> None:
     allowed = {"onshore", "offshore"}
 
-    registry = load_json(DATA / "discovery-v04.json")
-    if set(registry.get("allowed_site_types", [])) != allowed:
+    seed_registry = load_json(DATA / "discovery-v04.json")
+    census = load_json(DATA / "discovery-census-v04.json")
+    scope_profiles = load_json(DATA / "scope-profiles-v04.json")
+    identity_rules = load_json(DATA / "identity-rules-v04.json")
+    refresh_log = load_json(DATA / "refresh-log-v04.json")
+
+    if set(seed_registry.get("allowed_site_types", [])) != allowed:
         fail("discovery registry: allowed_site_types inattesi")
 
-    statuses = set(registry.get("workflow", []))
+    statuses = set(seed_registry.get("workflow", []))
     required_statuses = {
         "discovered",
         "identity_checked",
@@ -37,8 +49,16 @@ def main() -> None:
     if statuses != required_statuses:
         fail("discovery registry: workflow incompleto")
 
-    required = set(registry.get("candidate_required_fields", []))
-    for candidate in registry.get("candidates", []):
+    required = set(seed_registry.get("candidate_required_fields", []))
+    candidates = list(seed_registry.get("candidates", [])) + list(census.get("candidates", []))
+    if len(candidates) != 35:
+        fail(f"discovery: candidati inattesi {len(candidates)}, attesi 35")
+
+    ids = [candidate.get("candidate_id") for candidate in candidates]
+    if len(ids) != len(set(ids)):
+        fail("discovery: candidate_id duplicati tra registri")
+
+    for candidate in candidates:
         missing = required - set(candidate)
         if missing:
             fail(f"{candidate.get('candidate_id', '?')}: campi discovery mancanti {sorted(missing)}")
@@ -46,15 +66,78 @@ def main() -> None:
             fail(f"{candidate['candidate_id']}: site_type non canonico {candidate['site_type']}")
         if candidate["status"] not in statuses:
             fail(f"{candidate['candidate_id']}: status discovery non canonico {candidate['status']}")
+        if activity_class(candidate) not in {"current", "stale_scoping", "rejected"}:
+            fail(f"{candidate['candidate_id']}: activity_class non canonica")
         if not candidate.get("sources"):
             fail(f"{candidate['candidate_id']}: almeno una fonte discovery è obbligatoria")
+
+    current = [c for c in candidates if activity_class(c) == "current"]
+    stale = [c for c in candidates if activity_class(c) == "stale_scoping"]
+    rejected = [c for c in candidates if activity_class(c) == "rejected"]
+
+    if (len(current), len(stale), len(rejected)) != (29, 4, 2):
+        fail(f"current/stale/rejected inattesi: {len(current)}/{len(stale)}/{len(rejected)}")
+    if (sum(c["site_type"] == "onshore" for c in current), sum(c["site_type"] == "offshore" for c in current)) != (19, 10):
+        fail("discovery corrente: distribuzione onshore/offshore inattesa")
+
+    current_wind = sum(float(c.get("wind_mw") or 0) for c in current)
+    current_bess = sum(float(c.get("bess_mw") or 0) for c in current)
+    stale_wind = sum(float(c.get("wind_mw") or 0) for c in stale)
+    rejected_wind = sum(float(c.get("wind_mw") or 0) for c in rejected)
+    if not math.isclose(current_wind, 10948.67, abs_tol=0.01):
+        fail(f"MW wind current inattesi: {current_wind:.2f}")
+    if not math.isclose(current_bess, 618.0, abs_tol=0.01):
+        fail(f"MW BESS current inattesi: {current_bess:.2f}")
+    if not math.isclose(stale_wind, 3195.0, abs_tol=0.01):
+        fail(f"MW stale-scoping inattesi: {stale_wind:.1f}")
+    if not math.isclose(rejected_wind, 1050.0, abs_tol=0.01):
+        fail(f"MW rejected inattesi: {rejected_wind:.1f}")
+
+    by_id = {c["candidate_id"]: c for c in candidates}
+    if by_id["off-med-wind-grecale"].get("mase_procedure_id") != "13027":
+        fail("Med Wind Grecale: procedura MASE corrente 13027 non registrata")
+    if by_id["off-kailia-current"].get("wind_mw") != 900 or by_id["off-kailia-current"].get("identity_group") != "kailia-offshore-puglia":
+        fail("Kailia: configurazione corrente/identity guard incoerente")
+    if by_id["off-atis-current"].get("identity_group") != "atis-floating-wind-toscana" or len(by_id["off-atis-current"].get("sources", [])) < 2:
+        fail("Atis: scoping + VIA non riconciliati")
+    if by_id["off-nurax-ne-sardinia"].get("identity_group") != "nurax-ne-sardinia-462" or len(by_id["off-nurax-ne-sardinia"].get("sources", [])) < 3:
+        fail("NURAX: genealogia multi-procedura non riconciliata")
+    if by_id["off-poseidon-sardinia-nw"].get("identity_group") != "poseidon-tirreno-nw-1008":
+        fail("Poseidon: identity group mancante")
+    if by_id["on-sv9-monte-camulera"].get("site_type") != "onshore" or "offshore" not in str(by_id["on-sv9-monte-camulera"].get("source_type_label", "")):
+        fail("SV9 Monte Camulera: data-quality guard tipologia MASE non conservata")
+    if by_id["off-chieuti-legacy"].get("status") != "rejected" or by_id["off-puglia-1-archived"].get("status") != "rejected":
+        fail("guardie rejected Chieuti/Puglia 1 non protette")
+
+    profiles = scope_profiles.get("profiles", {})
+    if set(profiles) != {"onshore", "offshore"}:
+        fail("scope profiles onshore/offshore mancanti")
+    onshore_ids = {x["id"] for x in profiles["onshore"]["core_scopes"]}
+    offshore_ids = {x["id"] for x in profiles["offshore"]["core_scopes"]}
+    if onshore_ids != {"civil", "electrical", "sse_grid", "foundation", "erection", "logistics", "dismantling"}:
+        fail("scope profile onshore non coincide con v0.3")
+    expected_offshore = {"substructure_mooring", "turbine_installation", "inter_array_cables", "offshore_substation", "export_cable_landfall", "onshore_grid", "marine_logistics_port", "onshore_civil", "dismantling"}
+    if offshore_ids != expected_offshore:
+        fail(f"scope profile offshore incompleto: {sorted(offshore_ids)}")
+
+    if identity_rules.get("identity_priority") != ["explicit_identity_group", "myterna_anchor", "mase_operation_anchor", "name_site_area_anchor"]:
+        fail("identity priority inattesa")
+    never = set(identity_rules.get("never_identity_fields", []))
+    if not {"wind_mw", "wtg_count", "developer_or_spv", "procedure_state", "stage"}.issubset(never):
+        fail("campi mutabili stanno entrando nell'identità")
+
+    runs = refresh_log.get("runs", [])
+    if len(runs) != 1 or runs[0].get("run_id") != "2026-09-05-baseline":
+        fail("refresh log baseline mancante")
+    if runs[0].get("canonical_promotions") != 0:
+        fail("discovery ha promosso candidati senza gate")
 
     manifest = load_json(DATA / "projects.json")
     projects = []
     for chunk in manifest["chunks"]:
         projects.extend(load_json(DATA / chunk))
-    if not projects:
-        fail("dataset canonico vuoto")
+    if len(projects) != 17:
+        fail(f"dataset canonico v0.3 alterato: {len(projects)} progetti")
 
     invalid_site_types = [
         (p.get("id"), p.get("site_type"))
@@ -66,24 +149,33 @@ def main() -> None:
 
     index = (WIND / "index.html").read_text(encoding="utf-8")
     app = (WIND / "assets" / "app.js").read_text(encoding="utf-8")
+    discovery_js = (WIND / "assets" / "discovery-v04.js").read_text(encoding="utf-8")
+    engine = (ROOT / "scripts" / "wind_discovery_engine.py").read_text(encoding="utf-8")
 
-    for token in ['id="siteType"', 'value="onshore"', 'value="offshore"']:
+    for token in ['id="siteType"', 'value="onshore"', 'value="offshore"', 'id="discoveryRows"', 'assets/discovery-v04.js']:
         if token not in index:
-            fail(f"selettore onshore/offshore incompleto: manca {token}")
-
+            fail(f"UI v0.4 incompleta: manca {token}")
     if "p.site_type||'onshore'" not in app:
         fail("fallback legacy site_type=onshore mancante")
     if "projects.length!==17" in app:
         fail("frontend ancora bloccato sul seed esatto di 17 progetti")
     if "site_type" not in app or "siteType" not in app:
         fail("site_type non cablato nel frontend/export")
+    if "discovery-census-v04.json" not in discovery_js or "discovery-v04.json" not in discovery_js:
+        fail("Discovery UI non legge entrambi i registri")
+    if "REGISTRIES = [DATA / \"discovery-v04.json\", DATA / \"discovery-census-v04.json\"]" not in engine:
+        fail("Discovery engine non combina i due registri")
+    if "stale_scoping" not in engine or "change_fingerprint" not in engine or "identity_key" not in engine:
+        fail("Discovery engine privo di activity/change/identity logic")
 
     explicit = sum(1 for p in projects if p.get("site_type") in allowed)
     legacy = len(projects) - explicit
-    print(f"[OK] dataset canonico: {len(projects)} progetti; {explicit} site_type espliciti, {legacy} legacy -> onshore")
-    print("[OK] selector Onshore + offshore / Onshore / Offshore presente")
-    print("[OK] frontend non più vincolato a 17 progetti")
-    print(f"[OK] discovery registry: {len(registry.get('candidates', []))} candidati")
+    print(f"[OK] canonico invariato: {len(projects)} progetti; {explicit} site_type espliciti, {legacy} legacy -> onshore")
+    print(f"[OK] discovery: {len(candidates)} candidati = {len(current)} current + {len(stale)} stale + {len(rejected)} rejected")
+    print(f"[OK] current onshore/offshore: 19/10 · {current_wind:.2f} MW wind + {current_bess:.0f} MW BESS")
+    print("[OK] identity guards: NURAX, Atis, Poseidon, Kailia, SV9, Chieuti/Puglia1")
+    print("[OK] scope profiles separati onshore/offshore; KPI canonici non contaminati")
+    print("[OK] selector + Discovery UI presenti; frontend non più vincolato a 17 progetti")
 
 
 if __name__ == "__main__":
