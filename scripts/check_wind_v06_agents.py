@@ -50,15 +50,17 @@ required_adapters = {
     "calabria-via",
     "campania-viavas",
     "lazio-regional",
+    "mase-provvedimenti",
     "mase-via",
     "puglia-sistema-energia",
     "sardegna-sira",
     "sicilia-sivvi",
+    "terna-econnextion",
     "toscana-atos",
     "toscana-gea",
 }
 assert required_adapters.issubset(implemented), implemented
-assert len(implemented) >= 10, implemented
+assert len(implemented) >= 12, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
 
 # Evidence discipline: generic capability / weak signals never close scope.
