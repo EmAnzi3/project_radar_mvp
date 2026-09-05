@@ -39,14 +39,14 @@ Coperture execution correnti:
 Audit completato il 05/09/2026 e registrato in:
 `docs/wind/research/2026-09-05-stage-consistency-audit.md`
 
-La scala è unica e a soglie osservabili:
-- **E0 Universo** — lead individuato, sviluppo non ancora sufficientemente verificato;
+**E0–E8 è una scala interna del Radar**, non una nomenclatura tecnica universale. Le etichette usano terminologia di settore:
+- **E0 Pre-sviluppo** — opportunità/progetto individuato e in valutazione preliminare; sviluppo strutturato non ancora sufficientemente verificato;
 - **E1 Sviluppo** — developer/SPV e sviluppo osservabili, iter formale non ancora osservato;
 - **E2 Iter autorizzativo** — VIA/AU/permitting formalmente avviato;
 - **E3 Iter autorizzativo avanzato** — VIA favorevole o iter nelle fasi finali, ma autorizzazione complessiva non acquisita;
-- **E4 Autorizzato** — principali autorizzazioni ottenute, procurement non ancora osservato;
-- **E5 Investimento impegnato** — FID/financial close/altro commitment vincolante, procurement principale non ancora osservato;
-- **E6 Acquisti / affidamenti** — ordini/contratti principali osservati, lavori fisici non ancora provati;
+- **E4 Autorizzato** — principali autorizzazioni ottenute, senza FID/financial close/procurement sufficiente osservato;
+- **E5 FID / investimento impegnato** — FID/financial close/altro commitment vincolante, procurement principale non ancora osservato;
+- **E6 Procurement / affidamenti** — ordini/contratti principali osservati, lavori fisici non ancora provati;
 - **E7 Costruzione** — lavori fisici in sito avviati;
 - **E8 In esercizio** — commissioning/COD completato e impianto operativo.
 
@@ -69,14 +69,13 @@ Correzione emersa dall'audit:
 Gli altri 16 stage sono risultati coerenti con le soglie canoniche.
 
 UI pipeline:
-- legenda mappa mostra ora tutte le 9 fasi, comprese quelle a zero;
+- legenda mappa mostra tutte le 9 fasi, comprese quelle a zero;
 - filtro, pipeline e badge progetto usano la tassonomia canonica centrale;
 - fasi a zero mostrate come `nessun progetto`;
 - nota esplicativa sul fatto che 0 ≠ fase saltata;
-- label in italiano;
-- browser test desktop 1440 px + mobile 390 px PASS, nessun overflow e nessun errore console.
+- browser test desktop 1440 px + mobile 390 px PASS anche con le nuove etichette E5/E6, nessun overflow e nessun errore console.
 
-Regression guard: `scripts/check_wind_stages.py`.
+Regression guard: `scripts/check_wind_stages.py` protegge anche le nove label esatte e la coerenza del glossario.
 
 ## Contractor / technical intelligence consolidata
 
@@ -156,12 +155,12 @@ Regression guard: `scripts/check_wind_stages.py`.
 - FM Service Group = C candidate site-services, progetto non nominato.
 
 ### Fenice
-- NVA Fenice 51 WTG / 367,2 MW, E3 advanced permitting / in attesa concerto;
+- NVA Fenice 51 WTG / 367,2 MW, E3 iter autorizzativo avanzato / in attesa concerto;
 - ATS Engineering A1 design, non contractor;
 - REL101/REL102 letti; nessun cronoprogramma distinto emerso.
 
 ### Toritto
-- 108 MW wind + 50 MW BESS, E2 permitting/VIA;
+- 108 MW wind + 50 MW BESS, E2 iter autorizzativo/VIA;
 - cronoprogramma 503 giorni solo relativo.
 
 ### Sava-Maruggio / Volturino / Lama Cupa
@@ -198,7 +197,7 @@ Glossario ricercabile per utenti non tecnici, 37 termini / 9 categorie:
 - `docs/wind/assets/glossary.js`
 - `docs/wind/assets/glossary.css`
 
-Copre MW, WTG, BESS, BoP, SSE, COD, FID, OEM, EPC, RTI, DL, CSP/CSE, LTA, VIA, AU, MASE, MYTERNA, A1-D, E0-E8, scope, contractor gap, ecc.
+Copre MW, WTG, BESS, BoP, SSE, COD, FID, OEM, EPC, RTI, DL, CSP/CSE, LTA, VIA, AU, MASE, MYTERNA, A1-D, E0-E8, scope, contractor gap, ecc. La voce E0–E8 chiarisce che i codici sono interni al Radar e riporta le nove etichette sector-aligned.
 
 ## Regression guards / verifiche
 
@@ -206,7 +205,7 @@ Copre MW, WTG, BESS, BoP, SSE, COD, FID, OEM, EPC, RTI, DL, CSP/CSE, LTA, VIA, A
 - `scripts/check_wind_industry_press.py`
 - `scripts/check_wind_stages.py`
 
-Gate browser già eseguiti su desktop/mobile per v0.3, Industry intelligence, glossario e nuova pipeline E0-E8.
+Gate browser già eseguiti su desktop/mobile per v0.3, Industry intelligence, glossario e pipeline E0-E8.
 
 ## Stato
 
