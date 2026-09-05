@@ -162,22 +162,31 @@ Implementato nel branch:
 - `app/wind_agents/planner.py`: code separate per **Institutional Watch**, **Company Watch** e **Project Execution Watch**, con cadenze proprie;
 - `app/wind_agents/state.py`: persistenza SQLite separata per raw findings e change events; il canonico non viene modificato automaticamente;
 - `app/wind_agents/evidence.py`: gate strutturale unico, per cui solo evidenza project-specific A1/A2 può chiudere uno scope esecutivo;
-- `app/wind_agents/adapters/mase.py`: primo adapter realmente eseguibile, che riusa il collector MASE esistente ma lo restringe a eolico / repowering / offshore;
 - `app/wind_agents/runner.py` + `scripts/run_wind_agents.py`: orchestrazione e CLI;
 - `scripts/check_wind_v06_agents.py`: regressione dedicata.
+
+Adapter istituzionali attualmente eseguibili:
+1. `mase-via` — MASE VIA, tarato su eolico / repowering / offshore;
+2. `lazio-via` — Regione Lazio VIA/PAUR, derivato dal collector `pv_agent_mvp/lazio.py`;
+3. `toscana-gea` — Regione Toscana GeA, derivato dal collector `pv_agent_mvp/toscana.py`;
+4. `toscana-atos` — ATOS Toscana FER, derivato da `pv_agent_mvp/toscana_atos.py` e filtrato su eolico senza dipendere da codici numerici tecnologia non documentati;
+5. `sardegna-sira` — Sardegna SIRA VIA/PAUR, con news + ricerca JSF adattate da `pv_agent_mvp/sardegna.py`;
+6. `sicilia-sivvi` — Sicilia SI-VVI, prima tranche sul CSV regionale ufficiale derivata da `pv_agent_mvp/sicilia.py`; dettaglio/GIS resta un arricchimento additivo successivo.
 
 Il planner usa i registri v0.6 correnti:
 - Company Network base + tranche B;
 - Institutional Source Network base + tranche B;
 - canonico progetti per generare la coda E4–E7 con scope ancora aperti.
 
-Regola di trasparenza: un nodo fonte presente nel registry ma senza adapter eseguibile resta **visibile come lavoro dovuto**, non viene considerato falsamente monitorato.
+Regola di trasparenza: un nodo fonte presente nel registry ma senza adapter eseguibile resta **visibile come lavoro dovuto**, non viene considerato falsamente monitorato. Anche un adapter registrato non viene dichiarato live-validato finché non è stato eseguito contro la fonte corrente; il workflow PR valida architettura, import, gate e regressioni, non la disponibilità esterna del portale.
 
 Prossima estensione del motore:
-1. portare/adattare dal PV Agent i collector regionali ad alta priorità, iniziando da Lazio, Toscana/ATOS, Sardegna, Sicilia, Puglia, Campania, Calabria e Basilicata;
-2. aggiungere adapter company-watch per press/news/supplier pages dei player A;
-3. riconciliare automaticamente i finding con canonico/discovery senza promozione automatica;
-4. generare digest delle sole variazioni utili commercialmente.
+1. portare/adattare i collector **Sistema Puglia, Campania, Calabria e Basilicata**;
+2. completare l'arricchimento dettaglio/GIS Sicilia;
+3. aggiungere adapter company-watch per press/news/supplier pages dei player A;
+4. riconciliare automaticamente i finding con canonico/discovery senza promozione automatica;
+5. generare digest delle sole variazioni utili commercialmente;
+6. predisporre l'esecuzione periodica con stato persistente e reporting delle sole variazioni.
 
 Branch di lavoro v0.6:
 `feat/wind-radar-v0.6-execution-intelligence`.
