@@ -2,11 +2,17 @@
 
 ## Andretta-Bisaccia
 
-Il record operativo del radar `Andretta-Bisaccia` resta riferito al progetto Edison Rinnovabili con **18 aerogeneratori**. Il Piano di Cantierizzazione depositato da Edison/GEKO conferma esplicitamente il nuovo assetto da 18 WTG.
+Il record operativo del radar resta **provvisoriamente** riferito alla configurazione Edison Rinnovabili da **18 aerogeneratori / 88,5 MW**, perché la documentazione MASE più recente della procedura di ottemperanza, redatta il 31/07/2026 e pubblicata l'11/08/2026, descrive una riduzione di potenza a 88,5 MW e il Piano di Cantierizzazione depositato nello stesso fascicolo descrive esplicitamente un nuovo assetto da 18 WTG.
 
-Il MASE conserva come oggetto amministrativo originario il progetto 18 × 6,6 MW = 118,8 MW, ma la Relazione Illustrativa di Verifica di Ottemperanza, redatta il 31/07/2026 e pubblicata l'11/08/2026, descrive una **riduzione di potenza a 88,5 MW** con sostituzione aerogeneratori. Per il radar la configurazione corrente resta quindi **18 WTG / 88,5 MW**.
+La verifica sulle fonti territoriali corregge però una precedente interpretazione: l'avviso Regione Campania del 02/07/2026 relativo a **13 WTG × 6,6 MW = 85,8 MW**, con smantellamento di 18 WTG esistenti da 54 MW, indica come proponente **EDISON RINNOVABILI S.p.A.**. Non può quindi essere liquidato come progetto estraneo o come pista amministrativa di altro proponente.
 
-La pista regionale da **13 WTG / 85,8 MW** non va usata per sovrascrivere il record: MASE la espone come distinta configurazione/progetto correlato nell'ambito della stessa opera/area amministrativa, con percorsi e proponenti che compaiono in atti differenti (Winbis / Edison). Va conservata come storico/parallel administrative track, non come conflitto irrisolto sul record operativo.
+MASE espone due procedimenti sotto la stessa opera territoriale Andretta-Bisaccia:
+- progetto 18 WTG / 118,8 MW, proponente Edison Rinnovabili, oggi in ottemperanza con documentazione 2026 che descrive riduzione a 88,5 MW;
+- progetto 13 WTG / 85,8 MW, nato anche sotto Winbis S.r.l. ma oggi presente in un procedimento MASE con proponente Edison Rinnovabili e richiamato dall'avviso espropriativo regionale del 02/07/2026.
+
+### Esito operativo
+
+Finché non viene trovata una fonte che espliciti il rapporto giuridico-tecnico tra le due configurazioni 2026, **non considerare risolto il conflitto 18 WTG / 88,5 MW vs 13 WTG / 85,8 MW**. Il radar può mantenere 18 / 88,5 come baseline più recente per cronoprogramma e cantierizzazione, ma deve mostrarla come configurazione da riconciliare e conservare 13 / 85,8 come variante/procedimento Edison concorrente, non come progetto separato.
 
 ### Collisione territoriale MERAL
 
@@ -14,17 +20,17 @@ Nel portale VIA/VAS della Regione Campania è presente anche un **distinto proge
 
 Fonte: https://viavas.regione.campania.it/opencms/opencms/VIAVAS/VIA_files_new/Progetti/prg_10177_prot_2026.577306_del_29-06-2026.via
 
-**Regola:** nessun atto locale trovato con le sole chiavi `Andretta`, `Bisaccia`, `eolico` va attribuito al repowering Edison senza riscontro su proponente/SPV, WTG, MW, procedura o opere inequivocabilmente riferibili al progetto 88,5 MW.
+**Regola:** nessun atto locale trovato con le sole chiavi `Andretta`, `Bisaccia`, `eolico` va attribuito al repowering Edison senza riscontro su proponente/SPV, WTG, MW, procedura o opere inequivocabilmente riferibili al progetto.
 
 ### Regola metodologica
 
 Per progetti con più procedimenti nella stessa area, l'identità non deve essere risolta soltanto con nome/località. Usare almeno:
-- proponente/SPV;
+- proponente/SPV corrente e storico;
 - numero WTG;
 - configurazione MW;
 - ID progetto/procedura MASE o regionale;
 - data e tipo dell'atto;
-- eventuale relazione esplicita tra configurazione originaria e variante/ottemperanza.
+- eventuale relazione esplicita tra configurazione originaria, variante, espropri e ottemperanza.
 
 ## Serra Giannina
 
