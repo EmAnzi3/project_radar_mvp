@@ -29,7 +29,7 @@ assert "app/collectors/puglia.py" in reuse["disabled"]
 sources = registry["sources"] + audit["sources"]
 ids = [s["id"] for s in sources]
 assert len(ids) == len(set(ids)), "duplicate institutional source ids"
-assert len(sources) >= 25, f"institutional source network too small after audit: {len(sources)}"
+assert len(sources) >= 30, f"institutional source network too small after audit: {len(sources)}"
 
 for s in sources:
     assert s["priority"] in {"A", "B", "C"}, s["id"]
@@ -50,9 +50,10 @@ for required in [
     "puglia-sistema-energia", "sardegna-sira", "sicilia-sivvi",
     "basilicata-via", "calabria-via", "campania-viavas",
     "toscana-gea", "toscana-atos",
-    "liguria-via-procedimenti", "molise-au-eolico", "lazio-via-project-list",
-    "emilia-romagna-viavasweb", "umbria-via-list", "veneto-fer-procedures",
-    "piemonte-sivia"
+    "abruzzo-via", "abruzzo-fer-au", "liguria-via-procedimenti", "molise-au-eolico",
+    "marche-via-regional", "marche-via-state-mirror", "marche-energy-au",
+    "lazio-via-project-list", "emilia-romagna-viavasweb", "lombardia-ferau",
+    "umbria-via-list", "veneto-fer-procedures", "piemonte-sivia"
 ]:
     assert required in by_id, f"missing required institutional node {required}"
 
@@ -63,12 +64,13 @@ assert "aggregate" in by_id["terna-econnextion"]["status"] or "aggregate" in by_
 
 original_gaps = {x["region"]: x for x in registry["coverage_gaps"]}
 resolved = {x["region"] for x in audit["resolved_coverage_gaps"]}
-assert {"Liguria", "Molise"} <= resolved
+assert {"Abruzzo", "Liguria", "Marche", "Molise"} <= resolved
 for region in resolved:
     assert region in original_gaps, f"resolved gap was not declared originally: {region}"
     assert any(s.get("region") == region and s["priority"] == "A" for s in audit["sources"]), f"{region}: resolution lacks priority-A source"
 remaining_gaps = set(original_gaps) - resolved
-assert "Liguria" not in remaining_gaps and "Molise" not in remaining_gaps
+for region in ["Abruzzo", "Liguria", "Marche", "Molise"]:
+    assert region not in remaining_gaps, f"{region} should be resolved at source-discovery level"
 
 # Explicit guard: inherited PV collectors are source/parser assets, not wind-ready collectors by default.
 assert "PV-only keyword filters must not be copied" in " ".join(registry["principles"])
@@ -76,5 +78,5 @@ assert "PV-only keyword filters must not be copied" in " ".join(registry["princi
 print(
     f"v0.6 institutional network OK: {len(sources)} source nodes, "
     f"{sum(s['priority']=='A' for s in sources)} priority A, "
-    f"{len(resolved)} priority gaps source-audited, {len(remaining_gaps)} remaining declared gaps"
+    f"{len(resolved)} source gaps resolved, {len(remaining_gaps)} remaining declared gaps"
 )
