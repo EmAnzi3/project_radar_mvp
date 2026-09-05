@@ -60,6 +60,27 @@ Fonte: https://va.mite.gov.it/it-IT/Oggetti/Info/10094
 
 **Regola:** la sola presenza di `Tricarico` in atti regionali, espropri, opere di rete o ricerche contractor non è sufficiente per attribuire la fonte ad Adest 42 MW. Verificare sempre Adest/SPV, 7 WTG, 42 MW, Vestas o riferimenti amministrativi coerenti con il record operativo.
 
+### Storico non correlato
+
+Ricerche di settore restituiscono anche riferimenti a un progetto `Tricarico Italy` con turbine Siemens e attività risalenti al 2016. Non è il record operativo Adest 42 MW / 7 Vestas e non deve essere usato per attribuire contractor, erection o logistics al progetto corrente.
+
+## Castelfranco in Miscano / CER
+
+Il seed operativo riguarda **CER / Campana Energie Rinnovabili — repowering Difesa Vecchia — CUP 9439**, impianto esistente da circa 30 MW sostituito con **5 WTG**.
+
+Il pass sulla stampa di settore ha fatto emergere un progetto diverso ma quasi sovrapponibile per nome località e potenza: **Fri-El S.p.A. — progetto eolico Miscano — 29,4 MW — CUP 9207**.
+
+La Regione Campania separa esplicitamente i due procedimenti:
+- CUP **9439** — CER S.r.l. / Campana Energie Rinnovabili — località **Difesa Vecchia** — impianto esistente / repowering;
+- CUP **9207** — Fri-El S.p.A. — progetto **Miscano**, 29,4 MW — Castelfranco in Miscano con opere connesse anche a Greci, Ariano Irpino e Montecalvo Irpino.
+
+Fonti:
+- https://burc.regione.campania.it/eBurcWeb/directServlet?ATTACH_ID=213684&DOCUMENT_ID=00141646
+- https://burc.regione.campania.it/eBurcWeb/directServlet?ATTACH_ID=213688&DOCUMENT_ID=00141646
+- https://burc.regione.campania.it/eBurcWeb/directServlet?ATTACH_ID=217245&DOCUMENT_ID=00143505
+
+**Regola:** risultati di settore, atti locali, connessioni, supplier o contractor relativi a `Castelfranco`, `Miscano` o `29,4 MW` non devono essere attribuiti a CER senza verificare **CUP 9439 / CER / Difesa Vecchia / 5 WTG**. Il progetto Fri-El/Miscano CUP 9207 è una collisione distinta.
+
 ## Contractor status
 
-Questa riconciliazione non aggiunge nuovi contractor esecutivi A1/A2. Progeco Group / Progeco SE su Andretta-Bisaccia resta un segnale **B** di site/construction management e supervisione, non prova Civil BoP. D'Agostino su Serra Giannina resta segnale B finché non emerge evidenza diretta dello scope esecutivo.
+Questa riconciliazione non aggiunge nuovi contractor esecutivi A1/A2. Progeco Group / Progeco SE su Andretta-Bisaccia resta un segnale **B** di site/construction management e supervisione, non prova Civil BoP. D'Agostino su Serra Giannina resta segnale B finché non emerge evidenza diretta dello scope esecutivo. Il pass stampa di settore non modifica gli 8/108 scope esecutivi confermati.
