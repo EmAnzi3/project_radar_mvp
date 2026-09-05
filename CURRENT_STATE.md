@@ -46,6 +46,7 @@ Nuove evidenze contractor/tecniche già censite:
 - Venusia: EGM Project A2 su progettazione esecutiva / Direzione Lavori;
 - Nulvi-Ploaghe: Hydro Engineering A2 su sviluppo/engineering;
 - Tricarico: Vector Renewables A2 come LTA / construction monitoring;
+- **Tricarico: Vestas B `WTG supply + installation`, scope_hint erection** — fonte company-supplied descrive installazione, ma il comunicato diretto Vestas conferma solo ordine/delivery/commissioning; Erection resta quindi aperto;
 - Serra Giannina: D’Agostino B come forte segnale di presenza construction/site, non Civil BoP confermato;
 - Greci-Montaguto: RINA B come segnale Electrical & Quality Inspection;
 - ALAS: Hydro Engineering A1 come progettista del Progetto Esecutivo Opere Civili, **non** Civil BoP;
@@ -59,7 +60,7 @@ Il branch aggiunge:
 - KPI `Scope esecutivi coperti`;
 - chip scope coverage in Opportunità prioritarie;
 - scheda progetto con Commercial Window, completezza intelligence, matrice scope, investigation queue e document intelligence;
-- Contractor view arricchita con relazioni tecniche/esecutive senza promuovere segnali B/C a contractor confermati;
+- Contractor view unificata: relazioni base + enrichment + docpass2 + contractor leads, mantenendo segnali B/C separati dagli scope A1/A2;
 - pannello `Deep document & public-source pass` nel drawer, alimentato anche dai registri di fonti regionali e comunali.
 
 ### Deep-document — full text acquisito
@@ -95,6 +96,7 @@ Registri:
 
 - `docs/wind/data/public-entity-sources-2026-09-04.json`;
 - `docs/wind/data/local-entity-sources-2026-09-04.json`;
+- `docs/wind/data/contractor-leads-2026-09-05.json`;
 - `docs/wind/research/2026-09-04-public-entity-source-pass.md`;
 - `docs/wind/research/2026-09-05-local-source-pass-2.md`;
 - `docs/wind/research/2026-09-05-identity-reconciliation.md`.
@@ -102,12 +104,12 @@ Registri:
 ### Pass locale/pubblico 2026-09-05
 
 - **Andretta-Bisaccia:** identity reconciliation chiusa. Il record operativo resta Edison Rinnovabili **18 WTG / 88,5 MW**. Il procedimento regionale 13 WTG / 85,8 MW è una pista amministrativa/progettuale distinta e correlata, non un aggiornamento del record corrente.
-- **ALAS:** introdotto identity guard tra `ALAS` 66 MW e il distinto `Alas 2` 50,4 MW negli stessi comuni; nessun atto o contractor viene trasferito tra i due senza verifica di procedura/configurazione.
+- **ALAS:** identity guard tra `ALAS` 66 MW e il distinto `Alas 2` 50,4 MW negli stessi comuni; nessun atto o contractor viene trasferito tra i due senza verifica di procedura/configurazione. Nessuna ordinanza locale viabilità/mezzi pesanti attribuita con certezza finora.
 - **Serra Giannina:** gli elaborati esecutivi MASE 2026 confermano la configurazione corrente **42 MW / 6 WTG**; configurazioni precedenti restano storico amministrativo.
 - **Tarsia Ovest:** ricostruita la catena locale/amministrativa PLT → Eni Plenitude. Comune di Tarsia: convenzione PLT 2023 e ordine del giorno 01/12/2025 per la nuova convenzione con Plenitude; Regione Calabria: voltura 2025 e variante 2026. Resta da recuperare la delibera finale 2025 con allegato convenzione.
-- **Nulvi-Ploaghe:** Comune di Osilo, Delibera Consiglio n.29 del 30/07/2026, dedicata al potenziamento. Il registro ordinanze Osilo 2026 non mostra ancora un atto chiaramente attribuibile al cantiere eolico. Il progetto resta Priority 1 perché ERG dichiara un rilevante ricorso a imprese/fornitori locali senza ancora nominarli.
-- **Tricarico:** genealogia amministrativa `Corona Prima`/Adest separata dalle configurazioni storiche; il record corrente resta 42 MW. Nessuna deduzione `Idoka proprietaria = Idoka Civil BoP`.
-- **Greci-Montaguto:** variante, espropri e cantiere sono confermati, ma Civil BoP/fondazioni restano aperti.
+- **Nulvi-Ploaghe:** Comune di Osilo, Delibera Consiglio n.29 del 30/07/2026, dedicata al potenziamento. Le ordinanze Osilo 2026 indicizzate non mostrano ancora un atto chiaramente attribuibile al cantiere eolico. Il progetto resta Priority 1 perché ERG dichiara un rilevante ricorso a imprese/fornitori locali senza ancora nominarli.
+- **Tricarico:** genealogia amministrativa `Corona Prima`/Adest separata dalle configurazioni storiche; il record corrente resta 42 MW. Il nuovo lead Vestas installation resta B; nessuna deduzione `Idoka proprietaria = Idoka Civil BoP`.
+- **Greci-Montaguto:** variante, espropri e cantiere sono confermati, ma Civil BoP/fondazioni restano aperti; un framework Hydro–ERG non viene attribuito perché non project-specific.
 
 ### Regola identity/versioning
 
@@ -115,13 +117,24 @@ Ogni fonte viene classificata rispetto al record operativo (`same-project-curren
 
 ### Stato contractor hunt
 
-Il pass locale/pubblico del 5 settembre **non chiude nuovi scope esecutivi A1/A2**. I target con maggior valore investigativo restano:
+Il pass del 5 settembre **non chiude nuovi scope esecutivi A1/A2**. I target con maggior valore investigativo restano:
 
 - Nulvi-Ploaghe — procurement locale dichiarato, fornitori non nominati;
 - ALAS — cantiere attivo, impresa esecutrice non identificata;
 - Serra Giannina — D’Agostino resta forte segnale B;
 - Greci-Montaguto — cantiere attivo, BoP/fondazioni aperti;
-- Tricarico — financing e construction monitoring osservati, BoP aperto.
+- Tricarico — Vestas installation B da confermare direttamente; Civil/Electrical BoP aperti.
+
+### Verifiche correnti
+
+- 17 progetti / 1.496,9 MW invariati;
+- scope coverage invariata **8/108**;
+- MW con ≥1 scope A1/A2 invariati **230,9 MW**;
+- Vestas/Tricarico installation resta B e non chiude Erection;
+- Carlentini chiude solo Foundation;
+- Hydro ALAS e ATS Fenice non chiudono scope esecutivi;
+- Brulli non è attribuita a Lama Cupa;
+- preview standalone verificata in browser: Contractor view unificata mostra Vestas/Tricarico come `signal · B`, KPI 230,9 MW e 8/108, senza errori console.
 
 ### Pass aperti prima di proporre merge
 
@@ -129,10 +142,10 @@ Il pass locale/pubblico del 5 settembre **non chiude nuovi scope esecutivi A1/A2
 - cercare Nulvi/Ploaghe/Osilo: ordinanze viabilità, occupazioni e trasporti eccezionali;
 - cercare Ittiri/Villanova Monteleone: atti locali ALAS su viabilità/mezzi pesanti/cantiere;
 - cercare Greci/Montaguto e Provincia Avellino: viabilità e trasporti del repowering;
-- cercare Tricarico/Adest: apertura cantiere, connessione e accessi;
+- cercare Tricarico/Adest: apertura cantiere, connessione e accessi + conferma diretta Vestas installation;
 - cercare un cronoprogramma Fenice nel restante corpus MASE;
 - cercare l'anchor reale di avvio Toritto;
-- preview visuale desktop/mobile del nuovo pannello prima di qualsiasi merge;
+- completare preview visuale mobile del nuovo pannello;
 - audit coordinate territoriali contro corografie/layout ufficiali resta separato.
 
 ### Vincoli
