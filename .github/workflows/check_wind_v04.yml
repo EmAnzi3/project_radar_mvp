@@ -9,6 +9,7 @@ on:
       - 'scripts/run_wind_agents.py'
       - 'scripts/wind_discovery_engine.py'
       - '.github/workflows/check_wind_v04.yml'
+      - '.github/workflows/wind_agent_watch.yml'
   workflow_dispatch:
 
 jobs:
@@ -44,7 +45,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install agent-check dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
 
       - name: Preserve v0.5 manifest
         run: cp docs/wind/data/projects.json /tmp/projects-v05.json
