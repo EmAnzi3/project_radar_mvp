@@ -1,29 +1,47 @@
 # project_radar_mvp
 
-MVP per radar commerciale progetti.
+Radar commerciale per progetti e infrastrutture in Italia.
 
-Obiettivo:
-- raccogliere progetti da fonti pubbliche;
-- normalizzare dati essenziali;
-- calcolare uno score commerciale;
-- generare JSON, CSV e dashboard HTML.
+## Wind Project & Contractor Radar
 
-Output iniziali:
-- docs/data.json
-- docs/index.html
+Baseline pubblicata: **v0.5.0**.
 
-Avvio locale:
-.\aggiorna_radar.bat
+Il Wind Radar integra:
+- progetti eolici onshore e offshore da fonti pubbliche;
+- normalizzazione di identità, MW, WTG, stage E0–E8 e timing;
+- separazione rigorosa tra MW wind e BESS;
+- supply-chain intelligence con ruolo, fonte e livello di confidenza;
+- scope esecutivi chiusi solo con evidenza A1/A2 esplicita;
+- Discovery separato dal dataset canonico;
+- dashboard HTML con KPI, filtri, mappa, timeline, opportunità e Contractor view.
 
-Fonti previste:
+Baseline canonica v0.5:
+- **51 progetti**;
+- **11.202,52 MW wind**;
+- 34 progetti promossi dal discovery v0.4;
+- 4 candidati ancora blocked nel discovery.
+
+Dashboard Wind:
+- `docs/wind/index.html`
+
+Stato operativo dettagliato:
+- `CURRENT_STATE.md`
+
+## Altri output repository
+
+- `docs/data.json`
+- `docs/index.html`
+- `docs/branches.html`
+
+Avvio locale legacy:
+`.\aggiorna_radar.bat`
+
+Fonti principali previste / utilizzate a seconda del radar:
 1. MASE VIA
 2. OpenCUP
 3. ANAC / BDNCP
-4. Regioni
-5. Albi pretori selezionati
-
-Stato:
-Versione iniziale con record demo e struttura dati base.
+4. Regioni ed enti territoriali
+5. developer / contractor / operatori diretti quando la fonte è primaria
 
 <!-- MAINTENANCE-STANDARD:START -->
 ## Manutenzione repository
@@ -35,9 +53,9 @@ Versione iniziale con record demo e struttura dati base.
 
 Comando consigliato prima del commit:
 
-`powershell
+```powershell
 .\scripts\check_before_publish.ps1
 git status
 git diff --check
-`
+```
 <!-- MAINTENANCE-STANDARD:END -->
