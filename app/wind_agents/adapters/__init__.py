@@ -1,3 +1,5 @@
+from .basilicata import BasilicataWindAgent
+from .calabria import CalabriaWindAgent
 from .campania import CampaniaWindAgent
 from .lazio import LazioWindAgent
 from .mase import MaseWindAgent
@@ -8,6 +10,8 @@ from .toscana import ToscanaWindAgent
 from .toscana_atos import ToscanaAtosWindAgent
 
 __all__ = [
+    "BasilicataWindAgent",
+    "CalabriaWindAgent",
     "CampaniaWindAgent",
     "LazioWindAgent",
     "MaseWindAgent",
