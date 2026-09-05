@@ -8,6 +8,7 @@ DATA = ROOT / "docs" / "wind" / "data"
 base = json.loads((DATA / "company-network-v06.json").read_text(encoding="utf-8"))
 tranche_b = json.loads((DATA / "company-network-v06b.json").read_text(encoding="utf-8"))
 tranche_c = json.loads((DATA / "company-network-v06c.json").read_text(encoding="utf-8"))
+tranche_d = json.loads((DATA / "company-network-v06d.json").read_text(encoding="utf-8"))
 manifest = json.loads((DATA / "projects.json").read_text(encoding="utf-8"))
 projects = []
 for chunk in manifest["chunks"]:
@@ -18,13 +19,14 @@ project_aliases = {"on-lama-cupa": "lama-cupa"}
 assert base["version"] == "0.6.0"
 assert tranche_b["version"] == "0.6.0"
 assert tranche_c["version"] == "0.6.0-c"
+assert tranche_d["version"] == "0.6.0-d"
 assert base["monitoring"]["high_priority_cadence_days"] == 7
 assert base["monitoring"]["standard_cadence_days"] == 14
 assert base["monitoring"]["universe_refresh_days"] == 30
 assert any("anev.org/soci" in s.get("url", "") for s in base["discovery_sources"])
 
 # Merge additive tranches by company id, matching planner/UI behaviour.
-parts = (base, tranche_b, tranche_c)
+parts = (base, tranche_b, tranche_c, tranche_d)
 by_id = {}
 for payload in parts:
     for company in payload.get("companies", []):
@@ -40,8 +42,8 @@ for payload in parts:
 companies = list(by_id.values())
 raw_ids = [c["id"] for payload in parts for c in payload.get("companies", [])]
 assert len(raw_ids) == len(set(raw_ids)), "duplicate company ids across v06 tranches"
-assert len(companies) >= 58, f"expanded network too small: {len(companies)}"
-assert sum(bool(c.get("watch_urls")) for c in companies) >= 50, "company watch URL coverage too low"
+assert len(companies) >= 59, f"expanded network too small: {len(companies)}"
+assert sum(bool(c.get("watch_urls")) for c in companies) >= 51, "company watch URL coverage too low"
 
 for c in companies:
     assert c["commercial_priority"] in {"A", "B", "C"}, c["id"]
@@ -61,7 +63,8 @@ for required in [
     "renext-solutions", "ox2-italia", "wpd-italia", "hitachi-energy", "tratos-cavi",
     "yce-blades", "engie-italia", "alerion", "goldwind-energy-italy",
     "blu-costruzioni", "egm-project", "barone-costruzione", "gruppo-novello",
-    "la-molisana-trasporti", "pizzulo-costruzioni", "simic", "fc-wind-service"
+    "la-molisana-trasporti", "pizzulo-costruzioni", "simic", "fc-wind-service",
+    "progeco-group"
 ]:
     assert required in by_id, f"missing required network node {required}"
 
@@ -113,8 +116,16 @@ simic = by_id["simic"]
 assert "wind_epc" in simic["cluster"]
 assert simic["project_links"] == [], "turnkey track record must not imply a canonical award"
 
+progeco = by_id["progeco-group"]
+assert progeco["commercial_priority"] == "A"
+assert progeco["project_links"] == ["andretta-bisaccia"]
+assert progeco["relationship_status"] == "project_specific_support_signal"
+assert "construction_supervision" in progeco["cluster"]
+assert "civil_bop" not in progeco["cluster"], "site-management support signal must not become civil execution attribution"
+assert "electrical_bop" not in progeco["cluster"], "site-management support signal must not become electrical execution attribution"
+
 # All expansion nodes must be operationally actionable, not just names.
-for payload in (tranche_b, tranche_c):
+for payload in (tranche_b, tranche_c, tranche_d):
     for c in payload["companies"]:
         assert c.get("last_checked") == "2026-09-05", c["id"]
         assert c.get("next_action"), f"{c['id']}: missing next_action"
@@ -126,5 +137,5 @@ assert "companies" not in manifest
 print(
     f"v0.6 company network OK: {len(companies)} players, "
     f"{sum(c['commercial_priority']=='A' for c in companies)} priority A, "
-    f"{len(tranche_b['companies']) + len(tranche_c['companies'])} operational expansion nodes"
+    f"{len(tranche_b['companies']) + len(tranche_c['companies']) + len(tranche_d['companies'])} operational expansion nodes"
 )
