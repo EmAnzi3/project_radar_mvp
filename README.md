@@ -29,15 +29,19 @@ Stato operativo dettagliato:
 
 ### Sviluppo v0.6
 
-La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`, mantenendo raw finding, storico variazioni, planner/cadenze ed evidence gate separati dal canonico.
+La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`, mantenendo raw finding, storico variazioni, planner/cadenze, reconciliation ed evidence gate separati dal canonico.
 
 Stato corrente della Draft PR #5:
 - **50 player commerciali** nel Company Network;
 - **31 nodi istituzionali** nel Source Network;
-- **10 adapter istituzionali eseguibili**: MASE, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria e Basilicata;
+- **17 adapter istituzionali eseguibili**: MASE VIA, MASE Provvedimenti, Terna Econnextion, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria, Basilicata, Emilia-Romagna, Lombardia, Piemonte, Umbria e Veneto;
 - Company Watch diretto sulle `watch_urls` con cadenze 7/14/30 giorni;
 - stato runtime persistente per `new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
+- reconciliation conservativa dei finding verso canonico/Discovery **senza promozione automatica**;
+- digest review-only delle sole variazioni commercialmente utili;
 - workflow periodico predisposto con trigger giornaliero e selezione `--due`, senza commit automatici né modifiche automatiche al canonico.
+
+Terna Econnextion resta intelligence aggregata di mercato e non genera progetti. Una VIA positiva MASE non viene interpretata come autorizzazione complessiva, procurement o costruzione. I finding company-direct restano network intelligence finché non esiste evidenza project-specific sul ruolo esecutivo.
 
 Il workflow PR valida architettura e regressioni; la disponibilità live dei portali viene verificata solo da un'esecuzione effettiva degli adapter. Il workflow schedulato diventerà attivo solo se la v0.6 verrà approvata e il relativo file entrerà nel branch di default.
 
