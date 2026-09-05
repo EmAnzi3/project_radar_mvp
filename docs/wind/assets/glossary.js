@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 let glossary=null,modal=null,query=null,list=null,count=null,lastFocus=null;
 function normalize(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
 function render(){if(!glossary||!list)return;const q=normalize(query?.value);const terms=(glossary.terms||[]).filter(x=>!q||normalize([x.term,x.full,x.category,x.definition].join(' ')).includes(q));count.textContent=q?`${terms.length} termini trovati`:`${terms.length} termini`;
