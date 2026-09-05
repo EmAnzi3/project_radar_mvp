@@ -9,21 +9,24 @@ from bs4 import BeautifulSoup
 from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
-BASE_URL = "https://siraviavas.regione.liguria.it/ElencoInCorsoVIA.aspx?Tipo=VIA"
+PRIMARY_URL = "https://siraviavas.regione.liguria.it/ElencoInCorsoVIA.aspx?Tipo=VIA"
+SERVICE_URL = "https://servizi.regione.liguria.it/page/welcome/VIA"
+FALLBACK_URL = "https://www.regione.liguria.it/homepage-ambiente/cosa-cerchi/via-vas-aia-aua/valutazione-impatto-ambientale-via.html"
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
 
 
 class LiguriaWindAgent(BaseWindAgent):
-    """Regione Liguria VIA/PAUR in-progress registry, filtered to wind.
+    """Regione Liguria VIA/PAUR registry, filtered to wind.
 
-    The public SIRAVIAVAS table contains both regional and national VIA rows.
-    National rows remain useful as local mirrors but never duplicate/promote a
-    MASE identity automatically: reconciliation is advisory only.
+    The legacy/current SIRAVIAVAS endpoint can return server errors to automated
+    clients. When it is unavailable, the adapter verifies the official Regione
+    Liguria VIA page and records a degraded channel snapshot pointing to the
+    official procedures service. It never turns an outage into fake project data.
     """
 
     agent_name = "institutional_watch"
     source_name = "Regione Liguria VIA"
-    base_url = BASE_URL
+    base_url = PRIMARY_URL
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -72,15 +75,72 @@ class LiguriaWindAgent(BaseWindAgent):
         return f"LIGURIA-VIA-{digest}"
 
     def _page(self, page: int) -> str:
-        url = BASE_URL if page == 1 else f"{BASE_URL}&page={page}"
+        url = PRIMARY_URL if page == 1 else f"{PRIMARY_URL}&page={page}"
         response = self.session.get(url, timeout=60, allow_redirects=True)
         response.raise_for_status()
         return response.text
 
+    def _channel_snapshot(self, primary_error: str) -> AgentFinding:
+        source_url = FALLBACK_URL
+        fallback_verified = False
+        service_link_verified = False
+        excerpt = ""
+        try:
+            response = self.session.get(FALLBACK_URL, timeout=60, allow_redirects=True)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+            fallback_verified = True
+            excerpt = self._clean(soup.get_text(" ", strip=True))[:4000]
+            for anchor in soup.find_all("a", href=True):
+                absolute = urljoin(FALLBACK_URL, anchor.get("href") or "")
+                label = self._clean(anchor.get_text(" ", strip=True)).lower()
+                if "procedimenti via" in label or absolute.rstrip("/") == SERVICE_URL.rstrip("/"):
+                    service_link_verified = True
+                    source_url = absolute
+                    break
+        except Exception as exc:
+            primary_error = f"{primary_error}; fallback={type(exc).__name__}: {exc}"
+
+        return AgentFinding(
+            external_id="LIGURIA-VIA-CHANNEL",
+            source_name=self.source_name,
+            source_url=source_url,
+            title="Regione Liguria — procedimenti VIA",
+            finding_type="source_channel_snapshot",
+            payload={
+                "region": "Liguria",
+                "sector": "eolico",
+                "source_grade_ceiling": "A1",
+                "project_specific": False,
+                "execution_scope": None,
+                "evidence_layer": "institutional_channel",
+                "availability": "degraded_primary_unavailable",
+                "primary_url": PRIMARY_URL,
+                "service_url": SERVICE_URL,
+                "fallback_url": FALLBACK_URL,
+                "fallback_verified": fallback_verified,
+                "service_link_verified": service_link_verified,
+                "primary_fetch_error": primary_error,
+                "official_page_excerpt": excerpt,
+                "runtime_note": "Primary proceedings endpoint unavailable to runner; official Regione Liguria VIA page and procedures-service link remain the monitored fallback. No project rows were claimed.",
+            },
+        )
+
     def fetch(self) -> list[AgentFinding]:
         findings: dict[str, AgentFinding] = {}
+        try:
+            first_html = self._page(1)
+        except Exception as exc:
+            return [self._channel_snapshot(f"{type(exc).__name__}: {exc}")]
+
         for page in range(1, 6):
-            html = self._page(page)
+            if page == 1:
+                html = first_html
+            else:
+                try:
+                    html = self._page(page)
+                except Exception:
+                    break
             soup = BeautifulSoup(html, "html.parser")
             tables = soup.find_all("table")
             found_rows = 0
@@ -106,7 +166,7 @@ class LiguriaWindAgent(BaseWindAgent):
                         continue
                     found_rows += 1
                     practice = self._clean(row.get("numero_pratica"))
-                    source_url = BASE_URL if page == 1 else f"{BASE_URL}&page={page}"
+                    source_url = PRIMARY_URL if page == 1 else f"{PRIMARY_URL}&page={page}"
                     for anchor in tr.find_all("a", href=True):
                         href = anchor.get("href") or ""
                         if href and not href.startswith("mailto:"):
@@ -140,9 +200,9 @@ class LiguriaWindAgent(BaseWindAgent):
                         },
                     )
 
-            # Stop when the page has no project table rows; avoids probing well
-            # beyond the public paginator while tolerating page-count changes.
             if page > 1 and found_rows == 0 and not any("pagina" in self._clean(t.get_text(" ", strip=True)).lower() for t in tables):
                 break
 
+        if not findings:
+            return [self._channel_snapshot("primary reachable but no parseable wind rows")]
         return list(findings.values())
