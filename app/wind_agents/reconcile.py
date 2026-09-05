@@ -264,11 +264,13 @@ def reconcile_finding(
 ) -> dict[str, Any]:
     """Conservatively match one raw finding without mutating canonical data."""
 
-    canonical_targets = [_canonical_candidate(row) for row in (canonical or load_canonical_projects())]
+    canonical_rows = canonical if canonical is not None else load_canonical_projects()
+    discovery_rows = discovery if discovery is not None else load_discovery_candidates()
+    canonical_targets = [_canonical_candidate(row) for row in canonical_rows]
     canonical_ids = {row.get("target_id") for row in canonical_targets}
     discovery_targets = [
         _discovery_candidate(row)
-        for row in (discovery or load_discovery_candidates())
+        for row in discovery_rows
         if row.get("candidate_id") not in canonical_ids
     ]
     scored = [_score_candidate(finding, target) for target in canonical_targets + discovery_targets]
