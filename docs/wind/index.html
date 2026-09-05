@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="Alayan Wind Project &amp; Contractor Radar — pipeline, timing e supply chain dei progetti eolici italiani." name="description"/>
+<meta content="Alayan Wind Project &amp; Contractor Radar — pipeline, timing e supply chain dei progetti eolici italiani onshore e offshore." name="description"/>
 <title>Wind Project &amp; Contractor Radar</title>
 <link href="assets/style.css" rel="stylesheet"/>
 <link href="assets/review-fixes.css" rel="stylesheet"/>
@@ -11,14 +11,15 @@
 <link href="assets/docpass2-intelligence.css" rel="stylesheet"/>
 <link href="assets/glossary.css" rel="stylesheet"/>
 <link href="assets/stage-consistency.css" rel="stylesheet"/>
-<link href="assets/timeline-coherence.css" rel="stylesheet"/></head>
+<link href="assets/timeline-coherence.css" rel="stylesheet"/>
+<link href="assets/discovery-v04.css" rel="stylesheet"/></head>
 <body>
 <header class="hero">
 <div class="hero-inner">
 <div>
 <div class="eyebrow">Alayan · Market &amp; Construction Intelligence</div>
 <h1>Wind Project &amp; Contractor Radar</h1>
-<p>Pipeline eolica italiana letta dal punto di vista commerciale: dove, quanti MW, fase reale, finestre di cantiere e chi sta eseguendo le opere.</p>
+<p>Pipeline eolica italiana onshore e offshore letta dal punto di vista commerciale: dove, quanti MW, fase reale, finestre di cantiere e chi sta eseguendo le opere.</p>
 </div>
 <div class="hero-meta">
 <span class="status-dot"></span>
@@ -42,6 +43,7 @@
 <div class="filters">
 <label class="search-field wide"><span>Cerca</span><input id="q" placeholder="Progetto, comune, developer, contractor…" type="search"/></label>
 <label><span>Regione</span><select id="region"><option value="">Tutte</option></select></label>
+<label><span>Ambito</span><select id="siteType"><option value="">Onshore + offshore</option><option value="onshore">Onshore</option><option value="offshore">Offshore</option></select></label>
 <label><span>Maturità</span><select id="stage"><option value="">E0–E8 tutte</option></select></label>
 <label><span>Tipo</span><select id="type"><option value="">Tutti</option></select></label>
 <label><span>Developer</span><select id="developer"><option value="">Tutti</option></select></label>
@@ -77,6 +79,14 @@
 </div>
 <div aria-label="Calendario attività e milestone dei progetti" class="chart timeline-chart" id="timelineChart"></div>
 <div class="timeline-fallback" id="timelineFallback"></div>
+</section>
+<section class="panel discovery-panel">
+<div class="panel-heading">
+<div class="discovery-note"><h2>Discovery · nuovi progetti da verificare</h2><p>Registro separato dal Radar canonico: mostra candidati MASE onshore e offshore prima della promozione. Non modifica KPI, Contractor View o scope coverage finché identità e stato non superano il gate di verifica.</p></div>
+</div>
+<div class="discovery-summary" id="discoverySummary"></div>
+<div class="discovery-grid" id="discoveryRows"><div class="discovery-empty">Caricamento discovery…</div></div>
+<div class="scale-note"><b>Corrente</b> = procedura recente/in corso · <b>Scoping datato</b> = ultimo avanzamento individuato nel 2022–2023 senza procedura successiva trovata · <b>Escluso / guardia</b> = esito negativo o archiviazione conservati solo per evitare falsi positivi.</div>
 </section>
 <section class="panel opportunity-panel">
 <div class="panel-heading">
@@ -118,5 +128,5 @@
 <div id="methodBody"></div>
 </section>
 </div>
-<script src="assets/app.js"></script><script src="assets/review-fixes.js"></script><script src="assets/contractor-direct-fix.js"></script><script src="assets/scope-intelligence.js"></script><script src="assets/docpass2-intelligence.js"></script><script src="assets/glossary.js"></script><script src="assets/stage-consistency.js"></script><script src="assets/timeline-coherence.js"></script></body>
+<script src="assets/app.js"></script><script src="assets/review-fixes.js"></script><script src="assets/contractor-direct-fix.js"></script><script src="assets/scope-intelligence.js"></script><script src="assets/docpass2-intelligence.js"></script><script src="assets/glossary.js"></script><script src="assets/stage-consistency.js"></script><script src="assets/timeline-coherence.js"></script><script src="assets/discovery-v04.js"></script></body>
 </html>

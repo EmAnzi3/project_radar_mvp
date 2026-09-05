@@ -1,0 +1,54 @@
+name: Wind Radar v0.4 checks
+
+on:
+  pull_request:
+    paths:
+      - 'docs/wind/**'
+      - 'scripts/check_wind_*.py'
+      - 'scripts/wind_discovery_engine.py'
+      - '.github/workflows/check_wind_v04.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-wind-radar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Wind files only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            docs/wind/**
+            scripts/check_wind_radar.py
+            scripts/check_wind_industry_press.py
+            scripts/check_wind_stages.py
+            scripts/check_wind_v04.py
+            scripts/wind_discovery_engine.py
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Canonical v0.3 regression
+        run: python scripts/check_wind_radar.py
+
+      - name: Industry press separation regression
+        run: python scripts/check_wind_industry_press.py
+
+      - name: Stage consistency regression
+        run: python scripts/check_wind_stages.py
+
+      - name: Discovery v0.4 validation
+        run: python scripts/check_wind_v04.py
+
+      - name: Identity and change engine dry-run
+        run: python scripts/wind_discovery_engine.py
+
+      - name: JavaScript syntax
+        run: |
+          node --check docs/wind/assets/app.js
+          node --check docs/wind/assets/discovery-v04.js
+          node --check docs/wind/assets/stage-consistency.js
+          node --check docs/wind/assets/timeline-coherence.js

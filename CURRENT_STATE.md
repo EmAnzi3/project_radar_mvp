@@ -2,213 +2,200 @@
 
 ## Wind Project & Contractor Radar
 
-Baseline pubblicata su `master`: **17 progetti / 1.496,9 MW wind**.  
-Branch corrente: `feat/wind-radar-enrichment-v0.3`.  
-Draft PR: **#2 — Wind Radar v0.3 — contractor hunt, scope coverage e document intelligence**.  
-Stato: **non mergiato e non pubblicato**.
+Baseline pubblicata su `master`: **v0.3**, merge commit `5cb4f00c3d9206e3b08eb224dd8751928ac44022`.
 
-## Regola v0.3
-
-Core scope:
-1. Civil BoP;
-2. Electrical BoP;
-3. SSE / grid;
-4. Fondazioni WTG;
-5. Erection;
-6. Logistics / heavy transport;
-7. Dismantling per repowering.
-
-Solo A1/A2 con `azienda + progetto + ruolo esecutivo` possono chiudere un core scope. B/C, engineering, DL, CSE, LTA, inspection, development, financing e site management restano intelligence.
-
-## Metriche correnti
-
+Baseline canonica pubblicata:
 - **17 progetti / 1.496,9 MW wind**;
 - **230,9 MW** con almeno uno scope esecutivo A1/A2;
 - **8 / 108** core scope applicabili coperti = **7,4%**;
-- **437,7 MW in costruzione E7** dopo la correzione di Castelfranco/CER.
+- **437,7 MW** in costruzione E7.
 
-Coperture execution correnti:
-- Serra Palino: Civil + Electrical;
-- Venusia: Civil/site preparation;
-- Carlentini: Foundation;
-- Tarsia Ovest: Civil + Electrical + SSE/grid;
-- Castelfranco/CER: SSE/grid.
+Branch corrente: `feat/wind-radar-v0.4-discovery-refresh`.
+Draft PR: **#3 — Wind Radar v0.4 — discovery, refresh engine e onshore/offshore**.
+Stato: **Draft, non mergiato e non pubblicato**.
 
-## Pipeline E0–E8 — modello canonico
+## Obiettivo v0.4
 
-Audit completato il 05/09/2026 e registrato in:
-`docs/wind/research/2026-09-05-stage-consistency-audit.md`
+Trasformare il Radar da seed curato di 17 progetti a sistema di discovery/refresh riproducibile, mantenendo separati:
+1. dataset canonico;
+2. candidati discovery;
+3. guardie storiche/rejected;
+4. change detection;
+5. promotion gate.
 
-**E0–E8 è una scala interna del Radar**, non una nomenclatura tecnica universale. Le etichette usano terminologia di settore:
-- **E0 Pre-sviluppo** — opportunità/progetto individuato e in valutazione preliminare; sviluppo strutturato non ancora sufficientemente verificato;
-- **E1 Sviluppo** — developer/SPV e sviluppo osservabili, iter formale non ancora osservato;
-- **E2 Iter autorizzativo** — VIA/AU/permitting formalmente avviato;
-- **E3 Iter autorizzativo avanzato** — VIA favorevole o iter nelle fasi finali, ma autorizzazione complessiva non acquisita;
-- **E4 Autorizzato** — principali autorizzazioni ottenute, senza FID/financial close/procurement sufficiente osservato;
-- **E5 FID / investimento impegnato** — FID/financial close/altro commitment vincolante, procurement principale non ancora osservato;
-- **E6 Procurement / affidamenti** — ordini/contratti principali osservati, lavori fisici non ancora provati;
-- **E7 Costruzione** — lavori fisici in sito avviati;
-- **E8 In esercizio** — commissioning/COD completato e impianto operativo.
+La v0.4 include **onshore + offshore**. L'offshore non viene escluso a priori.
 
-Regola: il progetto assume **la fase più avanzata direttamente osservata**. Non serve avere una fonte distinta per ogni fase precedente. Le fasi a zero restano sempre visibili e non sono considerate “saltate”.
+## Site type
 
-Distribuzione corrente:
-- E0: 0
-- E1: 0
-- E2: 3
-- E3: 2
-- E4: 1
-- E5: 0
-- E6: 2
-- E7: 9
-- E8: 0
+Campo canonico v0.4:
+- `onshore`
+- `offshore`
 
-Correzione emersa dall'audit:
-- **Castelfranco in Miscano / CER: E6 → E7**, perché Energy& documenta lavori fisici di revamping in corso.
+I 17 record v0.3 privi del campo esplicito ricevono fallback legacy `onshore`. Ogni nuovo record dovrà dichiarare `site_type`.
 
-Gli altri 16 stage sono risultati coerenti con le soglie canoniche.
+UI:
+- `Onshore + offshore`
+- `Onshore`
+- `Offshore`
 
-UI pipeline:
-- legenda mappa mostra tutte le 9 fasi, comprese quelle a zero;
-- filtro, pipeline e badge progetto usano la tassonomia canonica centrale;
-- fasi a zero mostrate come `nessun progetto`;
-- nota esplicativa sul fatto che 0 ≠ fase saltata;
-- browser test desktop 1440 px + mobile 390 px PASS anche con le nuove etichette E5/E6, nessun overflow e nessun errore console.
+Il campo `type` resta separato e continua a indicare Greenfield, Repowering, Greenfield + BESS ecc.
 
-Regression guard: `scripts/check_wind_stages.py` protegge anche le nove label esatte e la coerenza del glossario.
+## Discovery corpus al 05/09/2026
 
-## Contractor / technical intelligence consolidata
+Tre registri:
+- `docs/wind/data/discovery-v04.json`
+- `docs/wind/data/discovery-census-v04.json`
+- `docs/wind/data/discovery-census-v04b.json`
 
-### Andretta-Bisaccia
-- Edison Rinnovabili **18 WTG / 88,5 MW** come baseline operativa da riconciliare con pista Edison 13 WTG / 85,8 MW;
-- Progeco Group / Progeco SE: **B — site/construction management & works supervision**, non Civil BoP;
-- GEKO: engineering/cantierizzazione A1;
-- apertura cantiere 02/11/2026; civili dal 13/11/2026;
-- distinto MERAL 30 MW / 5 WTG negli stessi Comuni = collision guard.
+Totale:
+- **47 candidati distinti**;
+- **38 current**;
+- **4 stale_scoping**;
+- **5 rejected / guardie**.
 
-### Serra Giannina
-- corrente **42 MW / 6 WTG**, costruzione RWE avviata 21/05/2026;
-- D'Agostino B construction/site presence; EGM Project B tecnica;
-- nessun Civil/Foundation/Electrical/SSE A1/A2;
-- 45 MW / 10 WTG = storico autorizzativo.
+Current:
+- **28 onshore**;
+- **10 offshore**;
+- **11.538,67 MW wind**;
+- **661 MW BESS**, separati dai MW wind.
 
-### ALAS
-- RWE **66 MW / 10 WTG**;
-- Hydro Engineering A1 progettista Progetto Esecutivo Opere Civili, non Civil BoP;
-- impresa esecutrice nominale non trovata;
-- distinto `Alas 2` RWE 50,4 MW / 7 WTG negli stessi Comuni.
+Stale scoping:
+- 4 offshore;
+- **3.195 MW wind**;
+- ultimo avanzamento individuato nel 2022–2023 senza procedura successiva trovata nel pass corrente.
 
-### Greci-Montaguto
-- ERG **43,8 MW**, costruzione marzo 2026 → estate 2027;
-- Vestas OEM A2; RINA B inspection;
-- Civil/Foundation/Dismantling/Logistics/SSE aperti.
+Rejected/guardie:
+- 5 candidati;
+- **1.195,4 MW wind**;
+- non entrano nella pipeline corrente.
 
-### Nulvi-Ploaghe
-- ERG **121,5 MW / 27 WTG**, autorizzato e Route-to-Market eligible;
-- Hydro Engineering A2 development/engineering, non BoP;
-- ERG/stampa confermano procurement locale rilevante ma senza nomi esecutivi verificati;
-- DUVRI ERG 43,35 MW / 51 Vestas V52 escluso: sito legacy, non repowering;
-- distinto Nulvi-Tergu 99 MW / FRI-EL Anglona = identity guard.
+Importante: il discovery corpus **non modifica** i KPI canonici v0.3.
 
-### Tricarico
-- Adest **42 MW / 7 × Vestas V162-6MW**;
-- Vestas OEM A2; `WTG supply + installation` resta B perché la fonte diretta non esplicita installation;
-- Vector Renewables A2 LTA/construction monitoring, non esecutore;
-- UniCredit green mini-perm project financing **46,5 mln €**, target operativo H2 2027;
-- resta **E6**, perché non è ancora provato l'avvio fisico del cantiere;
-- distinto Dolomiti Windfarm 79,2 MW / 12 WTG = identity guard.
+## Limite fonte MASE
 
-### Venusia
-- Idoka A2 Civil/site preparation, fase civile conclusa;
-- EGM Project A2 engineering/DL;
-- Nordex Group A2 OEM corrente;
-- New Developments A2 co-development/engineering;
-- record corretto a **8 WTG × 5,6 MW**;
-- Electrical/SSE, Erection, Logistics e Foundation ancora da provare.
+Alcune rotte di ricerca del portale MASE riportano temporanea disabilitazione per revisione dei requisiti di sicurezza informatica. La v0.4 è quindi un **censimento corrente indicizzato e refreshable**, non una dichiarazione di completezza assoluta di ogni pratica storica MASE.
 
-### Serra Palino
-- D'Agostino A2 Civil + Electrical/electromechanical;
-- Nordex Group A2 OEM corrente;
-- SSE/grid, Erection, Logistics, Foundation ancora aperti.
+Il motore è predisposto per estendere il corpus senza cambiare identità o perdere storico quando le rotte tornano pienamente interrogabili.
 
-### Tarsia Ovest
-- RTI Idoka / Michelangelo Mammana / PLC / Delta A2 Civil + Electrical infrastructure;
-- PLC A2 SSE/grid;
-- Michelangelo Mammana B individual Civil hint;
-- Concessioni Provincia Cosenza 85/2025 e 111/2025: cavi MT; 139/2026: possibile accesso SP176, non Logistics;
-- distinta Deaway Solar sulla SP176 = collision guard.
+Audit: `docs/wind/research/2026-09-05-v04-discovery-census-audit.md`.
 
-### Castelfranco in Miscano / CER
-- CER / Campana Energie Rinnovabili / IP Gruppo api — **CUP 9439 / Difesa Vecchia / 5 WTG**;
-- **E7 Costruzione** dopo audit pipeline: Energy& documenta lavori fisici di revamping in corso;
-- Vestas OEM A2; PLC A2 SSE/grid;
-- Energy& resta B per scope: la prova dell'esistenza del cantiere non prova quali lavorazioni esegua materialmente Energy&;
-- distinto Fri-El / progetto Miscano 29,4 MW / CUP 9207 = collision guard.
+## Activity class
 
-### Carlentini
-- Gruppo Mammana Foundation/concrete; Hydro foundation engineering/quality + DL; BFP CSP/CSE;
-- solo Foundation chiude un core scope.
+- `current`: procedura recente/in corso o evidenza ufficiale recente;
+- `stale_scoping`: scoping datato senza procedura successiva trovata;
+- `rejected`: archiviazione/esito negativo conservato come guardia.
 
-### Alia-Sclafani
-- 55 MW / 9 Vestas, E7;
-- Staffetta 2019 = same-site historical config;
-- FM Service Group = C candidate site-services, progetto non nominato.
+`status != rejected` non viene più usato come sinonimo di progetto attivo.
 
-### Fenice
-- NVA Fenice 51 WTG / 367,2 MW, E3 iter autorizzativo avanzato / in attesa concerto;
-- ATS Engineering A1 design, non contractor;
-- REL101/REL102 letti; nessun cronoprogramma distinto emerso.
+## Identity reconciliation
 
-### Toritto
-- 108 MW wind + 50 MW BESS, E2 iter autorizzativo/VIA;
-- cronoprogramma 503 giorni solo relativo.
+Regole: `docs/wind/data/identity-rules-v04.json`.
 
-### Sava-Maruggio / Volturino / Lama Cupa
-- Sava-Maruggio E3;
-- Volturino E2;
-- Lama Cupa E2;
-- Brulli resta riferita alla SE Casamassima / FLYNIS PV 34, non al parco Lama Cupa.
+Priorità:
+1. `explicit_identity_group`;
+2. `MYTERNA`;
+3. operation anchor MASE;
+4. fallback `site_type + nome + area` normalizzati.
 
-## Deep-document acquisito
+Gli ID procedura MASE non sono identità progetto.
+MW, BESS, WTG, developer/SPV, stage e stato procedura sono campi mutabili e appartengono al change fingerprint, non all'identità.
 
-Full text già letto:
-- Andretta-Bisaccia — Piano di cantierizzazione;
-- Alia-Sclafani — cronoprogramma repowering;
-- Serra Giannina — cronoprogramma BoP WTG-by-WTG;
-- ALAS — `PEALAS_PE_00016_01_00`;
-- Toritto — `C24PU001WP010R00`;
-- Fenice — REL101 + REL102;
-- Lama Cupa / connessione — `74402A` SE Casamassima.
+Identity guards già protette:
+- NURAX: più procedure = una opera da 462 MW;
+- Atis: scoping + VIA = una opera;
+- Poseidon: scoping/PUA/oggetto 2026 = una opera da 1.008 MW;
+- Kailia: 900 MW corrente vs 1.170/1.176 MW storico = una identità con config change;
+- Le Chiancate: istanza 14717 archiviata + nuova 14943 = una opera da 86,4 MW;
+- Nulvi-Sedini WPD distinto da ERG Nulvi-Ploaghe e FRI-EL Nulvi-Tergu;
+- SV9 Monte Camulera: classificato onshore nonostante label MASE offshore incoerente;
+- rejected non riattivati senza nuova procedura distinta.
 
-## Pass conclusi il 5 settembre
+## Change / refresh engine
 
-- `docs/wind/research/2026-09-05-contractor-priority1-pass-5.md`
-- `docs/wind/research/2026-09-05-public-pass-6.md`
-- `docs/wind/research/2026-09-05-industry-press-pass-7.md`
-- `docs/wind/research/2026-09-05-identity-reconciliation.md`
-- `docs/wind/research/2026-09-05-v03-final-validation.md`
-- `docs/wind/research/2026-09-05-glossary-validation.md`
-- `docs/wind/research/2026-09-05-stage-consistency-audit.md`
+Script: `scripts/wind_discovery_engine.py`.
 
-## Glossario
+Funzioni:
+- combina i tre registri;
+- genera `identity_key` stabile;
+- genera `change_fingerprint`;
+- distingue current/stale/rejected;
+- produce eventi `baseline`, `discovered`, `changed`, `missing_from_refresh`;
+- con `--write` aggiorna index derivato e refresh log.
 
-Glossario ricercabile per utenti non tecnici, 37 termini / 9 categorie:
-- `docs/wind/data/glossary.json`
-- `docs/wind/assets/glossary.js`
-- `docs/wind/assets/glossary.css`
+Baseline refresh:
+`docs/wind/data/refresh-log-v04.json`.
 
-Copre MW, WTG, BESS, BoP, SSE, COD, FID, OEM, EPC, RTI, DL, CSP/CSE, LTA, VIA, AU, MASE, MYTERNA, A1-D, E0-E8, scope, contractor gap, ecc. La voce E0–E8 chiarisce che i codici sono interni al Radar e riporta le nove etichette sector-aligned.
+## Scope profile
 
-## Regression guards / verifiche
+File: `docs/wind/data/scope-profiles-v04.json`.
 
+### Onshore
+Restano i 7 core scope v0.3:
+Civil BoP; Electrical BoP; SSE/grid; fondazioni WTG; erection; logistics/heavy transport; dismantling per repowering.
+
+### Offshore
+Profilo distinto:
+- foundations / substructure / mooring;
+- WTG installation offshore;
+- inter-array cables;
+- offshore substation quando applicabile;
+- export cable + landfall;
+- onshore SSE/grid;
+- marine logistics / port / heavy lift;
+- opere civili onshore di connessione quando applicabili;
+- dismantling/decommissioning per repowering.
+
+Gli offshore non entrano nel denominatore 8/108 del canonico onshore.
+
+## UI v0.4
+
+Nuova sezione:
+**Discovery · nuovi progetti da verificare**.
+
+Regole:
+- separata dai KPI canonici;
+- segue filtro Ambito, ricerca e stage hint quando disponibile;
+- mostra current/stale/rejected;
+- 12 candidati visibili di default, `Mostra tutti` per evitare una pagina eccessivamente lunga;
+- non alimenta Contractor View né scope coverage.
+
+Test browser locale con corpus equivalente completo di 47 candidati:
+- desktop 1440 px: PASS;
+- mobile 390 px: PASS;
+- nessun overflow orizzontale;
+- default 38 current / 4 stale / 5 rejected;
+- Offshore: 10 current / 4 stale / 2 rejected;
+- Onshore: 28 current / 0 stale / 3 rejected.
+
+## Validazione
+
+Regression guards:
 - `scripts/check_wind_radar.py`
 - `scripts/check_wind_industry_press.py`
 - `scripts/check_wind_stages.py`
+- `scripts/check_wind_v04.py`
+- `scripts/wind_discovery_engine.py`
 
-Gate browser già eseguiti su desktop/mobile per v0.3, Industry intelligence, glossario e pipeline E0-E8.
+Workflow riproducibile:
+`.github/workflows/check_wind_v04.yml`.
 
-## Stato
+Il workflow esegue anche `node --check` su JS core e discovery.
 
-**v0.3 conclusa per enrichment/research, rappresentazione UI, glossario e normalizzazione pipeline; pronta per revisione utente e step successivi.**
+## Promotion gate
+
+Nessun candidato discovery viene promosso automaticamente.
+
+Per entrare nel canonico servono:
+1. identity reconciliation;
+2. stato corrente verificato;
+3. MW/WTG canonici;
+4. `site_type` esplicito;
+5. stage E0–E8 sostenuto da fonte;
+6. scope profile applicabile;
+7. collision check con i record esistenti.
+
+## Stato v0.4
+
+Architettura, discovery corpus, identity/change engine, scope profile offshore e UI Discovery implementati. Resta come gate finale l'esito dei regression check riproducibili sul branch e la sincronizzazione conclusiva della Draft PR #3.
 
 Nessun merge e nessuna pubblicazione senza approvazione esplicita.
