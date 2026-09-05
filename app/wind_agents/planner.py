@@ -37,7 +37,7 @@ def _priority_rank(value: str | None) -> int:
 
 def _merge_company_registries() -> tuple[dict[str, Any], list[dict[str, Any]]]:
     base = _load_json(DATA / "company-network-v06.json")
-    paths = [DATA / "company-network-v06b.json"]
+    paths = [DATA / "company-network-v06b.json", DATA / "company-network-v06c.json"]
     companies = list(base.get("companies", []))
     seen = {row["id"] for row in companies}
 
