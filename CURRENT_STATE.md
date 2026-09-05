@@ -177,24 +177,36 @@ Implementato:
 - `app/wind_agents/evidence.py`: solo evidenza project-specific A1/A2 può chiudere uno scope esecutivo;
 - `app/wind_agents/runner.py`: runner istituzionale resiliente e cadence-aware;
 - `app/wind_agents/company_watch.py`: monitor diretto delle fonti dei player commerciali;
-- `scripts/run_wind_agents.py`: CLI per plan, due queue, source run e company run;
-- `scripts/check_wind_v06_agents.py`: regressioni architetturali e probatorie.
+- `app/wind_agents/reconcile.py`: reconciliation conservativa e digest review-only delle sole variazioni utili;
+- `scripts/run_wind_agents.py`: CLI per plan, due queue, source run, company run e digest;
+- `scripts/check_wind_v06_agents.py`: regressioni architetturali, probatorie e di reconciliation.
 
-### Adapter istituzionali eseguibili — 10
+### Adapter istituzionali eseguibili — 17
 
 Gli ID coincidono con il registry istituzionale:
 1. `mase-via` — MASE VIA, eolico / repowering / offshore;
-2. `lazio-regional` — Regione Lazio VIA/PAUR;
-3. `toscana-gea` — Regione Toscana GeA;
-4. `toscana-atos` — ATOS Toscana FER;
-5. `sardegna-sira` — Sardegna SIRA VIA/PAUR;
-6. `sicilia-sivvi` — Sicilia SI-VVI, prima tranche CSV ufficiale;
-7. `puglia-sistema-energia` — Sistema Puglia Energia;
-8. `campania-viavas` — Regione Campania VIA/PAUR;
-9. `calabria-via` — Regione Calabria VIA/PAUR;
-10. `basilicata-via` — Regione Basilicata VIA/Screening.
+2. `mase-provvedimenti` — MASE provvedimenti/esiti, separando VIA positiva da autorizzazione complessiva;
+3. `terna-econnextion` — Terna Econnextion, solo intelligence aggregata regionale;
+4. `lazio-regional` — Regione Lazio VIA/PAUR;
+5. `toscana-gea` — Regione Toscana GeA;
+6. `toscana-atos` — ATOS Toscana FER;
+7. `sardegna-sira` — Sardegna SIRA VIA/PAUR;
+8. `sicilia-sivvi` — Sicilia SI-VVI, prima tranche CSV ufficiale;
+9. `puglia-sistema-energia` — Sistema Puglia Energia;
+10. `campania-viavas` — Regione Campania VIA/PAUR;
+11. `calabria-via` — Regione Calabria VIA/PAUR;
+12. `basilicata-via` — Regione Basilicata VIA/Screening;
+13. `emilia-romagna-regional` — Emilia-Romagna VIA/VAS;
+14. `lombardia-regional` — Lombardia SILVIA;
+15. `piemonte-regional` — Piemonte SKVIA;
+16. `umbria-regional` — Umbria VIA/PAUR/Screening;
+17. `veneto-regional` — Veneto VIA/VAS, pagine annuali correnti.
 
-Sistema Puglia non ripete il backfill fisso di circa 1.500 ID ad ogni ciclo: usa un **high-water cursor persistente**, forward probe e lookback breve. Il backfill storico potrà essere eseguito separatamente.
+Gli ultimi cinque riusano endpoint, flow HTTP e parser già maturati nel PV Agent ma sostituiscono i filtri fotovoltaici con selezione eolica. Restano **eseguibili**, non automaticamente dichiarati live-validati: la disponibilità corrente del portale viene attestata solo da un'esecuzione effettiva.
+
+Sistema Puglia non ripete il backfill fisso di circa 1.500 ID ad ogni ciclo: usa un **high-water cursor persistente**, forward probe e lookback breve. Il backfill storico può essere eseguito separatamente.
+
+Terna Econnextion è esplicitamente `market_intelligence`: i valori regionali aggregati non possono creare progetti, chiudere scope o attribuire contractor.
 
 ### Company Watch
 
@@ -211,7 +223,36 @@ Un finding da fonte diretta aziendale resta:
 - `execution_scope = null`;
 - layer `network_intelligence`.
 
-Quindi **non chiude scope** finché un successivo pass di reconciliation non trova una dichiarazione esplicita riferita a un progetto e a un ruolo esecutivo.
+Quindi **non chiude scope** finché non emerge successiva evidenza esplicita project-specific sul ruolo esecutivo.
+
+## Reconciliation e digest
+
+`app/wind_agents/reconcile.py` confronta esclusivamente i finding `new/changed` con:
+- i 51 progetti canonici;
+- i candidati del Discovery ancora separati dal canonico.
+
+Segnali usati per il match:
+- nome progetto;
+- URL sorgente;
+- comuni/area;
+- potenza MW;
+- developer/proponente;
+- regione;
+- link progetto già registrati nel Company Network come indizio, non come prova.
+
+Una corrispondenza può essere marcata `high_confidence_match` solo con identità forte, punteggio e margine sufficienti. Il flag resta **advisory**: nessuna reconciliation modifica automaticamente canonico, Discovery, stage, priority, scope o contractor.
+
+Inoltre un finding company-direct con `project_specific=false` **non può diventare auto-reconciled execution evidence**, anche se il registry contiene un link al progetto.
+
+Il digest classifica le variazioni in:
+- `canonical_update_review`;
+- `discovery_refresh_review`;
+- `new_project_lead`;
+- `company_project_signal`;
+- `company_network_update`;
+- `market_intelligence`.
+
+Le variazioni su progetti E4–E7 e A/A+ ricevono maggiore peso commerciale; gli snapshot aziendali vuoti restano nello storico ma non entrano nel digest operativo.
 
 ## Esecuzione periodica
 
@@ -220,7 +261,9 @@ Quindi **non chiude scope** finché un successivo pass di reconciliation non tro
 - il trigger giornaliero non significa controllo giornaliero di tutto: `--due` applica le cadenze 1/3/7/14/30 giorni;
 - stato SQLite persistente via cache GitHub Actions;
 - un singolo portale indisponibile viene registrato come errore ma non interrompe gli altri watch;
-- output JSON e artifact di run, retention 30 giorni;
+- esecuzione source watch + company watch;
+- generazione automatica di `reports/wind-agent/digest.json` dai soli finding nuovi/modificati;
+- report JSON, GitHub Step Summary e artifact di run, retention 30 giorni;
 - nessuna scrittura automatica del canonico e nessun commit automatico.
 
 **Importante:** il workflow `schedule` diventa operativo solo quando il file è presente sul branch di default. Finché la v0.6 resta nella Draft PR #5, è configurazione da revisionare, non un monitor schedulato già attivo.
@@ -229,21 +272,22 @@ Quindi **non chiude scope** finché un successivo pass di reconciliation non tro
 
 Il workflow PR verifica:
 - import e sintassi;
-- registrazione adapter/registry;
+- registrazione dei 17 adapter contro il registry;
 - planner e cadence state;
 - persistence `new / changed / unchanged`;
 - cursori/high-water;
 - gate probatorio;
+- reconciliation conservativa e divieto di auto-reconciliation per company snapshot non project-specific;
+- lettura degli eventi di run e digest review-only;
 - regressioni v0.3/v0.4/v0.5.
 
 Non equivale a una prova live che ogni portale esterno sia raggiungibile in quel momento. Un adapter è dichiarato **eseguibile**, ma la sua disponibilità live viene attestata solo da un run effettivo contro la fonte.
 
 ## Lavoro ancora aperto v0.6
 
-1. aggiungere adapter per **MASE Provvedimenti** e **Terna Econnextion** come intelligence aggregata, senza trasformare aggregati in progetti;
-2. portare/adattare altri collector regionali prioritari di `pv_agent_mvp` (Emilia-Romagna, Lombardia, Piemonte, Umbria, Veneto) e i canali auditati Abruzzo/Liguria/Marche/Molise;
-3. completare dettaglio/GIS Sicilia;
-4. implementare la **reconciliation automatica dei finding** con canonico/discovery senza promozione automatica;
-5. generare un **digest delle sole variazioni commercialmente utili**, distinguendo nuovo progetto, cambio stage/configurazione, nuovo player e potenziale execution evidence;
-6. sviluppare Project Execution Watch specifico per i progetti E4–E7 e continuare la contractor hunt A1/A2 su Andretta-Bisaccia, Tricarico, Nulvi-Ploaghe, Serra Giannina, Greci-Montaguto, Carlentini e Alia-Sclafani;
-7. completare il census ANEV/non-ANEV e ampliare ulteriormente il network commerciale quando emergono nuovi player dalle fonti istituzionali e dai documenti di progetto.
+1. completare dettaglio/GIS Sicilia oltre alla prima tranche CSV;
+2. aggiungere gli ulteriori canali istituzionali ancora censiti ma senza adapter, con priorità ai gap territoriali utili (Abruzzo, Liguria, Marche, Molise);
+3. sviluppare un **Project Execution Watch specifico** che trasformi i match in code di indagine per scope, senza scrivere automaticamente evidenza;
+4. continuare la contractor hunt A1/A2 sui progetti E4–E7, in particolare Andretta-Bisaccia, Tricarico, Nulvi-Ploaghe, Serra Giannina, Greci-Montaguto, Carlentini e Alia-Sclafani;
+5. completare il census ANEV/non-ANEV e ampliare il network commerciale quando emergono nuovi player dalle fonti istituzionali e dai documenti di progetto;
+6. effettuare run live controllati dei 17 adapter e correggere eventuali drift dei portali prima di proporre l'attivazione schedulata su `master`.
