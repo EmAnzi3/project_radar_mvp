@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from app.wind_agents.company_watch import due_company_ids, run_company_watch
 from app.wind_agents.planner import build_run_plan
 from app.wind_agents.runner import due_agent_ids, executable_agent_ids, run_agents
 
@@ -36,7 +37,11 @@ def main() -> None:
     due_cmd.add_argument("--as-of", help="YYYY-MM-DD; defaults to today")
     due_cmd.add_argument("--output", help="optional JSON output path")
 
-    run_cmd = sub.add_parser("run", help="execute implemented source adapters")
+    company_due_cmd = sub.add_parser("company-due", help="show commercial players due for direct-source monitoring")
+    company_due_cmd.add_argument("--as-of", help="YYYY-MM-DD; defaults to today")
+    company_due_cmd.add_argument("--output", help="optional JSON output path")
+
+    run_cmd = sub.add_parser("run", help="execute implemented institutional source adapters")
     run_cmd.add_argument(
         "--source",
         action="append",
@@ -49,6 +54,19 @@ def main() -> None:
         help="execute only adapters due according to registry cadence + persistent live watch state",
     )
     run_cmd.add_argument("--output", help="optional JSON report path")
+
+    company_run_cmd = sub.add_parser("company-run", help="watch direct sources for commercial-network companies")
+    company_run_cmd.add_argument(
+        "--company",
+        action="append",
+        help="company registry id to run; repeatable; default = all companies with watch URLs",
+    )
+    company_run_cmd.add_argument(
+        "--due",
+        action="store_true",
+        help="execute only company watches due by registry cadence + persistent runtime state",
+    )
+    company_run_cmd.add_argument("--output", help="optional JSON report path")
 
     args = parser.parse_args()
 
@@ -65,6 +83,24 @@ def main() -> None:
                 "due_agents": due_agent_ids(as_of=as_of),
                 "all_executable_agents": executable_agent_ids(),
             },
+            args.output,
+        )
+        return
+
+    if args.command == "company-due":
+        as_of = date.fromisoformat(args.as_of) if args.as_of else None
+        _emit(
+            {
+                "as_of": (as_of or date.today()).isoformat(),
+                "due_companies": due_company_ids(as_of=as_of),
+            },
+            args.output,
+        )
+        return
+
+    if args.command == "company-run":
+        _emit(
+            run_company_watch(args.company, due_only=args.due),
             args.output,
         )
         return
