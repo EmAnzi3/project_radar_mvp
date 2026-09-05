@@ -116,7 +116,6 @@ def main() -> None:
         p = by_id(pid)
         return {s["id"] for s in applicable(p) if covered(p, s)}
 
-    # Every relation source must resolve after all overlays.
     for p in merged:
         source_ids = {s.get("id") for s in p.get("sources", [])}
         missing = sorted({
@@ -126,7 +125,6 @@ def main() -> None:
         if missing:
             fail(f"source_id enrichment non risolti in {p['id']}: {', '.join(missing)}")
 
-    # Priority 1 regression guards.
     progeco = [r for r in by_id("andretta-bisaccia")["relations"] if r.get("source_id") == "andr-progeco-site-manager"]
     if len(progeco) != 1 or progeco[0].get("confidence") != "B" or progeco[0].get("status") != "signal":
         fail("Andretta-Bisaccia: Progeco deve restare signal/B")
@@ -139,17 +137,31 @@ def main() -> None:
     if coverage("tricarico"):
         fail("Tricarico: un lead/advisory sta chiudendo indebitamente uno scope")
 
+    venusia = by_id("venusia")
     if coverage("venusia") != {"civil"}:
         fail(f"Venusia: coverage inattesa {sorted(coverage('venusia'))}")
-    ven_nordex = [r for r in by_id("venusia")["relations"] if r.get("source_id") == "ven-rwe-ceo-nordex"]
-    ven_newdev = [r for r in by_id("venusia")["relations"] if r.get("source_id") == "ven-newdev-cosviluppo"]
+    if venusia.get("wtg") != 8:
+        fail(f"Venusia: WTG correnti inattesi {venusia.get('wtg')}; attesi 8")
+    if "OEM" in venusia.get("gaps", []):
+        fail("Venusia: OEM è ancora presente nei gap nonostante Nordex A2")
+    current_cfg = [c for c in venusia.get("configs", []) if c.get("source_id") == "ven-rwe"]
+    if len(current_cfg) != 1 or current_cfg[0].get("wtg_count") != 8 or not math.isclose(float(current_cfg[0].get("wtg_mw") or 0), 5.6, abs_tol=0.01):
+        fail("Venusia: configurazione RWE corrente deve essere 8 WTG x 5,6 MW")
+    ven_nordex = [r for r in venusia["relations"] if r.get("source_id") == "ven-rwe-ceo-nordex"]
+    ven_newdev = [r for r in venusia["relations"] if r.get("source_id") == "ven-newdev-cosviluppo"]
     if len(ven_nordex) != 1 or ven_nordex[0].get("role") != "OEM" or ven_nordex[0].get("confidence") != "A2":
         fail("Venusia: Nordex OEM A2 mancante/duplicato")
     if len(ven_newdev) != 1 or ven_newdev[0].get("confidence") != "A2":
         fail("Venusia: New Developments A2 mancante/duplicato")
 
+    serra_palino = by_id("serra-palino")
     if coverage("serra-palino") != {"civil", "electrical"}:
         fail(f"Serra Palino: coverage inattesa {sorted(coverage('serra-palino'))}")
+    if "OEM" in serra_palino.get("gaps", []):
+        fail("Serra Palino: OEM è ancora presente nei gap nonostante Nordex A2")
+    sp_nordex = [r for r in serra_palino["relations"] if r.get("source_id") == "sp-rwe-ceo-nordex"]
+    if len(sp_nordex) != 1 or sp_nordex[0].get("role") != "OEM" or sp_nordex[0].get("confidence") != "A2":
+        fail("Serra Palino: Nordex OEM A2 mancante/duplicato")
 
     if coverage("tarsia-ovest") != {"civil", "electrical", "sse_grid"}:
         fail(f"Tarsia Ovest: coverage inattesa {sorted(coverage('tarsia-ovest'))}")
@@ -195,7 +207,7 @@ def main() -> None:
     print(f"[OK] scope coverage: {covered_slots}/{total_slots} ({covered_slots / total_slots * 100:.1f}%)")
     print(f"[OK] MW con almeno uno scope A1/A2: {mw_with_scope:.1f}")
     print("[OK] Priority 1 leads separati dagli scope: Progeco, Vestas-install, Mammana, Energy&")
-    print("[OK] Nordex OEM / New Developments technical enrichment non gonfiano la coverage")
+    print("[OK] Venusia 8x5,6 MW e OEM Nordex coerenti; OEM gap risolto anche su Serra Palino")
 
 
 if __name__ == "__main__":
