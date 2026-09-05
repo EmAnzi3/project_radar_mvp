@@ -42,8 +42,8 @@ for payload in parts:
 companies = list(by_id.values())
 raw_ids = [c["id"] for payload in parts for c in payload.get("companies", [])]
 assert len(raw_ids) == len(set(raw_ids)), "duplicate company ids across v06 tranches"
-assert len(companies) >= 59, f"expanded network too small: {len(companies)}"
-assert sum(bool(c.get("watch_urls")) for c in companies) >= 51, "company watch URL coverage too low"
+assert len(companies) >= 60, f"expanded network too small: {len(companies)}"
+assert sum(bool(c.get("watch_urls")) for c in companies) >= 52, "company watch URL coverage too low"
 
 for c in companies:
     assert c["commercial_priority"] in {"A", "B", "C"}, c["id"]
@@ -64,7 +64,7 @@ for required in [
     "yce-blades", "engie-italia", "alerion", "goldwind-energy-italy",
     "blu-costruzioni", "egm-project", "barone-costruzione", "gruppo-novello",
     "la-molisana-trasporti", "pizzulo-costruzioni", "simic", "fc-wind-service",
-    "progeco-group"
+    "progeco-group", "socep"
 ]:
     assert required in by_id, f"missing required network node {required}"
 
@@ -123,6 +123,13 @@ assert progeco["relationship_status"] == "project_specific_support_signal"
 assert "construction_supervision" in progeco["cluster"]
 assert "civil_bop" not in progeco["cluster"], "site-management support signal must not become civil execution attribution"
 assert "electrical_bop" not in progeco["cluster"], "site-management support signal must not become electrical execution attribution"
+
+socep = by_id["socep"]
+assert socep["commercial_priority"] == "B"
+assert socep["project_links"] == ["alia-sclafani"]
+assert socep["relationship_status"] == "historical_same_site_supplier"
+assert "civil_works" in socep["cluster"]
+assert "historical" in socep["relationship_status"], "old-site reference must remain explicitly historical"
 
 # All expansion nodes must be operationally actionable, not just names.
 for payload in (tranche_b, tranche_c, tranche_d):
