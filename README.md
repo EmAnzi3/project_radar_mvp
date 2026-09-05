@@ -29,7 +29,7 @@ Stato operativo dettagliato:
 
 ### Sviluppo v0.6
 
-La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`: raw findings, storico variazioni, planner per cadenza ed evidence gate restano separati dal canonico. Gli adapter istituzionali eseguibili correnti sono **MASE VIA, Lazio VIA/PAUR, Toscana GeA, ATOS Toscana FER, Sardegna SIRA e Sicilia SI-VVI**. Ulteriori fonti regionali, company-watch e scheduling persistente sono ancora in sviluppo sul Draft PR #5.
+La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`: raw findings, storico variazioni, planner per cadenza ed evidence gate restano separati dal canonico. Gli adapter istituzionali eseguibili correnti sono **MASE VIA, Lazio VIA/PAUR, Toscana GeA, ATOS Toscana FER, Sardegna SIRA e Sicilia SI-VVI**. Ulteriori fonti regionali, company-watch e scheduling persistente sono ancora in sviluppo sul Draft PR #5. Il workflow PR valida architettura e regressioni; la disponibilità live dei portali viene verificata solo con l'esecuzione degli adapter.
 
 ## Altri output repository
 
