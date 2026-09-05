@@ -1,0 +1,10 @@
+{
+  "version": "0.4.0-discovery",
+  "as_of": "2026-09-05",
+  "status": "discovery-layer",
+  "note": "Registro separato dal dataset canonico. Un candidato non entra nel Radar finché identity reconciliation e soglie di evidenza non sono soddisfatte.",
+  "allowed_site_types": ["onshore", "offshore"],
+  "workflow": ["discovered", "identity_checked", "evidence_enriched", "canonical_candidate", "accepted", "needs_reconciliation", "rejected"],
+  "candidate_required_fields": ["candidate_id", "name", "site_type", "status", "sources"],
+  "candidates": []
+}
