@@ -36,15 +36,19 @@ assert plan.institutional, "institutional due queue empty"
 assert plan.companies, "company due queue empty"
 implemented = set(executable_agent_ids())
 required_adapters = {
-    "mase-via",
+    "basilicata-via",
+    "calabria-via",
+    "campania-via",
     "lazio-via",
-    "toscana-gea",
-    "toscana-atos",
+    "mase-via",
     "sardegna-sira",
     "sicilia-sivvi",
     "sistema-puglia",
+    "toscana-atos",
+    "toscana-gea",
 }
 assert required_adapters.issubset(implemented), implemented
+assert len(implemented) >= 10, implemented
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
