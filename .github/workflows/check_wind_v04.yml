@@ -39,6 +39,7 @@ jobs:
             scripts/check_wind_v06_network.py
             scripts/check_wind_v06_institutional.py
             scripts/check_wind_v06_agents.py
+            scripts/check_wind_v06_mase_normalization.py
             scripts/check_wind_v06_commercial.py
             scripts/check_wind_v06_commercial_c.py
             scripts/check_wind_v06_map.py
@@ -99,6 +100,9 @@ jobs:
 
       - name: Wind agent architecture v0.6 validation
         run: python scripts/check_wind_v06_agents.py
+
+      - name: MASE wind normalization v0.6 validation
+        run: python scripts/check_wind_v06_mase_normalization.py
 
       - name: Project-specific commercial signals v0.6 validation
         run: python scripts/check_wind_v06_commercial.py
