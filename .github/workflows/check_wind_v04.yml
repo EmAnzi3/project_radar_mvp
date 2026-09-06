@@ -40,6 +40,8 @@ jobs:
             scripts/check_wind_v06_institutional.py
             scripts/check_wind_v06_agents.py
             scripts/check_wind_v06_commercial.py
+            scripts/check_wind_v06_commercial_c.py
+            scripts/check_wind_v06_map.py
             scripts/run_wind_agents.py
             scripts/wind_discovery_engine.py
 
@@ -101,9 +103,16 @@ jobs:
       - name: Project-specific commercial signals v0.6 validation
         run: python scripts/check_wind_v06_commercial.py
 
+      - name: Deep project enrichment v0.6 validation
+        run: python scripts/check_wind_v06_commercial_c.py
+
+      - name: Province map v0.6 validation
+        run: python scripts/check_wind_v06_map.py
+
       - name: JavaScript syntax
         run: |
           node --check docs/wind/assets/app.js
+          node --check docs/wind/assets/province-map-v06.js
           node --check docs/wind/assets/discovery-v04.js
           node --check docs/wind/assets/stage-consistency.js
           node --check docs/wind/assets/timeline-coherence.js
