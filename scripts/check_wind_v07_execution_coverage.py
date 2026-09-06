@@ -99,6 +99,7 @@ def main() -> None:
         "alia-sclafani",
         "serra-giannina",
         "greci-montaguto",
+        "alas",
         "nulvi-ploaghe",
     ):
         assert not has_exec(effective_by_id[project_id]), project_id
