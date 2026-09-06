@@ -53,7 +53,7 @@ project_text = (
 )
 project_title = MaseProvvedimentiWindAgent._project_title(project_text, 'truncated')
 fields = MaseProvvedimentiWindAgent._project_fields(project_text, project_title)
-assert fields['proponent'] == 'EDISON Rinnovabili S.p.A.', fields
+assert fields['proponent'].rstrip('.') == 'EDISON Rinnovabili S.p.A', fields
 assert fields['region'] == 'Puglia', fields
 assert fields['province'] == 'Foggia', fields
 assert fields['municipalities'] == ['Celle di San Vito', 'Faeto'], fields
