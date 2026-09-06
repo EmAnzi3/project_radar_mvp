@@ -1,7 +1,7 @@
 {
   "version": "0.6.0-commercial-enrichment-d",
   "as_of": "2026-09-06",
-  "note": "Additive project-specific intelligence from official design documentation and direct employee-level project involvement. Engineering evidence and B-level mobilisation signals remain non-execution unless a project-specific A1/A2 execution award is explicit.",
+  "note": "Additive project-specific intelligence from official design documentation, direct corporate references and direct employee-level project involvement. Engineering evidence and B-level mobilisation signals remain non-execution unless a project-specific A1/A2 execution award is explicit.",
   "projects": {
     "greci-montaguto": {
       "relations": [
@@ -50,6 +50,36 @@
           "title": "Serra Giannina — project-specific participation alongside RWE and civil-infrastructure context",
           "date": "2026-05-25",
           "url": "https://it.linkedin.com/posts/giuliano-del-sordo-55a433103_serra-giannina-activity-7464766053450104832-tRNP"
+        }
+      ]
+    },
+    "alas": {
+      "relations": [
+        {
+          "company": "I.A.T. Consulenza e Progetti S.r.l.",
+          "role": "Civil/electrical design & environmental studies",
+          "status": "confirmed",
+          "confidence": "A2",
+          "scope": "I.A.T.'s direct corporate references identify the 66 MW ALAS project for RWE Renewables Italia and state its mandate for definitive civil and electrical design plus environmental and landscape analyses. This confirms the project engineering/development chain only; it does not attribute Civil BoP, Electrical BoP, foundations, grid construction, erection or logistics execution.",
+          "source_id": "alas-iat-design-a2-2020"
+        }
+      ],
+      "signals": [
+        {
+          "type": "development-engineering-chain",
+          "grade": "A2",
+          "title": "I.A.T. directly identifies its ALAS civil/electrical design mandate for RWE",
+          "note": "The contractor hunt resolves another named project participant but the role is explicitly design/environmental studies. It remains non-execution under the v0.7 evidence gate."
+        }
+      ],
+      "sources": [
+        {
+          "id": "alas-iat-design-a2-2020",
+          "publisher": "I.A.T. Consulenza e Progetti S.r.l.",
+          "grade": "A2",
+          "title": "Corporate references — Progetto impianto eolico ALAS, Ittiri e Villanova Monteleone, 66 MW",
+          "date": "2020",
+          "url": "https://www.iatprogetti.it/wp-content/uploads/2016/09/IAT-Srl-Brochure.pdf"
         }
       ]
     }
