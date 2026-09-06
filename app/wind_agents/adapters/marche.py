@@ -14,7 +14,13 @@ WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
 
 
 class MarcheWindAgent(BaseWindAgent):
-    """Regione Marche public VIA-start registry filtered to wind projects."""
+    """Regione Marche public VIA-start registry filtered to wind projects.
+
+    The regional portal can reject automated runners with HTTP 403 even when the
+    public page is otherwise available to a browser. In that case the adapter
+    emits an explicit non-project channel snapshot instead of failing the whole
+    source group or pretending that project rows were collected.
+    """
 
     agent_name = "institutional_watch"
     source_name = "Regione Marche VIA"
@@ -95,10 +101,50 @@ class MarcheWindAgent(BaseWindAgent):
         digest = hashlib.sha1(text.encode("utf-8")).hexdigest()[:18]
         return f"MARCHE-VIA-{digest}"
 
-    def fetch(self) -> list[AgentFinding]:
-        response = self.session.get(BASE_URL, timeout=60, allow_redirects=True)
+    def _get(self, url: str) -> BeautifulSoup:
+        response = self.session.get(
+            url,
+            timeout=60,
+            allow_redirects=True,
+            headers={
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
+                "Referer": "https://www.regione.marche.it/",
+            },
+        )
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
+        return BeautifulSoup(response.text, "html.parser")
+
+    def _channel_snapshot(self, *, primary_error: str | None = None) -> AgentFinding:
+        return AgentFinding(
+            external_id="MARCHE-VIA-CHANNEL",
+            source_name=self.source_name,
+            source_url=BASE_URL,
+            title="Regione Marche — canale Avvio Procedimenti VIA",
+            finding_type="source_channel_snapshot",
+            payload={
+                "region": "Marche",
+                "sector": "eolico",
+                "source_grade_ceiling": "A1",
+                "project_specific": False,
+                "execution_scope": None,
+                "evidence_layer": "institutional_channel",
+                "availability": "degraded_primary_unavailable" if primary_error else "channel_only",
+                "primary_url": BASE_URL,
+                "primary_fetch_error": primary_error,
+                "runtime_note": (
+                    "No project rows were collected from the Marche VIA registry. "
+                    "The public channel remains monitored, but a blocked/empty fetch cannot "
+                    "be treated as project-specific evidence or used for canonical promotion."
+                ),
+            },
+        )
+
+    def fetch(self) -> list[AgentFinding]:
+        try:
+            soup = self._get(BASE_URL)
+        except Exception as exc:
+            return [self._channel_snapshot(primary_error=f"{type(exc).__name__}: {exc}")]
 
         candidates = soup.find_all("li")
         if not candidates:
@@ -150,5 +196,8 @@ class MarcheWindAgent(BaseWindAgent):
                     "source_adapter_origin": "new_wind_source_audit/marche",
                 },
             )
+
+        if not findings:
+            findings["MARCHE-VIA-CHANNEL"] = self._channel_snapshot()
 
         return list(findings.values())
