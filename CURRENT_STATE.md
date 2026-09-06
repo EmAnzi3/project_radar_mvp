@@ -16,7 +16,7 @@ Stato produzione: **mergiato e pubblicato da `master/docs`**.
 Il Radar canonico comprende:
 - **51 progetti**;
 - **11.202,52 MW wind** complessivi;
-- **34 progetti** promossi dal discovery v0.4 tramite promotion gate controllato;
+- **34 progetti** promossi dal discovery v0.4;
 - **9.705,62 MW wind + 311 MW BESS** relativi ai 34 promossi;
 - BESS sempre separato dai MW wind.
 
@@ -36,7 +36,7 @@ Regole canoniche invarianti:
 - nessun contractor per deduzione;
 - solo evidenza project-specific A1/A2 esplicita può chiudere uno scope esecutivo;
 - B/C restano segnali;
-- owner/developer/advisor/engineering/survey non equivalgono a contractor esecutivo;
+- owner/developer/advisor/engineering/survey/supervisione non equivalgono a contractor esecutivo;
 - VIA positiva non equivale ad AU/FID/procurement/cantiere;
 - Terna aggregata non genera identità progetto;
 - onshore/offshore usano scope profile distinti;
@@ -58,36 +58,17 @@ La v0.6 sviluppa tre reti collegate ma probatoriamente separate:
 2. **Company / Commercial Network**;
 3. **Institutional & Source Network**.
 
-## Network v0.6
+## Stato rete e runtime
 
 Stato corrente:
-- **58 player commerciali** classificati per capability, priorità, relazione, fonti da monitorare e prossima azione;
-- **31 nodi istituzionali/pubblici** censiti;
+- **61 player commerciali** nel Company Network;
+- **31 nodi istituzionali/pubblici**;
 - **21 adapter istituzionali eseguibili**;
 - Company Watch operativo sulle fonti dirette;
-- Project Execution investigation queue operativa sui canonici E4–E7 con scope ancora aperti.
+- Project Execution investigation queue operativa sui canonici E4–E7 con scope aperti;
+- workflow periodico predisposto, ma non attivo finché la Draft PR non entra nel branch di default.
 
-La tranche commerciale più recente aggiunge:
-- Blu Costruzioni;
-- EGM Project;
-- Barone Costruzione;
-- Gruppo Novello;
-- La Molisana Trasporti;
-- Pizzulo Costruzioni;
-- SIMIC;
-- F&C Wind Service.
-
-Guard specifici:
-- la referenza storica Blu su Carlentini **non** prova un ruolo nel repowering ERG corrente;
-- la prossimità geografica/capability di Pizzulo rispetto ad Andretta-Bisaccia è un lead commerciale, **non** un award;
-- EGM è collegata a Serra Giannina come presenza/engineering non-execution finché non emerge un ruolo esecutivo esplicito;
-- capability Full BoP/EPC storica o generica non chiude scope su alcun canonico.
-
-ESPE resta target A adiacente ad alto valore, senza attribuirle Full BoP utility-scale wind in assenza di prova.
-
-## Architettura agent-style
-
-Pattern riusato da `pv_agent_mvp` e adattato all'eolico:
+Pattern agent-style riusato da `pv_agent_mvp` e adattato all'eolico:
 
 `fonti -> agent/collector -> raw findings -> change history -> reconciliation/evidence gate -> canonico/UI`
 
@@ -100,8 +81,7 @@ Moduli principali:
 - `app/wind_agents/company_watch.py` — watch diretto player;
 - `app/wind_agents/reconcile.py` — reconciliation conservativa + digest review-only;
 - `app/wind_agents/execution_watch.py` — coda contractor-hunt E4–E7 per singolo scope;
-- `scripts/run_wind_agents.py` — CLI operativa;
-- `scripts/check_wind_v06_agents.py` — regressioni architetturali/probatorie.
+- `scripts/run_wind_agents.py` — CLI operativa.
 
 Persistenza runtime separata dal canonico:
 - `raw_findings`;
@@ -111,63 +91,119 @@ Persistenza runtime separata dal canonico:
 
 ## Adapter istituzionali eseguibili — 21
 
-1. `mase-via` — MASE VIA;
-2. `mase-provvedimenti` — MASE provvedimenti/esiti;
-3. `terna-econnextion` — Terna Econnextion, solo market intelligence aggregata;
-4. `lazio-regional` — Lazio VIA/PAUR;
-5. `toscana-gea` — Toscana GeA;
-6. `toscana-atos` — ATOS Toscana FER;
-7. `sardegna-sira` — Sardegna SIRA;
-8. `sicilia-sivvi` — Sicilia SI-VVI, prima tranche CSV;
-9. `puglia-sistema-energia` — Sistema Puglia Energia;
-10. `campania-viavas` — Campania VIA/PAUR;
-11. `calabria-via` — Calabria VIA/PAUR;
-12. `basilicata-via` — Basilicata VIA/Screening;
-13. `emilia-romagna-regional` — Emilia-Romagna VIA/VAS;
-14. `lombardia-regional` — Lombardia SILVIA;
-15. `piemonte-regional` — Piemonte SKVIA;
-16. `umbria-regional` — Umbria VIA/PAUR/Screening;
-17. `veneto-regional` — Veneto VIA/VAS;
-18. `abruzzo-via` — piattaforma Valutazioni Ambientali Abruzzo;
-19. `liguria-via-procedimenti` — SIRAVIAVAS Liguria;
-20. `marche-via-regional` — registro avvio procedimenti VIA Marche;
-21. `molise-au-eolico` — canali regionali Eolico / Eolico-VIA nazionale Molise.
+1. `mase-via`;
+2. `mase-provvedimenti`;
+3. `terna-econnextion`;
+4. `lazio-regional`;
+5. `toscana-gea`;
+6. `toscana-atos`;
+7. `sardegna-sira`;
+8. `sicilia-sivvi`;
+9. `puglia-sistema-energia`;
+10. `campania-viavas`;
+11. `calabria-via`;
+12. `basilicata-via`;
+13. `emilia-romagna-regional`;
+14. `lombardia-regional`;
+15. `piemonte-regional`;
+16. `umbria-regional`;
+17. `veneto-regional`;
+18. `abruzzo-via`;
+19. `liguria-via-procedimenti`;
+20. `marche-via-regional`;
+21. `molise-au-eolico`.
 
-Abruzzo e Molise adottano una regola di trasparenza aggiuntiva: se il portale espone solo SPA/API e non sono parseabili righe progetto server-side, l'adapter emette un `source_channel_snapshot` non project-specific. Il canale risulta quindi osservato, ma non viene falsamente dichiarata acquisizione di dati progetto.
+Abruzzo e Molise usano un fallback trasparente `source_channel_snapshot` quando non sono disponibili righe progetto server-side. Liguria conserva il guard di riconciliazione MASE per le VIA nazionali del mirror regionale. Terna Econnextion resta market intelligence aggregata e non genera progetti/contractor/scope.
 
-Liguria conserva un guard per le VIA nazionali presenti nel mirror regionale: prima di qualunque azione identitaria devono riconciliarsi con MASE.
+Sistema Puglia usa high-water cursor persistente, forward probe e lookback breve invece di ripetere un backfill massivo.
 
-Sistema Puglia usa high-water cursor persistente, forward probe e lookback breve invece di ripetere il backfill massivo.
+Sicilia SI-VVI usa un percorso resiliente: CSV ufficiale come prima fonte e fallback ufficiale SI-VVI/MapServer se il download CSV non è disponibile.
+
+## Live validation
+
+Il live smoke completo sul current branch è ora passato.
+
+**Wind Radar live source smoke #36 — SUCCESS**:
+- `national-market` — SUCCESS;
+- `priority-regional` — SUCCESS;
+- `centre-north` — SUCCESS;
+- `south-islands` — SUCCESS.
+
+Nel gruppo Sud/Isole:
+- **268 finding** complessivi;
+- **0 errori**;
+- Calabria: **103 project-specific findings**;
+- Sicilia: **164 project-specific findings**;
+- Sardegna: **1 project-specific finding**;
+- Basilicata, Campania e Sistema Puglia: `empty_success` nel pass osservato.
+
+La Sicilia, che nel run precedente andava in timeout sul CSV, è quindi passata a `project_data` con 164 finding grazie alla strategia resiliente.
+
+## Project-specific enrichment v0.6
+
+I file additivi `commercial-enrichment-v06.json`, `v06b.json` e `v06c.json` conservano le nuove evidenze senza riscrivere il canonico v0.5.
+
+### Andretta-Bisaccia
+- Progeco Group: A2 project-specific per project management / construction supervision support; non execution award;
+- MASE/Edison A1: configurazione corrente **18 WTG / 88,5 MW** e documentazione di avvio lavori;
+- Vestas A2 resta configurazione/ordine OEM storico corrente ma non identifica i contractor BoP;
+- Civil, Electrical, SSE/grid, erection, dismantling, logistics e foundations restano aperti.
+
+### Carlentini
+- Mammana Michelangelo S.p.A.: **Foundation contractor — A2 confirmed** sul repowering corrente;
+- Hydro Engineering: **Direzione Lavori / foundation engineering & quality control — A2 confirmed**, non-execution;
+- nessuna estensione automatica Mammana al full Civil BoP.
+
+### Tricarico
+- UniCredit: A2 financial-close signal da €46,5m;
+- Vector Renewables: **Lender's Technical Advisor / construction monitoring — A2 confirmed**, non-execution;
+- Vestas OEM A2;
+- Civil, Electrical, SSE, erection, logistics e foundations restano aperti.
+
+### Greci-Montaguto
+- Regione Campania/BURC A1: configurazione corrente **6 × Vestas V136 4,5 MW + 4 × Vestas V117 4,2 MW**;
+- Vestas A2: OEM + AOM 5000;
+- ERG A2 kick-off: cantiere da **marzo 2026**, circa **40 persone medie**, commissioning delle nuove WTG previsto **estate 2027**;
+- nessun nuovo contractor BoP dedotto.
+
+### Nulvi-Ploaghe
+- Hydro Engineering: development/engineering A2, non-execution;
+- ERG: E4 / fully authorised / Route-to-Market eligible;
+- nuovo segnale A2 developer-direct: **27 nuove WTG da 4,5 MW, investimento ~€170m, produzione ~300 GWh/anno**;
+- tutti gli scope procurement/execution principali restano aperti.
+
+### Serra Giannina
+- EGM Project: A2 construction-phase technical / site follow-up, non-execution;
+- D'Agostino Costruzioni Generali: B project-specific mobilisation lead;
+- recruiting project-specific attribuito a D'Agostino copre Site Manager, assistenza cantiere, HSE/qualità, ambiente, amministrazione e ufficio tecnico: lead più forte, ma ancora B in assenza di award diretto RWE/D'Agostino;
+- nessun Civil BoP chiuso per deduzione.
+
+### Alia-Sclafani
+- Comune di Alia A1: PAS corrente per **9 WTG / 55 MW**, con dismissione delle 30 turbine esistenti;
+- Vestas A2: 9 WTG correnti e delivery H2 2026;
+- SOCEP A2 è verificata come **same-site historical supplier** per piazzole, lavori di sottostazione e consolidamenti sul vecchio impianto Asja;
+- SOCEP resta esplicitamente `historical`, non è un award sul repowering corrente.
 
 ## Company Watch
 
-Il monitor commerciale usa le `watch_urls` dei 58 player:
+Il monitor commerciale usa le `watch_urls` dei 61 player:
 - A/A+: 7 giorni;
 - B: 14 giorni;
 - C / universe refresh: 30 giorni, salvo override.
 
-Per ridurre falsi cambi vengono conservati heading e segmenti con segnali eolici/commerciali: award, contract, construction, BoP, civili, elettrico, grid, fondazioni, erection, logistica, commissioning, procurement, partnership, supplier ecc.
-
-Un finding company-direct resta:
+Un finding company-direct resta normalmente:
 - `source_grade_ceiling = A2`;
 - `project_specific = false`;
 - `execution_scope = null`;
 - layer `network_intelligence`.
 
-Un link già noto tra azienda e progetto aiuta la reconciliation, ma **non trasforma** il finding in execution evidence.
+Un link noto tra azienda e progetto aiuta la reconciliation, ma non trasforma automaticamente il finding in execution evidence.
 
 ## Reconciliation e digest
 
-`app/wind_agents/reconcile.py` confronta i finding `new/changed` con canonico e Discovery usando:
-- nome progetto;
-- URL fonte;
-- geografia;
-- MW;
-- developer/proponente;
-- regione;
-- link di registry come indizio.
+`app/wind_agents/reconcile.py` confronta i finding `new/changed` con canonico e Discovery usando nome, URL, geografia, MW, developer/proponente, regione e link di registry.
 
-`high_confidence_match` richiede identità forte, punteggio e margine sufficienti. Il risultato resta advisory: nessuna write automatica su canonico/Discovery, nessun cambio di stage/priority/scope/contractor.
+`high_confidence_match` resta advisory: nessuna write automatica su canonico/Discovery e nessun cambio automatico di stage, priority, scope o contractor.
 
 Digest action types:
 - `canonical_update_review`;
@@ -179,33 +215,66 @@ Digest action types:
 
 ## Project Execution investigation queue
 
-`app/wind_agents/execution_watch.py` trasforma i canonici E4–E7 con scope aperti in una coda di indagine ordinata per urgenza.
+`app/wind_agents/execution_watch.py` trasforma i canonici E4–E7 con scope aperti in una coda ordinata per urgenza considerando stage, priorità, milestone e numero di gap.
 
-L'urgenza considera:
-- stage E4–E7;
-- priorità A+/A/B;
-- prossima milestone entro 30/90/180 giorni;
-- numero di scope ancora aperti.
+Priorità corrente della contractor hunt:
+1. Andretta-Bisaccia;
+2. Tricarico;
+3. Nulvi-Ploaghe;
+4. Serra Giannina;
+5. Greci-Montaguto;
+6. Alia-Sclafani.
 
-Per ogni gap viene generato un playbook di ricerca specifico. Esempi:
-- Civil BoP → developer/tender, AU/PAUR, civil EPC watch;
-- Electrical BoP/SSE → grid specs, Terna/connection acts, electrical EPC;
-- Erection → OEM news, heavy-lift/erection player, site mobilisation;
-- Logistics → transport/access plan, heavy transport player, atti stradali locali;
-- offshore → T&I, cable procurement, OSS, port/marine logistics, landfall.
+La queue è investigativa: nessun contractor viene confermato senza A1/A2 project-specific.
 
-Il comando CLI è:
-`python scripts/run_wind_agents.py execution-queue`
+## UI v0.6 — mappa province
 
-La queue è investigativa: **nessun contractor viene confermato senza A1/A2 project-specific**.
+La precedente mappa a marker puntuali non scala più con il numero crescente di progetti.
+
+Sul branch v0.6 è stata sostituita, nella vista principale, da una **choropleth per provincia** ispirata a `EmAnzi3/pv_echarts`:
+- ECharts 5;
+- GeoJSON province Openpolis;
+- normalizzazione dei nomi provincia con alias compatibili con `pv_echarts`;
+- metriche selezionabili: **MW eolici**, **N. progetti**, **MW E4+**;
+- tooltip con MW, numero progetti, E4+, E7, priorità A/A+, progetti senza contractor esecutivo A1/A2 e BESS separato;
+- click sulla provincia applica la provincia come filtro al Radar;
+- ogni progetto viene conteggiato una sola volta sulla provincia canonica principale per evitare duplicazioni MW;
+- offshore trattato come aggregazione amministrativa/territoriale, non footprint delle WTG in mare;
+- fallback ordinato per provincia se ECharts/GeoJSON non sono disponibili.
+
+File:
+- `docs/wind/assets/province-map-v06.js`;
+- `docs/wind/assets/province-map-v06.css`;
+- `scripts/check_wind_v06_map.py`.
+
+La vecchia mappa marker resta solo come compatibilità DOM nascosta per non alterare il runtime legacy prima del refactor completo; non è più la visualizzazione mostrata all'utente.
+
+## Validazione current head
+
+**Wind Radar v0.6 checks #219 — SUCCESS**.
+
+Valida fra l'altro:
+- regressioni v0.3/v0.4/v0.5;
+- canonico v0.5 invariato;
+- Company Network;
+- Institutional Network;
+- 21 adapter e planner/cadenze;
+- raw/history persistence, cursori e evidence gate;
+- reconciliation/digest ed execution queue;
+- project-specific commercial enrichment v0.6/v0.6b;
+- deep enrichment v0.6c;
+- mappa province v0.6;
+- sintassi JavaScript.
+
+Un check verde dimostra coerenza del codice e delle regressioni. La disponibilità live delle fonti è coperta separatamente dal live smoke.
 
 ## Workflow periodico predisposto
 
 `.github/workflows/wind_agent_watch.yml` prevede:
 - trigger giornaliero 05:40 UTC;
-- esecuzione solo dei source/company watch effettivamente `due`;
+- source/company watch solo se `due`;
 - SQLite persistente via cache;
-- resilienza al guasto di un singolo portale;
+- resilienza al guasto di una singola fonte;
 - `institutional-run.json`;
 - `company-run.json`;
 - `execution-queue.json`;
@@ -214,31 +283,14 @@ La queue è investigativa: **nessun contractor viene confermato senza A1/A2 proj
 - nessuna scrittura automatica del canonico;
 - nessun commit automatico.
 
-**Lo schedule non è ancora attivo**: diventerà operativo solo se il workflow entrerà nel branch di default dopo approvazione della v0.6.
-
-## Validazione e trasparenza
-
-Il workflow PR verifica:
-- regressioni v0.3/v0.4/v0.5;
-- Company Network;
-- Institutional Network;
-- import/sintassi adapter;
-- allineamento adapter/registry;
-- planner/cadenze;
-- raw/history persistence;
-- cursori/high-water;
-- evidence gate;
-- reconciliation/digest;
-- execution investigation queue;
-- JavaScript UI.
-
-Un check verde dimostra coerenza del codice e delle regressioni, **non** che tutti i portali esterni siano raggiungibili live. Ogni adapter resta `eseguibile` finché un run live non ne attesta il comportamento corrente.
+**Lo schedule non è ancora attivo**: diventerà operativo solo dopo eventuale approvazione e merge della v0.6.
 
 ## Lavoro ancora aperto v0.6
 
-1. effettuare **run live controllati dei 21 adapter** e correggere eventuali drift;
-2. approfondire gli endpoint SPA/API di Abruzzo e Molise per evitare, quando possibile, il solo channel snapshot;
-3. completare dettaglio/GIS Sicilia;
-4. continuare la contractor hunt A1/A2 su Andretta-Bisaccia, Tricarico, Nulvi-Ploaghe, Serra Giannina, Greci-Montaguto, Carlentini e Alia-Sclafani;
-5. usare la nuova execution queue per guidare la ricerca documentale per singolo scope;
-6. ampliare ulteriormente il census ANEV/non-ANEV e incorporare nuovi player trovati nei documenti di progetto e nelle fonti istituzionali.
+1. continuare la contractor hunt A1/A2 sui pacchetti di Andretta-Bisaccia, Tricarico, Nulvi-Ploaghe, Serra Giannina, Greci-Montaguto e Alia-Sclafani;
+2. cercare una fonte diretta RWE/D'Agostino che elevi o smentisca il B-signal Serra Giannina;
+3. verificare gli `empty_success` di Basilicata, Campania e Sistema Puglia per distinguere assenza reale di nuovi record da copertura del parser ancora migliorabile;
+4. approfondire SPA/API Abruzzo e Molise e i percorsi AU/BUR regionali;
+5. completare dettaglio/GIS Sicilia oltre la prima acquisizione project-level;
+6. continuare l'ampliamento ANEV/non-ANEV del network commerciale;
+7. eseguire preview/browser review desktop+mobile della nuova mappa province e delle altre modifiche UI prima di qualunque merge.
