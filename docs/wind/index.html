@@ -13,7 +13,10 @@
 <link href="assets/stage-consistency.css" rel="stylesheet"/>
 <link href="assets/timeline-coherence.css" rel="stylesheet"/>
 <link href="assets/discovery-v04.css" rel="stylesheet"/>
-<link href="assets/company-network-v06.css" rel="stylesheet"/></head>
+<link href="assets/company-network-v06.css" rel="stylesheet"/>
+<link href="assets/province-map-v06.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
 <body>
 <header class="hero">
 <div class="hero-inner">
@@ -57,14 +60,20 @@
 <section class="overview-grid">
 <article class="panel map-panel">
 <div class="panel-heading">
-<div><h2>Mappa progetti</h2><p>Marker solo per i progetti con coordinate territoriali già verificate. I nuovi canonici privi di coordinate restano nel Radar ma non vengono posizionati per stima; le coordinate mostrate non sono posizioni WTG.</p></div>
-<div class="legend-inline" id="stageLegend"></div>
+<div><h2>Mappa per provincia</h2><p>Vista amministrativa aggregata sul modello della dashboard PV: il colore rappresenta la concentrazione dei progetti nella provincia canonica e resta leggibile anche con molti record.</p></div>
 </div>
-<div class="map-shell" id="projectMap">
-<img alt="Mappa dell'Italia" class="map-base" src="assets/italy-base.svg"/>
-<div class="map-markers" id="mapMarkers"></div>
-<div aria-hidden="true" class="map-tooltip" id="mapTooltip" role="tooltip"></div>
+<div class="province-map-toolbar">
+<div class="province-map-metrics" role="group" aria-label="Metrica mappa province">
+<button class="province-map-metric active" data-metric="mw" type="button">MW eolici</button>
+<button class="province-map-metric" data-metric="projects" type="button">N. progetti</button>
+<button class="province-map-metric" data-metric="e4mw" type="button">MW E4+</button>
 </div>
+<div class="province-map-selection" id="provinceMapSelection">Clicca una provincia per applicarla come filtro al Radar.</div>
+</div>
+<div aria-label="Mappa dei progetti eolici aggregati per provincia" class="province-map-viz" id="provinceMap"></div>
+<div class="province-map-status" id="provinceMapStatus">Caricamento mappa province…</div>
+<div class="province-map-note"><b>Metodo geografico:</b> ogni progetto è conteggiato una sola volta sulla provincia canonica principale, quindi i MW non vengono duplicati. Per l’offshore la provincia è un riferimento amministrativo/territoriale del progetto e non rappresenta l’area delle turbine in mare. I MW BESS restano separati.</div>
+<div class="legacy-map-compat" aria-hidden="true"><div id="stageLegend"></div><div id="projectMap"><div id="mapMarkers"></div><div id="mapTooltip"></div></div></div>
 </article>
 <article class="panel pipeline-panel">
 <div class="panel-heading"><div><h2>Stato corrente per maturità</h2><p>Fotografia dei progetti sulla scala E0–E8 alla data di aggiornamento. I MW BESS non sono sommati all’eolico.</p></div></div>
@@ -129,5 +138,5 @@
 <div id="methodBody"></div>
 </section>
 </div>
-<script src="assets/app.js"></script><script src="assets/review-fixes.js"></script><script src="assets/contractor-direct-fix.js"></script><script src="assets/scope-intelligence.js"></script><script src="assets/docpass2-intelligence.js"></script><script src="assets/glossary.js"></script><script src="assets/stage-consistency.js"></script><script src="assets/timeline-coherence.js"></script><script src="assets/discovery-v04.js"></script><script src="assets/company-network-v06.js"></script></body>
+<script src="assets/app.js"></script><script src="assets/province-map-v06.js"></script><script src="assets/review-fixes.js"></script><script src="assets/contractor-direct-fix.js"></script><script src="assets/scope-intelligence.js"></script><script src="assets/docpass2-intelligence.js"></script><script src="assets/glossary.js"></script><script src="assets/stage-consistency.js"></script><script src="assets/timeline-coherence.js"></script><script src="assets/discovery-v04.js"></script><script src="assets/company-network-v06.js"></script><script src="assets/commercial-enrichment-v05.js"></script></body>
 </html>
