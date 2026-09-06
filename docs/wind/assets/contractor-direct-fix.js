@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])),fmt=v=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:1}).format(+v||0);
-const COMMERCIAL_FILES=['commercial-enrichment-v05.json','commercial-enrichment-v05b.json','commercial-enrichment-v05c.json','commercial-enrichment-v05d.json'];
+const COMMERCIAL_FILES=['commercial-enrichment-v05.json','commercial-enrichment-v05b.json','commercial-enrichment-v05c.json','commercial-enrichment-v05d.json','commercial-enrichment-v06.json','commercial-enrichment-v06b.json','commercial-enrichment-v06c.json'];
 let projects=[],meta={},chosen='',view,sum,select,renderTimer;
 function conf(c){return `<span class="confidence ${esc(c)}">${esc(c)}</span>`}
 function strictRel(r){return(meta.execution_roles||[]).includes(r.role)&&r.status==='confirmed'&&['A1','A2'].includes(r.confidence)}

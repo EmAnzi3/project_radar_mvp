@@ -2,14 +2,27 @@
 
 MVP operativo del radar eolico nazionale, isolato in `docs/wind/` e costruito per leggere la pipeline dal punto di vista commerciale e della supply chain esecutiva.
 
-## Seed e KPI
+## Portafoglio canonico
 
-- 17 progetti seed verificati;
-- 1.496,9 MW eolici monitorati;
-- BESS sempre separato dai MW wind;
+Il Radar pubblico corrente contiene:
+
+- **51 progetti / 11.202,52 MW eolici**;
+- **17 seed originari / 1.496,9 MW**;
+- **34 progetti promossi dal Discovery v0.4 / 9.705,62 MW**, più **311 MW BESS** mantenuti separati;
+- **441 MW BESS** complessivi nel canonico, sempre separati dai MW wind;
 - maturità osservabile `E0–E8`;
 - evidence grading `A1/A2/B/C/D`;
 - contractor esecutivo conteggiato nei KPI solo con ruolo esecutivo `confirmed` e confidenza `A1/A2`.
+
+## Discovery interno
+
+Discovery è una coda tecnica di ricerca, **non una sezione pubblica della dashboard**. I candidati vengono:
+
+- promossi nel canonico quando identità, attività corrente, configurazione e stage sono sufficientemente verificati;
+- mantenuti internamente se reali ma ancora incompleti;
+- rimossi dalla coda attiva se falsi, duplicati o non più validi, conservando soltanto le guardie negative utili a evitare reintroduzioni errate.
+
+La triage corrente è in `data/discovery-triage-v06.json`.
 
 ## Dataset
 
@@ -28,23 +41,15 @@ Ogni progetto conserva, dove disponibili:
 
 ## Mappa
 
-I marker usano coordinate territoriali indicative del progetto e **non** rappresentano le coordinate delle singole WTG. La promozione a layout verificato richiede una corografia o un elaborato ufficiale.
-
-La basemap regionale viene disegnata sullo stesso piano WGS84 e sugli stessi bounds (`6.3–19 E`, `35.2–47.3 N`) usati dai marker. I confini regionali provengono dal dataset `geojson-italy`, derivato dai limiti amministrativi ISTAT e pubblicato in WGS84/CC-BY. Se la risorsa remota non è disponibile resta visibile la basemap locale di fallback.
+La vista principale usa una **choropleth ECharts per provincia**. Ogni progetto viene aggregato una sola volta sulla provincia canonica principale per evitare duplicazioni dei MW; per l’offshore la provincia è un riferimento amministrativo/territoriale e non rappresenta il footprint delle WTG in mare. I MW BESS restano separati.
 
 ## Contractor view
 
-La vista inversa mostra una sola azienda alla volta. Il selettore:
+La vista inversa mostra azienda → progetti → MW → ruolo → stato → timing, separando relazioni A1/A2 confermate dai segnali B/C.
 
-- è ordinato alfabeticamente con locale italiano;
-- viene ricostruito dall'insieme completo delle card disponibili nel filtro corrente;
-- ignora e azzera l'eventuale valore ripristinato dal browser nel vecchio campo di ricerca nascosto, evitando il precedente caso in cui compariva soltanto `Vestas`.
+## Motore di intelligence
 
-Nel seed completo risultano 11 aziende/nodi distinti.
-
-## Responsive
-
-`Opportunità prioritarie` usa scroll interno su desktop, ma sotto i 760 px torna nello scroll normale della pagina per evitare scroll-trap su touch.
+Player & Network Watch e Institutional & Source Watch alimentano il Radar ma non vengono mostrati come sezioni a piena pagina. La loro copertura è riportata nella metodologia della dashboard.
 
 ## Regole di attribuzione
 
