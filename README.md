@@ -1,52 +1,84 @@
-# Project Radar MVP
+# project_radar_mvp
 
-Radar operativo per progetti e opportunità infrastrutturali in Italia.
+Radar commerciale per progetti e infrastrutture in Italia.
 
 ## Wind Project & Contractor Radar
 
-La baseline pubblicata resta **v0.5.0** su `master`.
+Baseline pubblicata: **v0.5.0**.
 
-La v0.6 è in lavorazione sulla Draft PR **#5 — Wind Radar v0.6 — execution intelligence e commercial timing** e non deve essere mergiata o pubblicata senza revisione esplicita.
+Il Wind Radar integra:
+- progetti eolici onshore e offshore da fonti pubbliche;
+- normalizzazione di identità, MW, WTG, stage E0–E8 e timing;
+- separazione rigorosa tra MW wind e BESS;
+- supply-chain intelligence con ruolo, fonte e livello di confidenza;
+- scope esecutivi chiusi solo con evidenza A1/A2 esplicita;
+- Discovery separato dal dataset canonico;
+- dashboard HTML con KPI, filtri, mappa, timeline, opportunità e Contractor view.
 
-### Baseline canonica
+Baseline canonica v0.5:
+- **51 progetti**;
+- **11.202,52 MW wind**;
+- 34 progetti promossi dal discovery v0.4;
+- 4 candidati ancora blocked nel discovery.
 
-- 51 progetti canonici;
-- 11.202,52 MW wind;
-- BESS sempre separato dai MW wind;
-- maturità E0–E8;
-- scope onshore/offshore distinti.
+Dashboard Wind:
+- `docs/wind/index.html`
 
-### Regola probatoria
+Stato operativo dettagliato:
+- `CURRENT_STATE.md`
 
-Uno scope esecutivo viene chiuso solo con evidenza **project-specific A1/A2** esplicita. Owner, developer, advisor, engineering, DL, supervision, recruiting, capability generale e storico stesso sito non implicano un award di execution.
+### Sviluppo v0.6
 
-### v0.6
+La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`, mantenendo raw finding, storico variazioni, planner/cadenze, reconciliation ed evidence gate separati dal canonico.
 
-La v0.6 aggiunge:
-- Company / Commercial Network;
-- Institutional & Source Network;
-- agent/collector con raw findings e change history separati dal canonico;
-- evidence gate centralizzato;
-- reconciliation conservativa e digest review-only;
-- Project Execution investigation queue E4–E7;
-- contractor intelligence additiva;
-- mappa ECharts choropleth per provincia con filtro Provincia dedicato e metriche MW wind / N. progetti / MW E4+.
+Stato corrente della Draft PR #5:
+- **58 player commerciali** nel Company Network;
+- **31 nodi istituzionali** nel Source Network;
+- **21 adapter istituzionali eseguibili**: MASE VIA, MASE Provvedimenti, Terna Econnextion, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria, Basilicata, Emilia-Romagna, Lombardia, Piemonte, Umbria, Veneto, Abruzzo, Liguria, Marche e Molise;
+- Company Watch diretto sulle `watch_urls` con cadenze 7/14/30 giorni;
+- stato runtime persistente per `new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
+- reconciliation conservativa dei finding verso canonico/Discovery **senza promozione automatica**;
+- digest review-only delle sole variazioni commercialmente utili;
+- **Project Execution investigation queue** per i canonici E4–E7 con open scope, urgency score e playbook di contractor hunt per singolo scope;
+- workflow periodico predisposto con trigger giornaliero e selezione `--due`, senza commit automatici né modifiche automatiche al canonico.
 
-La review browser della mappa province è stata eseguita su desktop e mobile. Il click provincia non sovrascrive più la ricerca libera; tooltip, reset, clear e metriche sono coperti da validator dedicati.
+La nuova tranche commerciale aggiunge player execution-oriented come Blu Costruzioni, EGM Project, Barone Costruzione, Gruppo Novello, La Molisana Trasporti, Pizzulo Costruzioni, SIMIC e F&C Wind Service. I riferimenti storici, la prossimità geografica o la presenza tecnica in sito restano **lead di rete**, non award: ad esempio non si deduce Blu sul repowering Carlentini corrente, Pizzulo su Andretta-Bisaccia o EGM come contractor esecutivo di Serra Giannina.
 
-Per lo stato operativo aggiornato vedere `CURRENT_STATE.md` e `CHANGELOG.md`.
+Gli adapter Abruzzo e Molise includono un fallback trasparente `source_channel_snapshot` quando il portale non espone righe progetto server-side: in quel caso il canale resta monitorabile ma non viene falsamente dichiarata acquisizione di dati progetto. Liguria e Marche lavorano sui registri pubblici regionali correnti.
 
-## Struttura repository
+Terna Econnextion resta intelligence aggregata di mercato e non genera progetti. Una VIA positiva MASE non viene interpretata come autorizzazione complessiva, procurement o costruzione. I finding company-direct restano network intelligence finché non esiste evidenza project-specific sul ruolo esecutivo.
 
-- `docs/wind/` — dashboard Wind Radar e dati canonici/enrichment;
-- `app/wind_agents/` — runtime agent-style per fonti istituzionali, company watch e reconciliation;
-- `scripts/check_wind_*.py` — regressioni e validator;
-- `scripts/run_wind_agents.py` — CLI operativa;
-- `CURRENT_STATE.md` — stato corrente;
-- `CHANGELOG.md` — evoluzione del progetto.
+Il workflow PR valida architettura e regressioni; la disponibilità live dei portali viene verificata solo da un'esecuzione effettiva degli adapter. Il workflow schedulato diventerà attivo solo se la v0.6 verrà approvata e il relativo file entrerà nel branch di default.
 
-## Governance
+## Altri output repository
 
-- nessuna scrittura automatica nel canonico;
-- nessun contractor per deduzione;
-- nessun merge/pubblicazione della Draft PR #5 senza approvazione esplicita.
+- `docs/data.json`
+- `docs/index.html`
+- `docs/branches.html`
+
+Avvio locale legacy:
+`.\aggiorna_radar.bat`
+
+Fonti principali previste / utilizzate a seconda del radar:
+1. MASE VIA
+2. OpenCUP
+3. ANAC / BDNCP
+4. Regioni ed enti territoriali
+5. developer / contractor / operatori diretti quando la fonte è primaria
+
+<!-- MAINTENANCE-STANDARD:START -->
+## Manutenzione repository
+
+- Stato operativo: `CURRENT_STATE.md`
+- Istruzioni per ChatGPT/Codex: `AGENTS.md`
+- Storico modifiche: `CHANGELOG.md`
+- Controllo pre-pubblicazione: `.\scripts\check_before_publish.ps1`
+
+Comando consigliato prima del commit:
+
+```powershell
+.\scripts\check_before_publish.ps1
+git status
+git diff --check
+```
+<!-- MAINTENANCE-STANDARD:END -->
