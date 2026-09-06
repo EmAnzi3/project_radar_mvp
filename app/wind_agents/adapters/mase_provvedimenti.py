@@ -35,6 +35,9 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
 
     A positive VIA decision is recorded as project evidence but is explicitly
     guarded from being interpreted as overall AU/FID/construction authorization.
+    Project-page fields are parsed separately from the decision page so that
+    proponent, geography and current project MW do not inherit menu/navigation
+    text or unit/legacy turbine powers.
     """
 
     agent_name = "institutional_watch"
@@ -108,6 +111,8 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
             return "Verifica di ottemperanza"
         if "verifica di assoggettabilità" in lowered or "verifica di assoggettabilita" in lowered:
             return "Verifica di assoggettabilità VIA"
+        if "provvedimento unico in materia ambientale" in lowered:
+            return "Provvedimento Unico in materia Ambientale"
         if "valutazione di impatto ambientale" in lowered or re.search(r"\bvia\b", lowered):
             return "VIA"
         if "scoping" in lowered:
@@ -117,15 +122,16 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
     @classmethod
     def _decree(cls, text: str) -> str | None:
         patterns = (
-            r"\bD\.M\.\s*[^,.;\n]{1,120}",
+            r"\bD\.M\.\s*(?:MASE[_\-]VA[_\-]DEC[_\-])?\d{4}[-_]\d+",
             r"\bDM[_\-\s]?\d{4}[-_]\d+",
-            r"\bDecreto\s+(?:Direttoriale|Ministeriale)?\s*[^,.;\n]{1,140}",
+            r"\bMASE[_\-]VA[_\-]DEC[_\-]\d{4}[-_]\d+",
+            r"\bDecreto\s+(?:Direttoriale|Ministeriale)?\s*[^,.;\n]{1,100}",
             r"\bn\.\s*\d+\s+del\s+\d{1,2}/\d{1,2}/\d{4}",
         )
         for pattern in patterns:
             match = re.search(pattern, text, flags=re.I)
             if match:
-                return cls._clean(match.group(0))[:200]
+                return cls._clean(match.group(0))[:160]
         return None
 
     @staticmethod
@@ -151,58 +157,128 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
                 return absolute
         return None
 
+    @staticmethod
+    def _number(raw: str) -> float | None:
+        value = raw.replace(" ", "")
+        if "," in value:
+            value = value.replace(".", "").replace(",", ".")
+        try:
+            parsed = float(value)
+        except ValueError:
+            return None
+        return parsed if 0 < parsed < 5000 else None
+
     @classmethod
-    def _project_fields(cls, text: str) -> dict:
+    def _project_title(cls, project_text: str, fallback: str) -> str:
+        text = cls._clean(project_text)
+        if text:
+            # MASE project pages currently expose the actual project heading at
+            # the beginning of the flat text, followed by the generic "- Info -"
+            # site heading. This is more complete than the truncated decisions list.
+            candidate = text.split(" - Info - ", 1)[0].strip(" -")
+            if len(candidate) >= 20 and cls._is_wind(candidate):
+                return candidate[:1400]
+        return cls._clean(fallback)[:900]
+
+    @classmethod
+    def _power_mw(cls, project_title: str) -> float | None:
+        totals: list[float] = []
+        for pattern in (
+            r"potenza\s+complessiva(?:\s+(?:installata|dell['’]impianto))?\s*(?:pari\s+a|di|:)?\s*([0-9][0-9.\s]*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MWp?\b",
+            r"potenza\s+totale\s*(?:pari\s+a|di|:)?\s*([0-9][0-9.\s]*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MWp?\b",
+        ):
+            for match in re.finditer(pattern, project_title, flags=re.I):
+                value = cls._number(match.group(1))
+                if value is not None:
+                    totals.append(value)
+        if totals:
+            # In repowering descriptions the legacy plant precedes the rebuilt
+            # plant; keep the final explicit project total as current config.
+            return totals[-1]
+        match = re.search(
+            r"potenza\s+(?:massima\s+in\s+immissione\s+)?(?:pari\s+a|di)\s*([0-9][0-9.\s]*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MWp?\b",
+            project_title,
+            flags=re.I,
+        )
+        return cls._number(match.group(1)) if match else None
+
+    @classmethod
+    def _bess_mw(cls, project_title: str) -> float | None:
+        for pattern in (
+            r"(?:sistema\s+di\s+)?accumulo(?:\s+integrato)?[^.;,]{0,80}?([0-9]+(?:[.,][0-9]+)?)\s*MWp?\b",
+            r"\bBESS\b[^.;,]{0,80}?([0-9]+(?:[.,][0-9]+)?)\s*MWp?\b",
+            r"\bstorage\b[^.;,]{0,80}?([0-9]+(?:[.,][0-9]+)?)\s*MWp?\b",
+        ):
+            match = re.search(pattern, project_title, flags=re.I)
+            if match:
+                value = cls._number(match.group(1))
+                if value is not None:
+                    return value
+        return None
+
+    @classmethod
+    def _project_fields(cls, text: str, project_title: str) -> dict:
         proponent = None
         for pattern in (
-            r"Proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)",
-            r"Societ[aà]\s+proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)",
+            r"Proponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Altri\s+progetti\b|\s+Territori\s+ed\s+aree\s+marine\b|\s+Scegli\s+la\s+procedura\b|$)",
+            r"Societ[aà]\s+proponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Territori\s+ed\s+aree\s+marine\b|$)",
         ):
             match = re.search(pattern, text, flags=re.I)
             if match:
-                proponent = cls._clean(match.group(1))[:250]
-                break
+                candidate = cls._clean(match.group(1)).strip(" -–—:;,.()")
+                if 2 <= len(candidate) <= 250:
+                    proponent = candidate
+                    break
 
-        province = None
-        province_match = re.search(r"\(([A-Z]{2})\)", text)
-        if province_match:
-            province = province_match.group(1)
-
-        municipalities: list[str] = []
-        for match in re.finditer(
-            r"(?:Comune|Comuni)\s+di\s+(.+?)(?:\s*\([A-Z]{2}\)|\.|;|\s+Provincia|$)",
+        region = None
+        region_match = re.search(
+            r"Regioni\s*:\s*(.+?)(?=\s+Province\s*:|\s+Comuni\s*:|\s+Aree\s+marine\s*:|\s+Scegli\s+la\s+procedura\b|$)",
             text,
             flags=re.I,
-        ):
-            for part in re.split(r",|/|\s+e\s+", match.group(1), flags=re.I):
+        )
+        if region_match:
+            region = cls._clean(region_match.group(1)).strip(" -–—:;,.()") or None
+
+        province = None
+        province_match = re.search(
+            r"Province\s*:\s*(.+?)(?=\s+Comuni\s*:|\s+Aree\s+marine\s*:|\s+Scegli\s+la\s+procedura\b|$)",
+            text,
+            flags=re.I,
+        )
+        if province_match:
+            province_text = cls._clean(province_match.group(1))
+            province = province_text.split(",", 1)[0].strip() or None
+        if not province:
+            code_match = re.search(r"\(([A-Z]{2})\)", project_title)
+            province = code_match.group(1) if code_match else None
+
+        municipalities: list[str] = []
+        municipalities_match = re.search(
+            r"Comuni\s*:\s*(.+?)(?=\s+Aree\s+marine\s*:|\s+Scegli\s+la\s+procedura\b|$)",
+            text,
+            flags=re.I,
+        )
+        if municipalities_match:
+            for part in municipalities_match.group(1).split(","):
                 item = cls._clean(part).strip(" -–—:;,.()")
                 if item and 2 <= len(item) <= 90 and item.lower() not in {v.lower() for v in municipalities}:
                     municipalities.append(item)
-            if municipalities:
-                break
-
-        power_mw = None
-        for match in re.finditer(
-            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
-            text,
-            flags=re.I,
-        ):
-            raw = match.group(1).replace(" ", "")
-            if "," in raw:
-                raw = raw.replace(".", "").replace(",", ".")
-            try:
-                value = float(raw)
-            except ValueError:
-                continue
-            if 0 < value < 5000:
-                power_mw = value
-                break
+        if not municipalities:
+            for match in re.finditer(r"\b(?:Comune|Comuni)\s+di\s+(.+?)(?:\s*\([A-Z]{2}\)|\.|;|$)", project_title, flags=re.I):
+                for part in re.split(r",|/|\s+e\s+", match.group(1), flags=re.I):
+                    item = cls._clean(part).strip(" -–—:;,.()")
+                    if item and 2 <= len(item) <= 90 and item.lower() not in {v.lower() for v in municipalities}:
+                        municipalities.append(item)
+                if municipalities:
+                    break
 
         return {
             "proponent": proponent,
+            "region": region,
             "province": province,
-            "municipalities": municipalities[:12],
-            "power_mw": power_mw,
+            "municipalities": municipalities[:20],
+            "power_mw": cls._power_mw(project_title),
+            "bess_mw": cls._bess_mw(project_title),
         }
 
     def fetch(self) -> list[AgentFinding]:
@@ -227,7 +303,8 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
                     project_text = self._clean(BeautifulSoup(project_html, "html.parser").get_text(" ", strip=True))
 
             evidence_text = self._clean(f"{combined} {project_text}")
-            fields = self._project_fields(project_text or evidence_text)
+            title = self._project_title(project_text, item.get("list_title") or "MASE provvedimento eolico")
+            fields = self._project_fields(project_text or evidence_text, title)
             match = re.search(r"/DettaglioUltimiProvvedimenti/(\d+)", detail_url)
             detail_id = match.group(1) if match else re.sub(r"\W+", "-", detail_url)[-80:]
             external_id = f"MASE-PROVV-WIND-{detail_id}"
@@ -235,24 +312,25 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
                 continue
             seen.add(external_id)
 
-            title = item.get("list_title") or "MASE provvedimento eolico"
             findings.append(
                 AgentFinding(
                     external_id=external_id,
                     source_name=self.source_name,
                     source_url=detail_url,
-                    title=title[:900],
+                    title=title,
                     finding_type="project_outcome",
                     payload={
-                        "project_name": title[:900],
+                        "project_name": title,
                         "proponent": fields.get("proponent"),
+                        "region": fields.get("region"),
                         "province": fields.get("province"),
                         "municipalities": fields.get("municipalities", []),
                         "power_mw": fields.get("power_mw"),
-                        "procedure": self._procedure(evidence_text),
+                        "bess_mw": fields.get("bess_mw"),
+                        "procedure": self._procedure(item.get("list_title") or evidence_text),
                         "outcome": self._outcome(evidence_text),
-                        "decree_number": self._decree(evidence_text),
-                        "decree_date": self._date(evidence_text),
+                        "decree_number": self._decree(detail_text),
+                        "decree_date": self._date(detail_text),
                         "project_url": project_url,
                         "document_url": self._document_url(soup, detail_url),
                         "sector": "eolico",
@@ -261,6 +339,7 @@ class MaseProvvedimentiWindAgent(BaseWindAgent):
                         "execution_scope": None,
                         "stage_semantic_guard": "VIA/provvedimento outcome is not proof of overall AU, FID, procurement or construction stage.",
                         "source_adapter_origin": "pv_agent_mvp/mase_provvedimenti.py",
+                        "source_normalization": "project page supplies full title/proponent/geography/current total MW; BESS remains separate",
                     },
                 )
             )
