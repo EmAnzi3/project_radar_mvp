@@ -1,7 +1,7 @@
 {
-  "version": "0.7.0-execution-coverage-a",
+  "version": "0.7.0-execution-coverage-b",
   "as_of": "2026-09-06",
-  "note": "Runtime reconciliation of project-specific A1/A2 execution evidence already validated in additive intelligence. It upgrades only explicitly matched relations; B/C signals, engineering, supervision, owner/developer and historical same-site suppliers remain non-execution.",
+  "note": "Runtime reconciliation of project-specific A1/A2 execution evidence. It upgrades only explicitly matched execution relations; B/C signals, engineering, supervision, owner/developer and historical same-site suppliers remain non-execution. Corporate-release relays qualify as A2 only when the company-origin wording, named project and explicit contractual execution scope are all visible.",
   "projects": {
     "carlentini": {
       "relations": [
@@ -27,6 +27,29 @@
         }
       ],
       "coverage_note": "Reconciles the A2 foundation execution evidence already present in commercial-enrichment-v06.json into the effective runtime project graph."
+    },
+    "tricarico": {
+      "relations": [
+        {
+          "company": "Vestas",
+          "role": "Erection contractor",
+          "status": "confirmed",
+          "confidence": "A2",
+          "scope": "The Tricarico contract is explicitly described as including supply and installation of seven V162-6.0 MW turbines. This closes WTG erection/installation only; Civil BoP, Electrical BoP, grid/SSE, foundations and heavy transport remain open unless separately evidenced.",
+          "source_id": "tri-vestas-install-a2"
+        }
+      ],
+      "sources": [
+        {
+          "id": "tri-vestas-install-a2",
+          "publisher": "Vestas Italia — corporate release relayed by Rinnovabili / Le Aziende Informano",
+          "grade": "A2",
+          "title": "Vestas annuncia due ordini a marzo in Italia per un totale di 97 MW — Tricarico contract includes supply and installation",
+          "date": "2026-04-02",
+          "url": "https://www.rinnovabili.it/mercato/le-aziende-informano/vestas-italia-annuncia-due-ordini-marzo-totale-di-97-mw/"
+        }
+      ],
+      "coverage_note": "The dedicated corporate-information channel reproduces Vestas-origin wording in first person, an attributed statement from Vestas Italy General Manager Francesco Amati, and the explicit Tricarico contractual scope. The global Vestas order release independently confirms the same project/customer/turbine configuration and timing."
     }
   }
 }
