@@ -36,8 +36,11 @@ assert "select.value=province" in js and "dispatchEvent(new Event('change'" in j
 assert "ensureProvinceFilter" in app
 assert "fill(e.province,projects.map(p=>p.province))" in app
 assert "pv&&p.province!==pv" in app
+assert "confine:true" in js, "province tooltip must remain inside the map on desktop/mobile"
+assert "max-width:300px" in js, "province tooltip needs a bounded readable width"
+assert "state.metric!=='mw'" in js and "state.metric!=='projects'" in js and "state.metric!=='e4mw'" in js, "selected metric must not be duplicated in tooltip"
 assert "p.lat" not in js and "p.lon" not in js, "province map must not regress to project marker coordinates"
 assert ".province-map-viz" in css
 assert ".legacy-map-compat" in css
 
-print("v0.6 province map OK: choropleth uses a dedicated province filter and preserves free-text search")
+print("v0.6 province map OK: dedicated province filter, preserved search and confined non-duplicated tooltip")
