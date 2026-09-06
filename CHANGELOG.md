@@ -4,6 +4,7 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-09-06 — Corretto il live smoke Sicilia dopo il timeout del CSV regionale: `sicilia-sivvi` usa ora timeout HTTP bounded e fallback project-specific sul layer ArcGIS ufficiale SI-VVI già sfruttato da `pv_agent_mvp` per l'enrichment GIS. Il fallback conserva il gate A1/project-specific e non modifica automaticamente canonico o scope.
 - 2026-09-05 — Portata la copertura istituzionale v0.6 a **21 adapter eseguibili** aggiungendo Abruzzo, Liguria, Marche e Molise. Abruzzo/Molise usano un fallback trasparente `source_channel_snapshot` quando il portale non espone righe progetto server-side; Liguria mantiene il guard di riconciliazione MASE per le VIA nazionali del mirror regionale.
 - 2026-09-05 — Aggiunto `app/wind_agents/execution_watch.py`: **Project Execution investigation queue** per canonici E4–E7 con scope aperti, urgency score basato su stage/priorità/milestone/gap e playbook di contractor hunt per singolo scope. La queue è review-only e richiede sempre evidenza project-specific A1/A2 per chiudere uno scope.
 - 2026-09-05 — Esteso il Company Network da **50 a 58 player** con Blu Costruzioni, EGM Project, Barone Costruzione, Gruppo Novello, La Molisana Trasporti, Pizzulo Costruzioni, SIMIC e F&C Wind Service. Inseriti guard espliciti contro deduzioni Blu→Carlentini corrente, Pizzulo→Andretta-Bisaccia ed EGM→contractor esecutivo Serra Giannina.
