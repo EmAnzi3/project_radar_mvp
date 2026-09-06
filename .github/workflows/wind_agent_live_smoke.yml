@@ -68,6 +68,69 @@ jobs:
             "${args[@]}" \
             --output "reports/wind-agent-live/${WIND_SMOKE_GROUP}.json"
 
+      - name: Export live findings for review
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import sqlite3
+          from pathlib import Path
+
+          group = os.environ['WIND_SMOKE_GROUP']
+          report_path = Path(f'reports/wind-agent-live/{group}.json')
+          db_path = Path('data/wind_agent.sqlite')
+          if not report_path.exists() or not db_path.exists():
+              print('No live findings database/report available to export.')
+              raise SystemExit(0)
+
+          report = json.loads(report_path.read_text(encoding='utf-8'))
+          run_id = report.get('run_id')
+          if not run_id:
+              print('Live report has no run_id; skipping findings export.')
+              raise SystemExit(0)
+
+          with sqlite3.connect(db_path) as conn:
+              conn.row_factory = sqlite3.Row
+              rows = conn.execute(
+                  '''
+                  SELECT agent_name, source_name, external_id, source_url, title,
+                         finding_type, payload_json, first_seen, last_seen
+                  FROM raw_findings
+                  WHERE last_run_id = ?
+                  ORDER BY agent_name, source_name, external_id
+                  ''',
+                  (run_id,),
+              ).fetchall()
+
+          findings = []
+          for row in rows:
+              payload = json.loads(row['payload_json'])
+              findings.append({
+                  'agent_name': row['agent_name'],
+                  'source_name': row['source_name'],
+                  'external_id': row['external_id'],
+                  'source_url': row['source_url'],
+                  'title': row['title'],
+                  'finding_type': row['finding_type'],
+                  'payload': payload.get('payload') or {},
+                  'first_seen': row['first_seen'],
+                  'last_seen': row['last_seen'],
+              })
+
+          out = {
+              'group': group,
+              'run_id': run_id,
+              'finding_count': len(findings),
+              'guard': 'Raw live findings for review only; no canonical promotion or scope closure is implied.',
+              'findings': findings,
+          }
+          output = Path(f'reports/wind-agent-live/{group}-findings.json')
+          output.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
+          print(f'Exported {len(findings)} raw findings to {output}')
+          PY
+
       - name: Validate live result
         shell: bash
         run: |
@@ -113,6 +176,7 @@ jobs:
 
           group = os.environ['WIND_SMOKE_GROUP']
           report = Path(f'reports/wind-agent-live/{group}.json')
+          findings_report = Path(f'reports/wind-agent-live/{group}-findings.json')
           lines = [f'## Wind Radar live smoke — {group}']
           if report.exists():
               data = json.loads(report.read_text(encoding='utf-8'))
@@ -125,6 +189,9 @@ jobs:
                       f"findings {row.get('findings', 0)}; project-specific {row.get('project_specific_findings', 0)}; "
                       f"new {row.get('new', 0)}; changed {row.get('changed', 0)}"
                   )
+              if findings_report.exists():
+                  raw = json.loads(findings_report.read_text(encoding='utf-8'))
+                  lines.append(f"- Raw findings exported for review: {raw.get('finding_count', 0)}")
               if data.get('errors'):
                   lines.append(f"- Errors: {data['errors']}")
           else:
