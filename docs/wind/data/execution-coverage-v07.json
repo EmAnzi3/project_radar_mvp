@@ -1,0 +1,32 @@
+{
+  "version": "0.7.0-execution-coverage-a",
+  "as_of": "2026-09-06",
+  "note": "Runtime reconciliation of project-specific A1/A2 execution evidence already validated in additive intelligence. It upgrades only explicitly matched relations; B/C signals, engineering, supervision, owner/developer and historical same-site suppliers remain non-execution.",
+  "projects": {
+    "carlentini": {
+      "relations": [
+        {
+          "match_company": "Gruppo Mammana",
+          "match_role": "Foundation contractor / concrete works",
+          "company": "Mammana Michelangelo S.p.A.",
+          "role": "Foundation contractor",
+          "status": "confirmed",
+          "confidence": "A2",
+          "scope": "Execution of WTG foundation concrete works on the current Carlentini repowering. Direct current project-participant evidence identifies Gruppo Mammana as executor of the foundation pours. The attribution closes the foundation package only and does not extend to the full Civil BoP.",
+          "source_id": "car-hydro-mammana-foundation-a2"
+        }
+      ],
+      "sources": [
+        {
+          "id": "car-hydro-mammana-foundation-a2",
+          "publisher": "Hydro Engineering",
+          "grade": "A2",
+          "title": "Repowering Carlentini — first WTG foundation pour R-CA01",
+          "date": "2026-08",
+          "url": "https://it.linkedin.com/company/hydro-engineering-s-s"
+        }
+      ],
+      "coverage_note": "Reconciles the A2 foundation execution evidence already present in commercial-enrichment-v06.json into the effective runtime project graph."
+    }
+  }
+}
