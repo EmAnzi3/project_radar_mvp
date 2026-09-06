@@ -19,7 +19,6 @@ def main() -> None:
     manifest = load(DATA / "projects.json")
     meta = load(DATA / manifest["meta"])
     projects = [p for chunk in manifest["chunks"] for p in load(DATA / chunk)]
-    by_id = {p["id"]: p for p in projects}
     roles = set(meta["execution_roles"])
     overlay = load(DATA / "execution-coverage-v07.json")
 
@@ -69,10 +68,10 @@ def main() -> None:
     assert len(projects) == 51, len(projects)
     assert len(before) == 4, (len(before), sorted(before))
     assert round(before_mw, 2) == 133.90, before_mw
-    assert len(after) == 5, (len(after), sorted(after))
-    assert round(after_mw, 2) == 230.90, after_mw
-    assert len(open_projects) == 46, len(open_projects)
-    assert round(open_mw, 2) == 10971.62, open_mw
+    assert len(after) == 6, (len(after), sorted(after))
+    assert round(after_mw, 2) == 272.90, after_mw
+    assert len(open_projects) == 45, len(open_projects)
+    assert round(open_mw, 2) == 10929.62, open_mw
 
     carlentini = effective_by_id["carlentini"]
     mammana = [
@@ -83,6 +82,17 @@ def main() -> None:
     ]
     assert len(mammana) == 1 and strict(mammana[0]), mammana
 
+    tricarico = effective_by_id["tricarico"]
+    vestas_erection = [
+        r
+        for r in tricarico.get("relations", [])
+        if r.get("company") == "Vestas"
+        and r.get("role") == "Erection contractor"
+    ]
+    assert len(vestas_erection) == 1 and strict(vestas_erection[0]), vestas_erection
+    assert "Civil BoP" in tricarico.get("gaps", []), tricarico.get("gaps")
+    assert "Electrical BoP" in tricarico.get("gaps", []), tricarico.get("gaps")
+
     # Known anti-inference guards must remain open after reconciliation.
     for project_id in (
         "andretta-bisaccia",
@@ -90,7 +100,6 @@ def main() -> None:
         "serra-giannina",
         "greci-montaguto",
         "nulvi-ploaghe",
-        "tricarico",
     ):
         assert not has_exec(effective_by_id[project_id]), project_id
 
@@ -105,7 +114,11 @@ def main() -> None:
             if any(strict(r) for r in payload.get("relations") or []):
                 additive_exec_projects.add(project_id)
 
-    missing = sorted(project_id for project_id in additive_exec_projects if project_id in effective_by_id and not has_exec(effective_by_id[project_id]))
+    missing = sorted(
+        project_id
+        for project_id in additive_exec_projects
+        if project_id in effective_by_id and not has_exec(effective_by_id[project_id])
+    )
     assert not missing, f"A1/A2 execution evidence exists only in additive intelligence: {missing}"
 
     print(f"canonical projects: {len(projects)}")
