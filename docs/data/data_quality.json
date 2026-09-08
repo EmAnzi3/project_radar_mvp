@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-09-07T23:43:52.110029+00:00",
+  "generated_at_utc": "2026-09-08T19:48:44.989967+00:00",
   "raw_rows": 547683,
   "total_records": 510889,
-  "with_contractor": 132617,
+  "with_contractor": 132637,
   "contractor_coverage_pct": 25.96,
   "duplicate_cups_count": 15601,
   "duplicate_cups_top": [
@@ -424,7 +424,7 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 8701,
+      "with_contractor": 8702,
       "contractor_coverage_pct": 18.88
     },
     {
@@ -452,7 +452,7 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 6839,
+      "with_contractor": 6840,
       "contractor_coverage_pct": 18.37
     },
     {
@@ -480,8 +480,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 8071,
-      "contractor_coverage_pct": 24.43
+      "with_contractor": 8076,
+      "contractor_coverage_pct": 24.45
     },
     {
       "branch": "Cosenza",
@@ -676,8 +676,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2559,
-      "contractor_coverage_pct": 29.44
+      "with_contractor": 2560,
+      "contractor_coverage_pct": 29.45
     },
     {
       "branch": "Verona",
@@ -746,8 +746,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2625,
-      "contractor_coverage_pct": 36.94
+      "with_contractor": 2626,
+      "contractor_coverage_pct": 36.95
     },
     {
       "branch": "Bergamo",
@@ -844,8 +844,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 1895,
-      "contractor_coverage_pct": 33.12
+      "with_contractor": 1906,
+      "contractor_coverage_pct": 33.32
     },
     {
       "branch": "Sassuolo",
@@ -934,38 +934,38 @@
   ],
   "shards": [
     {
+      "file": "Bari_part_001.json",
+      "branch": "Bari_part_001",
+      "records": 31775,
+      "mb": 44.97,
+      "status": "ok"
+    },
+    {
       "file": "Catania_part_001.json",
       "branch": "Catania_part_001",
-      "records": 32094,
-      "mb": 45.1,
-      "status": "warning"
+      "records": 31996,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Napoli_part_001.json",
       "branch": "Napoli_part_001",
-      "records": 31943,
-      "mb": 45.04,
-      "status": "warning"
-    },
-    {
-      "file": "Bari_part_001.json",
-      "branch": "Bari_part_001",
-      "records": 31815,
-      "mb": 45.02,
-      "status": "warning"
+      "records": 31885,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Roma_Nomentana_part_001.json",
       "branch": "Roma_Nomentana_part_001",
-      "records": 31725,
-      "mb": 45.01,
-      "status": "warning"
+      "records": 31691,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Rimini.json",
       "branch": "Rimini",
       "records": 33032,
-      "mb": 44.72,
+      "mb": 44.73,
       "status": "ok"
     },
     {
@@ -999,8 +999,8 @@
     {
       "file": "Roma_Nomentana_part_002.json",
       "branch": "Roma_Nomentana_part_002",
-      "records": 20672,
-      "mb": 26.01,
+      "records": 20706,
+      "mb": 26.05,
       "status": "ok"
     },
     {
@@ -1041,8 +1041,8 @@
     {
       "file": "Catania_part_002.json",
       "branch": "Catania_part_002",
-      "records": 13993,
-      "mb": 17.63,
+      "records": 14091,
+      "mb": 17.76,
       "status": "ok"
     },
     {
@@ -1195,8 +1195,8 @@
     {
       "file": "Napoli_part_002.json",
       "branch": "Napoli_part_002",
-      "records": 5288,
-      "mb": 6.81,
+      "records": 5346,
+      "mb": 6.88,
       "status": "ok"
     },
     {
@@ -1209,8 +1209,8 @@
     {
       "file": "Bari_part_002.json",
       "branch": "Bari_part_002",
-      "records": 3719,
-      "mb": 4.62,
+      "records": 3759,
+      "mb": 4.67,
       "status": "ok"
     },
     {

@@ -5,24 +5,24 @@
     "technical_match_pct": 46.9,
     "enriched_projects": 166232,
     "enriched_pct": 32.54,
-    "confirmed_projects": 132633,
-    "confirmed_pct": 25.96
+    "confirmed_projects": 132653,
+    "confirmed_pct": 25.97
   },
   "exclusive_levels": {
     "confirmed": {
-      "count": 132633,
-      "pct": 25.96
+      "count": 132653,
+      "pct": 25.97
     },
     "none": {
       "count": 271292,
       "pct": 53.1
     },
     "review": {
-      "count": 2539,
-      "pct": 0.5
+      "count": 2525,
+      "pct": 0.49
     },
     "small": {
-      "count": 31060,
+      "count": 31054,
       "pct": 6.08
     },
     "technical": {
