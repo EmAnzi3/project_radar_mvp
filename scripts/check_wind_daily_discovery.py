@@ -28,11 +28,12 @@ def main() -> int:
         "finding": {
             "external_id": f"test-known-{known['id']}",
             "source_name": "test",
-            "source_url": source_url,
+            "source_url": "https://example.invalid/provvedimento-not-equal-to-project-url",
             "title": known.get("name"),
             "finding_type": "project_source",
             "payload": {
                 "project_specific": True,
+                "project_url": source_url,
                 "project_name": known.get("name"),
                 "region": known.get("region"),
                 "municipalities": known.get("municipalities") or [],
@@ -74,10 +75,63 @@ def main() -> int:
     )
     assert novel_result["category"] == "new_project_candidate", novel_result
 
+    historical_event = {
+        "event_type": "new",
+        "external_id": "test-historical-small-wind",
+        "finding": {
+            "external_id": "test-historical-small-wind",
+            "source_name": "ATOS Toscana FER",
+            "source_url": "https://example.invalid/historical-small",
+            "title": "EOL STORICO TEST",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "EOL STORICO TEST",
+                "region": "Toscana",
+                "power_mw": 0.9,
+                "status_raw": "Autorizzato",
+                "last_act_date": "2018-12-21",
+            },
+        },
+    }
+    historical_result = classify_daily_discovery_event(
+        historical_event,
+        canonical=canonical,
+        discovery=[],
+    )
+    assert historical_result["category"] == "non_target_scale", historical_result
+
+    archived_event = {
+        "event_type": "new",
+        "external_id": "test-archived-wind",
+        "finding": {
+            "external_id": "test-archived-wind",
+            "source_name": "Regione Lazio VIA/PAUR",
+            "source_url": "https://example.invalid/archived",
+            "title": "Parco eolico archiviato test",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "Parco eolico archiviato test",
+                "region": "Lazio",
+                "power_mw": 30.0,
+                "status_raw": "Archiviato",
+            },
+        },
+    }
+    archived_result = classify_daily_discovery_event(
+        archived_event,
+        canonical=canonical,
+        discovery=[],
+    )
+    assert archived_result["category"] == "historical_or_closed", archived_result
+
     print("Wind daily discovery checks OK")
     print(f"Canonical: {len(canonical)} projects / {total_mw:.2f} MW")
-    print("Known finding -> known_project_update")
+    print("Known finding via payload.project_url -> known_project_update")
     print("Unmatched new project-specific finding -> new_project_candidate")
+    print("Historical micro-wind -> non_target_scale")
+    print("Archived project -> historical_or_closed")
     return 0
 
 
