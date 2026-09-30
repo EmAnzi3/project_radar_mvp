@@ -1,0 +1,1173 @@
+{
+  "summary": {
+    "projects": 17,
+    "wind_mw": 1496.9,
+    "bess_mw": 130.0,
+    "authorized_or_later_mw": 689.7,
+    "construction_mw": 408.7,
+    "projects_with_execution_contractor": 4,
+    "projects_without_execution_contractor": 13
+  },
+  "projects": [
+    {
+      "project_id": "andretta-bisaccia",
+      "project_name": "Andretta-Bisaccia",
+      "wind_mw": 88.5,
+      "bess_mw": 0,
+      "project_type": "Repowering",
+      "region": "Campania",
+      "province": "Avellino",
+      "municipalities": [
+        "Andretta",
+        "Bisaccia",
+        "Vallata"
+      ],
+      "area_if_known": null,
+      "developer": "Edison Rinnovabili",
+      "spv": "Edison Rinnovabili",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Procurement",
+      "project_status": "Cronoprogramma esecutivo disponibile: apertura cantiere 02/11/2026 e civili dal 13/11/2026. Contractor esecutivi principali ancora da identificare.",
+      "maturity": "E6",
+      "civil_start": "2026-11-13",
+      "foundation_window": null,
+      "electrical_start": "2027-01-11",
+      "wtg_delivery_window": {
+        "label": "Consegna componenti WTG",
+        "start": "2027-12-06",
+        "end": "2028-03-31",
+        "date": null,
+        "precision": "day",
+        "confidence": "A1"
+      },
+      "erection_window": {
+        "label": "Montaggi elettromeccanici WTG",
+        "start": "2027-12-06",
+        "end": "2028-04-28",
+        "date": null,
+        "precision": "day",
+        "confidence": "A1"
+      },
+      "commissioning_window": {
+        "label": "Commissioning",
+        "start": "2028-01-10",
+        "end": "2028-08-10",
+        "date": null,
+        "precision": "day",
+        "confidence": "A1"
+      },
+      "cod": "2028-08-10",
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [
+        "Vestas"
+      ],
+      "engineering": [
+        "GEKO"
+      ],
+      "direzione_lavori": [],
+      "site_management": [
+        "Progeco Group"
+      ],
+      "last_update": "2026-08-11",
+      "confidence": "A1",
+      "sources": [
+        {
+          "id": "andr-plan",
+          "title": "Piano di cantierizzazione IR Andretta Bisaccia",
+          "publisher": "Edison Rinnovabili / GEKO",
+          "date": null,
+          "url": "",
+          "grade": "A1"
+        },
+        {
+          "id": "andr-mase",
+          "title": "Relazione illustrativa di verifica di ottemperanza – potenza aggiornata 88,5 MW",
+          "publisher": "MASE",
+          "date": "2026-08-11",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/MetadatoDocumento/1419737",
+          "grade": "A1"
+        },
+        {
+          "id": "andr-vestas",
+          "title": "Vestas secures 102 MW order in Italy from Edison",
+          "publisher": "Vestas",
+          "date": "2025-12-30",
+          "url": "https://www.vestas.com/en/media/company-news/2025/vestas-secures-102-mw-order-in-italy-from-edison-c4287400",
+          "grade": "A2"
+        },
+        {
+          "id": "andr-progeco",
+          "title": "Survey precedente – Progeco Group in supervisione/site management; non Civil BoP",
+          "date": null,
+          "url": ""
+        }
+      ],
+      "notes": "Cronoprogramma esecutivo disponibile: apertura cantiere 02/11/2026 e civili dal 13/11/2026. Contractor esecutivi principali ancora da identificare."
+    },
+    {
+      "project_id": "alia-sclafani",
+      "project_name": "Alia-Sclafani",
+      "wind_mw": 55,
+      "bess_mw": 0,
+      "project_type": "Repowering",
+      "region": "Sicilia",
+      "province": "Palermo",
+      "municipalities": [
+        "Alia",
+        "Sclafani Bagni",
+        "Valledolmo"
+      ],
+      "area_if_known": null,
+      "developer": "Asja Energy / Asja Ambiente Italia",
+      "spv": "Asja Ambiente Italia",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Erection in corso secondo il cronoprogramma; opere elettriche previste in chiusura il 09/09/2026. Nessun Civil/Electrical BoP corrente attribuito senza prova diretta.",
+      "maturity": "E7",
+      "civil_start": "2025-07-29",
+      "foundation_window": null,
+      "electrical_start": "2026-05-21",
+      "wtg_delivery_window": {
+        "label": "Trasporto WTG in sito",
+        "start": "2026-07-22",
+        "end": "2026-08-20",
+        "date": null,
+        "precision": "day",
+        "confidence": "A1"
+      },
+      "erection_window": {
+        "label": "Erection WTG",
+        "start": "2026-08-21",
+        "end": "2026-11-05",
+        "date": null,
+        "precision": "day",
+        "confidence": "A1"
+      },
+      "commissioning_window": {
+        "label": "Energizzazione",
+        "start": null,
+        "end": null,
+        "date": "2027-01-07",
+        "precision": "day",
+        "confidence": "A1"
+      },
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [
+        "Vestas"
+      ],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-03-31",
+      "confidence": "A1",
+      "sources": [
+        {
+          "id": "alia-plan",
+          "title": "Cronoprogramma degli interventi – Rifacimento Alia Sclafani",
+          "publisher": "Asja Ambiente Italia",
+          "date": "2024-11-14",
+          "url": "",
+          "grade": "A1"
+        },
+        {
+          "id": "alia-vestas",
+          "title": "Vestas announces two new orders for a total of 97 MW",
+          "publisher": "Vestas",
+          "date": "2026-03-31",
+          "url": "https://www.vestas.com/en/media/company-news/2026/vestas-announces-two-new-orders-for-a-total-of-97-mw-c4329411",
+          "grade": "A2"
+        },
+        {
+          "id": "alia-socep",
+          "title": "Survey precedente – SOCEP incumbent storico del sito; repowering attuale da confermare",
+          "date": null,
+          "url": ""
+        }
+      ],
+      "notes": "Erection in corso secondo il cronoprogramma; opere elettriche previste in chiusura il 09/09/2026. Nessun Civil/Electrical BoP corrente attribuito senza prova diretta."
+    },
+    {
+      "project_id": "serra-giannina",
+      "project_name": "Serra Giannina",
+      "wind_mw": 42,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Basilicata",
+      "province": "Potenza",
+      "municipalities": [
+        "Genzano di Lucania",
+        "Banzi"
+      ],
+      "area_if_known": null,
+      "developer": "RWE",
+      "spv": "RWE",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Cantiere avviato il 21/05/2026. Disponibile un BoP schedule WTG-by-WTG su circa cinque mesi; il Civil BoP non viene attribuito senza evidenza nominale.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [
+        "D'Agostino Costruzioni Generali"
+      ],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [
+        "EGM Project"
+      ],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-07-01",
+      "confidence": "A1",
+      "sources": [
+        {
+          "id": "sg-plan",
+          "title": "Project schedule – Cronoprogramma BoP Wind Farm Serra Giannina (6 WTG)",
+          "publisher": "BoP schedule",
+          "date": null,
+          "url": "",
+          "grade": "A1"
+        },
+        {
+          "id": "sg-rwe",
+          "title": "RWE starts construction of 42-megawatt onshore wind farm in Italy",
+          "publisher": "RWE",
+          "date": "2026-05-21",
+          "url": "https://www.rwe.com/en/press/rwe-renewables-europe-australia/2026-05-21-rwe-starts-construction-of-42-megawatt-onshore-wind-farm-in-italy/",
+          "grade": "A2"
+        },
+        {
+          "id": "sg-egm",
+          "title": "Dalle fondamenta al vento: come nasce una turbina eolica",
+          "publisher": "EGM Project",
+          "date": "2026-07-01",
+          "url": "https://www.egmproject.it/dalle-fondamenta-al-vento-come-nasce-una-turbina-eolica/",
+          "grade": "B"
+        },
+        {
+          "id": "sg-dag-signal",
+          "title": "Survey precedente – forte segnale operativo D'Agostino; contratto BoP da confermare",
+          "date": null,
+          "url": ""
+        }
+      ],
+      "notes": "Cantiere avviato il 21/05/2026. Disponibile un BoP schedule WTG-by-WTG su circa cinque mesi; il Civil BoP non viene attribuito senza evidenza nominale."
+    },
+    {
+      "project_id": "serra-palino",
+      "project_name": "Serra Palino",
+      "wind_mw": 47,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": [],
+      "area_if_known": null,
+      "developer": "RWE",
+      "spv": "RWE",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Cantiere attivo. D’Agostino dichiara direttamente l’esecuzione delle opere civili ed elettromeccaniche: relazione utilizzabile commercialmente con confidenza A2.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": "2026-12-31",
+      "civil_bop": [
+        "D'Agostino Costruzioni Generali"
+      ],
+      "electrical_bop": [
+        "D'Agostino Costruzioni Generali"
+      ],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-07-01",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "sp-rwe",
+          "title": "RWE – Serra Palino e Venusia in costruzione",
+          "publisher": "RWE",
+          "date": "2025-10-23",
+          "url": "https://it.rwe.com/ufficio-stampa/2025-10-23-rwe-avvia-la-costruzione-di-due-parchi-eolici-onshore-in-italia/",
+          "grade": "A2"
+        },
+        {
+          "id": "sp-dag",
+          "title": "Formazione e innovazione – cantiere Serra Palino",
+          "publisher": "D’Agostino Costruzioni Generali",
+          "date": "2026-07-01",
+          "url": "https://it.linkedin.com/posts/d-agostino-costuzioni-generali_dagostinocostruzionigenerali-rwe-energiarinnovabile-activity-7467962508730109952-c9vG",
+          "grade": "A2"
+        }
+      ],
+      "notes": "Cantiere attivo. D’Agostino dichiara direttamente l’esecuzione delle opere civili ed elettromeccaniche: relazione utilizzabile commercialmente con confidenza A2."
+    },
+    {
+      "project_id": "venusia",
+      "project_name": "Venusia",
+      "wind_mw": 45,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Basilicata",
+      "province": "Potenza",
+      "municipalities": [
+        "Venosa",
+        "Maschito"
+      ],
+      "area_if_known": null,
+      "developer": "RWE",
+      "spv": "RWE",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Idoka dichiara concluse le proprie attività e il sito predisposto per l’ingresso del turbinista: opportunità immediata sulla transizione civil → erection/logistics.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": "2026-12-31",
+      "civil_bop": [
+        "Idoka Costruzioni"
+      ],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [
+        "EGM Project"
+      ],
+      "direzione_lavori": [
+        "EGM Project"
+      ],
+      "site_management": [
+        "Energy&"
+      ],
+      "last_update": "2025-10-23",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "ven-rwe",
+          "title": "RWE – Serra Palino e Venusia in costruzione",
+          "publisher": "RWE",
+          "date": "2025-10-23",
+          "url": "https://it.rwe.com/ufficio-stampa/2025-10-23-rwe-avvia-la-costruzione-di-due-parchi-eolici-onshore-in-italia/",
+          "grade": "A2"
+        },
+        {
+          "id": "ven-idoka",
+          "title": "Venusia Wind Farm prende forma",
+          "publisher": "Idoka Costruzioni",
+          "date": null,
+          "url": "https://www.linkedin.com/company/idoka-costruzioni-s.r.l./",
+          "grade": "A2"
+        },
+        {
+          "id": "ven-egm",
+          "title": "Segnale Direzione Lavori Venusia",
+          "publisher": "EGM Project",
+          "date": null,
+          "url": "https://www.egmproject.it/",
+          "grade": "B"
+        },
+        {
+          "id": "ven-energy",
+          "title": "Survey precedente – Energy& in site management / intelligence operativa",
+          "date": null,
+          "url": ""
+        }
+      ],
+      "notes": "Idoka dichiara concluse le proprie attività e il sito predisposto per l’ingresso del turbinista: opportunità immediata sulla transizione civil → erection/logistics."
+    },
+    {
+      "project_id": "alas",
+      "project_name": "ALAS",
+      "wind_mw": 66,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Sardegna",
+      "province": "Sassari",
+      "municipalities": [
+        "Ittiri"
+      ],
+      "area_if_known": null,
+      "developer": "RWE",
+      "spv": "RWE",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "RWE conferma avvio costruzione nel 2026, 10 × 6,6 MW e commissioning 2027. Nessun contractor BoP nominato nel seed dopo riesame delle evidenze.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": {
+        "label": "Commissioning previsto",
+        "start": null,
+        "end": null,
+        "date": "2027-12-31",
+        "precision": "year",
+        "confidence": "A2"
+      },
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-07-01",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "alas-rwe",
+          "title": "High speed growth in Italy – Alas wind farm",
+          "publisher": "RWE",
+          "date": "2026-02-26",
+          "url": "https://www.rwe.com/en/press/rwe-renewables-europe-australia/2026-02-26-high-speed-growth-in-italy/",
+          "grade": "A2"
+        },
+        {
+          "id": "globaldata",
+          "title": "GlobalData PlantConnect – Italy wind pipeline extract",
+          "publisher": "GlobalData",
+          "date": "2026-07-01",
+          "url": "",
+          "grade": "C"
+        },
+        {
+          "id": "alas-pisci",
+          "title": "Survey precedente – F.lli Pisci: forte evidenza operativa/civile; contratto specifico da confermare",
+          "date": null,
+          "url": ""
+        }
+      ],
+      "notes": "RWE conferma avvio costruzione nel 2026, 10 × 6,6 MW e commissioning 2027. Nessun contractor BoP nominato nel seed dopo riesame delle evidenze."
+    },
+    {
+      "project_id": "greci-montaguto",
+      "project_name": "Greci-Montaguto",
+      "wind_mw": 43.8,
+      "bess_mw": 0,
+      "project_type": "Repowering",
+      "region": "Campania",
+      "province": "Avellino",
+      "municipalities": [
+        "Greci",
+        "Montaguto"
+      ],
+      "area_if_known": null,
+      "developer": "ERG",
+      "spv": "ERG",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Repowering in costruzione; OEM Vestas collegato all’ordine combinato Carlentini + Greci-Montaguto. Contractor BoP da identificare.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": "2027-08-31",
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [
+        "Vestas"
+      ],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-03-01",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "greci-erg",
+          "title": "Kick-off meeting for the Greci-Montaguto repowering project",
+          "publisher": "ERG",
+          "date": "2026-03-01",
+          "url": "https://www.erg.eu/it/-/kick-off-meeting-for-the-greci-montaguto-repowering-project",
+          "grade": "A2"
+        },
+        {
+          "id": "greci-vestas",
+          "title": "Vestas announces four new orders for a total of 289 MW",
+          "publisher": "Vestas",
+          "date": "2025-12-30",
+          "url": "https://www.vestas.com/en/media/company-news/2025/vestas-announces-four-new-orders-for-a-total-of-289-mw-c4287390",
+          "grade": "A2"
+        }
+      ],
+      "notes": "Repowering in costruzione; OEM Vestas collegato all’ordine combinato Carlentini + Greci-Montaguto. Contractor BoP da identificare."
+    },
+    {
+      "project_id": "carlentini",
+      "project_name": "Carlentini",
+      "wind_mw": 97,
+      "bess_mw": 0,
+      "project_type": "Repowering",
+      "region": "Sicilia",
+      "province": "Siracusa",
+      "municipalities": [
+        "Carlentini"
+      ],
+      "area_if_known": null,
+      "developer": "ERG",
+      "spv": "ERG",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Repowering in costruzione. Un post tecnico Hydro documenta progettazione/controllo fondazioni e getto eseguito da Gruppo Mammana; è segnale B, non attribuzione del main Civil BoP.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": {
+        "label": "Fondazioni in esecuzione",
+        "start": null,
+        "end": null,
+        "date": "2026-08-01",
+        "precision": "approx",
+        "confidence": "B"
+      },
+      "electrical_start": null,
+      "wtg_delivery_window": {
+        "label": "Delivery/commissioning Vestas",
+        "start": "2026-01-01",
+        "end": "2026-12-31",
+        "date": null,
+        "precision": "year",
+        "confidence": "A2"
+      },
+      "erection_window": null,
+      "commissioning_window": {
+        "label": "Delivery/commissioning Vestas",
+        "start": "2026-01-01",
+        "end": "2026-12-31",
+        "date": null,
+        "precision": "year",
+        "confidence": "A2"
+      },
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [
+        "Vestas"
+      ],
+      "engineering": [
+        "Hydro Engineering"
+      ],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2025-12-30",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "car-vestas",
+          "title": "Vestas announces four new orders for a total of 289 MW",
+          "publisher": "Vestas",
+          "date": "2025-12-30",
+          "url": "https://www.vestas.com/en/media/company-news/2025/vestas-announces-four-new-orders-for-a-total-of-289-mw-c4287390",
+          "grade": "A2"
+        },
+        {
+          "id": "car-hydro",
+          "title": "Repowering Carlentini – primo getto fondazione",
+          "publisher": "Hydro Engineering",
+          "date": null,
+          "url": "https://it.linkedin.com/company/hydro-engineering-s-s",
+          "grade": "B"
+        }
+      ],
+      "notes": "Repowering in costruzione. Un post tecnico Hydro documenta progettazione/controllo fondazioni e getto eseguito da Gruppo Mammana; è segnale B, non attribuzione del main Civil BoP."
+    },
+    {
+      "project_id": "nulvi-ploaghe",
+      "project_name": "Nulvi-Ploaghe",
+      "wind_mw": 121.5,
+      "bess_mw": 0,
+      "project_type": "Repowering",
+      "region": "Sardegna",
+      "province": "Sassari",
+      "municipalities": [
+        "Nulvi",
+        "Osilo",
+        "Ploaghe"
+      ],
+      "area_if_known": null,
+      "developer": "ERG Wind Energy",
+      "spv": "ERG Wind Energy",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Authorized",
+      "project_status": "Completamente autorizzato e route-to-market eligible secondo ERG; nessun contractor BoP pubblico nel seed. È una delle principali opportunità da sorvegliare.",
+      "maturity": "E4",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-07-01",
+      "confidence": "A1",
+      "sources": [
+        {
+          "id": "nulvi-erg",
+          "title": "Risultati Q1 2026 – Nulvi-Ploaghe completamente autorizzato",
+          "publisher": "ERG",
+          "date": "2026-05-01",
+          "url": "https://www.erg.eu/it/-/il-consiglio-di-amministrazione-di-erg-s.p.a.-approva-i-risultati-consolidati-del-primo-trimestre-2026",
+          "grade": "A2"
+        },
+        {
+          "id": "nulvi-buras",
+          "title": "Autorizzazione Unica / BURAS",
+          "publisher": "Regione Sardegna",
+          "date": "2026-04-28",
+          "url": "https://buras.regione.sardegna.it/bollettino/59364/parte-supplemento/59465",
+          "grade": "A1"
+        },
+        {
+          "id": "globaldata",
+          "title": "GlobalData PlantConnect – Italy wind pipeline extract",
+          "publisher": "GlobalData",
+          "date": "2026-07-01",
+          "url": "",
+          "grade": "C"
+        }
+      ],
+      "notes": "Completamente autorizzato e route-to-market eligible secondo ERG; nessun contractor BoP pubblico nel seed. È una delle principali opportunità da sorvegliare."
+    },
+    {
+      "project_id": "tricarico",
+      "project_name": "Tricarico",
+      "wind_mw": 42,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Basilicata",
+      "province": "Matera",
+      "municipalities": [
+        "Tricarico"
+      ],
+      "area_if_known": null,
+      "developer": "Adest (gruppo IC Holding / Idoka)",
+      "spv": "Adest S.r.l.",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Procurement",
+      "project_status": "Ordine turbine Vestas: progetto in procurement/market-committed. Nessun ruolo Civil/Electrical BoP attribuito per deduzione societaria.",
+      "maturity": "E6",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": {
+        "label": "WTG delivery",
+        "start": "2026-07-01",
+        "end": "2026-12-31",
+        "date": null,
+        "precision": "half-year",
+        "confidence": "A2"
+      },
+      "erection_window": null,
+      "commissioning_window": {
+        "label": "Commissioning",
+        "start": "2027-01-01",
+        "end": "2027-12-31",
+        "date": null,
+        "precision": "year",
+        "confidence": "A2"
+      },
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [
+        "Vestas"
+      ],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2026-03-31",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "tri-vestas",
+          "title": "Vestas announces two new orders for a total of 97 MW",
+          "publisher": "Vestas",
+          "date": "2026-03-31",
+          "url": "https://www.vestas.com/en/media/company-news/2026/vestas-announces-two-new-orders-for-a-total-of-97-mw-c4329411",
+          "grade": "A2"
+        }
+      ],
+      "notes": "Ordine turbine Vestas: progetto in procurement/market-committed. Nessun ruolo Civil/Electrical BoP attribuito per deduzione societaria."
+    },
+    {
+      "project_id": "tarsia-ovest",
+      "project_name": "Tarsia Ovest",
+      "wind_mw": 12.9,
+      "bess_mw": 0,
+      "project_type": "Greenfield / variante",
+      "region": "Calabria",
+      "province": "Cosenza",
+      "municipalities": [
+        "Tarsia"
+      ],
+      "area_if_known": null,
+      "developer": "Eni Plenitude Renewables Italy",
+      "spv": "Eni Plenitude Renewables Italy",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Construction",
+      "project_status": "Cantiere avviato. RTI con Idoka, Michelangelo Mammana, PLC System e Delta partecipa alla costruzione; PLC ha scope specifico sulla SSE MT/AT. Caso contractor-view ad alta utilità.",
+      "maturity": "E7",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": "2026-01-01",
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [
+        "RTI Idoka Costruzioni · Michelangelo Mammana · PLC System · Delta"
+      ],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2025-12-12",
+      "confidence": "A1",
+      "sources": [
+        {
+          "id": "tars-plen",
+          "title": "Plenitude avvia la costruzione del parco eolico Tarsia Ovest",
+          "publisher": "Plenitude",
+          "date": "2025-11-27",
+          "url": "https://corporate.eniplenitude.com/it/media/comunicati-stampa/energie-rinnovabili/27-11-2025-Plenitude-avvia-la-costruzione-di-un-parco-eolico-in-Calabria-da-13-MW",
+          "grade": "A2"
+        },
+        {
+          "id": "tars-plc",
+          "title": "PLC System – nuovo contratto Tarsia Ovest",
+          "publisher": "PLC",
+          "date": "2025-12-12",
+          "url": "https://www.plc-spa.it/plc-system-nuovo-contratto-per-il-parco-eolico-tarsia-ovest/",
+          "grade": "A2"
+        },
+        {
+          "id": "tars-reg-old",
+          "title": "PAUR Tarsia Ovest – configurazione storica",
+          "publisher": "Regione Calabria",
+          "date": "2023-03-13",
+          "url": "https://www.regione.calabria.it/wp-content/uploads/2023/03/360_parco-eolico-tarsia-ovest-ddg-3509_del_13_03_2023.pdf",
+          "grade": "A1"
+        }
+      ],
+      "notes": "Cantiere avviato. RTI con Idoka, Michelangelo Mammana, PLC System e Delta partecipa alla costruzione; PLC ha scope specifico sulla SSE MT/AT. Caso contractor-view ad alta utilità."
+    },
+    {
+      "project_id": "fenice",
+      "project_name": "Fenice",
+      "wind_mw": 367.2,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": [
+        "San Severo",
+        "Lucera",
+        "Torremaggiore",
+        "Pietramontecorvino",
+        "Castelnuovo della Daunia",
+        "Foggia"
+      ],
+      "area_if_known": null,
+      "developer": "NVA Fenice",
+      "spv": "NVA Fenice S.r.l.",
+      "myterna_code": "202305182",
+      "mase_project_id": null,
+      "permitting_status": "Advanced permitting",
+      "project_status": "In attesa concerto MASE; configurazione aggiornata 51 × 7,2 MW. Contractor non ancora pubblici: grande bacino prospettico ma non immediato quanto E4–E7.",
+      "maturity": "E3",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": null,
+      "confidence": null,
+      "sources": [
+        {
+          "id": "fen-mase",
+          "title": "Impianto eolico Fenice – configurazione aggiornata 24/04/2026",
+          "publisher": "MASE",
+          "date": null,
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/10768",
+          "grade": "A1"
+        }
+      ],
+      "notes": "In attesa concerto MASE; configurazione aggiornata 51 × 7,2 MW. Contractor non ancora pubblici: grande bacino prospettico ma non immediato quanto E4–E7."
+    },
+    {
+      "project_id": "sava-maruggio",
+      "project_name": "Sava-Maruggio",
+      "wind_mw": 132,
+      "bess_mw": 50,
+      "project_type": "Greenfield + BESS",
+      "region": "Puglia",
+      "province": "Taranto / Brindisi",
+      "municipalities": [
+        "Erchie",
+        "Manduria",
+        "Sava",
+        "Maruggio",
+        "Torricella"
+      ],
+      "area_if_known": null,
+      "developer": "Red Energy",
+      "spv": "Red Energy S.r.l.",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Advanced permitting",
+      "project_status": "VIA favorevole ma quadro autorizzativo ancora da seguire; 132 MW eolici e BESS 50 MW restano separati. Nessun contractor pubblico nel seed.",
+      "maturity": "E3",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2025-05-20",
+      "confidence": null,
+      "sources": [
+        {
+          "id": "sava-mase",
+          "title": "Sava-Maruggio – documentazione MASE",
+          "publisher": "MASE",
+          "date": "2022-07-04",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/MetadatoDocumento/654760",
+          "grade": "A1"
+        },
+        {
+          "id": "sava-via",
+          "title": "Decreto VIA / decisione favorevole 2025",
+          "publisher": "MASE / CdM",
+          "date": "2025-05-20",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7990/11739",
+          "grade": "A1"
+        }
+      ],
+      "notes": "VIA favorevole ma quadro autorizzativo ancora da seguire; 132 MW eolici e BESS 50 MW restano separati. Nessun contractor pubblico nel seed."
+    },
+    {
+      "project_id": "toritto",
+      "project_name": "Toritto",
+      "wind_mw": 108,
+      "bess_mw": 50,
+      "project_type": "Greenfield + BESS",
+      "region": "Puglia",
+      "province": "Bari",
+      "municipalities": [
+        "Toritto",
+        "Bitonto",
+        "Binetto",
+        "Ruvo di Puglia"
+      ],
+      "area_if_known": null,
+      "developer": "Evolve Energy Toritto",
+      "spv": "Evolve Energy Toritto S.r.l.",
+      "myterna_code": "202407665",
+      "mase_project_id": "13821",
+      "permitting_status": "Permitting",
+      "project_status": "Istruttoria tecnica MASE. Progetto 15 × 7,2 MW + BESS 50 MW; nessun contractor ancora pubblico.",
+      "maturity": "E2",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": null,
+      "confidence": null,
+      "sources": [
+        {
+          "id": "tor-mase",
+          "title": "Impianto eolico Toritto – 108 MW + BESS 50 MW",
+          "publisher": "MASE",
+          "date": null,
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/11663",
+          "grade": "A1"
+        }
+      ],
+      "notes": "Istruttoria tecnica MASE. Progetto 15 × 7,2 MW + BESS 50 MW; nessun contractor ancora pubblico."
+    },
+    {
+      "project_id": "volturino",
+      "project_name": "Volturino",
+      "wind_mw": 102,
+      "bess_mw": 0,
+      "project_type": "Greenfield",
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": [
+        "Volturino",
+        "Lucera",
+        "Pietramontecorvino",
+        "Biccari (connessione)",
+        "Troia (connessione)"
+      ],
+      "area_if_known": null,
+      "developer": "GreenIT",
+      "spv": "GreenIT S.p.A.",
+      "myterna_code": "202401311",
+      "mase_project_id": null,
+      "permitting_status": "Permitting",
+      "project_status": "Permitting tecnico: 17 × 6 MW. Biccari e Troia compaiono per opere di connessione; contractor non pubblici.",
+      "maturity": "E2",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2025-09-15",
+      "confidence": null,
+      "sources": [
+        {
+          "id": "vol-mase",
+          "title": "Impianto eolico Volturino – 102 MW",
+          "publisher": "MASE",
+          "date": "2025-09-15",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/MetadatoDocumento/1302298",
+          "grade": "A1"
+        }
+      ],
+      "notes": "Permitting tecnico: 17 × 6 MW. Biccari e Troia compaiono per opere di connessione; contractor non pubblici."
+    },
+    {
+      "project_id": "lama-cupa",
+      "project_name": "Lama Cupa",
+      "wind_mw": 98,
+      "bess_mw": 30,
+      "project_type": "Greenfield + BESS",
+      "region": "Puglia",
+      "province": "Bari",
+      "municipalities": [
+        "Acquaviva delle Fonti",
+        "Gioia del Colle",
+        "Sammichele di Bari",
+        "Casamassima"
+      ],
+      "area_if_known": null,
+      "developer": "Acciona Energia Global Italia",
+      "spv": "Acciona Energia Global Italia S.r.l.",
+      "myterna_code": "202304180",
+      "mase_project_id": null,
+      "permitting_status": "Permitting",
+      "project_status": "Configurazione canonica 98 MW wind + 30 MW BESS. Il file GlobalData riportava 128 MW come totale combinato: nel radar le due componenti restano separate.",
+      "maturity": "E2",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": null,
+      "wtg_delivery_window": null,
+      "erection_window": null,
+      "commissioning_window": null,
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": null,
+      "confidence": null,
+      "sources": [
+        {
+          "id": "lama-mase",
+          "title": "Impianto eolico Lama Cupa – 98 MW + BESS 30 MW",
+          "publisher": "MASE",
+          "date": null,
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/11203",
+          "grade": "A1"
+        }
+      ],
+      "notes": "Configurazione canonica 98 MW wind + 30 MW BESS. Il file GlobalData riportava 128 MW come totale combinato: nel radar le due componenti restano separate."
+    },
+    {
+      "project_id": "castelfranco-cer",
+      "project_name": "Castelfranco in Miscano / CER",
+      "wind_mw": 29,
+      "bess_mw": 0,
+      "project_type": "Repowering",
+      "region": "Campania",
+      "province": "Benevento",
+      "municipalities": [
+        "Castelfranco in Miscano",
+        "Montefalcone di Val Fortore"
+      ],
+      "area_if_known": null,
+      "developer": "Campana Energie Rinnovabili (IP Gruppo api)",
+      "spv": "Campana Energie Rinnovabili S.r.l.",
+      "myterna_code": null,
+      "mase_project_id": null,
+      "permitting_status": "Procurement",
+      "project_status": "OEM e contratto SSE/grid già pubblici: progetto market-committed con supply chain parzialmente visibile. Civil BoP, erection e logistics restano gap commerciali.",
+      "maturity": "E6",
+      "civil_start": null,
+      "foundation_window": null,
+      "electrical_start": "2025-10-13",
+      "wtg_delivery_window": {
+        "label": "Delivery & commissioning Vestas",
+        "start": "2026-07-01",
+        "end": "2026-12-31",
+        "date": null,
+        "precision": "half-year",
+        "confidence": "A2"
+      },
+      "erection_window": null,
+      "commissioning_window": {
+        "label": "Delivery & commissioning Vestas",
+        "start": "2026-07-01",
+        "end": "2026-12-31",
+        "date": null,
+        "precision": "half-year",
+        "confidence": "A2"
+      },
+      "cod": null,
+      "civil_bop": [],
+      "electrical_bop": [],
+      "erection_contractor": [],
+      "dismantling_contractor": [],
+      "logistics_contractor": [],
+      "oem": [
+        "Vestas"
+      ],
+      "engineering": [],
+      "direzione_lavori": [],
+      "site_management": [],
+      "last_update": "2025-10-13",
+      "confidence": "A2",
+      "sources": [
+        {
+          "id": "cas-plc",
+          "title": "Nuovo contratto con IP Gruppo api – SSE Castelfranco",
+          "publisher": "PLC",
+          "date": "2025-10-13",
+          "url": "https://www.plc-spa.it/nuovo-contratto-con-ip-gruppo-api/",
+          "grade": "A2"
+        },
+        {
+          "id": "cas-vestas",
+          "title": "Vestas announces three orders in Italy for a total of 94 MW",
+          "publisher": "Vestas",
+          "date": "2025-09-30",
+          "url": "https://www.vestas.com/en/media/company-news/2025/vestas-announces-three-orders-in-italy-for-a-total-of-9-c4243482",
+          "grade": "A2"
+        }
+      ],
+      "notes": "OEM e contratto SSE/grid già pubblici: progetto market-committed con supply chain parzialmente visibile. Civil BoP, erection e logistics restano gap commerciali."
+    }
+  ]
+}
