@@ -448,7 +448,7 @@ def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, 
 
     closed_negative_tokens = (
         "archiviat", "negativ", "ritirat", "revocat", "annullat",
-        "improced", "non ammiss", "rinviat", "cessat", "concluso", "conclusa",
+        "improced", "non ammiss", "rinviat", "cessat",
     )
     if any(token in status for token in closed_negative_tokens):
         return "historical_or_closed", "status_closed_or_negative"
