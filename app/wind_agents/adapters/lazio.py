@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from datetime import date, datetime
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
@@ -45,9 +46,10 @@ class LazioWindAgent(BaseWindAgent):
     source_name = "Regione Lazio VIA/PAUR"
     base_url = START_URL
 
-    def __init__(self, max_pages: int = 120) -> None:
+    def __init__(self, max_pages: int = 120, min_year: int | None = None) -> None:
         super().__init__()
         self.max_pages = max_pages
+        self.cutoff = date(min_year or (date.today().year - 2), 1, 1)
 
     @staticmethod
     def _clean(text: str | None) -> str:
@@ -118,10 +120,16 @@ class LazioWindAgent(BaseWindAgent):
         lowered = cls._clean(text).lower()
         checks = (
             ("favorevole con prescrizioni", "Favorevole con prescrizioni"),
+            ("non favorevole", "Negativo"),
+            ("negativo", "Negativo"),
+            ("diniego", "Negativo"),
+            ("rigetto", "Negativo"),
             ("favorevole", "Favorevole"),
             ("archiviato", "Archiviato"),
             ("archiviata", "Archiviato"),
             ("improcedibile", "Improcedibile"),
+            ("rinviato alla procedura di via", "Rinviato a VIA"),
+            ("rinviata alla procedura di via", "Rinviato a VIA"),
             ("rinviato a via", "Rinviato a VIA"),
             ("escluso da via", "Escluso da VIA"),
             ("esclusa da via", "Escluso da VIA"),
@@ -163,6 +171,17 @@ class LazioWindAgent(BaseWindAgent):
         return match.group(1) if match else None
 
     @classmethod
+    def _latest_activity_date(cls, text: str) -> str | None:
+        dates: list[date] = []
+        for match in re.finditer(r"\b(\d{1,2})[/-](\d{1,2})[/-](20\d{2})\b", text):
+            day, month, year = match.groups()
+            try:
+                dates.append(date(int(year), int(month), int(day)))
+            except ValueError:
+                pass
+        return max(dates).isoformat() if dates else None
+
+    @classmethod
     def _next_url(cls, soup: BeautifulSoup, current_url: str) -> str | None:
         for anchor in soup.find_all("a", href=True):
             if "pagina successiva" in cls._clean(anchor.get_text(" ", strip=True)).lower():
@@ -183,12 +202,14 @@ class LazioWindAgent(BaseWindAgent):
         visited: set[str] = set()
         url: str | None = START_URL
         page_no = 1
+        stale_pages = 0
 
         while url and page_no <= self.max_pages and url not in visited:
             visited.add(url)
-            response = self.session.get(url, timeout=90)
+            response = self.session.get(url, timeout=(8, 20))
             response.raise_for_status()
             soup = BeautifulSoup(response.content.decode("utf-8", errors="replace"), "html.parser")
+            page_activity_dates: list[date] = []
 
             for block in soup.find_all("li"):
                 text = self._clean(block.get_text(" ", strip=True))
@@ -202,7 +223,16 @@ class LazioWindAgent(BaseWindAgent):
                 title = self._title(text)
                 if not title:
                     continue
-                date = self._date(text)
+                date_received = self._date(text)
+                last_activity = self._latest_activity_date(text)
+                if last_activity:
+                    try:
+                        activity_day = date.fromisoformat(last_activity)
+                        page_activity_dates.append(activity_day)
+                        if activity_day < self.cutoff:
+                            continue
+                    except ValueError:
+                        pass
                 proponent = self._field(
                     text,
                     "Proponente",
@@ -217,7 +247,7 @@ class LazioWindAgent(BaseWindAgent):
                 if first_link:
                     detail_url = urljoin(url, first_link["href"])
 
-                external_id = self._external_id(title, date, proponent, municipality)
+                external_id = self._external_id(title, date_received, proponent, municipality)
                 if external_id in seen:
                     continue
                 seen.add(external_id)
@@ -238,7 +268,8 @@ class LazioWindAgent(BaseWindAgent):
                             "power_mw": self._power_mw(text),
                             "procedure": procedure,
                             "status_raw": status,
-                            "date_received": date,
+                            "date_received": date_received,
+                            "last_act_date": last_activity,
                             "sector": "eolico",
                             "source_grade_ceiling": "A1",
                             "project_specific": True,
@@ -246,6 +277,13 @@ class LazioWindAgent(BaseWindAgent):
                         },
                     )
                 )
+
+            if page_activity_dates and max(page_activity_dates) < self.cutoff:
+                stale_pages += 1
+            else:
+                stale_pages = 0
+            if stale_pages >= 2:
+                break
 
             url = self._next_url(soup, url)
             page_no += 1

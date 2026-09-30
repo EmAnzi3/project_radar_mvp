@@ -84,6 +84,8 @@ class CalabriaWindAgent(BaseWindAgent):
         path = parsed.path.lower()
         if path in {"", "/"} or "/page/" in path or ".pdf" in path:
             return False
+        if path.rstrip("/").endswith("/avvisi-via-e-vas"):
+            return False
         if any(token in path for token in ("wp-json", "feed", "privacy", "cookie", "contatti", "uffici")):
             return False
         return cls._is_wind(context + " " + path) or any(
@@ -125,14 +127,29 @@ class CalabriaWindAgent(BaseWindAgent):
         return urls
 
     @classmethod
-    def _title(cls, soup: BeautifulSoup, plain: str) -> str | None:
-        for selector in ("h1", "h2", ".entry-title", ".page-title", "title"):
-            node = soup.select_one(selector)
-            if node:
+    def _title(cls, soup: BeautifulSoup, plain: str, url: str) -> str | None:
+        candidates: list[str] = []
+        for selector in ("h1", "h2", ".entry-title", ".page-title", ".wp-block-post-title", "title"):
+            for node in soup.select(selector):
                 value = cls._clean(node.get_text(" ", strip=True))
-                if value and len(value) > 10:
-                    return value[:900]
-        return plain[:900] if plain else None
+                if value:
+                    candidates.append(value)
+        bad_prefixes = (
+            "regione calabria", "dipartimento", "risultati della ricerca",
+            "avvisi via e vas", "home", "privacy", "cookie",
+        )
+        for value in candidates:
+            value = re.sub(r"\s*[-|]\s*Regione Calabria\s*$", "", value, flags=re.I).strip(" .:-")
+            norm = cls._norm(value)
+            if len(value) < 20 or any(norm == bad or norm.startswith(bad + " ") for bad in bad_prefixes):
+                continue
+            if cls._is_wind(value + " " + url):
+                return value[:900]
+        slug = urlparse(url).path.rstrip("/").split("/")[-1].replace("-", " ")
+        slug = cls._clean(slug)
+        if len(slug) >= 20 and cls._is_wind(slug):
+            return slug[:900]
+        return None
 
     @classmethod
     def _publication_date(cls, soup: BeautifulSoup, text: str) -> str | None:
@@ -199,7 +216,8 @@ class CalabriaWindAgent(BaseWindAgent):
             text,
             flags=re.I,
         ):
-            for part in re.split(r",|/|\s+e\s+", match.group(1), flags=re.I):
+            segment = re.split(r"\b(?:proponente|societ[aà]|potenza|procedura)\b", match.group(1), maxsplit=1, flags=re.I)[0]
+            for part in re.split(r",|/|\s+e\s+", segment, flags=re.I):
                 item = cls._clean(part).strip(" -–—:;,.()")
                 if item and 2 <= len(item) <= 80 and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
@@ -223,6 +241,26 @@ class CalabriaWindAgent(BaseWindAgent):
             return "VIA"
         return None
 
+    @classmethod
+    def _status(cls, text: str) -> str | None:
+        lowered = cls._norm(text)
+        checks = (
+            ("favorevole con prescrizioni", "Favorevole con prescrizioni"),
+            ("non favorevole", "Negativo"),
+            ("negativo", "Negativo"),
+            ("diniego", "Negativo"),
+            ("rigetto", "Negativo"),
+            ("archiviat", "Archiviato"),
+            ("improced", "Improcedibile"),
+            ("ritirat", "Ritirato"),
+            ("conclus", "Concluso"),
+            ("in corso", "In corso"),
+        )
+        for needle, label in checks:
+            if needle in lowered:
+                return label
+        return None
+
     @staticmethod
     def _external_id(url: str) -> str:
         return "CALABRIA-WIND-" + hashlib.sha1(url.encode("utf-8")).hexdigest()[:18]
@@ -235,17 +273,18 @@ class CalabriaWindAgent(BaseWindAgent):
                 continue
             soup = BeautifulSoup(html_page, "html.parser")
             plain = self._clean(soup.get_text(" ", strip=True))
-            title = self._title(soup, plain)
+            title = self._title(soup, plain, url)
             combined = self._clean(f"{title or ''} {plain[:9000]}")
             if not title or not self._is_wind(combined):
                 continue
             publication = self._publication_date(soup, combined)
-            if publication:
-                try:
-                    if date.fromisoformat(publication) < self.cutoff:
-                        continue
-                except ValueError:
-                    pass
+            if not publication:
+                continue
+            try:
+                if date.fromisoformat(publication) < self.cutoff:
+                    continue
+            except ValueError:
+                continue
             municipalities = self._municipalities(combined)
             findings.append(
                 AgentFinding(
@@ -262,6 +301,7 @@ class CalabriaWindAgent(BaseWindAgent):
                         "municipalities": municipalities,
                         "power_mw": self._power_mw(combined),
                         "procedure": self._procedure(combined),
+                        "status_raw": self._status(combined),
                         "publication_date": publication,
                         "sector": "eolico",
                         "source_grade_ceiling": "A1",

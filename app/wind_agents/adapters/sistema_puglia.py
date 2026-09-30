@@ -1,307 +1,165 @@
 from __future__ import annotations
 
+import hashlib
 import re
-import time
-import unicodedata
-from urllib.parse import urljoin
+from io import BytesIO
 
-from bs4 import BeautifulSoup
+from openpyxl import load_workbook
 
 from app.wind_agents.base import AgentFinding, BaseWindAgent
-from app.wind_agents.state import get_source_cursor, set_source_cursor
 
 
-BASE_URL = "https://www.sistema.puglia.it"
-DETAIL_URL_TEMPLATE = "https://www.sistema.puglia.it/portal/page/portal/SistemaPuglia/DettaglioInfo?id={id}"
-CURSOR_ID = "sistema-puglia-detail-id"
-INITIAL_CURSOR = 64250  # last audited high-water mark inherited from pv_agent_mvp
-
-WIND_TERMS = (
-    "eolico",
-    "eolica",
-    "parco eolico",
-    "impianto eolico",
-    "aerogenerator",
-    "repowering",
+XLSX_URL = (
+    "https://dati.puglia.it/ckan/dataset/"
+    "4af29dda-fdcc-4606-bf41-ad4fa3e30790/resource/"
+    "1728acca-e2fc-4dcb-bb52-0fc1eaa628c2/download/via_fer.xlsx"
 )
-
-PROVINCES = ("BA", "BT", "BR", "FG", "LE", "TA")
+SOURCE_URL = "https://dati.puglia.it/ckan/dataset/impianti-proposti-via-fer"
+WIND_TERMS = ("eolico", "eolica", "wind")
 
 
 class SistemaPugliaWindAgent(BaseWindAgent):
-    """Incremental wind watch for Sistema Puglia energy acts.
+    """Daily Puglia wind discovery from the official VIA FER dataset.
 
-    The mature PV collector scanned a fixed ~1,500-detail-id range. For periodic
-    wind monitoring this adapter uses a persistent high-water cursor plus a
-    bounded forward probe and lookback, so routine runs stay finite even when
-    individual legacy portal pages are slow. A future explicit backfill can
-    widen the range without changing the live cadence.
+    This replaces the legacy sequential DettaglioInfo id probe. One dataset
+    download gives the current regional inventory and makes daily execution
+    bounded and deterministic.
     """
 
     agent_name = "institutional_watch"
     source_name = "Sistema Puglia Energia"
-    base_url = BASE_URL
-
-    def __init__(
-        self,
-        forward_probe: int = 30,
-        lookback: int = 60,
-        request_sleep: float = 0.05,
-        request_timeout: float = 8.0,
-    ) -> None:
-        super().__init__()
-        self.forward_probe = max(1, forward_probe)
-        self.lookback = max(0, lookback)
-        self.request_sleep = max(0.0, request_sleep)
-        self.request_timeout = max(2.0, request_timeout)
+    base_url = SOURCE_URL
 
     @staticmethod
     def _clean(value: object) -> str:
         return re.sub(r"\s+", " ", str(value or "")).strip()
 
     @classmethod
-    def _repair_mojibake(cls, value: str) -> str:
-        # Same portal quirk handled by pv_agent_mvp: several pages are more
-        # reliable when decoded as Windows-1252. Keep a small repair fallback.
-        replacements = {
-            "Ã ": "à",
-            "Ã¨": "è",
-            "Ã©": "é",
-            "Ã¬": "ì",
-            "Ã²": "ò",
-            "Ã¹": "ù",
-            "â€™": "’",
-            "Â": "",
-        }
-        for bad, good in replacements.items():
-            value = value.replace(bad, good)
-        return value
-
-    @classmethod
-    def _norm(cls, value: object) -> str:
+    def _header(cls, value: object) -> str:
         text = cls._clean(value).lower()
-        text = unicodedata.normalize("NFKD", text)
-        text = "".join(ch for ch in text if not unicodedata.combining(ch))
-        return re.sub(r"\s+", " ", text)
+        for src, dst in (("à", "a"), ("è", "e"), ("é", "e"), ("ì", "i"), ("ò", "o"), ("ù", "u")):
+            text = text.replace(src, dst)
+        return re.sub(r"[^a-z0-9]+", "_", text).strip("_")
 
     @classmethod
-    def _is_wind(cls, text: str) -> bool:
-        lowered = cls._norm(text)
-        return any(term in lowered for term in WIND_TERMS)
+    def _is_wind(cls, value: object) -> bool:
+        text = cls._clean(value).lower()
+        return any(term in text for term in WIND_TERMS)
 
-    def _get_html(self, detail_id: int) -> str | None:
-        url = DETAIL_URL_TEMPLATE.format(id=detail_id)
+    @classmethod
+    def _power_mw(cls, value: object) -> float | None:
+        text = cls._clean(value)
+        if not text:
+            return None
+        match = re.search(r"[0-9]+(?:[.,][0-9]+)*", text)
+        if not match:
+            return None
+        raw = match.group(0)
+        if "," in raw and "." in raw:
+            raw = raw.replace(".", "").replace(",", ".") if raw.rfind(",") > raw.rfind(".") else raw.replace(",", "")
+        elif "," in raw:
+            raw = raw.replace(",", ".")
         try:
-            response = self.session.get(
-                url,
-                headers={
-                    "User-Agent": "Wind-Radar-Agent/0.6",
-                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                    "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
-                    "Referer": BASE_URL,
-                },
-                timeout=self.request_timeout,
-                allow_redirects=True,
-            )
-        except Exception:
+            power = float(raw)
+        except ValueError:
             return None
-        if response.status_code != 200:
-            return None
-        text = response.content.decode("windows-1252", errors="replace")
-        text = self._repair_mojibake(text)
-        if "Data Pubblicazione" not in text and "Determinazione" not in text:
-            return None
-        return text
+        return power if 0 < power < 5000 else None
 
     @classmethod
-    def _power_mw(cls, text: str) -> float | None:
-        for match in re.finditer(
-            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
-            text,
-            flags=re.I,
-        ):
-            raw = match.group(1).replace(" ", "")
-            if "," in raw:
-                raw = raw.replace(".", "").replace(",", ".")
-            try:
-                value = float(raw)
-            except ValueError:
-                continue
-            if 0 < value < 5000:
+    def _row_value(cls, row: dict[str, str], *keys: str) -> str | None:
+        for key in keys:
+            value = cls._clean(row.get(key) or "")
+            if value:
                 return value
         return None
 
     @classmethod
-    def _publication_date(cls, text: str) -> str | None:
-        match = re.search(
-            r"Data\s+Pubblicazione\s*:?\s*([0-9]{1,2}[/-][0-9]{1,2}[/-][0-9]{4})",
-            text,
-            flags=re.I,
+    def _external_id(cls, row: dict[str, str], *, province: str, municipality: str, source: str, power_mw: float | None) -> str:
+        explicit = cls._row_value(
+            row,
+            "id", "id_progetto", "id_procedimento", "codice", "codice_pratica",
+            "numero_pratica", "numero_procedimento", "procedimento",
         )
-        return match.group(1) if match else None
-
-    @classmethod
-    def _proponent(cls, text: str) -> str | None:
-        normalized = cls._clean(text)
-        patterns = (
-            r"Societ[aà]\s+proponente\s*:\s*(.+?)(?:\s+-\s+Partita\s+IVA|\s+-\s+P\.?\s*IVA|\s+C\.?\s*Fisc|\s+Sede\s+Legale|\s+Data\s+Pubblicazione|\s+\[Scarica|$)",
-            r"Proponente\s*:\s*(.+?)(?:\s+-\s+Partita\s+IVA|\s+-\s+P\.?\s*IVA|\s+C\.?\s*Fisc|\s+Sede\s+Legale|\s+Data\s+Pubblicazione|\s+\[Scarica|$)",
-            r"Voltura\s+(?:alla\s+societ[aà]|a\s+favore\s+di)\s+(.+?)(?:\s+con\s+sede|\s+-\s+P\.?\s*IVA|\s+C\.?\s*Fisc|\s+Data\s+Pubblicazione|$)",
-        )
-        for pattern in patterns:
-            match = re.search(pattern, normalized, flags=re.I)
-            if match:
-                value = cls._clean(match.group(1)).strip(" -–—:;,.")
-                if 2 <= len(value) <= 220:
-                    return value
-        return None
-
-    @classmethod
-    def _province(cls, text: str) -> str | None:
-        for code in PROVINCES:
-            if re.search(rf"\({code}\)|\b{code}\b", text, flags=re.I):
-                return code
-        province_names = {
-            "bari": "BA",
-            "barletta": "BT",
-            "brindisi": "BR",
-            "foggia": "FG",
-            "lecce": "LE",
-            "taranto": "TA",
-        }
-        lowered = cls._norm(text)
-        for name, code in province_names.items():
-            if f"provincia di {name}" in lowered:
-                return code
-        return None
-
-    @classmethod
-    def _municipalities(cls, text: str) -> list[str]:
-        values: list[str] = []
-        for match in re.finditer(
-            r"(?:comune|comuni)\s+di\s+(.+?)(?:\s+in\s+provincia|\s*\([A-Z]{2}\)|\.|;|\s+-\s+|$)",
-            text,
-            flags=re.I,
-        ):
-            segment = cls._clean(match.group(1))
-            for part in re.split(r",|\s+e\s+", segment):
-                value = cls._clean(part).strip(" -–—:;,.()")
-                if value and 2 <= len(value) <= 80 and value.lower() not in {v.lower() for v in values}:
-                    values.append(value)
-            if values:
-                break
-        return values[:12]
-
-    @classmethod
-    def _procedure(cls, text: str) -> str | None:
-        lowered = cls._norm(text)
-        if "autorizzazione unica" in lowered or re.search(r"\bau\b", lowered):
-            return "AU FER"
-        if "paur" in lowered or "provvedimento autorizzatorio unico" in lowered:
-            return "PAUR"
-        if "valutazione di impatto ambientale" in lowered or re.search(r"\bvia\b", lowered):
-            return "VIA"
-        if "voltura" in lowered:
-            return "Voltura"
-        if "proroga" in lowered:
-            return "Proroga"
-        if "variante" in lowered:
-            return "Variante"
-        return "Atto energia"
-
-    @classmethod
-    def _pdf_url(cls, soup: BeautifulSoup, page_url: str) -> str | None:
-        for anchor in soup.find_all("a", href=True):
-            label = cls._norm(anchor.get_text(" ", strip=True))
-            href = anchor.get("href") or ""
-            if ".pdf" in href.lower() or "scarica" in label or "determinazione" in label:
-                return urljoin(page_url, href)
-        return None
-
-    @classmethod
-    def _title(cls, soup: BeautifulSoup, text: str, proponent: str | None, municipalities: list[str], power_mw: float | None) -> str:
-        for selector in ("h1", "h2", "h3", ".title", ".titolo"):
-            for node in soup.select(selector):
-                candidate = cls._clean(node.get_text(" ", strip=True))
-                if len(candidate) > 20 and "sistema puglia" not in cls._norm(candidate):
-                    return candidate[:700]
-        pieces = [piece for piece in (proponent, ", ".join(municipalities[:4]) or None, f"{power_mw:g} MW" if power_mw else None) if piece]
-        if pieces:
-            return " - ".join(pieces)[:700]
-        match = re.search(r"(Determinazione\s+del\s+Dirigente.+?)(?:Data\s+Pubblicazione|$)", text, flags=re.I)
-        return cls._clean(match.group(1))[:700] if match else "Sistema Puglia Energia - eolico"
+        if explicit:
+            safe = re.sub(r"[^A-Za-z0-9._-]+", "-", explicit).strip("-")
+            return f"PUGLIA-VIA-FER-{safe[:120]}"
+        raw = "|".join([province, municipality, source, f"{power_mw:.6f}" if power_mw is not None else ""])
+        return "PUGLIA-VIA-FER-" + hashlib.sha1(raw.lower().encode("utf-8")).hexdigest()[:20]
 
     def fetch(self) -> list[AgentFinding]:
-        raw_cursor = get_source_cursor(CURSOR_ID, str(INITIAL_CURSOR))
-        try:
-            cursor = int(raw_cursor or INITIAL_CURSOR)
-        except ValueError:
-            cursor = INITIAL_CURSOR
+        response = self.session.get(
+            XLSX_URL,
+            timeout=(8, 30),
+            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+        )
+        response.raise_for_status()
+        wb = load_workbook(BytesIO(response.content), read_only=True, data_only=True)
+        ws = wb.active
+        iterator = ws.iter_rows(values_only=True)
+        raw_headers = next(iterator, None)
+        if not raw_headers:
+            return []
+        headers = [self._header(value) for value in raw_headers]
 
-        upper = cursor + self.forward_probe
-        lower = max(1, cursor - self.lookback)
-        highest_existing = cursor
         findings: list[AgentFinding] = []
-
-        for detail_id in range(upper, lower - 1, -1):
-            html_page = self._get_html(detail_id)
-            if html_page is None:
-                continue
-            highest_existing = max(highest_existing, detail_id)
-
-            soup = BeautifulSoup(html_page, "html.parser")
-            text = self._clean(soup.get_text(" ", strip=True))
-            if not self._is_wind(text):
-                if self.request_sleep:
-                    time.sleep(self.request_sleep)
+        seen: set[str] = set()
+        for values in iterator:
+            row = {
+                header: self._clean(values[index]) if index < len(values) and values[index] is not None else ""
+                for index, header in enumerate(headers)
+                if header
+            }
+            source = self._row_value(row, "fonte", "tipologia_fonte", "tecnologia") or ""
+            if not self._is_wind(source):
                 continue
 
-            page_url = DETAIL_URL_TEMPLATE.format(id=detail_id)
-            proponent = self._proponent(text)
-            municipalities = self._municipalities(text)
-            power_mw = self._power_mw(text)
-            procedure = self._procedure(text)
-            publication_date = self._publication_date(text)
-            title = self._title(soup, text, proponent, municipalities, power_mw)
+            province = self._row_value(row, "provincia") or ""
+            municipality = self._row_value(row, "comune", "municipio") or ""
+            power_mw = self._power_mw(self._row_value(row, "potenza_mw", "potenza", "potenza_nominale"))
+            status = self._row_value(row, "stato_del_procedimento", "stato", "esito")
+            proponent = self._row_value(row, "proponente", "societa_proponente", "soggetto_proponente")
+            project_name = self._row_value(row, "denominazione", "progetto", "oggetto", "nome_progetto")
+            if not project_name:
+                area = municipality or "Comune non indicato"
+                if province:
+                    area = f"{area} ({province})"
+                project_name = f"Impianto eolico - {area}" + (f" - {power_mw:g} MW" if power_mw else "")
+
+            external_id = self._external_id(
+                row,
+                province=province,
+                municipality=municipality,
+                source=source,
+                power_mw=power_mw,
+            )
+            if external_id in seen:
+                continue
+            seen.add(external_id)
 
             findings.append(
                 AgentFinding(
-                    external_id=f"SISTEMA-PUGLIA-WIND-{detail_id}",
+                    external_id=external_id,
                     source_name=self.source_name,
-                    source_url=page_url,
-                    title=title,
+                    source_url=XLSX_URL,
+                    title=project_name[:900],
                     finding_type="project_source",
                     payload={
-                        "project_name": title,
+                        "project_name": project_name[:900],
                         "proponent": proponent,
                         "region": "Puglia",
-                        "province": self._province(text),
-                        "municipalities": municipalities,
+                        "province": province or None,
+                        "municipalities": [municipality] if municipality else [],
                         "power_mw": power_mw,
-                        "procedure": procedure,
-                        "publication_date": publication_date,
-                        "pdf_url": self._pdf_url(soup, page_url),
-                        "detail_id": detail_id,
+                        "procedure": "VIA FER",
+                        "status_raw": status,
+                        "source_type": source,
                         "sector": "eolico",
                         "source_grade_ceiling": "A1",
                         "project_specific": True,
-                        "source_adapter_origin": "pv_agent_mvp/sistema_puglia_energia.py",
+                        "source_adapter_origin": "pv_agent_mvp/puglia.py",
+                        "ingestion_path": "official_via_fer_xlsx",
                     },
                 )
             )
 
-            if self.request_sleep:
-                time.sleep(self.request_sleep)
-
-        set_source_cursor(
-            CURSOR_ID,
-            highest_existing,
-            {
-                "scanned_lower": lower,
-                "scanned_upper": upper,
-                "wind_findings": len(findings),
-                "strategy": "incremental_forward_probe_plus_lookback",
-                "request_timeout_seconds": self.request_timeout,
-            },
-        )
         return findings

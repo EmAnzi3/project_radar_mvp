@@ -446,16 +446,22 @@ def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, 
         for key in ("status_raw", "outcome", "phase", "procedure")
     ).lower()
 
+    procedure = _norm(payload.get("procedure"))
+    if "rinviat" in status and "via" in status:
+        return "existing_project_follow_up", "screening_referred_to_via"
+    follow_up_tokens = (
+        "ottemperanza", "proroga", "valutazione preliminare",
+        "parere tecnico", "terre e rocce", "vinca", "variante",
+    )
+    if any(token in procedure for token in follow_up_tokens):
+        return "existing_project_follow_up", "existing_project_procedural_follow_up"
+
     closed_negative_tokens = (
         "archiviat", "negativ", "ritirat", "revocat", "annullat",
-        "improced", "non ammiss", "rinviat", "cessat",
+        "improced", "non ammiss", "cessat",
     )
     if any(token in status for token in closed_negative_tokens):
         return "historical_or_closed", "status_closed_or_negative"
-
-    procedure = _norm(payload.get("procedure"))
-    if "ottemperanza" in procedure:
-        return "existing_project_follow_up", "verification_of_compliance"
 
     power = _as_float(payload.get("power_mw"))
     if power is not None and power < 10.0:

@@ -66,7 +66,7 @@ class SiciliaWindAgent(BaseWindAgent):
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
         for match in re.finditer(
-            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
+            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*(MW|kW|kWp)\b",
             text,
             flags=re.I,
         ):
@@ -77,6 +77,9 @@ class SiciliaWindAgent(BaseWindAgent):
                 value = float(raw)
             except ValueError:
                 continue
+            unit = match.group(2).lower()
+            if unit in {"kw", "kwp"}:
+                value /= 1000.0
             if 0 < value < 5000:
                 return value
         return None
