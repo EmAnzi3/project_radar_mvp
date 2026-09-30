@@ -75,14 +75,14 @@ class CampaniaWindAgent(BaseWindAgent):
             SEARCH_URL,
             data=payload,
             headers=headers,
-            timeout=90,
+            timeout=(8, 20),
             allow_redirects=False,
         )
         if response.is_redirect or response.is_permanent_redirect:
             redirected = urljoin(SEARCH_URL, response.headers.get("Location", ""))
             if "www.regione.campania.it" in redirected:
                 raise RuntimeError(f"unexpected Campania redirect: {redirected}")
-            response = self.session.get(redirected, headers=headers, timeout=90, allow_redirects=False)
+            response = self.session.get(redirected, headers=headers, timeout=(8, 20), allow_redirects=False)
         response.raise_for_status()
         return response.content.decode("utf-8", errors="replace")
 

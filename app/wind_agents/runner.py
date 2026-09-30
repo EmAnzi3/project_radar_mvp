@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from datetime import date, datetime
+import time
 from typing import Any
 
 from .adapters import (
@@ -162,6 +163,7 @@ def run_agents(
     try:
         for source_id in sorted(requested):
             agent = AGENT_FACTORIES[source_id]()
+            agent_started = time.monotonic()
             counters: dict[str, Any] = {
                 "findings": 0,
                 "new": 0,
@@ -218,6 +220,7 @@ def run_agents(
                         "data_health": "error",
                     },
                 )
+            counters["duration_seconds"] = round(time.monotonic() - agent_started, 1)
             per_agent[source_id] = counters
     finally:
         finish_run(run_id, findings=findings_count, changed_items=changed_count)

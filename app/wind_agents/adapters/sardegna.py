@@ -166,7 +166,7 @@ class SardegnaWindAgent(BaseWindAgent):
         )
 
     def _fetch_news(self) -> list[AgentFinding]:
-        response = self.session.get(NEWS_URL, timeout=90)
+        response = self.session.get(NEWS_URL, timeout=(8, 20))
         response.raise_for_status()
         soup = BeautifulSoup(response.content.decode("utf-8", errors="replace"), "html.parser")
         blocks = list(soup.select("div.news-sardegna"))
@@ -189,7 +189,7 @@ class SardegnaWindAgent(BaseWindAgent):
     def _get_search_form(self) -> tuple[str, str, str]:
         response = self.session.get(
             SEARCH_URL,
-            timeout=90,
+            timeout=(8, 20),
             headers={
                 "User-Agent": "Wind-Radar-Agent/0.6",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -247,7 +247,7 @@ class SardegnaWindAgent(BaseWindAgent):
             "Referer": SEARCH_URL,
             "Accept": "application/xml, text/xml, */*; q=0.01",
         }
-        response = self.session.post(action, data=payload, headers=headers, timeout=90)
+        response = self.session.post(action, data=payload, headers=headers, timeout=(8, 20))
         response.raise_for_status()
         return response.text
 

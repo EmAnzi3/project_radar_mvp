@@ -48,7 +48,7 @@ class BasilicataWindAgent(BaseWindAgent):
                     "Referer": BASE_URL,
                     "Connection": "close",
                 },
-                timeout=60,
+                timeout=(8, 20),
                 allow_redirects=True,
             )
             response.raise_for_status()

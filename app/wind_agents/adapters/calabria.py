@@ -58,7 +58,7 @@ class CalabriaWindAgent(BaseWindAgent):
                     "User-Agent": "Wind-Radar-Agent/0.6",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 },
-                timeout=60,
+                timeout=(8, 20),
             )
             response.raise_for_status()
             return response.content.decode("utf-8", errors="replace")
@@ -101,7 +101,10 @@ class CalabriaWindAgent(BaseWindAgent):
             for search_url in search_urls:
                 html_page = self._get_html(search_url)
                 if not html_page:
-                    continue
+                    # If one pagination request fails, later pages of the same
+                    # WordPress search are unlikely to be usable. Do not burn
+                    # the daily BAT on repeated timeout attempts.
+                    break
                 soup = BeautifulSoup(html_page, "html.parser")
                 page_text = self._clean(soup.get_text(" ", strip=True))
                 if not self._is_wind(page_text):
