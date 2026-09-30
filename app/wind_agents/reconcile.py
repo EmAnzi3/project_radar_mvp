@@ -458,7 +458,7 @@ def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, 
         return "non_target_scale", "below_10_mw"
 
     source_date = None
-    for key in ("last_act_date", "decree_date", "protocol_date", "date_received"):
+    for key in ("last_act_date", "decree_date", "protocol_date", "date_received", "date_last_update", "date_presented", "publication_date"):
         source_date = _parse_source_date(payload.get(key))
         if source_date:
             break
