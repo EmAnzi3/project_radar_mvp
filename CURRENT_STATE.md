@@ -114,6 +114,22 @@ Principali punti:
 - Alia-Sclafani: PAS corrente 9 WTG / 55 MW, SOCEP storico non trasferito al repowering;
 - Carlentini: Mammana foundation contractor A2 confirmed; nessuna estensione al full Civil BoP.
 
+
+## Avvio locale one-click
+
+Disponibile `aggiorna_wind_radar.bat` alla radice del repository.
+
+Flusso:
+- crea/riusa `.venv` e verifica le dipendenze;
+- esegue di default solo Institutional/Company Watch dovuti per cadenza;
+- aggiorna execution investigation queue e digest review-only;
+- scrive uno status locale ignorato da Git in `docs/wind/data/local-run-status.json`;
+- esegue i validator Wind v0.5/v0.6;
+- avvia un server HTTP locale su `127.0.0.1:8766` e apre la dashboard;
+- non promuove finding né modifica automaticamente il canonico.
+
+Varianti: `all` forza tutti i watch; `offline` salta la rete.
+
 ## Validazione
 
 I validator v0.6 includono regressioni canoniche, promotion, commercial/institutional network, agent architecture, project-specific enrichment, mappa province e sintassi JS.

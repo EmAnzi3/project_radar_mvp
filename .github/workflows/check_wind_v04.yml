@@ -7,6 +7,8 @@ on:
       - 'app/wind_agents/**'
       - 'scripts/check_wind_*.py'
       - 'scripts/run_wind_agents.py'
+      - 'scripts/update_wind_radar_local.py'
+      - 'aggiorna_wind_radar.bat'
       - 'scripts/wind_discovery_engine.py'
       - 'CURRENT_STATE.md'
       - 'CHANGELOG.md'
@@ -45,6 +47,8 @@ jobs:
             scripts/check_wind_v06_commercial_d.py
             scripts/check_wind_v06_map.py
             scripts/run_wind_agents.py
+            scripts/update_wind_radar_local.py
+            aggiorna_wind_radar.bat
             scripts/wind_discovery_engine.py
 
       - name: Set up Python
@@ -105,6 +109,25 @@ jobs:
       - name: MASE wind normalization v0.6 validation
         run: python scripts/check_wind_v06_mase_normalization.py
 
+      - name: Wind local launcher offline smoke
+        shell: bash
+        run: |
+          python -m py_compile scripts/update_wind_radar_local.py
+          python scripts/update_wind_radar_local.py --offline
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("docs/wind/data/local-run-status.json")
+          assert path.exists(), "local run status not generated"
+          data = json.loads(path.read_text(encoding="utf-8"))
+          assert data["mode"] == "offline", data
+          assert data["canonical"]["projects"] == 51, data["canonical"]
+          assert abs(float(data["canonical"]["wind_mw"]) - 11202.52) < 0.01, data["canonical"]
+          assert "A1/A2" in data["guard"], data["guard"]
+          print("local launcher offline smoke OK")
+          PY
+
       - name: Project-specific commercial signals v0.6 validation
         run: python scripts/check_wind_v06_commercial.py
 
@@ -120,6 +143,7 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check docs/wind/assets/app.js
+          node --check docs/wind/assets/local-run.js
           node --check docs/wind/assets/province-map-v06.js
           node --check docs/wind/assets/discovery-v04.js
           node --check docs/wind/assets/stage-consistency.js
