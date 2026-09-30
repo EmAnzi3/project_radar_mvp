@@ -218,8 +218,22 @@ def _score_candidate(finding: dict[str, Any], candidate: dict[str, Any]) -> dict
     reasons: list[str] = []
     strong_identity = False
 
+    source_checks = [
+        finding.get("source_url"),
+        payload.get("project_url"),
+        payload.get("source_url"),
+        payload.get("document_url"),
+    ]
+    source_points = 0
+    source_reason = None
+    for source_value in source_checks:
+        points, reason = _source_score(source_value, candidate)
+        if points > source_points:
+            source_points = points
+            source_reason = reason
+
     for points, reason in (
-        _source_score(finding.get("source_url"), candidate),
+        (source_points, source_reason),
         _name_score(title, candidate_name),
         _place_score(payload, candidate),
         _power_score(payload.get("power_mw"), candidate.get("wind_mw") or candidate.get("mw")),
@@ -397,6 +411,68 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
     }
 
 
+
+def _parse_source_date(value: Any):
+    from datetime import date, datetime
+
+    text = str(value or "").strip()
+    if not text:
+        return None
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            return datetime.strptime(text[:19], fmt).date()
+        except ValueError:
+            continue
+    try:
+        return date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
+
+def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, str | None]:
+    """Return eligibility bucket for daily *new-project* discovery.
+
+    The radar is aimed at utility-scale projects in a live development /
+    authorisation / construction pipeline, not the historical installed fleet.
+    This filter affects only the NEW-candidate bucket; raw findings/history are
+    still retained for audit.
+    """
+
+    from datetime import date
+
+    as_of = as_of or date.today()
+    status = " ".join(
+        str(payload.get(key) or "")
+        for key in ("status_raw", "outcome", "phase", "procedure")
+    ).lower()
+
+    closed_negative_tokens = (
+        "archiviat", "negativ", "ritirat", "revocat", "annullat",
+        "improced", "non ammiss", "rinviat", "cessat",
+    )
+    if any(token in status for token in closed_negative_tokens):
+        return "historical_or_closed", "status_closed_or_negative"
+
+    power = _as_float(payload.get("power_mw"))
+    if power is not None and power < 10.0:
+        return "non_target_scale", "below_10_mw"
+
+    source_date = None
+    for key in ("last_act_date", "decree_date", "protocol_date", "date_received"):
+        source_date = _parse_source_date(payload.get(key))
+        if source_date:
+            break
+
+    # A completed/authorised record is useful only if it is recent enough to
+    # remain a plausible commercial pipeline lead. Current/in-iter records are
+    # not rejected merely because an old procedural date is present.
+    if any(token in status for token in ("autorizzato", "concluso", "conclusa", "favorevole")):
+        if source_date and (as_of - source_date).days > 1095:
+            return "historical_or_closed", "completed_record_older_than_3y"
+
+    return "eligible", None
+
+
 def classify_daily_discovery_event(
     event: dict[str, Any],
     *,
@@ -426,6 +502,8 @@ def classify_daily_discovery_event(
     project_specific = bool(payload.get("project_specific"))
     finding_type = finding.get("finding_type")
 
+    eligibility, eligibility_reason = _pipeline_eligibility(payload)
+
     if payload.get("is_aggregated_market_intelligence"):
         category = "market_intelligence"
     elif finding_type == "company_source_snapshot":
@@ -436,6 +514,8 @@ def classify_daily_discovery_event(
         category = "known_project_update"
     elif best.get("target_kind") == "discovery" and status in {"high_confidence_match", "review_match"}:
         category = "discovery_candidate_update"
+    elif eligibility != "eligible":
+        category = eligibility
     elif event_type == "new" and project_specific and status in {"unmatched", "weak_match"}:
         category = "new_project_candidate"
     elif best.get("target_kind") == "canonical" and status in {"review_match", "weak_match"}:
@@ -452,6 +532,8 @@ def classify_daily_discovery_event(
         "category": category,
         "reconciliation": reconciliation,
         "project_specific": project_specific,
+        "pipeline_eligibility": eligibility,
+        "pipeline_eligibility_reason": eligibility_reason,
     }
 
 
@@ -483,9 +565,11 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "unmatched_project_change": 2,
         "known_project_update": 3,
         "discovery_candidate_update": 4,
-        "market_intelligence": 5,
-        "company_signal": 6,
-        "non_project_event": 7,
+        "historical_or_closed": 5,
+        "non_target_scale": 6,
+        "market_intelligence": 7,
+        "company_signal": 8,
+        "non_project_event": 9,
     }
     items.sort(
         key=lambda row: (
@@ -507,6 +591,10 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         row for row in items
         if row.get("category") in {"identity_review", "unmatched_project_change"}
     ]
+    filtered_non_pipeline = [
+        row for row in items
+        if row.get("category") in {"historical_or_closed", "non_target_scale"}
+    ]
 
     return {
         "run_ids": run_ids,
@@ -517,6 +605,7 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "known_project_updates": len(known_updates),
         "discovery_candidate_updates": len(discovery_updates),
         "identity_reviews": len(identity_reviews),
+        "filtered_non_pipeline": len(filtered_non_pipeline),
         "category_counts": counts,
         "new_candidates": new_candidates,
         "known_updates": known_updates,
