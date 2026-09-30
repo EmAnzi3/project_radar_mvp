@@ -209,6 +209,40 @@ def _search_keyword(
     return _unique_preserve_order(links) if preserve_order else sorted(set(links))
 
 
+def _normalize_label(value: str | None) -> str:
+    value = _clean(value) or ""
+    value = value.lower()
+    for src, dst in (("à", "a"), ("è", "e"), ("é", "e"), ("ì", "i"), ("ò", "o"), ("ù", "u")):
+        value = value.replace(src, dst)
+    return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+
+def _extract_key_value_data(soup: BeautifulSoup) -> dict[str, str]:
+    data: dict[str, str] = {}
+    for tr in soup.find_all("tr"):
+        cells = [_clean(cell.get_text(" ", strip=True)) for cell in tr.find_all(["th", "td"])]
+        if len(cells) < 2 or not cells[0] or not cells[1]:
+            continue
+        data[_normalize_label(cells[0])] = cells[1]
+    for dt in soup.find_all("dt"):
+        dd = dt.find_next_sibling("dd")
+        if not dd:
+            continue
+        key = _normalize_label(dt.get_text(" ", strip=True))
+        value = _clean(dd.get_text(" ", strip=True))
+        if key and value:
+            data[key] = value
+    return data
+
+
+def _find_info_value(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
+    wanted = tuple(_normalize_label(key) for key in keys)
+    for key, value in data.items():
+        if any(target and target in key for target in wanted):
+            return _clean(value)
+    return None
+
+
 def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     try:
         response = session.get(url, headers=HEADERS, timeout=45)
@@ -219,6 +253,15 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
 
     soup = BeautifulSoup(response.text, "lxml")
     full_text = _clean(soup.get_text(" ", strip=True)) or ""
+    info_table = _extract_key_value_data(soup)
+    procedure_raw = _find_info_value(
+        info_table,
+        ("procedura", "ultima procedura", "tipo procedura", "tipologia procedura", "procedimento"),
+    )
+    status_raw = _find_info_value(
+        info_table,
+        ("stato procedura", "stato", "esito procedura", "esito"),
+    )
 
     external_id = None
     id_match = re.search(r"/Oggetti/Info/(\d+)", url)
@@ -256,7 +299,8 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
         sector=_infer_sector(full_text),
         category="energia / ambiente",
         intervention_type="nuova costruzione" if "realizzazione" in full_text.lower() else None,
-        phase=_infer_phase(full_text),
+        phase=procedure_raw or _infer_phase(full_text),
+        status=status_raw,
         client=proponent,
         client_type="privato" if proponent else None,
         power_mw=_extract_power_mw(full_text),
