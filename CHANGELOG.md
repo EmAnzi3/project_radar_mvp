@@ -4,6 +4,8 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-09-30 — Convertito il launcher Wind in **daily project discovery**: il doppio clic su `aggiorna_wind_radar.bat` interroga tutti i 21 adapter istituzionali a ogni run, confronta i finding con i 51 progetti canonici e la coda Discovery e genera un report HTML/CSV/JSON con nuovi candidati, aggiornamenti dei progetti noti, identity review ed errori fonte. Nessuna promozione automatica nel canonico.
+- 2026-09-30 — Aggiunta classificazione conservativa `new_project_candidate / known_project_update / discovery_candidate_update / identity_review` e relativo validator sintetico; i player commerciali restano a cadenza nel run standard e vengono forzati solo con modalità `all`.
 - 2026-09-30 — Aggiunto avvio **one-click locale** del Wind Radar con `aggiorna_wind_radar.bat`: ambiente Python, watch istituzionale/company per cadenza, execution queue, digest review-only, validator v0.5/v0.6, server HTTP locale e riquadro dashboard con esito dell'ultimo run. Nessuna promozione automatica nel canonico.
 
 - 2026-09-06 — Completata la review browser della nuova **mappa ECharts per provincia**: introdotto filtro Provincia dedicato, il click sulla mappa non sovrascrive più la ricerca libera, `Mostra tutte` preserva gli altri filtri e reset/cambio metrica sono coerenti. Verificati desktop 1440×1100 e mobile 390×844 senza overflow orizzontale.
