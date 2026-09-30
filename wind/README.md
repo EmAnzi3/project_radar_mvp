@@ -1,89 +1,59 @@
 # Wind Radar Italia
 
-Radar commerciale eolico costruito sulla stessa logica operativa dei radar esistenti.
+Radar commerciale eolico isolato nel branch `feat/wind-radar-mvp`.
 
-## Avvio
+## Entry point Windows
 
-Doppio clic su:
+Eseguire:
 
 ```text
 aggiorna_wind_radar.bat
 ```
 
-Il BAT:
+Il BAT usa solo Python standard library e:
 
 1. crea/riusa `.venv`;
-2. legge `wind/input/projects.json`;
-3. valida i record;
-4. genera:
-   - `docs/wind/index.html`
-   - `docs/wind/data.json`
-   - `docs/wind/projects.csv`
-5. apre automaticamente la dashboard.
+2. verifica la sintassi del builder;
+3. legge e valida `wind/input/projects.json`;
+4. genera master, relazioni progetto↔azienda, JSON e CSV;
+5. rigenera la dashboard in `docs/wind/`;
+6. crea `docs/wind/preview.html`, standalone e apribile direttamente;
+7. riesegue i controlli sugli output;
+8. controlla il JavaScript con Node.js se disponibile;
+9. termina con `SUCCESS` o `FAILURE`.
 
-Non richiede pacchetti Python esterni.
+## Sorgenti canoniche
 
-## Dati rilevati
+- dati: `wind/input/projects.json`;
+- builder: `wind/scripts/build_wind_radar.py`;
+- web source: `wind/web/`.
 
-Il radar privilegia le informazioni utili commercialmente:
+Non modificare direttamente un output generato per introdurre una correzione persistente: correggere prima la sorgente o il builder.
 
-- MW eolici e BESS separati;
-- regione, provincia, comuni e area/località quando disponibile;
-- greenfield / repowering;
-- stato e maturità;
-- developer e SPV;
-- MYTERNA quando noto;
-- finestra opere civili;
-- finestra erection;
-- COD / commissioning;
-- contractor e ruolo;
-- livello di confidenza dell'associazione;
-- focus commerciale;
-- fonti.
+## Output
 
-Non vengono modellati computi metrici, volumi di calcestruzzo o quantità di scavo.
+- `docs/wind/index.html` — dashboard per hosting statico/GitHub Pages;
+- `docs/wind/preview.html` — preview standalone;
+- `docs/wind/data/projects.json` + chunk — dataset dashboard;
+- `docs/wind/data/master.json` — master normalizzato;
+- `docs/wind/data/project_company_relationships.json` — relazione progetto ↔ azienda;
+- `docs/wind/projects.csv`;
+- `docs/wind/project_company_relationships.csv`.
 
-## Aggiornare i progetti
+## Regole dati
 
-Il master manuale iniziale è:
+- MW eolici e BESS restano separati;
+- maturità `E0–E8`;
+- evidenze `A1/A2/B/C/D`;
+- una relazione B/C è un segnale, non un affidamento;
+- GlobalData è solo enrichment/lead source;
+- dati mancanti restano null/unknown, senza falsa precisione;
+- le coordinate della mappa possono essere proxy territoriali e non coordinate WTG.
 
-```text
-wind/input/projects.json
-```
+## Guardrail
 
-Ogni record contiene i campi usati dalla dashboard. Lasciare vuote le date non note: non forzare una falsa precisione.
+Il builder blocca regressioni note: Progeco non può essere promosso a Civil BoP su Andretta senza nuova prova; D'Agostino su Serra Giannina resta segnale finché non emerge una prova A1/A2; SOCEP su Alia resta incumbent storico e non contractor del repowering corrente.
 
-Le associazioni contractor devono distinguere tra:
+## CI
 
-- confermato;
-- forte evidenza / da confermare;
-- incumbent storico;
-- engineering / DL / supervisione;
-- OEM.
-
-## Dashboard
-
-La pagina contiene:
-
-- KPI;
-- pipeline per maturità;
-- MW per regione;
-- contractor network;
-- timeline delle milestone con data esatta;
-- tabella completa filtrabile;
-- export CSV;
-- link alle fonti.
-
-## Evoluzione prevista
-
-Il master JSON è volutamente separato dalla raccolta fonti. In questo modo il radar è già usabile ora e potrà essere alimentato successivamente da:
-
-- Terna / Econnextion;
-- MASE VIA;
-- Regioni / BUR / PAUR / AU;
-- GSE / FER-X;
-- developer;
-- contractor / RTI / vendor assessment;
-- job posting e documentazione di cantiere.
-
-La dashboard non deve dipendere direttamente dallo scraping delle fonti.
+Il workflow `.github/workflows/wind-radar-mvp.yml` ricostruisce e valida l'MVP sul branch. Solo dopo compilazione, build, validazione, controllo JavaScript e pre-publish check aggiorna gli output `docs/wind/` e pubblica l'artifact `wind-radar-preview`.

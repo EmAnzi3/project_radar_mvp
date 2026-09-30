@@ -250,7 +250,7 @@ def summary(meta: dict, projects: list[dict]) -> dict:
 
 def write_csv(path: Path, fieldnames: list[str], rows: list[dict]) -> None:
     with path.open("w", newline="", encoding="utf-8-sig") as fh:
-        w = csv.DictWriter(fh, fieldnames=fieldnames, delimiter=";", extrasaction="ignore")
+        w = csv.DictWriter(fh, fieldnames=fieldnames, delimiter=";", extrasaction="ignore", lineterminator="\\n")
         w.writeheader()
         for row in rows:
             cooked = {}
