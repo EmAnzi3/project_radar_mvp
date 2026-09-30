@@ -159,7 +159,7 @@ def latest_source_date(project: dict) -> str | None:
     return dates[-1] if dates else None
 
 
-def master_record(project: dict) -> dict:
+def master_record(project: dict, as_of: str | None) -> dict:
     civil = first_timing(project, "opere civili", "civil")
     foundation = first_timing(project, "fondaz")
     electrical = first_timing(project, "opere elettriche", "cavidotti", "sse")
@@ -201,7 +201,7 @@ def master_record(project: dict) -> dict:
         "engineering": companies_for(project, lambda r: "engineering" in r),
         "direzione_lavori": companies_for(project, lambda r: "direzione" in r or "/ dl" in r),
         "site_management": companies_for(project, lambda r: "site management" in r or "supervision" in r),
-        "last_update": latest_source_date(project),
+        "last_update": project.get("last_update") or as_of or latest_source_date(project),
         "confidence": evidence_best(project),
         "sources": project.get("sources", []),
         "notes": project.get("status_note"),
@@ -335,7 +335,7 @@ def build() -> dict:
         encoding="utf-8",
     )
 
-    masters = [master_record(p) for p in projects]
+    masters = [master_record(p, meta.get("as_of")) for p in projects]
     rels = relationship_rows(projects)
     stats = summary(meta, projects)
     (DATA / "master.json").write_text(
