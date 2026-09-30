@@ -4,6 +4,8 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-09-30 — Aggiunto il launcher Windows del Wind Radar v0.7 (`aggiorna_wind_radar.bat`): valida execution coverage, avvia il server HTTP locale necessario ai JSON chunked e apre automaticamente la dashboard `/wind/`.
+
 - 2026-09-06 — Completata la review browser della nuova **mappa ECharts per provincia**: introdotto filtro Provincia dedicato, il click sulla mappa non sovrascrive più la ricerca libera, `Mostra tutte` preserva gli altri filtri e reset/cambio metrica sono coerenti. Verificati desktop 1440×1100 e mobile 390×844 senza overflow orizzontale.
 - 2026-09-06 — Corretto dopo review reale il tooltip della choropleth: `confine:true`, larghezza bounded e rimozione della duplicazione della metrica selezionata; aggiunti guard nel validator mappa per evitare regressioni desktop/mobile.
 - 2026-09-06 — Aggiunta tranche additiva `commercial-enrichment-v06d.json`: PROGETTO ENERGIA S.r.l. A1 project-specific come progettista Greci-Montaguto (non execution) e rafforzamento B del lead D'Agostino su Serra Giannina tramite coinvolgimento employee-level diretto. **Nessun nuovo scope execution chiuso**.
