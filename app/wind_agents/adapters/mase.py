@@ -165,6 +165,8 @@ class MaseWindAgent(BaseWindAgent):
                         "power_mw": wind_mw,
                         "bess_mw": self._bess_power_mw(title),
                         "phase": record.phase,
+                        "procedure": record.phase,
+                        "status_raw": record.status,
                         "sector": record.sector,
                         "description": record.description,
                         "source_grade_ceiling": "A1",
