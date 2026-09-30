@@ -24,6 +24,23 @@ Baseline canonica v0.5:
 Dashboard Wind:
 - `docs/wind/index.html`
 
+### Avvio locale one-click
+
+Per aggiornare l'intelligence e aprire il Wind Radar in locale:
+
+```bat
+aggiorna_wind_radar.bat
+```
+
+Il BAT crea/riusa `.venv`, installa le dipendenze, esegue solo le fonti/player dovuti secondo cadenza, rigenera execution queue e digest review-only, valida il Radar e apre `http://127.0.0.1:8766/docs/wind/`.
+
+Modalità opzionali:
+- `aggiorna_wind_radar.bat all` — forza tutte le fonti/player monitorati;
+- `aggiorna_wind_radar.bat offline` — nessuna chiamata esterna, solo stato/validazione/apertura.
+
+I finding locali non modificano automaticamente il canonico: il gate A1/A2 resta invariato.
+
+
 Stato operativo dettagliato:
 - `CURRENT_STATE.md`
 

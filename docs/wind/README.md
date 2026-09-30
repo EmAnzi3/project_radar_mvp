@@ -55,6 +55,12 @@ Player & Network Watch e Institutional & Source Watch alimentano il Radar ma non
 
 Non assegnare mai un ruolo esecutivo per deduzione. Segnali B/C restano intelligence e non diventano affidamenti. GlobalData non è fonte canonica.
 
+## Avvio locale
+
+Doppio click su `aggiorna_wind_radar.bat` dalla radice del repository: aggiorna i watch dovuti, genera il digest review-only, valida il dataset e apre la dashboard via HTTP locale. Il riquadro **Ultimo run del BAT** mostra l'esito dell'aggiornamento.
+
+Varianti: `all` forza tutti i watch; `offline` valida/apre senza interrogare fonti esterne. Il canonico non viene mai modificato automaticamente dal launcher.
+
 ## Stato
 
 MVP in Draft PR per preview/revisione. Nessun merge e nessuna pubblicazione senza approvazione esplicita.
