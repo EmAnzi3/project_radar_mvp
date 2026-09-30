@@ -86,14 +86,14 @@ jobs:
       - name: Discovery v0.4 regression
         run: python scripts/check_wind_v04.py
 
-      - name: Daily project discovery classification
-        run: python scripts/check_wind_daily_discovery.py
-
       - name: Identity and change engine dry-run
         run: python scripts/wind_discovery_engine.py
 
       - name: Restore v0.5 manifest
         run: cp /tmp/projects-v05.json docs/wind/data/projects.json
+
+      - name: Daily project discovery classification
+        run: python scripts/check_wind_daily_discovery.py
 
       - name: Canonical promotion v0.5 validation
         run: python scripts/check_wind_v05.py
