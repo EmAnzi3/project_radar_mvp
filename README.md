@@ -82,3 +82,14 @@ git status
 git diff --check
 ```
 <!-- MAINTENANCE-STANDARD:END -->
+
+
+## Avvio locale Wind Radar
+
+Per usare il Wind Radar su Windows:
+
+```text
+aggiorna_wind_radar.bat
+```
+
+Il BAT usa solo Python 3 standard, esegue il validator v0.7, avvia un server HTTP locale su `127.0.0.1:8765` e apre automaticamente `/wind/` nel browser. Il server locale è necessario perché la dashboard carica il manifest e i chunk JSON tramite `fetch()`.
