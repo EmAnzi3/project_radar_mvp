@@ -10,13 +10,13 @@ Baseline canonica invariata:
 - **34 progetti integrati dopo promotion gate / 9.705,62 MW**;
 - BESS sempre separato dai MW wind.
 
-## Fase corrente — v0.6
+## Fase corrente — daily discovery
 
-Branch: `feat/wind-radar-v0.6-execution-intelligence`
+Branch: `feat/wind-daily-discovery`.
 
-Draft PR: **#5 — Wind Radar v0.6 — execution intelligence e commercial timing**.
+Obiettivo del branch: trasformare il motore v0.6 già derivato da `pv_agent_mvp` in uno strumento operativo giornaliero per rispondere in modo esplicito alla domanda **“ci sono nuovi progetti eolici rispetto ai 51 già noti?”**.
 
-La PR resta **Draft**. Nessun merge o pubblicazione senza autorizzazione esplicita.
+Nessun merge o pubblicazione senza autorizzazione esplicita.
 
 ### Regola probatoria
 
@@ -115,20 +115,29 @@ Principali punti:
 - Carlentini: Mammana foundation contractor A2 confirmed; nessuna estensione al full Civil BoP.
 
 
-## Avvio locale one-click
+## Avvio locale one-click — daily discovery
 
 Disponibile `aggiorna_wind_radar.bat` alla radice del repository.
 
-Flusso:
+Comportamento del normale doppio clic:
 - crea/riusa `.venv` e verifica le dipendenze;
-- esegue di default solo Institutional/Company Watch dovuti per cadenza;
+- interroga **tutti i 21 adapter istituzionali project-discovery a ogni run**, indipendentemente dalla cadenza precedente;
+- esegue Company Watch solo sui player dovuti per cadenza;
+- persiste raw finding e storico SQLite con `new / changed / unchanged`;
+- riconcilia i nuovi finding contro i **51 progetti canonici** e la coda Discovery;
+- genera `reports/wind-agent/daily-discovery-latest.html`, `.csv` e `.json`;
+- separa nuovi candidati, aggiornamenti dei canonici, aggiornamenti Discovery, identità ambigue ed errori fonte;
 - aggiorna execution investigation queue e digest review-only;
-- scrive uno status locale ignorato da Git in `docs/wind/data/local-run-status.json`;
-- esegue i validator Wind v0.5/v0.6;
-- avvia un server HTTP locale su `127.0.0.1:8766` e apre la dashboard;
+- scrive lo status locale in `docs/wind/data/local-run-status.json`;
+- esegue i validator Wind v0.5/v0.6 + daily discovery;
+- apre prima il report giornaliero e poi la dashboard locale;
 - non promuove finding né modifica automaticamente il canonico.
 
-Varianti: `all` forza tutti i watch; `offline` salta la rete.
+Varianti:
+- `all` = stessa scansione completa delle fonti progetto + forza tutti i player commerciali;
+- `offline` = nessuna rete, solo stato/validazione/apertura.
+
+Il criterio operativo è quindi: **51 progetti sono la baseline nota; il BAT cerca ogni giorno ciò che non è già riconciliabile con quella baseline o con la coda Discovery.**
 
 ## Validazione
 
