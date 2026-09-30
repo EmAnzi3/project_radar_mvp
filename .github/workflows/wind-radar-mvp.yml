@@ -1,0 +1,57 @@
+name: Wind Radar MVP
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/wind-radar-mvp
+    paths:
+      - "wind/**"
+      - "aggiorna_wind_radar.bat"
+      - "docs/wind/**"
+      - ".github/workflows/wind-radar-mvp.yml"
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile builder
+        run: python -m py_compile wind/scripts/build_wind_radar.py
+
+      - name: Build radar
+        run: python wind/scripts/build_wind_radar.py
+
+      - name: Validate outputs
+        run: python wind/scripts/build_wind_radar.py --check-only
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check docs/wind/assets/app.js
+          node --check docs/wind/assets/review-fixes.js
+          node --check docs/wind/assets/contractor-direct-fix.js
+
+      - name: Repository pre-publish checks
+        shell: pwsh
+        run: ./scripts/check_before_publish.ps1 -SkipTests
+
+      - name: Upload navigable preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-radar-preview
+          path: |
+            docs/wind/preview.html
+            docs/wind/index.html
+            docs/wind/assets
+            docs/wind/data
+            docs/wind/projects.csv
+            docs/wind/project_company_relationships.csv
+          if-no-files-found: error
+          retention-days: 14
