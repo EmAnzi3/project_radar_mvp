@@ -453,6 +453,10 @@ def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, 
     if any(token in status for token in closed_negative_tokens):
         return "historical_or_closed", "status_closed_or_negative"
 
+    procedure = _norm(payload.get("procedure"))
+    if "ottemperanza" in procedure:
+        return "existing_project_follow_up", "verification_of_compliance"
+
     power = _as_float(payload.get("power_mw"))
     if power is not None and power < 10.0:
         return "non_target_scale", "below_10_mw"
@@ -566,10 +570,11 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "known_project_update": 3,
         "discovery_candidate_update": 4,
         "historical_or_closed": 5,
-        "non_target_scale": 6,
-        "market_intelligence": 7,
-        "company_signal": 8,
-        "non_project_event": 9,
+        "existing_project_follow_up": 6,
+        "non_target_scale": 7,
+        "market_intelligence": 8,
+        "company_signal": 9,
+        "non_project_event": 10,
     }
     items.sort(
         key=lambda row: (
@@ -593,7 +598,7 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
     ]
     filtered_non_pipeline = [
         row for row in items
-        if row.get("category") in {"historical_or_closed", "non_target_scale"}
+        if row.get("category") in {"historical_or_closed", "existing_project_follow_up", "non_target_scale"}
     ]
 
     return {

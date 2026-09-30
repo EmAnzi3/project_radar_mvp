@@ -235,6 +235,26 @@ def _extract_key_value_data(soup: BeautifulSoup) -> dict[str, str]:
     return data
 
 
+def _find_info_value_exact(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
+    wanted = {_normalize_label(key) for key in keys}
+    for key, value in data.items():
+        if _normalize_label(key) in wanted:
+            return _clean(value)
+    return None
+
+
+def _clean_mase_entity(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    if re.fullmatch(r"\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2}", value):
+        return None
+    norm = _normalize_label(value)
+    if norm.startswith(("nessuna ", "nessun ", "nessuno ")):
+        return None
+    return value
+
+
 def _find_info_value(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
     wanted = tuple(_normalize_label(key) for key in keys)
     for key, value in data.items():
@@ -386,9 +406,11 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     description = _clean(full_text[:900])
 
     proponent = (
-        _find_info_value(
-            info_table,
-            ("proponente", "proponenti", "societa proponente", "società proponente", "soggetto proponente"),
+        _clean_mase_entity(
+            _find_info_value_exact(
+                info_table,
+                ("proponente", "proponenti", "societa proponente", "società proponente", "soggetto proponente"),
+            )
         )
         or _extract_info_proponent_plain(full_text)
         or _extract_first(r"Proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
@@ -397,11 +419,11 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     proponent = _clean(proponent)
 
     region, province, municipality = _extract_region_province_municipality(full_text)
-    region = _clean_mase_geo(_find_info_value(info_table, ("regioni", "regione"))) or region
-    province_text = _clean_mase_geo(_find_info_value(info_table, ("province", "provincia")))
+    region = _clean_mase_geo(_find_info_value_exact(info_table, ("regioni", "regione"))) or region
+    province_text = _clean_mase_geo(_find_info_value_exact(info_table, ("province", "provincia")))
     if province_text:
         province = _clean(province_text.split(",", 1)[0]) or province
-    municipalities_text = _clean_mase_geo(_find_info_value(info_table, ("comuni", "comune")))
+    municipalities_text = _clean_mase_geo(_find_info_value_exact(info_table, ("comuni", "comune")))
     if municipalities_text:
         municipality = _clean(municipalities_text.split(",", 1)[0]) or municipality
 

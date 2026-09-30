@@ -101,6 +101,33 @@ def main() -> int:
     )
     assert historical_result["category"] == "non_target_scale", historical_result
 
+    follow_up_event = {
+        "event_type": "new",
+        "external_id": "test-old-compliance",
+        "finding": {
+            "external_id": "test-old-compliance",
+            "source_name": "MASE VIA",
+            "source_url": "https://example.invalid/old-compliance",
+            "title": "Parco eolico storico test",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "Parco eolico storico test",
+                "region": "Puglia",
+                "power_mw": 50.0,
+                "procedure": "Verifica di Ottemperanza",
+                "status_raw": "Istruttoria tecnica CTVIA",
+                "date_presented": "15/04/2019",
+            },
+        },
+    }
+    follow_up_result = classify_daily_discovery_event(
+        follow_up_event,
+        canonical=canonical,
+        discovery=[],
+    )
+    assert follow_up_result["category"] == "existing_project_follow_up", follow_up_result
+
     archived_event = {
         "event_type": "new",
         "external_id": "test-archived-wind",
@@ -131,6 +158,7 @@ def main() -> int:
     print("Known finding via payload.project_url -> known_project_update")
     print("Unmatched new project-specific finding -> new_project_candidate")
     print("Historical micro-wind -> non_target_scale")
+    print("Unmatched verification of compliance -> existing_project_follow_up")
     print("Archived project -> historical_or_closed")
     return 0
 
