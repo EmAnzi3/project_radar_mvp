@@ -19,6 +19,10 @@ on:
       - '.github/workflows/wind_agent_watch.yml'
   workflow_dispatch:
 
+concurrency:
+  group: wind-radar-v06-check-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate-wind-radar:
     runs-on: ubuntu-latest
