@@ -138,7 +138,24 @@ def _get_token(session: requests.Session) -> str | None:
     return None
 
 
-def _search_keyword(session: requests.Session, keyword: str, max_pages: int = 2) -> list[str]:
+def _unique_preserve_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        out.append(value)
+    return out
+
+
+def _search_keyword(
+    session: requests.Session,
+    keyword: str,
+    max_pages: int = 2,
+    *,
+    preserve_order: bool = False,
+) -> list[str]:
     """
     Cerca i link alle schede progetto per una keyword.
     Ritorna URL assoluti di tipo /Oggetti/Info/{id}.
@@ -182,14 +199,14 @@ def _search_keyword(session: requests.Session, keyword: str, max_pages: int = 2)
             if "/Oggetti/Info/" in href:
                 page_links.append(urljoin(BASE_URL, href))
 
-        page_links = sorted(set(page_links))
+        page_links = _unique_preserve_order(page_links) if preserve_order else sorted(set(page_links))
 
         if not page_links:
             break
 
         links.extend(page_links)
 
-    return sorted(set(links))
+    return _unique_preserve_order(links) if preserve_order else sorted(set(links))
 
 
 def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
@@ -253,6 +270,8 @@ def collect_mase_via(
     keywords: list[str] | None = None,
     max_pages_per_keyword: int = 1,
     max_details: int = 30,
+    *,
+    preserve_search_order: bool = False,
 ) -> list[ProjectRecord]:
     keywords = keywords or DEFAULT_KEYWORDS
 
@@ -262,11 +281,20 @@ def collect_mase_via(
 
     for keyword in keywords:
         print(f"[MASE] Cerco keyword: {keyword}")
-        links = _search_keyword(session, keyword, max_pages=max_pages_per_keyword)
+        links = _search_keyword(
+            session,
+            keyword,
+            max_pages=max_pages_per_keyword,
+            preserve_order=preserve_search_order,
+        )
         print(f"[MASE] Link trovati per '{keyword}': {len(links)}")
         all_links.extend(links)
 
-    unique_links = sorted(set(all_links))[:max_details]
+    unique_links = (
+        _unique_preserve_order(all_links)
+        if preserve_search_order
+        else sorted(set(all_links))
+    )[:max_details]
     print(f"[MASE] Totale link unici da leggere: {len(unique_links)}")
 
     records: list[ProjectRecord] = []
