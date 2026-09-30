@@ -243,6 +243,46 @@ def _find_info_value(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
     return None
 
 
+def _extract_procedure_overview(soup: BeautifulSoup) -> dict[str, str | None]:
+    """Parse the MASE procedure summary table by column names.
+
+    The first row is a real multi-column header; treating it as a key/value row
+    produces the bogus value "Codice istanza online" for Procedura.
+    """
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if len(rows) < 2:
+            continue
+        headers = [_normalize_label(cell.get_text(" ", strip=True)) for cell in rows[0].find_all(["th", "td"])]
+        if "procedura" not in headers or "stato procedura" not in headers:
+            continue
+        values = [_clean(cell.get_text(" ", strip=True)) for cell in rows[1].find_all(["th", "td"])]
+        if not values:
+            continue
+        def value_for(label: str) -> str | None:
+            try:
+                idx = headers.index(label)
+            except ValueError:
+                return None
+            return values[idx] if idx < len(values) else None
+        return {
+            "procedure": value_for("procedura"),
+            "date_started": value_for("data avvio"),
+            "status": value_for("stato procedura"),
+        }
+    return {"procedure": None, "date_started": None, "status": None}
+
+
+def _clean_mase_geo(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    norm = _normalize_label(value)
+    if norm.startswith(("nessuna ", "nessun ", "nessuno ")):
+        return None
+    return value
+
+
 def _clean_mase_procedure(value: str | None) -> str | None:
     value = _clean(value)
     if not value:
@@ -304,14 +344,17 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     soup = BeautifulSoup(response.text, "lxml")
     full_text = _clean(soup.get_text(" ", strip=True)) or ""
     info_table = _extract_key_value_data(soup)
+    overview = _extract_procedure_overview(soup)
     procedure_raw = _clean_mase_procedure(
-        _find_info_value(
+        overview.get("procedure")
+        or _find_info_value(
             info_table,
-            ("procedura", "ultima procedura", "tipo procedura", "tipologia procedura", "procedimento", "procedura in corso"),
+            ("ultima procedura", "tipo procedura", "tipologia procedura", "procedimento", "procedura in corso"),
         )
     )
     status_raw = _clean_mase_status(
-        _find_info_value(
+        overview.get("status")
+        or _find_info_value(
             info_table,
             ("stato procedura", "stato", "esito procedura", "esito"),
         )
@@ -319,7 +362,7 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     date_presented = _find_info_value(
         info_table,
         ("data presentazione", "data avvio", "data deposito", "data pubblicazione"),
-    )
+    ) or overview.get("date_started")
     date_last_update = _find_info_value(
         info_table,
         ("ultimo aggiornamento", "data aggiornamento", "data provvedimento"),
@@ -354,11 +397,11 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     proponent = _clean(proponent)
 
     region, province, municipality = _extract_region_province_municipality(full_text)
-    region = _find_info_value(info_table, ("regioni", "regione")) or region
-    province_text = _find_info_value(info_table, ("province", "provincia"))
+    region = _clean_mase_geo(_find_info_value(info_table, ("regioni", "regione"))) or region
+    province_text = _clean_mase_geo(_find_info_value(info_table, ("province", "provincia")))
     if province_text:
         province = _clean(province_text.split(",", 1)[0]) or province
-    municipalities_text = _find_info_value(info_table, ("comuni", "comune"))
+    municipalities_text = _clean_mase_geo(_find_info_value(info_table, ("comuni", "comune")))
     if municipalities_text:
         municipality = _clean(municipalities_text.split(",", 1)[0]) or municipality
 
