@@ -55,3 +55,11 @@ Audit puntuale delle coordinate territoriali dei 17 progetti contro corografie/l
 ### Vincoli
 
 Nessuna modifica a `master`, nessun merge e nessuna pubblicazione finché non viene data approvazione esplicita.
+
+## Wind Radar sperimentale
+
+- Branch: `feat/wind-radar-mvp`
+- Avvio locale: `aggiorna_wind_radar.bat`
+- Sorgente: `wind/input/projects.json`
+- Output: `docs/wind/index.html`, `docs/wind/data.json`, `docs/wind/projects.csv`
+- Stato: MVP funzionale iniziale con seed del probe eolico; raccolta automatica fonti non ancora collegata.
