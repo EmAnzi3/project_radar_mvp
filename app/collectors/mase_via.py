@@ -243,6 +243,56 @@ def _find_info_value(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
     return None
 
 
+def _clean_mase_procedure(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    norm = _normalize_label(value)
+    invalid = (
+        "codice istanza online", "id", "codice", "localizzazione",
+        "proponente", "progetto", "documentazione", "scheda", "info",
+    )
+    valid = (
+        "via", "valutazione di impatto ambientale", "verifica",
+        "assoggettabilita", "pniec", "pnrr", "ottemperanza",
+        "provvedimento", "scoping", "consultazione", "in corso",
+        "conclusa", "concluso", "archiviata", "archiviato",
+    )
+    if norm in invalid:
+        return None
+    if any(item in norm for item in invalid) and not any(item in norm for item in valid):
+        return None
+    return value if any(item in norm for item in valid) else None
+
+
+def _clean_mase_status(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    if re.fullmatch(r"\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2}", value):
+        return None
+    norm = _normalize_label(value)
+    invalid = ("codice istanza online", "codice", "id", "data", "info")
+    if norm in invalid:
+        return None
+    return value
+
+
+def _extract_info_proponent_plain(text: str) -> str | None:
+    patterns = (
+        r"\bProponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Scadenza\s+presentazione|\s+Territori\s+ed\s+aree|\s+Scegli\s+la\s+procedura|\s+Procedura\s+Codice|\s+Data\s+presentazione|\s+Oggetto\s*:|$)",
+        r"\bSociet[aà]\s+proponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Territori\s+ed\s+aree|\s+Scegli\s+la\s+procedura|$)",
+        r"\bSoggetto\s+proponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Territori\s+ed\s+aree|\s+Scegli\s+la\s+procedura|$)",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.I)
+        if match:
+            candidate = _clean(match.group(1))
+            if candidate and 2 <= len(candidate) <= 250:
+                return candidate.strip(" -–—:;,.()")
+    return None
+
+
 def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     try:
         response = session.get(url, headers=HEADERS, timeout=45)
@@ -254,13 +304,25 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     soup = BeautifulSoup(response.text, "lxml")
     full_text = _clean(soup.get_text(" ", strip=True)) or ""
     info_table = _extract_key_value_data(soup)
-    procedure_raw = _find_info_value(
-        info_table,
-        ("procedura", "ultima procedura", "tipo procedura", "tipologia procedura", "procedimento"),
+    procedure_raw = _clean_mase_procedure(
+        _find_info_value(
+            info_table,
+            ("procedura", "ultima procedura", "tipo procedura", "tipologia procedura", "procedimento", "procedura in corso"),
+        )
     )
-    status_raw = _find_info_value(
+    status_raw = _clean_mase_status(
+        _find_info_value(
+            info_table,
+            ("stato procedura", "stato", "esito procedura", "esito"),
+        )
+    )
+    date_presented = _find_info_value(
         info_table,
-        ("stato procedura", "stato", "esito procedura", "esito"),
+        ("data presentazione", "data avvio", "data deposito", "data pubblicazione"),
+    )
+    date_last_update = _find_info_value(
+        info_table,
+        ("ultimo aggiornamento", "data aggiornamento", "data provvedimento"),
     )
 
     external_id = None
@@ -281,11 +343,24 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     description = _clean(full_text[:900])
 
     proponent = (
-        _extract_first(r"Proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
+        _find_info_value(
+            info_table,
+            ("proponente", "proponenti", "societa proponente", "società proponente", "soggetto proponente"),
+        )
+        or _extract_info_proponent_plain(full_text)
+        or _extract_first(r"Proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
         or _extract_first(r"Società proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
     )
+    proponent = _clean(proponent)
 
     region, province, municipality = _extract_region_province_municipality(full_text)
+    region = _find_info_value(info_table, ("regioni", "regione")) or region
+    province_text = _find_info_value(info_table, ("province", "provincia"))
+    if province_text:
+        province = _clean(province_text.split(",", 1)[0]) or province
+    municipalities_text = _find_info_value(info_table, ("comuni", "comune"))
+    if municipalities_text:
+        municipality = _clean(municipalities_text.split(",", 1)[0]) or municipality
 
     record = ProjectRecord(
         source="MASE VIA",
@@ -301,6 +376,8 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
         intervention_type="nuova costruzione" if "realizzazione" in full_text.lower() else None,
         phase=procedure_raw or _infer_phase(full_text),
         status=status_raw,
+        source_date_presented=_clean(date_presented),
+        source_date_last_update=_clean(date_last_update),
         client=proponent,
         client_type="privato" if proponent else None,
         power_mw=_extract_power_mw(full_text),
