@@ -10,11 +10,11 @@ Baseline canonica invariata:
 - **34 progetti integrati dopo promotion gate / 9.705,62 MW**;
 - BESS sempre separato dai MW wind.
 
-## Fase corrente — v0.6
+## Fase corrente — v0.7
 
-Branch: `feat/wind-radar-v0.6-execution-intelligence`
+Branch: `feat/wind-radar-v0.7-contractor-coverage`
 
-Draft PR: **#5 — Wind Radar v0.6 — execution intelligence e commercial timing**.
+Draft PR: **#6 — Wind Radar v0.7 — contractor & construction coverage**.
 
 La PR resta **Draft**. Nessun merge o pubblicazione senza autorizzazione esplicita.
 
@@ -125,3 +125,11 @@ L'ultimo full live smoke completato prima delle modifiche UI results-first è **
 Il prossimo gate è la revisione dell'artifact **public/results-first**. Dopo approvazione esplicita: riallineamento finale PR body/CI e solo successivamente eventuale autorizzazione a merge/pubblicazione.
 
 **Nessun merge e nessuna pubblicazione prima dell'approvazione esplicita.**
+
+
+### Avvio locale
+
+- launcher Windows: `aggiorna_wind_radar.bat`;
+- esegue `scripts/check_wind_v07_execution_coverage.py` prima dell'apertura;
+- serve `docs/` via HTTP locale su porta 8765 e apre `http://127.0.0.1:8765/wind/`;
+- nessuna dipendenza Python esterna richiesta per il launcher.
