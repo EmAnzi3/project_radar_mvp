@@ -123,10 +123,11 @@ Comportamento del normale doppio clic:
 - crea/riusa `.venv` e verifica le dipendenze;
 - interroga **tutti i 21 adapter istituzionali project-discovery a ogni run**, indipendentemente dalla cadenza precedente;
 - esegue Company Watch solo sui player dovuti per cadenza;
-- persiste raw finding e storico SQLite con `new / changed / unchanged`;
-- riconcilia i nuovi finding contro i **51 progetti canonici** e la coda Discovery;
+- persiste raw finding e storico SQLite con `baseline / new / changed / unchanged`;
+- al primo successo di ciascuna fonte crea la baseline sorgente: i record già presenti non generano falsi allarmi "nuovo";
+- riconcilia baseline e variazioni successive contro i **51 progetti canonici** e la coda Discovery;
 - genera `reports/wind-agent/daily-discovery-latest.html`, `.csv` e `.json`;
-- separa nuovi candidati, aggiornamenti dei canonici, aggiornamenti Discovery, identità ambigue ed errori fonte;
+- separa nuovi candidati giornalieri, backlog iniziale della baseline, aggiornamenti dei canonici, aggiornamenti Discovery, identità ambigue ed errori fonte;
 - aggiorna execution investigation queue e digest review-only;
 - scrive lo status locale in `docs/wind/data/local-run-status.json`;
 - esegue i validator Wind v0.5/v0.6 + daily discovery;
@@ -137,7 +138,7 @@ Varianti:
 - `all` = stessa scansione completa delle fonti progetto + forza tutti i player commerciali;
 - `offline` = nessuna rete, solo stato/validazione/apertura.
 
-Il criterio operativo è quindi: **51 progetti sono la baseline nota; il BAT cerca ogni giorno ciò che non è già riconciliabile con quella baseline o con la coda Discovery.**
+Il criterio operativo è quindi doppio: **51 progetti sono la baseline canonica commerciale**, mentre lo SQLite mantiene la **baseline tecnica delle singole fonti**. Il primo run censisce ciò che esiste già; dai run successivi il BAT segnala come nuovo solo ciò che appare dopo la scansione precedente.
 
 ## Validazione
 

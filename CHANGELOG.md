@@ -4,6 +4,9 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-10-01 — Corretto il daily discovery Wind con **bootstrap per fonte**: il primo successo salva l'inventario esistente come `baseline`/backlog e non come `new`; solo le scansioni successive possono generare un vero nuovo progetto. La baseline non alimenta il digest actionable.
+- 2026-10-01 — Hardening fonti regionali: Sistema Puglia passa dal probe sequenziale degli ID al dataset ufficiale VIA FER XLSX; Calabria richiede pagine-progetto specifiche e recenti; Lazio usa l'ultima attività del procedimento e riconosce meglio esiti/rinvii; Sicilia normalizza anche potenze in kW e le procedure di follow-up restano separate dai nuovi progetti.
+- 2026-10-01 — Aggiunto test persistente `baseline -> unchanged -> changed` e concurrency sui check Wind per cancellare automaticamente i run PR superati.
 - 2026-09-30 — Convertito il launcher Wind in **daily project discovery**: il doppio clic su `aggiorna_wind_radar.bat` interroga tutti i 21 adapter istituzionali a ogni run, confronta i finding con i 51 progetti canonici e la coda Discovery e genera un report HTML/CSV/JSON con nuovi candidati, aggiornamenti dei progetti noti, identity review ed errori fonte. Nessuna promozione automatica nel canonico.
 - 2026-09-30 — Aggiunta classificazione conservativa `new_project_candidate / known_project_update / discovery_candidate_update / identity_review` e relativo validator sintetico; i player commerciali restano a cadenza nel run standard e vengono forzati solo con modalità `all`.
 - 2026-09-30 — Aggiunto avvio **one-click locale** del Wind Radar con `aggiorna_wind_radar.bat`: ambiente Python, watch istituzionale/company per cadenza, execution queue, digest review-only, validator v0.5/v0.6, server HTTP locale e riquadro dashboard con esito dell'ultimo run. Nessuna promozione automatica nel canonico.

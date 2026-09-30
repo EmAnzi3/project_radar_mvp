@@ -40,8 +40,11 @@ A ogni run genera:
 - `reports/wind-agent/daily-discovery-latest.json` — output strutturato;
 - storico in `reports/wind-agent/daily/`.
 
+Il primo run utile di ciascuna fonte inizializza una **baseline sorgente**: i record già esistenti vengono salvati come backlog iniziale, non come "nuovi". Dal run successivo, `new` significa realmente comparso dopo la precedente scansione.
+
 Il report separa:
-- **nuovi progetti candidati** non riconciliati con i 51 canonici né con la coda Discovery;
+- **nuovi progetti candidati giornalieri** comparsi dopo la baseline e non riconciliati con i 51 canonici né con la coda Discovery;
+- backlog iniziale della baseline fonti, da verificare separatamente e senza allarme "nuovo";
 - aggiornamenti dei 51 progetti già noti;
 - aggiornamenti di candidati Discovery già noti;
 - identità/match da verificare;
@@ -66,7 +69,7 @@ Stato corrente della Draft PR #5:
 - **31 nodi istituzionali** nel Source Network;
 - **21 adapter istituzionali eseguibili**: MASE VIA, MASE Provvedimenti, Terna Econnextion, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria, Basilicata, Emilia-Romagna, Lombardia, Piemonte, Umbria, Veneto, Abruzzo, Liguria, Marche e Molise;
 - Company Watch diretto sulle `watch_urls` con cadenze 7/14/30 giorni;
-- stato runtime persistente per `new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
+- stato runtime persistente per `baseline / new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
 - reconciliation conservativa dei finding verso canonico/Discovery **senza promozione automatica**;
 - digest review-only delle sole variazioni commercialmente utili;
 - **Project Execution investigation queue** per i canonici E4–E7 con open scope, urgency score e playbook di contractor hunt per singolo scope;

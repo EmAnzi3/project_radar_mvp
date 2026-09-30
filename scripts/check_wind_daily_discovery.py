@@ -3,12 +3,15 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from app.wind_agents.base import AgentFinding
 from app.wind_agents.reconcile import classify_daily_discovery_event, load_canonical_projects
+from app.wind_agents import state as wind_state
 
 
 def main() -> int:
@@ -169,6 +172,35 @@ def main() -> int:
     )
     assert baseline_result["category"] == "baseline_project_candidate", baseline_result
 
+    with tempfile.TemporaryDirectory() as tmp:
+        original_db = wind_state.DB_PATH
+        wind_state.DB_PATH = Path(tmp) / "wind-agent-test.sqlite"
+        try:
+            sample = AgentFinding(
+                external_id="bootstrap-state-test",
+                source_name="Test source",
+                source_url="https://example.invalid/bootstrap",
+                title="Test wind project",
+                finding_type="project_source",
+                payload={"project_specific": True, "project_name": "Test wind project"},
+            )
+            first = wind_state.upsert_finding("run-1", "institutional_watch", sample, baseline_new=True)
+            second = wind_state.upsert_finding("run-2", "institutional_watch", sample, baseline_new=False)
+            changed = AgentFinding(
+                external_id=sample.external_id,
+                source_name=sample.source_name,
+                source_url=sample.source_url,
+                title=sample.title,
+                finding_type=sample.finding_type,
+                payload={**sample.payload, "power_mw": 55.0},
+            )
+            third = wind_state.upsert_finding("run-3", "institutional_watch", changed, baseline_new=False)
+            assert first == "baseline", first
+            assert second == "unchanged", second
+            assert third == "changed", third
+        finally:
+            wind_state.DB_PATH = original_db
+
     print("Wind daily discovery checks OK")
     print(f"Canonical: {len(canonical)} projects / {total_mw:.2f} MW")
     print("Known finding via payload.project_url -> known_project_update")
@@ -177,6 +209,7 @@ def main() -> int:
     print("Historical micro-wind -> non_target_scale")
     print("Unmatched verification of compliance -> existing_project_follow_up")
     print("Archived project -> historical_or_closed")
+    print("State bootstrap -> baseline / unchanged / changed")
     return 0
 
 

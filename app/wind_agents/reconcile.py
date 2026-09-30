@@ -383,9 +383,11 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
             item["commercial_weight"] = _commercial_weight(item)
 
             payload = finding.get("payload") or {}
-            # Drop empty company snapshots from the actionable digest. They remain
-            # persisted in raw/history and can still be audited later.
-            if finding.get("finding_type") == "company_source_snapshot" and not (
+            # Bootstrap inventory is source baseline, not a live commercial
+            # change. Keep it auditable but never surface it as actionable.
+            if event.get("event_type") == "baseline":
+                item["actionable"] = False
+            elif finding.get("finding_type") == "company_source_snapshot" and not (
                 payload.get("signal_excerpt") or payload.get("headings")
             ):
                 item["actionable"] = False
