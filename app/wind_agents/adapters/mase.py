@@ -167,6 +167,8 @@ class MaseWindAgent(BaseWindAgent):
                         "phase": record.phase,
                         "procedure": record.phase,
                         "status_raw": record.status,
+                        "date_presented": record.source_date_presented,
+                        "date_last_update": record.source_date_last_update,
                         "sector": record.sector,
                         "description": record.description,
                         "source_grade_ceiling": "A1",
