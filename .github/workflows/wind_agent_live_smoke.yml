@@ -67,6 +67,7 @@ jobs:
             args+=(--source "$source")
           done
           python scripts/run_wind_agents.py run \
+            --no-bootstrap \
             "${args[@]}" \
             --output "reports/wind-agent-live/${WIND_SMOKE_GROUP}.json"
 

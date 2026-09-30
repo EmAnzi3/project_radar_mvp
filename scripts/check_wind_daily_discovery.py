@@ -153,10 +153,27 @@ def main() -> int:
     )
     assert archived_result["category"] == "historical_or_closed", archived_result
 
+    baseline_event = {
+        **novel_event,
+        "event_type": "baseline",
+        "external_id": "test-baseline-unique-project",
+        "finding": {
+            **novel_event["finding"],
+            "external_id": "test-baseline-unique-project",
+        },
+    }
+    baseline_result = classify_daily_discovery_event(
+        baseline_event,
+        canonical=canonical,
+        discovery=[],
+    )
+    assert baseline_result["category"] == "baseline_project_candidate", baseline_result
+
     print("Wind daily discovery checks OK")
     print(f"Canonical: {len(canonical)} projects / {total_mw:.2f} MW")
     print("Known finding via payload.project_url -> known_project_update")
     print("Unmatched new project-specific finding -> new_project_candidate")
+    print("First-seen source inventory -> baseline_project_candidate")
     print("Historical micro-wind -> non_target_scale")
     print("Unmatched verification of compliance -> existing_project_follow_up")
     print("Archived project -> historical_or_closed")

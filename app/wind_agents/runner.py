@@ -125,6 +125,7 @@ def run_agents(
     source_ids: Iterable[str] | None = None,
     *,
     due_only: bool = False,
+    bootstrap_new_sources: bool = True,
 ) -> dict[str, Any]:
     """Run implemented adapters and persist raw/history/runtime state.
 
@@ -164,8 +165,13 @@ def run_agents(
         for source_id in sorted(requested):
             agent = AGENT_FACTORIES[source_id]()
             agent_started = time.monotonic()
+            runtime_before = get_watch_status(source_id) or {}
+            bootstrap_source = bool(
+                bootstrap_new_sources and not runtime_before.get("last_success")
+            )
             counters: dict[str, Any] = {
                 "findings": 0,
+                "baseline": 0,
                 "new": 0,
                 "changed": 0,
                 "unchanged": 0,
@@ -173,11 +179,17 @@ def run_agents(
                 "finding_types": {},
                 "status": "running",
                 "data_health": "running",
+                "bootstrap_source": bootstrap_source,
             }
             try:
                 findings = agent.fetch()
                 for finding in findings:
-                    event = upsert_finding(run_id, agent.agent_name, finding)
+                    event = upsert_finding(
+                        run_id,
+                        agent.agent_name,
+                        finding,
+                        baseline_new=bootstrap_source,
+                    )
                     counters["findings"] += 1
                     counters[event] += 1
                     finding_type = str(finding.finding_type or "unknown")
@@ -195,8 +207,10 @@ def run_agents(
                     success=True,
                     metadata={
                         "findings": counters["findings"],
+                        "baseline": counters["baseline"],
                         "new": counters["new"],
                         "changed": counters["changed"],
+                        "bootstrap_source": bootstrap_source,
                         "project_specific_findings": counters["project_specific_findings"],
                         "finding_types": counters["finding_types"],
                         "data_health": counters["data_health"],
@@ -234,7 +248,13 @@ def run_agents(
         "run_id": run_id,
         "planned_tasks": len(requested),
         "due_only": due_only,
+        "bootstrap_new_sources": bootstrap_new_sources,
         "executed_agents": sorted(requested),
+        "bootstrapped_agents": sorted(
+            source_id
+            for source_id, counters in per_agent.items()
+            if counters.get("bootstrap_source") and counters.get("status") == "success"
+        ),
         "findings": findings_count,
         "new_or_changed": changed_count,
         "errors": errors,

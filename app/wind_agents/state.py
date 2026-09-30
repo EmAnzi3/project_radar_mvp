@@ -223,8 +223,14 @@ def _hash_payload(payload: dict[str, Any]) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
-def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
-    """Persist a raw source finding and return new/changed/unchanged.
+def upsert_finding(
+    run_id: str,
+    agent_name: str,
+    finding: AgentFinding,
+    *,
+    baseline_new: bool = False,
+) -> str:
+    """Persist a raw source finding and return baseline/new/changed/unchanged.
 
     This mirrors the PV Agent raw/history separation. It intentionally does not
     update docs/wind canonical JSON.
@@ -247,7 +253,7 @@ def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
         ).fetchone()
 
         if previous is None:
-            event_type = "new"
+            event_type = "baseline" if baseline_new else "new"
             first_seen = now
             previous_hash = None
         elif previous["content_hash"] != content_hash:
@@ -289,7 +295,7 @@ def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
             ),
         )
 
-        if event_type in {"new", "changed"}:
+        if event_type in {"baseline", "new", "changed"}:
             conn.execute(
                 """
                 INSERT INTO finding_events (

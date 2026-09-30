@@ -514,6 +514,19 @@ def classify_daily_discovery_event(
         category = "company_signal"
     elif not project_specific and finding_type != "project_source":
         category = "non_project_event"
+    elif event_type == "baseline":
+        if eligibility != "eligible":
+            category = eligibility
+        elif best.get("target_kind") == "canonical" and status == "high_confidence_match":
+            category = "baseline_known_project"
+        elif best.get("target_kind") == "discovery" and status in {"high_confidence_match", "review_match"}:
+            category = "baseline_discovery_candidate"
+        elif best.get("target_kind") in {"canonical", "discovery"} and status in {"review_match", "weak_match"}:
+            category = "identity_review"
+        elif project_specific:
+            category = "baseline_project_candidate"
+        else:
+            category = "non_project_event"
     elif best.get("target_kind") == "canonical" and status == "high_confidence_match":
         category = "known_project_update"
     elif best.get("target_kind") == "discovery" and status in {"high_confidence_match", "review_match"}:
@@ -565,16 +578,19 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
 
     category_order = {
         "new_project_candidate": 0,
-        "identity_review": 1,
-        "unmatched_project_change": 2,
-        "known_project_update": 3,
-        "discovery_candidate_update": 4,
-        "historical_or_closed": 5,
-        "existing_project_follow_up": 6,
-        "non_target_scale": 7,
-        "market_intelligence": 8,
-        "company_signal": 9,
-        "non_project_event": 10,
+        "baseline_project_candidate": 1,
+        "identity_review": 2,
+        "unmatched_project_change": 3,
+        "known_project_update": 4,
+        "discovery_candidate_update": 5,
+        "baseline_known_project": 6,
+        "baseline_discovery_candidate": 7,
+        "historical_or_closed": 8,
+        "existing_project_follow_up": 9,
+        "non_target_scale": 10,
+        "market_intelligence": 11,
+        "company_signal": 12,
+        "non_project_event": 13,
     }
     items.sort(
         key=lambda row: (
@@ -590,6 +606,7 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         counts[category] = counts.get(category, 0) + 1
 
     new_candidates = [row for row in items if row.get("category") == "new_project_candidate"]
+    baseline_candidates = [row for row in items if row.get("category") == "baseline_project_candidate"]
     known_updates = [row for row in items if row.get("category") == "known_project_update"]
     discovery_updates = [row for row in items if row.get("category") == "discovery_candidate_update"]
     identity_reviews = [
@@ -606,6 +623,10 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "canonical_projects": len(canonical),
         "discovery_candidates_known": len(discovery),
         "events": len(items),
+        "baseline_records": sum(1 for row in items if row.get("event_type") == "baseline"),
+        "baseline_project_candidates": len(baseline_candidates),
+        "baseline_known_projects": sum(1 for row in items if row.get("category") == "baseline_known_project"),
+        "baseline_discovery_candidates": sum(1 for row in items if row.get("category") == "baseline_discovery_candidate"),
         "new_project_candidates": len(new_candidates),
         "known_project_updates": len(known_updates),
         "discovery_candidate_updates": len(discovery_updates),
@@ -613,6 +634,7 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "filtered_non_pipeline": len(filtered_non_pipeline),
         "category_counts": counts,
         "new_candidates": new_candidates,
+        "baseline_candidates": baseline_candidates,
         "known_updates": known_updates,
         "discovery_updates": discovery_updates,
         "identity_review_items": identity_reviews,

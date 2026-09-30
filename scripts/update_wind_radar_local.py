@@ -127,6 +127,8 @@ def _write_daily_html(
     company: dict[str, Any],
 ) -> None:
     new_count = int(report.get("new_project_candidates") or 0)
+    baseline_count = int(report.get("baseline_project_candidates") or 0)
+    baseline_records = int(report.get("baseline_records") or 0)
     known_count = int(report.get("known_project_updates") or 0)
     discovery_count = int(report.get("discovery_candidate_updates") or 0)
     review_count = int(report.get("identity_reviews") or 0)
@@ -138,6 +140,12 @@ def _write_daily_html(
     if new_count:
         headline = f"{new_count} nuovo/i progetto/i candidato/i da verificare"
         headline_class = "alert"
+    elif baseline_records:
+        headline = (
+            f"Baseline fonti inizializzata: {baseline_records} record acquisiti; "
+            f"{baseline_count} candidati backlog da verificare, 0 nuovi giornalieri"
+        )
+        headline_class = "ok"
     else:
         headline = "Nessun nuovo progetto candidato rilevato"
         headline_class = "ok"
@@ -177,13 +185,15 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <div class="headline {headline_class}">{escape(headline)}</div>
 <div class="kpis">
 <div class="kpi"><small>Nuovi candidati</small><strong>{new_count}</strong></div>
+<div class="kpi"><small>Backlog baseline</small><strong>{baseline_count}</strong></div>
 <div class="kpi"><small>Progetti noti aggiornati</small><strong>{known_count}</strong></div>
 <div class="kpi"><small>Discovery aggiornati</small><strong>{discovery_count}</strong></div>
 <div class="kpi"><small>Identità da verificare</small><strong>{review_count}</strong></div>
 <div class="kpi"><small>Storici / fuori scala filtrati</small><strong>{filtered_count}</strong></div>
 <div class="kpi"><small>Errori fonte</small><strong>{len(source_errors)}</strong></div>
 </div>
-<section><h2>Nuovi progetti candidati</h2>{_html_table(report.get('new_candidates') or [], 'Nessun nuovo progetto candidato.')}</section>
+<section><h2>Nuovi progetti candidati dalla scansione giornaliera</h2>{_html_table(report.get('new_candidates') or [], 'Nessun nuovo progetto candidato.')}</section>
+<section><h2>Backlog iniziale della baseline fonti</h2>{_html_table(report.get('baseline_candidates') or [], 'Nessun candidato backlog nella baseline iniziale.')}</section>
 <section><h2>Aggiornamenti dei {canonical['projects']} progetti già noti</h2>{_html_table(report.get('known_updates') or [], 'Nessun aggiornamento significativo dei progetti canonici.')}</section>
 <section><h2>Candidati Discovery già noti aggiornati</h2>{_html_table(report.get('discovery_updates') or [], 'Nessun aggiornamento della coda Discovery.')}</section>
 <section><h2>Identità / matching da verificare</h2>{_html_table(report.get('identity_review_items') or [], 'Nessuna identità ambigua da verificare.')}</section>
@@ -350,12 +360,15 @@ def main() -> int:
             "run_ids": run_ids,
             "canonical_projects": canonical["projects"],
             "events": 0,
+            "baseline_records": 0,
+            "baseline_project_candidates": 0,
             "new_project_candidates": 0,
             "known_project_updates": 0,
             "discovery_candidate_updates": 0,
             "identity_reviews": 0,
             "filtered_non_pipeline": 0,
             "new_candidates": [],
+            "baseline_candidates": [],
             "known_updates": [],
             "discovery_updates": [],
             "identity_review_items": [],
@@ -403,6 +416,8 @@ def main() -> int:
             "action_types": digest.get("action_types") or {},
         },
         "daily_discovery": {
+            "baseline_records": int(daily_discovery.get("baseline_records") or 0),
+            "baseline_project_candidates": int(daily_discovery.get("baseline_project_candidates") or 0),
             "new_project_candidates": int(daily_discovery.get("new_project_candidates") or 0),
             "known_project_updates": int(daily_discovery.get("known_project_updates") or 0),
             "discovery_candidate_updates": int(daily_discovery.get("discovery_candidate_updates") or 0),
@@ -436,6 +451,7 @@ def main() -> int:
     print(
         "Daily discovery: "
         f"{status['daily_discovery']['new_project_candidates']} NEW project candidates / "
+        f"{status['daily_discovery']['baseline_project_candidates']} baseline backlog candidates / "
         f"{status['daily_discovery']['known_project_updates']} known-project updates / "
         f"{status['daily_discovery']['identity_reviews']} identity reviews / "
         f"{status['daily_discovery']['filtered_non_pipeline']} historical/non-target filtered"
