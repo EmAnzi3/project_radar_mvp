@@ -11,6 +11,7 @@ on:
       - 'CURRENT_STATE.md'
       - 'CHANGELOG.md'
       - 'README.md'
+      - 'aggiorna_wind_radar.bat'
       - '.github/workflows/check_wind_v04.yml'
       - '.github/workflows/wind_agent_watch.yml'
   workflow_dispatch:
