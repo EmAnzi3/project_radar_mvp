@@ -1,0 +1,1097 @@
+{
+  "updated_at": "2026-09-30",
+  "summary": {
+    "projects": 17,
+    "mw": 1498,
+    "construction_projects": 10,
+    "construction_mw": 480.8,
+    "preconstruction_projects": 1,
+    "authorized_projects": 1,
+    "projects_with_contractors": 12
+  },
+  "by_region": [
+    {
+      "name": "Puglia",
+      "projects": 7,
+      "mw": 896.2
+    },
+    {
+      "name": "Sardegna",
+      "projects": 2,
+      "mw": 187.5
+    },
+    {
+      "name": "Campania",
+      "projects": 3,
+      "mw": 162.3
+    },
+    {
+      "name": "Sicilia",
+      "projects": 2,
+      "mw": 152
+    },
+    {
+      "name": "Basilicata",
+      "projects": 2,
+      "mw": 87
+    },
+    {
+      "name": "Calabria",
+      "projects": 1,
+      "mw": 13
+    }
+  ],
+  "by_province": [
+    {
+      "name": "Foggia",
+      "projects": 4,
+      "mw": 558.2
+    },
+    {
+      "name": "Sassari",
+      "projects": 2,
+      "mw": 187.5
+    },
+    {
+      "name": "Avellino",
+      "projects": 2,
+      "mw": 132.3
+    },
+    {
+      "name": "Taranto",
+      "projects": 1,
+      "mw": 132
+    },
+    {
+      "name": "Bari",
+      "projects": 1,
+      "mw": 108
+    },
+    {
+      "name": "Brindisi",
+      "projects": 1,
+      "mw": 98
+    },
+    {
+      "name": "Siracusa",
+      "projects": 1,
+      "mw": 97
+    },
+    {
+      "name": "Palermo",
+      "projects": 1,
+      "mw": 55
+    },
+    {
+      "name": "Potenza",
+      "projects": 1,
+      "mw": 45
+    },
+    {
+      "name": "Matera",
+      "projects": 1,
+      "mw": 42
+    },
+    {
+      "name": "Benevento",
+      "projects": 1,
+      "mw": 30
+    },
+    {
+      "name": "Cosenza",
+      "projects": 1,
+      "mw": 13
+    }
+  ],
+  "by_stage": [
+    {
+      "name": "Permitting",
+      "projects": 4,
+      "mw": 675.2
+    },
+    {
+      "name": "Construction",
+      "projects": 10,
+      "mw": 480.8
+    },
+    {
+      "name": "Advanced permitting",
+      "projects": 1,
+      "mw": 132
+    },
+    {
+      "name": "Authorized",
+      "projects": 1,
+      "mw": 121.5
+    },
+    {
+      "name": "Pre-construction",
+      "projects": 1,
+      "mw": 88.5
+    }
+  ],
+  "contractors": [
+    {
+      "company": "Vestas",
+      "projects": 6,
+      "mw": 356.3,
+      "roles": [
+        "OEM WTG"
+      ],
+      "project_names": [
+        "Alia-Sclafani-Valledolmo",
+        "Andretta-Bisaccia",
+        "Carlentini",
+        "Castelfranco in Miscano / CER",
+        "Greci-Montaguto",
+        "Tricarico"
+      ]
+    },
+    {
+      "company": "Energy&",
+      "projects": 3,
+      "mw": 122,
+      "roles": [
+        "Site management",
+        "Site management / engineering signal",
+        "Site management / intelligence node"
+      ],
+      "project_names": [
+        "Castelfranco in Miscano / CER",
+        "Serra Palino",
+        "Venusia"
+      ]
+    },
+    {
+      "company": "Idoka Costruzioni",
+      "projects": 3,
+      "mw": 100,
+      "roles": [
+        "Opere civili / preparazione sito",
+        "Promotore / possibile BoP, ruolo da confermare",
+        "RTI opere propedeutiche WTG"
+      ],
+      "project_names": [
+        "Tarsia Ovest",
+        "Tricarico",
+        "Venusia"
+      ]
+    },
+    {
+      "company": "Hydro Engineering",
+      "projects": 2,
+      "mw": 218.5,
+      "roles": [
+        "DL / foundation engineering",
+        "Sviluppo/progettazione"
+      ],
+      "project_names": [
+        "Carlentini",
+        "Nulvi-Ploaghe"
+      ]
+    },
+    {
+      "company": "D'Agostino Costruzioni Generali",
+      "projects": 2,
+      "mw": 89,
+      "roles": [
+        "Forte segnale operativo; contratto da confermare",
+        "Opere civili ed elettromeccaniche"
+      ],
+      "project_names": [
+        "Serra Giannina",
+        "Serra Palino"
+      ]
+    },
+    {
+      "company": "EGM Project",
+      "projects": 2,
+      "mw": 87,
+      "roles": [
+        "Direzione Lavori / engineering",
+        "Progettazione esecutiva / DL"
+      ],
+      "project_names": [
+        "Serra Giannina",
+        "Venusia"
+      ]
+    },
+    {
+      "company": "PLC System",
+      "projects": 2,
+      "mw": 43,
+      "roles": [
+        "RTI / SSE MT-AT",
+        "SSE AT/MT e connessione"
+      ],
+      "project_names": [
+        "Castelfranco in Miscano / CER",
+        "Tarsia Ovest"
+      ]
+    },
+    {
+      "company": "BFP",
+      "projects": 1,
+      "mw": 97,
+      "roles": [
+        "CSP/CSE-HSE"
+      ],
+      "project_names": [
+        "Carlentini"
+      ]
+    },
+    {
+      "company": "Gruppo Mammana",
+      "projects": 1,
+      "mw": 97,
+      "roles": [
+        "Fondazioni / getti"
+      ],
+      "project_names": [
+        "Carlentini"
+      ]
+    },
+    {
+      "company": "Progeco Group",
+      "projects": 1,
+      "mw": 88.5,
+      "roles": [
+        "Supervisione di cantiere"
+      ],
+      "project_names": [
+        "Andretta-Bisaccia"
+      ]
+    },
+    {
+      "company": "F.lli Pisci",
+      "projects": 1,
+      "mw": 66,
+      "roles": [
+        "Forte evidenza operativa/civile; contratto da confermare"
+      ],
+      "project_names": [
+        "ALAS"
+      ]
+    },
+    {
+      "company": "SOCEP",
+      "projects": 1,
+      "mw": 55,
+      "roles": [
+        "Incumbent storico sito; repowering da confermare"
+      ],
+      "project_names": [
+        "Alia-Sclafani-Valledolmo"
+      ]
+    },
+    {
+      "company": "Vector Renewables",
+      "projects": 1,
+      "mw": 42,
+      "roles": [
+        "Lender technical adviser / construction monitoring"
+      ],
+      "project_names": [
+        "Tricarico"
+      ]
+    },
+    {
+      "company": "Delta",
+      "projects": 1,
+      "mw": 13,
+      "roles": [
+        "RTI"
+      ],
+      "project_names": [
+        "Tarsia Ovest"
+      ]
+    },
+    {
+      "company": "Michelangelo Mammana",
+      "projects": 1,
+      "mw": 13,
+      "roles": [
+        "RTI"
+      ],
+      "project_names": [
+        "Tarsia Ovest"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "carlentini",
+      "project": "Carlentini",
+      "type": "Repowering",
+      "mw_wind": 97,
+      "mw_bess": 0,
+      "region": "Sicilia",
+      "province": "Siracusa",
+      "municipalities": "Carlentini",
+      "area": "",
+      "developer": "ERG",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "Repowering in costruzione",
+      "construction_window": "2026–2027",
+      "erection_window": "2026–2027",
+      "cod_target": "Q2 2027",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Contractor network / supporto cantiere",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Vestas",
+          "role": "OEM WTG",
+          "confidence": "alta"
+        },
+        {
+          "company": "Hydro Engineering",
+          "role": "DL / foundation engineering",
+          "confidence": "alta"
+        },
+        {
+          "company": "BFP",
+          "role": "CSP/CSE-HSE",
+          "confidence": "alta"
+        },
+        {
+          "company": "Gruppo Mammana",
+          "role": "Fondazioni / getti",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "ERG",
+          "url": "https://www.erg.eu/it/-/due-nuovi-progetti-di-repowering-eolico-per-complessivi-141mw-aggiudicatari-in-asta-ferx"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "BFP",
+        "Gruppo Mammana",
+        "Hydro Engineering",
+        "Vestas"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "alas",
+      "project": "ALAS",
+      "type": "Greenfield",
+      "mw_wind": 66,
+      "mw_bess": 0,
+      "region": "Sardegna",
+      "province": "Sassari",
+      "municipalities": "Sardegna",
+      "area": "",
+      "developer": "RWE",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "Costruzione avviata 2026",
+      "construction_window": "2026–2027",
+      "erection_window": "Da verificare",
+      "cod_target": "2027",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Confermare ruolo F.lli Pisci e altri contractor",
+      "confidence": "media",
+      "contractors": [
+        {
+          "company": "F.lli Pisci",
+          "role": "Forte evidenza operativa/civile; contratto da confermare",
+          "confidence": "media"
+        }
+      ],
+      "sources": [
+        {
+          "label": "RWE",
+          "url": "https://www.rwe.com/en/press/rwe-renewables-europe-australia/2026-02-26-high-speed-growth-in-italy/"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "F.lli Pisci"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "alia",
+      "project": "Alia-Sclafani-Valledolmo",
+      "type": "Repowering",
+      "mw_wind": 55,
+      "mw_bess": 0,
+      "region": "Sicilia",
+      "province": "Palermo",
+      "municipalities": "Alia; Sclafani Bagni; Valledolmo",
+      "area": "Serra Tignino – Serra Cavero",
+      "developer": "Asja",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "Erection pianificato 21/08/2026–05/11/2026",
+      "construction_window": "29/07/2025–09/02/2026",
+      "erection_window": "21/08/2026–05/11/2026",
+      "cod_target": "14/01/2027",
+      "civil_start": "2025-07-29",
+      "erection_start": "2026-08-21",
+      "cod_date": "2027-01-14",
+      "commercial_focus": "Erection support / Electrical BoP / SSE / logistica",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Vestas",
+          "role": "OEM WTG",
+          "confidence": "alta"
+        },
+        {
+          "company": "SOCEP",
+          "role": "Incumbent storico sito; repowering da confermare",
+          "confidence": "media"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Cronoprogramma Asja",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/11126/16687"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "SOCEP",
+        "Vestas"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "serrapalino",
+      "project": "Serra Palino",
+      "type": "Greenfield",
+      "mw_wind": 47,
+      "mw_bess": 0,
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": "Area Foggiano",
+      "area": "",
+      "developer": "RWE",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "In costruzione",
+      "construction_window": "2025–2026",
+      "erection_window": "2026",
+      "cod_target": "entro fine 2026",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Cantiere attivo: fabbisogni residui e relazione contractor",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "D'Agostino Costruzioni Generali",
+          "role": "Opere civili ed elettromeccaniche",
+          "confidence": "alta"
+        },
+        {
+          "company": "Energy&",
+          "role": "Site management / intelligence node",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "RWE",
+          "url": "https://it.rwe.com/ufficio-stampa/2025-10-23-rwe-avvia-la-costruzione-di-due-parchi-eolici-onshore-in-italia/"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "D'Agostino Costruzioni Generali",
+        "Energy&"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "venusia",
+      "project": "Venusia",
+      "type": "Greenfield",
+      "mw_wind": 45,
+      "mw_bess": 0,
+      "region": "Basilicata",
+      "province": "Potenza",
+      "municipalities": "Venosa / area Potenza",
+      "area": "",
+      "developer": "RWE",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "Civili completati / ingresso turbinista",
+      "construction_window": "2025–2026",
+      "erection_window": "2026",
+      "cod_target": "fine 2026",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Erection / logistica / supporto turbinista",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Idoka Costruzioni",
+          "role": "Opere civili / preparazione sito",
+          "confidence": "alta"
+        },
+        {
+          "company": "EGM Project",
+          "role": "Progettazione esecutiva / DL",
+          "confidence": "alta"
+        },
+        {
+          "company": "Energy&",
+          "role": "Site management",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "RWE",
+          "url": "https://it.rwe.com/ufficio-stampa/2025-10-23-rwe-avvia-la-costruzione-di-due-parchi-eolici-onshore-in-italia/"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "EGM Project",
+        "Energy&",
+        "Idoka Costruzioni"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "greci",
+      "project": "Greci-Montaguto",
+      "type": "Repowering",
+      "mw_wind": 43.8,
+      "mw_bess": 0,
+      "region": "Campania",
+      "province": "Avellino",
+      "municipalities": "Greci; Montaguto",
+      "area": "",
+      "developer": "ERG",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "Cantiere avviato marzo 2026",
+      "construction_window": "03/2026–2027",
+      "erection_window": "Da verificare",
+      "cod_target": "estate 2027",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Identificare Civil/Electrical BoP e dismantling",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Vestas",
+          "role": "OEM WTG",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "ERG kick-off",
+          "url": "https://www.erg.eu/it/-/kick-off-meeting-for-the-greci-montaguto-repowering-project"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "Vestas"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "serragiannina",
+      "project": "Serra Giannina",
+      "type": "Greenfield",
+      "mw_wind": 42,
+      "mw_bess": 0,
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": "Area Foggiano",
+      "area": "",
+      "developer": "RWE",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "BoP civile/cavidotti in esecuzione",
+      "construction_window": "BoP ≈ 5 mesi; cantiere attivo 2026",
+      "erection_window": "Da verificare",
+      "cod_target": "2027",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Confermare Civil BoP; seguire transizione a erection",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "EGM Project",
+          "role": "Direzione Lavori / engineering",
+          "confidence": "alta"
+        },
+        {
+          "company": "D'Agostino Costruzioni Generali",
+          "role": "Forte segnale operativo; contratto da confermare",
+          "confidence": "media"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Cronoprogramma BoP MASE",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18510"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "D'Agostino Costruzioni Generali",
+        "EGM Project"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "tricarico",
+      "project": "Tricarico",
+      "type": "Greenfield",
+      "mw_wind": 42,
+      "mw_bess": 0,
+      "region": "Basilicata",
+      "province": "Matera",
+      "municipalities": "Tricarico",
+      "area": "",
+      "developer": "Idoka / Adest",
+      "spv": "Adest",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "In costruzione",
+      "construction_window": "2026–2027",
+      "erection_window": "H2 2026–2027",
+      "cod_target": "H2 2027",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Chiarire affidamento BoP; target Idoka",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Vestas",
+          "role": "OEM WTG",
+          "confidence": "alta"
+        },
+        {
+          "company": "Idoka Costruzioni",
+          "role": "Promotore / possibile BoP, ruolo da confermare",
+          "confidence": "media"
+        },
+        {
+          "company": "Vector Renewables",
+          "role": "Lender technical adviser / construction monitoring",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "UniCredit financing",
+          "url": "https://www.unicreditgroup.eu/it/press-media/news/2026/june/energia--unicredit-finanzia-con-46-5-milioni-il-nuovo-parco-eoli.html"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "Idoka Costruzioni",
+        "Vector Renewables",
+        "Vestas"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "castelfranco",
+      "project": "Castelfranco in Miscano / CER",
+      "type": "Repowering",
+      "mw_wind": 30,
+      "mw_bess": 0,
+      "region": "Campania",
+      "province": "Benevento",
+      "municipalities": "Castelfranco in Miscano",
+      "area": "",
+      "developer": "IP Gruppo api / CER Campana Energie Rinnovabili",
+      "spv": "CER Campana Energie Rinnovabili",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "WTG H2 2026; SSE completamento H1 2027",
+      "construction_window": "2026–H1 2027",
+      "erection_window": "H2 2026",
+      "cod_target": "H1 2027",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Electrical/SSE e supporto erection",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Vestas",
+          "role": "OEM WTG",
+          "confidence": "alta"
+        },
+        {
+          "company": "PLC System",
+          "role": "SSE AT/MT e connessione",
+          "confidence": "alta"
+        },
+        {
+          "company": "Energy&",
+          "role": "Site management / engineering signal",
+          "confidence": "media"
+        }
+      ],
+      "sources": [
+        {
+          "label": "BURC",
+          "url": "https://burc.regione.campania.it/eBurcWeb/directServlet?ATTACH_ID=224035&DOCUMENT_ID=00146891"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "Energy&",
+        "PLC System",
+        "Vestas"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "tarsiaovest",
+      "project": "Tarsia Ovest",
+      "type": "Greenfield",
+      "mw_wind": 13,
+      "mw_bess": 0,
+      "region": "Calabria",
+      "province": "Cosenza",
+      "municipalities": "Tarsia",
+      "area": "",
+      "developer": "Plenitude",
+      "spv": "",
+      "myterna": "",
+      "stage": "Construction",
+      "status": "Costruzione avviata; SSE nel 2026",
+      "construction_window": "11/2025–2026",
+      "erection_window": "2026",
+      "cod_target": "Da verificare",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Cantiere attivo; monitorare RTI e sottocontratti",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "PLC System",
+          "role": "RTI / SSE MT-AT",
+          "confidence": "alta"
+        },
+        {
+          "company": "Idoka Costruzioni",
+          "role": "RTI opere propedeutiche WTG",
+          "confidence": "alta"
+        },
+        {
+          "company": "Michelangelo Mammana",
+          "role": "RTI",
+          "confidence": "alta"
+        },
+        {
+          "company": "Delta",
+          "role": "RTI",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "PLC",
+          "url": "https://www.plc-spa.it/plc-system-nuovo-contratto-per-il-parco-eolico-tarsia-ovest/"
+        }
+      ],
+      "commercial_window": "ATTIVO",
+      "contractor_names": [
+        "Delta",
+        "Idoka Costruzioni",
+        "Michelangelo Mammana",
+        "PLC System"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "andrettabisaccia",
+      "project": "Andretta-Bisaccia",
+      "type": "Repowering",
+      "mw_wind": 88.5,
+      "mw_bess": 0,
+      "region": "Campania",
+      "province": "Avellino",
+      "municipalities": "Andretta; Bisaccia; Vallata",
+      "area": "",
+      "developer": "Edison",
+      "spv": "",
+      "myterna": "",
+      "stage": "Pre-construction",
+      "status": "Apertura cantiere pianificata 02/11/2026",
+      "construction_window": "13/11/2026–28/04/2027",
+      "erection_window": "06/12/2027–28/04/2028",
+      "cod_target": "10/08/2028",
+      "civil_start": "2026-11-13",
+      "erection_start": "2027-12-06",
+      "cod_date": "2028-08-10",
+      "commercial_focus": "Identificare Civil BoP / Electrical BoP prima della mobilitazione",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Vestas",
+          "role": "OEM WTG",
+          "confidence": "alta"
+        },
+        {
+          "company": "Progeco Group",
+          "role": "Supervisione di cantiere",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Piano cantierizzazione MASE",
+          "url": "https://va.mite.gov.it/en-GB/Oggetti/Documentazione/10986/19247"
+        }
+      ],
+      "commercial_window": "0–6 MESI",
+      "contractor_names": [
+        "Progeco Group",
+        "Vestas"
+      ],
+      "source_count": 1
+    },
+    {
+      "id": "nulviploaghe",
+      "project": "Nulvi-Ploaghe",
+      "type": "Repowering",
+      "mw_wind": 121.5,
+      "mw_bess": 0,
+      "region": "Sardegna",
+      "province": "Sassari",
+      "municipalities": "Nulvi; Ploaghe",
+      "area": "",
+      "developer": "ERG",
+      "spv": "",
+      "myterna": "",
+      "stage": "Authorized",
+      "status": "Autorizzato; Route-to-Market; procurement watch",
+      "construction_window": "Da definire",
+      "erection_window": "Da definire",
+      "cod_target": "Da definire",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Intercettare Civil/Electrical BoP prima della mobilitazione",
+      "confidence": "alta",
+      "contractors": [
+        {
+          "company": "Hydro Engineering",
+          "role": "Sviluppo/progettazione",
+          "confidence": "alta"
+        }
+      ],
+      "sources": [
+        {
+          "label": "BURAS",
+          "url": "https://buras.regione.sardegna.it/bollettino/59364/parte-supplemento/59465"
+        },
+        {
+          "label": "ERG Q1 2026",
+          "url": "https://www.erg.eu/it/-/il-consiglio-di-amministrazione-di-erg-s.p.a.-approva-i-risultati-consolidati-del-primo-trimestre-2026"
+        }
+      ],
+      "commercial_window": "PROCUREMENT",
+      "contractor_names": [
+        "Hydro Engineering"
+      ],
+      "source_count": 2
+    },
+    {
+      "id": "savamaruggio",
+      "project": "Sava-Maruggio",
+      "type": "Greenfield",
+      "mw_wind": 132,
+      "mw_bess": 50,
+      "region": "Puglia",
+      "province": "Taranto",
+      "municipalities": "Sava; Maruggio",
+      "area": "",
+      "developer": "",
+      "spv": "",
+      "myterna": "",
+      "stage": "Advanced permitting",
+      "status": "VIA positiva 20/05/2025",
+      "construction_window": "Da definire",
+      "erection_window": "Da definire",
+      "cod_target": "Da definire",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Cercare AU/procurement e contractor",
+      "confidence": "alta",
+      "contractors": [],
+      "sources": [
+        {
+          "label": "MASE provvedimento",
+          "url": "https://va.mite.gov.it/it-IT/Comunicazione/DettaglioUltimiProvvedimenti/5298"
+        }
+      ],
+      "commercial_window": "6–18 MESI",
+      "contractor_names": [],
+      "source_count": 1
+    },
+    {
+      "id": "fenice",
+      "project": "Fenice",
+      "type": "Greenfield",
+      "mw_wind": 367.2,
+      "mw_bess": 0,
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": "Puglia",
+      "area": "",
+      "developer": "NVA Fenice",
+      "spv": "NVA Fenice",
+      "myterna": "202305182",
+      "stage": "Permitting",
+      "status": "In attesa concerto",
+      "construction_window": "Da definire",
+      "erection_window": "Da definire",
+      "cod_target": "Da definire",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Monitorare passaggio a autorizzato/procurement",
+      "confidence": "alta",
+      "contractors": [],
+      "sources": [
+        {
+          "label": "MASE",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/10768"
+        }
+      ],
+      "commercial_window": "SVILUPPO",
+      "contractor_names": [],
+      "source_count": 1
+    },
+    {
+      "id": "toritto",
+      "project": "Toritto",
+      "type": "Greenfield",
+      "mw_wind": 108,
+      "mw_bess": 50,
+      "region": "Puglia",
+      "province": "Bari",
+      "municipalities": "Toritto",
+      "area": "",
+      "developer": "Evolve",
+      "spv": "Evolve",
+      "myterna": "202407665",
+      "stage": "Permitting",
+      "status": "VIA / progettazione avanzata; cronoprogramma ~18 mesi",
+      "construction_window": "~18 mesi da avvio",
+      "erection_window": "Da definire",
+      "cod_target": "Da definire",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Monitorare autorizzazione e primo procurement",
+      "confidence": "alta",
+      "contractors": [],
+      "sources": [
+        {
+          "label": "MASE cronoprogramma",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/MetadatoDocumento/1257559"
+        }
+      ],
+      "commercial_window": "SVILUPPO",
+      "contractor_names": [],
+      "source_count": 1
+    },
+    {
+      "id": "volturino",
+      "project": "Volturino",
+      "type": "Greenfield",
+      "mw_wind": 102,
+      "mw_bess": 0,
+      "region": "Puglia",
+      "province": "Foggia",
+      "municipalities": "Volturino",
+      "area": "",
+      "developer": "GreenIT",
+      "spv": "",
+      "myterna": "202401311",
+      "stage": "Permitting",
+      "status": "Istruttoria tecnica; documentazione progettuale ricca",
+      "construction_window": "Da definire",
+      "erection_window": "Da definire",
+      "cod_target": "Da definire",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Monitorare transizione a advanced permitting / procurement",
+      "confidence": "alta",
+      "contractors": [],
+      "sources": [
+        {
+          "label": "MASE documentazione",
+          "url": "https://va.mite.gov.it/en-GB/Oggetti/Documentazione/11819/18156"
+        }
+      ],
+      "commercial_window": "SVILUPPO",
+      "contractor_names": [],
+      "source_count": 1
+    },
+    {
+      "id": "lamacupa",
+      "project": "Lama Cupa",
+      "type": "Greenfield",
+      "mw_wind": 98,
+      "mw_bess": 30,
+      "region": "Puglia",
+      "province": "Brindisi",
+      "municipalities": "Puglia",
+      "area": "",
+      "developer": "Acciona",
+      "spv": "",
+      "myterna": "202304180",
+      "stage": "Permitting",
+      "status": "VIA / integrazioni",
+      "construction_window": "Da definire",
+      "erection_window": "Da definire",
+      "cod_target": "Da definire",
+      "civil_start": "",
+      "erection_start": "",
+      "cod_date": "",
+      "commercial_focus": "Monitorare evoluzione autorizzativa e procurement",
+      "confidence": "alta",
+      "contractors": [],
+      "sources": [
+        {
+          "label": "MASE",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/11203"
+        }
+      ],
+      "commercial_window": "SVILUPPO",
+      "contractor_names": [],
+      "source_count": 1
+    }
+  ]
+}
