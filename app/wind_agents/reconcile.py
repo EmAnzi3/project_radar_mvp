@@ -395,3 +395,136 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
         "non_actionable_events": len(items) - len(actionable),
         "guard": "Digest is review-only. No evidence, scope, stage, priority or canonical project is mutated automatically.",
     }
+
+
+def classify_daily_discovery_event(
+    event: dict[str, Any],
+    *,
+    canonical: list[dict[str, Any]] | None = None,
+    discovery: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Classify one new/changed finding for the daily project-discovery report.
+
+    The classification is intentionally conservative:
+    - canonical matches are updates to one of the 51 known projects;
+    - discovery matches are updates to already-known non-canonical candidates;
+    - only project-specific NEW findings without a credible existing match become
+      new project candidates;
+    - weak/ambiguous identity stays in review instead of being declared new.
+    """
+
+    finding = event.get("finding") or {}
+    payload = finding.get("payload") or {}
+    reconciliation = reconcile_finding(
+        finding,
+        canonical=canonical,
+        discovery=discovery,
+    )
+    best = reconciliation.get("best") or {}
+    status = reconciliation.get("status")
+    event_type = event.get("event_type")
+    project_specific = bool(payload.get("project_specific"))
+    finding_type = finding.get("finding_type")
+
+    if payload.get("is_aggregated_market_intelligence"):
+        category = "market_intelligence"
+    elif finding_type == "company_source_snapshot":
+        category = "company_signal"
+    elif not project_specific and finding_type != "project_source":
+        category = "non_project_event"
+    elif best.get("target_kind") == "canonical" and status == "high_confidence_match":
+        category = "known_project_update"
+    elif best.get("target_kind") == "discovery" and status in {"high_confidence_match", "review_match"}:
+        category = "discovery_candidate_update"
+    elif event_type == "new" and project_specific and status in {"unmatched", "weak_match"}:
+        category = "new_project_candidate"
+    elif best.get("target_kind") == "canonical" and status in {"review_match", "weak_match"}:
+        category = "identity_review"
+    elif event_type == "changed" and project_specific and status in {"unmatched", "weak_match"}:
+        category = "unmatched_project_change"
+    elif project_specific:
+        category = "identity_review"
+    else:
+        category = "non_project_event"
+
+    return {
+        **event,
+        "category": category,
+        "reconciliation": reconciliation,
+        "project_specific": project_specific,
+    }
+
+
+def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
+    """Build the daily discovery report from institutional/company run events.
+
+    This report answers the operational question: did today's scan find projects
+    not already represented by the canonical 51 or by the existing Discovery
+    queue? No automatic promotion is performed.
+    """
+
+    canonical = load_canonical_projects()
+    discovery = load_discovery_candidates()
+    items: list[dict[str, Any]] = []
+
+    for run_id in run_ids:
+        for event in get_run_events(run_id):
+            items.append(
+                classify_daily_discovery_event(
+                    event,
+                    canonical=canonical,
+                    discovery=discovery,
+                )
+            )
+
+    category_order = {
+        "new_project_candidate": 0,
+        "identity_review": 1,
+        "unmatched_project_change": 2,
+        "known_project_update": 3,
+        "discovery_candidate_update": 4,
+        "market_intelligence": 5,
+        "company_signal": 6,
+        "non_project_event": 7,
+    }
+    items.sort(
+        key=lambda row: (
+            category_order.get(row.get("category"), 99),
+            row.get("created_at") or "",
+            row.get("external_id") or "",
+        )
+    )
+
+    counts: dict[str, int] = {}
+    for row in items:
+        category = str(row.get("category") or "unknown")
+        counts[category] = counts.get(category, 0) + 1
+
+    new_candidates = [row for row in items if row.get("category") == "new_project_candidate"]
+    known_updates = [row for row in items if row.get("category") == "known_project_update"]
+    discovery_updates = [row for row in items if row.get("category") == "discovery_candidate_update"]
+    identity_reviews = [
+        row for row in items
+        if row.get("category") in {"identity_review", "unmatched_project_change"}
+    ]
+
+    return {
+        "run_ids": run_ids,
+        "canonical_projects": len(canonical),
+        "discovery_candidates_known": len(discovery),
+        "events": len(items),
+        "new_project_candidates": len(new_candidates),
+        "known_project_updates": len(known_updates),
+        "discovery_candidate_updates": len(discovery_updates),
+        "identity_reviews": len(identity_reviews),
+        "category_counts": counts,
+        "new_candidates": new_candidates,
+        "known_updates": known_updates,
+        "discovery_updates": discovery_updates,
+        "identity_review_items": identity_reviews,
+        "items": items,
+        "guard": (
+            "Daily discovery is review-only. A candidate is not added to the canonical "
+            "Wind Radar until identity/configuration/current activity pass the evidence gate."
+        ),
+    }
