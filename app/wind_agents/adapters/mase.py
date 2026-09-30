@@ -139,6 +139,7 @@ class MaseWindAgent(BaseWindAgent):
             keywords=self.keywords,
             max_pages_per_keyword=self.max_pages_per_keyword,
             max_details=self.max_details,
+            preserve_search_order=True,
         )
 
         findings: list[AgentFinding] = []
