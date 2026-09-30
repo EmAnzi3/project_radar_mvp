@@ -36,6 +36,7 @@ jobs:
             scripts/check_wind_industry_press.py
             scripts/check_wind_stages.py
             scripts/check_wind_v04.py
+            scripts/check_wind_daily_discovery.py
             scripts/check_wind_v05.py
             scripts/check_wind_v05_enrichment.py
             scripts/check_wind_v06_network.py
@@ -84,6 +85,9 @@ jobs:
 
       - name: Discovery v0.4 regression
         run: python scripts/check_wind_v04.py
+
+      - name: Daily project discovery classification
+        run: python scripts/check_wind_daily_discovery.py
 
       - name: Identity and change engine dry-run
         run: python scripts/wind_discovery_engine.py
