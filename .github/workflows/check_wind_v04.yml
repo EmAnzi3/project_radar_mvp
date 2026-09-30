@@ -5,6 +5,8 @@ on:
     paths:
       - 'docs/wind/**'
       - 'app/wind_agents/**'
+      - 'app/collectors/mase_via.py'
+      - 'app/models.py'
       - 'scripts/check_wind_*.py'
       - 'scripts/run_wind_agents.py'
       - 'scripts/update_wind_radar_local.py'

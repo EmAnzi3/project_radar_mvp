@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'app/wind_agents/**'
+      - 'app/collectors/mase_via.py'
+      - 'app/models.py'
       - 'docs/wind/data/institutional-source-network-v06*.json'
       - 'scripts/run_wind_agents.py'
       - '.github/workflows/wind_agent_live_smoke.yml'
@@ -131,6 +133,40 @@ jobs:
           print(f'Exported {len(findings)} raw findings to {output}')
           PY
 
+      - name: Classify live findings against canonical 51
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from app.wind_agents.reconcile import build_daily_discovery_report
+
+          group = os.environ['WIND_SMOKE_GROUP']
+          run_report = Path(f'reports/wind-agent-live/{group}.json')
+          if not run_report.exists():
+              print('No run report; skip daily classification.')
+              raise SystemExit(0)
+          run_id = json.loads(run_report.read_text(encoding='utf-8')).get('run_id')
+          if not run_id:
+              print('No run id; skip daily classification.')
+              raise SystemExit(0)
+
+          discovery = build_daily_discovery_report([str(run_id)])
+          output = Path(f'reports/wind-agent-live/{group}-daily-discovery.json')
+          output.write_text(json.dumps(discovery, ensure_ascii=False, indent=2), encoding='utf-8')
+          assert discovery.get('canonical_projects') == 51, discovery.get('canonical_projects')
+          print(
+              f"{group}: new={discovery.get('new_project_candidates', 0)} "
+              f"known={discovery.get('known_project_updates', 0)} "
+              f"discovery={discovery.get('discovery_candidate_updates', 0)} "
+              f"review={discovery.get('identity_reviews', 0)} "
+              f"filtered={discovery.get('filtered_non_pipeline', 0)}"
+          )
+          PY
+
       - name: Validate live result
         shell: bash
         run: |
@@ -177,6 +213,7 @@ jobs:
           group = os.environ['WIND_SMOKE_GROUP']
           report = Path(f'reports/wind-agent-live/{group}.json')
           findings_report = Path(f'reports/wind-agent-live/{group}-findings.json')
+          discovery_report = Path(f'reports/wind-agent-live/{group}-daily-discovery.json')
           lines = [f'## Wind Radar live smoke — {group}']
           if report.exists():
               data = json.loads(report.read_text(encoding='utf-8'))
@@ -192,6 +229,15 @@ jobs:
               if findings_report.exists():
                   raw = json.loads(findings_report.read_text(encoding='utf-8'))
                   lines.append(f"- Raw findings exported for review: {raw.get('finding_count', 0)}")
+              if discovery_report.exists():
+                  disc = json.loads(discovery_report.read_text(encoding='utf-8'))
+                  lines.append(
+                      f"- Daily classification: **{disc.get('new_project_candidates', 0)} new candidates**, "
+                      f"{disc.get('known_project_updates', 0)} known updates, "
+                      f"{disc.get('discovery_candidate_updates', 0)} Discovery updates, "
+                      f"{disc.get('identity_reviews', 0)} identity reviews, "
+                      f"{disc.get('filtered_non_pipeline', 0)} historical/non-target filtered"
+                  )
               if data.get('errors'):
                   lines.append(f"- Errors: {data['errors']}")
           else:
