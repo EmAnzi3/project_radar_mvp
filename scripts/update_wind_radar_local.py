@@ -130,6 +130,7 @@ def _write_daily_html(
     known_count = int(report.get("known_project_updates") or 0)
     discovery_count = int(report.get("discovery_candidate_updates") or 0)
     review_count = int(report.get("identity_reviews") or 0)
+    filtered_count = int(report.get("filtered_non_pipeline") or 0)
     source_errors = {
         **(institutional.get("errors") or {}),
         **{f"company:{k}": v for k, v in (company.get("errors") or {}).items()},
@@ -179,6 +180,7 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <div class="kpi"><small>Progetti noti aggiornati</small><strong>{known_count}</strong></div>
 <div class="kpi"><small>Discovery aggiornati</small><strong>{discovery_count}</strong></div>
 <div class="kpi"><small>Identità da verificare</small><strong>{review_count}</strong></div>
+<div class="kpi"><small>Storici / fuori scala filtrati</small><strong>{filtered_count}</strong></div>
 <div class="kpi"><small>Errori fonte</small><strong>{len(source_errors)}</strong></div>
 </div>
 <section><h2>Nuovi progetti candidati</h2>{_html_table(report.get('new_candidates') or [], 'Nessun nuovo progetto candidato.')}</section>
@@ -352,6 +354,7 @@ def main() -> int:
             "known_project_updates": 0,
             "discovery_candidate_updates": 0,
             "identity_reviews": 0,
+            "filtered_non_pipeline": 0,
             "new_candidates": [],
             "known_updates": [],
             "discovery_updates": [],
@@ -404,6 +407,7 @@ def main() -> int:
             "known_project_updates": int(daily_discovery.get("known_project_updates") or 0),
             "discovery_candidate_updates": int(daily_discovery.get("discovery_candidate_updates") or 0),
             "identity_reviews": int(daily_discovery.get("identity_reviews") or 0),
+            "filtered_non_pipeline": int(daily_discovery.get("filtered_non_pipeline") or 0),
             "report_html": str(REPORT_DIR / "daily-discovery-latest.html"),
         },
         "guard": (
@@ -433,7 +437,8 @@ def main() -> int:
         "Daily discovery: "
         f"{status['daily_discovery']['new_project_candidates']} NEW project candidates / "
         f"{status['daily_discovery']['known_project_updates']} known-project updates / "
-        f"{status['daily_discovery']['identity_reviews']} identity reviews"
+        f"{status['daily_discovery']['identity_reviews']} identity reviews / "
+        f"{status['daily_discovery']['filtered_non_pipeline']} historical/non-target filtered"
     )
     print(f"Daily report: {REPORT_DIR / 'daily-discovery-latest.html'}")
     print(
