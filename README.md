@@ -32,13 +32,26 @@ Per aggiornare l'intelligence e aprire il Wind Radar in locale:
 aggiorna_wind_radar.bat
 ```
 
-Il BAT crea/riusa `.venv`, installa le dipendenze, esegue solo le fonti/player dovuti secondo cadenza, rigenera execution queue e digest review-only, valida il Radar e apre `http://127.0.0.1:8766/docs/wind/`.
+Il BAT crea/riusa `.venv`, installa le dipendenze e, con un normale doppio clic, esegue una **scansione giornaliera di tutte le fonti istituzionali project-discovery**. I player commerciali restano invece a cadenza, perché servono soprattutto all'intelligence contractor/developer.
+
+A ogni run genera:
+- `reports/wind-agent/daily-discovery-latest.html` — report leggibile;
+- `reports/wind-agent/daily-discovery-latest.csv` — export;
+- `reports/wind-agent/daily-discovery-latest.json` — output strutturato;
+- storico in `reports/wind-agent/daily/`.
+
+Il report separa:
+- **nuovi progetti candidati** non riconciliati con i 51 canonici né con la coda Discovery;
+- aggiornamenti dei 51 progetti già noti;
+- aggiornamenti di candidati Discovery già noti;
+- identità/match da verificare;
+- errori delle fonti.
 
 Modalità opzionali:
-- `aggiorna_wind_radar.bat all` — forza tutte le fonti/player monitorati;
+- `aggiorna_wind_radar.bat all` — scansione progetto completa + forza anche tutti i player commerciali;
 - `aggiorna_wind_radar.bat offline` — nessuna chiamata esterna, solo stato/validazione/apertura.
 
-I finding locali non modificano automaticamente il canonico: il gate A1/A2 resta invariato.
+I finding locali non modificano automaticamente il canonico: un nuovo candidato entra nei 51 solo dopo verifica di identità, attività corrente, configurazione e stage.
 
 
 Stato operativo dettagliato:
