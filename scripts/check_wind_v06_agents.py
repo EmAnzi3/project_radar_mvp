@@ -122,6 +122,27 @@ decision = _bootstrap_decision(
 )
 assert decision[0] is False and decision[1] is False, decision
 
+puglia_revision = SistemaPugliaWindAgent()
+decision = _bootstrap_decision(
+    legacy_runtime,
+    puglia_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is True and decision[1] is True, decision
+assert decision[2] == "puglia-via-fer-xlsx-v1", decision
+assert puglia_revision.baseline_revision == "puglia-via-fer-xlsx-v1"
+
+migrated_puglia_runtime = {
+    "last_success": "2026-10-01T12:00:00",
+    "metadata": {"baseline_revision": puglia_revision.baseline_revision},
+}
+decision = _bootstrap_decision(
+    migrated_puglia_runtime,
+    puglia_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is False and decision[1] is False, decision
+
 sardegna_revision = SardegnaWindAgent(years=["2026"])
 decision = _bootstrap_decision(
     legacy_runtime,
