@@ -107,6 +107,25 @@ class SiciliaWindAgent(BaseWindAgent):
                     return value
         return None
 
+    @classmethod
+    def _change_basis(
+        cls,
+        *,
+        code: str | None,
+        title: str,
+        proponent: str | None,
+        procedure: str | None,
+        power_mw: float | None,
+    ) -> dict[str, object]:
+        """Stable project-change signal shared by CSV and GIS fallback."""
+        return {
+            "source_code": code,
+            "project_name": cls._clean(title),
+            "proponent": cls._clean(proponent) or None,
+            "procedure": cls._clean(procedure) or None,
+            "power_mw": power_mw,
+        }
+
     @staticmethod
     def _external_id(code: str | None, title: str, detail_url: str) -> str:
         if code:
@@ -174,6 +193,7 @@ class SiciliaWindAgent(BaseWindAgent):
                 or ""
             ) or None
             status = self._clean(row.get("stato") or row.get("status") or "") or None
+            power_mw = self._power_mw(title)
 
             findings.append(
                 AgentFinding(
@@ -188,7 +208,7 @@ class SiciliaWindAgent(BaseWindAgent):
                         "region": "Sicilia",
                         "province": self._province(title),
                         "municipality": self._municipality(title),
-                        "power_mw": self._power_mw(title),
+                        "power_mw": power_mw,
                         "procedure": procedure,
                         "status_raw": status,
                         "source_code": code,
@@ -197,6 +217,13 @@ class SiciliaWindAgent(BaseWindAgent):
                         "sector": "eolico",
                         "source_grade_ceiling": "A1",
                         "project_specific": True,
+                        "_change_basis": self._change_basis(
+                            code=code,
+                            title=title[:900],
+                            proponent=proponent,
+                            procedure=procedure,
+                            power_mw=power_mw,
+                        ),
                         "source_adapter_origin": "pv_agent_mvp/sicilia.py",
                         "ingestion_path": "official_csv",
                         "enrichment_note": (
@@ -284,6 +311,9 @@ class SiciliaWindAgent(BaseWindAgent):
                     continue
                 seen.add(external_id)
 
+                proponent = self._clean(attrs.get("proponente")) or None
+                power_mw = self._power_mw(title)
+
                 findings.append(
                     AgentFinding(
                         external_id=external_id,
@@ -293,11 +323,11 @@ class SiciliaWindAgent(BaseWindAgent):
                         finding_type="project_source",
                         payload={
                             "project_name": title[:900],
-                            "proponent": self._clean(attrs.get("proponente")) or None,
+                            "proponent": proponent,
                             "region": "Sicilia",
                             "province": self._province(title),
                             "municipality": self._municipality(title),
-                            "power_mw": self._power_mw(title),
+                            "power_mw": power_mw,
                             "procedure": procedure,
                             "status_raw": None,
                             "source_code": code,
@@ -308,6 +338,13 @@ class SiciliaWindAgent(BaseWindAgent):
                             "sector": "eolico",
                             "source_grade_ceiling": "A1",
                             "project_specific": True,
+                            "_change_basis": self._change_basis(
+                                code=code,
+                                title=title[:900],
+                                proponent=proponent,
+                                procedure=procedure,
+                                power_mw=power_mw,
+                            ),
                             "source_adapter_origin": "pv_agent_mvp/sicilia.py",
                             "ingestion_path": "official_sivvi_mapserver_fallback",
                             "fallback_reason": fallback_reason,
