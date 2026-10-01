@@ -14,6 +14,10 @@ BASE_URL = "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/
 ENERGY_NOTICE_URL = "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento"
 ENERGY_GRANTED_URL = "https://www.regione.basilicata.it/?temi-ate=autorizzazione-ambientale%2Fautorizzazione-unica-ex-art-12-d-lgs-387-2003-autorizzazioni-concesse"
 WP_SEARCH_URL = "https://www.regione.basilicata.it/wp-json/wp/v2/search"
+TRANSPARENCY_INDEX_URL = (
+    "https://amministrazionetrasparente.regione.basilicata.it/at/"
+    "direzione-generale-dellambiente-del-territorio-e-dellenergia/"
+)
 START_URLS = (
     (urljoin(BASE_URL, "section.jsp?sec=100002"), "Screening"),
     (urljoin(BASE_URL, "section.jsp?sec=145352"), "Screening - 2025"),
@@ -127,6 +131,7 @@ class BasilicataWindAgent(BaseWindAgent):
             r"Societ[aà]\s+(.+?)(?:\s+ha\s+presentato|\s+ha\s+depositato|\s+richiede|\||$)",
             r"propost[oa]\s+dalla\s+societ[aà]\s+(.+?)(?:\s+[–—-]\s+|\.|;|$)",
             r"Soggetto\s+richiedente\s*:?\s*(.+?)(?:\s+[–—-]\s+|\.|;|$)",
+            r"Richiedente\s*:?\s*(.+?)(?:\s+Comune|\s+Comuni|\s+Potenza|\s+Procedura|\s+Data|\||$)",
         ):
             match = re.search(pattern, text, flags=re.I)
             if match:
@@ -407,6 +412,113 @@ class BasilicataWindAgent(BaseWindAgent):
                 )
         return findings
 
+    def _fetch_transparency_authorisations(self) -> list[AgentFinding]:
+        """Official FER authorisation XLS from Regione Basilicata transparency.
+
+        This is a resilience layer for GitHub-hosted runs where the main
+        www.regione.basilicata.it host can time out while the transparency
+        subdomain remains reachable.
+        """
+        import xlrd
+
+        index = self.session.get(
+            TRANSPARENCY_INDEX_URL,
+            timeout=(8, 20),
+            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+        )
+        index.raise_for_status()
+        soup = BeautifulSoup(index.text, "html.parser")
+
+        xls_url = None
+        for anchor in soup.find_all("a", href=True):
+            label = self._clean(anchor.get_text(" ", strip=True)).lower()
+            href = urljoin(TRANSPARENCY_INDEX_URL, anchor.get("href") or "")
+            if (
+                "autorizzazioni uniche per impianti di produzione di energia elettrica da fonti rinnovabili" in label
+                and href.lower().split("?", 1)[0].endswith((".xls", ".xlsx"))
+            ):
+                xls_url = href
+                break
+        if not xls_url:
+            raise RuntimeError("Basilicata transparency FER authorisation XLS link not found")
+
+        response = self.session.get(
+            xls_url,
+            timeout=(8, 25),
+            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+        )
+        response.raise_for_status()
+
+        workbook = xlrd.open_workbook(file_contents=response.content)
+        unique: dict[str, AgentFinding] = {}
+        for sheet in workbook.sheets():
+            for row_index in range(sheet.nrows):
+                values = [
+                    self._clean(sheet.cell_value(row_index, col_index))
+                    for col_index in range(sheet.ncols)
+                ]
+                values = [value for value in values if value]
+                if not values:
+                    continue
+                text = self._clean(" | ".join(values))
+                if len(text) < 30 or not self._is_wind(text):
+                    continue
+
+                municipalities = self._municipalities(text)
+                proponent = self._proponent(text)
+                power_mw = self._power_mw(text)
+                title = self._project_name(text, text)
+
+                act = re.search(
+                    r"\b(?:D\.?G\.?R\.?|D\.?D\.?|Deliberazione|Determinazione)"
+                    r"\s*(?:n\.?|numero)?\s*([0-9]{1,7})",
+                    text,
+                    flags=re.I,
+                )
+                date_match = re.search(r"\b(\d{1,2}/\d{1,2}/20\d{2})\b", text)
+                if act:
+                    identity = "|".join([act.group(1), date_match.group(1) if date_match else "", title])
+                elif proponent and municipalities and power_mw:
+                    identity = "|".join([
+                        self._clean(title).lower(),
+                        self._clean(proponent).lower(),
+                        "|".join(sorted(self._clean(x).lower() for x in municipalities)),
+                        f"{power_mw:.4f}",
+                    ])
+                else:
+                    identity = text
+                external_id = "BASILICATA-AU-XLS-" + hashlib.sha1(
+                    identity.encode("utf-8")
+                ).hexdigest()[:20]
+                if external_id in unique:
+                    continue
+
+                unique[external_id] = AgentFinding(
+                    external_id=external_id,
+                    source_name="Regione Basilicata Ufficio Energia",
+                    source_url=xls_url,
+                    title=title[:900],
+                    finding_type="project_source",
+                    payload={
+                        "project_name": title[:900],
+                        "proponent": proponent,
+                        "region": "Basilicata",
+                        "province": self._province(text, municipalities),
+                        "municipalities": municipalities,
+                        "power_mw": power_mw,
+                        "procedure": "Autorizzazione Unica FER",
+                        "status_raw": "Elenco autorizzazioni FER - Amministrazione Trasparente",
+                        "source_date": date_match.group(1) if date_match else None,
+                        "sector": "eolico",
+                        "source_grade_ceiling": "A1",
+                        "project_specific": True,
+                        "source_adapter_origin": "basilicata_transparency_fer_xls",
+                        "ingestion_path": "official_transparency_fer_xls",
+                    },
+                )
+
+        return list(unique.values())
+
     def fetch(self) -> list[AgentFinding]:
         unique: dict[str, AgentFinding] = {}
         for page_url, procedure in START_URLS:
@@ -468,26 +580,40 @@ class BasilicataEnergyWindAgent(BasilicataWindAgent):
 
     source_name = "Regione Basilicata Ufficio Energia"
     base_url = ENERGY_NOTICE_URL
-    baseline_revision = "basilicata-energy-v3"
+    baseline_revision = "basilicata-energy-v4-transparency-xls"
 
     def fetch(self) -> list[AgentFinding]:
+        issues: list[str] = []
         try:
-            return self._fetch_energy_notices()
-        except (requests.ConnectionError, requests.Timeout) as exc:
-            return [
-                AgentFinding(
-                    external_id="BASILICATA-ENERGY-CHANNEL",
-                    source_name=self.source_name,
-                    source_url=ENERGY_NOTICE_URL,
-                    title="Regione Basilicata Ufficio Energia - canale AU/PAUR temporaneamente non raggiungibile",
-                    finding_type="source_channel_snapshot",
-                    payload={
-                        "region": "Basilicata",
-                        "project_specific": False,
-                        "source_grade_ceiling": "A1",
-                        "data_health": "channel_only",
-                        "availability_issue": f"{type(exc).__name__}: {exc}",
-                        "source_adapter_origin": "regional_basilicata_energy_notices",
-                    },
-                )
-            ]
+            findings = self._fetch_energy_notices()
+            if findings:
+                return findings
+            issues.append("primary Ufficio Energia pages returned no wind findings")
+        except Exception as exc:
+            issues.append(f"primary={type(exc).__name__}: {exc}")
+
+        try:
+            findings = self._fetch_transparency_authorisations()
+            if findings:
+                return findings
+            issues.append("transparency FER XLS returned no wind findings")
+        except Exception as exc:
+            issues.append(f"transparency={type(exc).__name__}: {exc}")
+
+        return [
+            AgentFinding(
+                external_id="BASILICATA-ENERGY-CHANNEL",
+                source_name=self.source_name,
+                source_url=TRANSPARENCY_INDEX_URL,
+                title="Regione Basilicata Ufficio Energia - canali AU/PAUR temporaneamente non raggiungibili",
+                finding_type="source_channel_snapshot",
+                payload={
+                    "region": "Basilicata",
+                    "project_specific": False,
+                    "source_grade_ceiling": "A1",
+                    "data_health": "channel_only",
+                    "availability_issue": "; ".join(issues),
+                    "source_adapter_origin": "regional_basilicata_energy_notices",
+                },
+            )
+        ]
