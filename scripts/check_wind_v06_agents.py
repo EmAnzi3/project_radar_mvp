@@ -17,7 +17,7 @@ from app.wind_agents.adapters.toscana import ToscanaWindAgent
 from app.wind_agents.adapters.toscana_atos import ToscanaAtosWindAgent
 from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
-from app.wind_agents.adapters.basilicata import BasilicataWindAgent
+from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.execution_watch import build_execution_queue
@@ -123,6 +123,16 @@ assert len(atos_findings) == 1, atos_findings
 assert atos_findings[0].finding_type == "source_channel_snapshot"
 assert atos_findings[0].payload.get("project_specific") is False
 assert atos_findings[0].payload.get("data_health") == "channel_only"
+
+basilicata_channel = BasilicataEnergyWindAgent()
+def _synthetic_basilicata_outage():
+    raise requests.ConnectionError("synthetic Basilicata AU timeout")
+basilicata_channel._fetch_energy_notices = _synthetic_basilicata_outage
+basilicata_channel_findings = basilicata_channel.fetch()
+assert len(basilicata_channel_findings) == 1
+assert basilicata_channel_findings[0].finding_type == "source_channel_snapshot"
+assert basilicata_channel_findings[0].payload.get("project_specific") is False
+assert basilicata_channel_findings[0].payload.get("data_health") == "channel_only"
 
 # Minimum-field parser guards on real-style official regional act text.
 puglia_text = (
