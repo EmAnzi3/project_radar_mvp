@@ -144,10 +144,53 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                 return cls._clean(match.group(1))[:900]
         return cls._clean(fallback)[:900]
 
+    def _regional_aoo_id(self) -> str:
+        try:
+            response = self.session.get(
+                ALBO_URL,
+                timeout=(8, 20),
+                headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+            )
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+            select = soup.find("select", attrs={"name": re.compile(r"idAoo", re.I)})
+            if select:
+                for option in select.find_all("option"):
+                    label = self._clean(option.get_text(" ", strip=True)).lower()
+                    if "transizione energetica" in label:
+                        value = self._clean(option.get("value") or "")
+                        if value:
+                            return value
+        except Exception:
+            pass
+        return "0"
+
+    @classmethod
+    def _regional_external_id(
+        cls,
+        *,
+        project_name: str,
+        proponent: str | None,
+        municipalities: list[str],
+        power_mw: float | None,
+        registry: str,
+    ) -> str:
+        if proponent and municipalities and power_mw:
+            raw = "|".join([
+                cls._clean(project_name).lower(),
+                cls._clean(proponent).lower(),
+                "|".join(sorted(cls._clean(x).lower() for x in municipalities)),
+                f"{power_mw:.4f}",
+            ])
+            return "PUGLIA-REGIONAL-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:20]
+        safe = re.sub(r"[^A-Za-z0-9._-]+", "-", registry).strip("-")
+        return f"PUGLIA-REGIONAL-ACT-{safe[:140]}" if safe else "PUGLIA-REGIONAL-ACT-UNKNOWN"
+
     def _fetch_regional_albo(self, max_pages: int = 12) -> list[AgentFinding]:
         """Regional AU/PAUR/proroga acts from the official Puglia Albo Pretorio."""
         findings: list[AgentFinding] = []
         seen: set[str] = set()
+        aoo_id = self._regional_aoo_id()
         for page in range(1, max_pages + 1):
             params = {
                 "p_p_id": "it_linksmt_albopretorio_albopretorio_portlet_AlboPretorioPortlet",
@@ -157,7 +200,7 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                 f"{ALBO_PREFIX}mvcRenderCommandName": "/cercaAtto",
                 f"{ALBO_PREFIX}cur": str(page),
                 f"{ALBO_PREFIX}delta": "60",
-                f"{ALBO_PREFIX}idAoo": "0",
+                f"{ALBO_PREFIX}idAoo": aoo_id,
                 f"{ALBO_PREFIX}idStatoAtto": "-1",
                 f"{ALBO_PREFIX}idTipoAtto": "0",
                 f"{ALBO_PREFIX}resetCur": "false",
@@ -196,8 +239,15 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                 municipalities = self._municipalities_from_text(object_text)
                 source_anchor = tr.find("a", href=True)
                 source_url = urljoin(ALBO_URL, source_anchor.get("href")) if source_anchor else str(response.url)
+                project_name = self._project_name_from_text(object_text, object_text)
                 stable = registry or f"{adoption_number}-{adoption_date}-{hashlib.sha1(object_text.encode('utf-8')).hexdigest()[:10]}"
-                external_id = "PUGLIA-REGIONAL-AU-" + re.sub(r"[^A-Za-z0-9._-]+", "-", stable).strip("-")[:140]
+                external_id = self._regional_external_id(
+                    project_name=project_name,
+                    proponent=proponent,
+                    municipalities=municipalities,
+                    power_mw=power_mw,
+                    registry=stable,
+                )
                 if external_id in seen:
                     continue
                 seen.add(external_id)
@@ -209,10 +259,10 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                         external_id=external_id,
                         source_name="Regione Puglia AU/PAUR",
                         source_url=source_url,
-                        title=self._project_name_from_text(object_text, object_text),
+                        title=project_name,
                         finding_type="project_source",
                         payload={
-                            "project_name": self._project_name_from_text(object_text, object_text),
+                            "project_name": project_name,
                             "proponent": proponent,
                             "region": "Puglia",
                             "province": None,
@@ -231,10 +281,8 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                         },
                     )
                 )
-            if page_hits == 0 and page >= 4:
-                # Daily discovery is current-facing; stop after several consecutive
-                # recent pages with no wind AU/PAUR signal.
-                pass
+            # Keep paging within the bounded window: the Albo may interleave
+            # unrelated acts even when the AOO filter is unavailable.
         return findings
 
     def _fetch_mase_via_dataset(self) -> list[AgentFinding]:
