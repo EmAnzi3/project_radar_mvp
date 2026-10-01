@@ -388,6 +388,7 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
             minimum_complete, minimum_missing = _minimum_project_fields(payload)
             item["minimum_project_fields_complete"] = minimum_complete
             item["minimum_project_fields_missing"] = minimum_missing
+            best = reconciliation.get("best") or {}
             existing_match = (
                 best.get("target_kind") in {"canonical", "discovery"}
                 and reconciliation.get("status") in {"high_confidence_match", "review_match"}
