@@ -159,11 +159,12 @@ class BasilicataWindAgent(BaseWindAgent):
         pages.append((ENERGY_NOTICE_URL, response.text))
         seen.add(ENERGY_NOTICE_URL)
 
-        for term in ("eolico", "parco eolico", "PAUR eolico"):
+        discovered_urls: list[str] = []
+        for term in ("eolico", "PAUR eolico"):
             try:
                 search = self.session.get(
                     WP_SEARCH_URL,
-                    params={"search": term, "per_page": 100},
+                    params={"search": term, "per_page": 30},
                     timeout=(8, 25),
                     headers={"User-Agent": "Wind-Radar-Agent/0.6"},
                 )
@@ -177,19 +178,28 @@ class BasilicataWindAgent(BaseWindAgent):
                 if not isinstance(row, dict):
                     continue
                 url = self._clean(row.get("url") or "")
-                if not url.startswith("http") or url in seen:
+                if not url.startswith("http") or url in seen or url in discovered_urls:
                     continue
-                seen.add(url)
-                try:
-                    detail = self.session.get(
-                        url,
-                        timeout=(8, 25),
-                        headers={"User-Agent": "Wind-Radar-Agent/0.6"},
-                    )
-                    detail.raise_for_status()
-                    pages.append((url, detail.text))
-                except Exception:
-                    continue
+                discovered_urls.append(url)
+                if len(discovered_urls) >= 30:
+                    break
+            if len(discovered_urls) >= 30:
+                break
+
+        # Fetch only a bounded current discovery window. The raw thematic page
+        # remains the primary source, while WP search is a resilience layer.
+        for url in discovered_urls:
+            seen.add(url)
+            try:
+                detail = self.session.get(
+                    url,
+                    timeout=(8, 15),
+                    headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+                )
+                detail.raise_for_status()
+                pages.append((url, detail.text))
+            except Exception:
+                continue
 
         # HTML search fallback if the REST search is disabled/restricted.
         if len(pages) == 1:
