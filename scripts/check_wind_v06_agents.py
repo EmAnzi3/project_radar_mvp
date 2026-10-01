@@ -229,7 +229,7 @@ with tempfile.TemporaryDirectory() as tmp:
         source_url="https://example.com/wind/1",
         title="Wind test",
         finding_type="project_source",
-        payload={"mw": 10, "project_specific": True},
+        payload={"power_mw": 10, "proponent": "Wind Test S.r.l.", "municipalities": ["Comune Test"], "project_specific": True},
     )
     assert state.upsert_finding(run_id, "test_agent", finding) == "new"
     assert state.upsert_finding(run_id, "test_agent", finding) == "unchanged"
@@ -239,7 +239,7 @@ with tempfile.TemporaryDirectory() as tmp:
         source_url="https://example.com/wind/1",
         title="Wind test",
         finding_type="project_source",
-        payload={"mw": 12, "project_specific": True},
+        payload={"power_mw": 12, "proponent": "Wind Test S.r.l.", "municipalities": ["Comune Test"], "project_specific": True},
     )
     assert state.upsert_finding(run_id, "test_agent", changed) == "changed"
     state.finish_run(run_id, findings=3, changed_items=2)
