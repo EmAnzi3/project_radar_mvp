@@ -3,8 +3,10 @@ from __future__ import annotations
 import hashlib
 import re
 from io import BytesIO
+from urllib.parse import urljoin
 
 from openpyxl import load_workbook
+from bs4 import BeautifulSoup
 
 from app.wind_agents.base import AgentFinding, BaseWindAgent
 
@@ -15,6 +17,8 @@ XLSX_URL = (
     "1728acca-e2fc-4dcb-bb52-0fc1eaa628c2/download/via_fer.xlsx"
 )
 SOURCE_URL = "https://dati.puglia.it/ckan/dataset/impianti-proposti-via-fer"
+ALBO_URL = "https://albonline.regione.puglia.it/web/guest/home"
+ALBO_PREFIX = "_it_linksmt_albopretorio_albopretorio_portlet_AlboPretorioPortlet_"
 WIND_TERMS = ("eolico", "eolica", "wind")
 
 
@@ -86,7 +90,154 @@ class SistemaPugliaWindAgent(BaseWindAgent):
         raw = "|".join([province, municipality, source, f"{power_mw:.6f}" if power_mw is not None else ""])
         return "PUGLIA-VIA-FER-" + hashlib.sha1(raw.lower().encode("utf-8")).hexdigest()[:20]
 
-    def fetch(self) -> list[AgentFinding]:
+    @classmethod
+    def _power_from_text(cls, text: str) -> float | None:
+        for match in re.finditer(
+            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:[,\.]\d+)?|[0-9]+(?:[,\.]\d+)?)\s*(MWe|MW)\b",
+            text,
+            flags=re.I,
+        ):
+            value = cls._power_mw(match.group(1))
+            if value is not None:
+                return value
+        return None
+
+    @classmethod
+    def _proponent_from_text(cls, text: str) -> str | None:
+        match = re.search(
+            r"Proponente\s*:\s*(.+?)(?=\s+(?:con\s+sede|sede\s+legale|C\.?F\.?|P\.?\s*I(?:VA|va)|codice\s+fiscale)|[.;]|$)",
+            text,
+            flags=re.I,
+        )
+        if not match:
+            return None
+        value = cls._clean(match.group(1)).strip(" -–—:;,.")
+        return value if 2 <= len(value) <= 220 else None
+
+    @classmethod
+    def _municipalities_from_text(cls, text: str) -> list[str]:
+        out: list[str] = []
+        patterns = (
+            r"(?:nei|ne[Ii]|negli|nel|nella|sito\s+nel|sito\s+nei|da\s+realizzarsi\s+nel|da\s+realizzarsi\s+nei)\s+Comuni?\s+di\s+(.+?)(?:\.|;|,\s*localit[aà]|\s+nonch[eé]|\s+oltre\s+alle|$)",
+            r"Comune\s+di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s*\([A-Z]{2}\)|,|\.|;|\s+in\s+localit[aà]|$)",
+        )
+        for pattern in patterns:
+            for match in re.finditer(pattern, text, flags=re.I):
+                raw = re.sub(r"\([A-Z]{2}\)", "", match.group(1))
+                for part in re.split(r",|\s+e\s+|\s+ed\s+", raw, flags=re.I):
+                    item = cls._clean(part).strip(" -–—:;,.()")
+                    if item and 2 <= len(item) <= 80 and item.lower() not in {x.lower() for x in out}:
+                        out.append(item)
+                if out:
+                    return out[:12]
+        return out
+
+    @classmethod
+    def _project_name_from_text(cls, text: str, fallback: str) -> str:
+        for pattern in (
+            r"denominat[oa]\s+[“\"']([^”\"']+)[”\"']",
+            r"impianto\s+eolico\s+[“\"']([^”\"']+)[”\"']",
+            r"parco\s+eolico\s+[“\"']([^”\"']+)[”\"']",
+        ):
+            match = re.search(pattern, text, flags=re.I)
+            if match:
+                return cls._clean(match.group(1))[:900]
+        return cls._clean(fallback)[:900]
+
+    def _fetch_regional_albo(self, max_pages: int = 12) -> list[AgentFinding]:
+        """Regional AU/PAUR/proroga acts from the official Puglia Albo Pretorio."""
+        findings: list[AgentFinding] = []
+        seen: set[str] = set()
+        for page in range(1, max_pages + 1):
+            params = {
+                "p_p_id": "it_linksmt_albopretorio_albopretorio_portlet_AlboPretorioPortlet",
+                "p_p_lifecycle": "0",
+                "p_p_state": "normal",
+                "p_p_mode": "view",
+                f"{ALBO_PREFIX}mvcRenderCommandName": "/cercaAtto",
+                f"{ALBO_PREFIX}cur": str(page),
+                f"{ALBO_PREFIX}delta": "60",
+                f"{ALBO_PREFIX}idAoo": "0",
+                f"{ALBO_PREFIX}idStatoAtto": "-1",
+                f"{ALBO_PREFIX}idTipoAtto": "0",
+                f"{ALBO_PREFIX}resetCur": "false",
+            }
+            response = self.session.get(
+                ALBO_URL,
+                params=params,
+                timeout=(8, 25),
+                headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+            )
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+            rows = soup.find_all("tr")
+            if not rows:
+                break
+            page_hits = 0
+            for tr in rows:
+                cells = tr.find_all("td")
+                if len(cells) < 6:
+                    continue
+                values = [self._clean(td.get_text(" ", strip=True)) for td in cells]
+                registry = values[0] if values else ""
+                adoption_number = values[2] if len(values) > 2 else ""
+                adoption_date = values[3] if len(values) > 3 else ""
+                structure = values[4] if len(values) > 4 else ""
+                object_text = values[5] if len(values) > 5 else ""
+                combined = self._clean(f"{structure} {object_text}")
+                if not self._is_wind(combined):
+                    continue
+                lowered = combined.lower()
+                if not any(token in lowered for token in ("autorizzazione unica", "p.a.u.r", "paur", "proroga")):
+                    continue
+
+                proponent = self._proponent_from_text(object_text)
+                power_mw = self._power_from_text(object_text)
+                municipalities = self._municipalities_from_text(object_text)
+                source_anchor = tr.find("a", href=True)
+                source_url = urljoin(ALBO_URL, source_anchor.get("href")) if source_anchor else str(response.url)
+                stable = registry or f"{adoption_number}-{adoption_date}-{hashlib.sha1(object_text.encode('utf-8')).hexdigest()[:10]}"
+                external_id = "PUGLIA-REGIONAL-AU-" + re.sub(r"[^A-Za-z0-9._-]+", "-", stable).strip("-")[:140]
+                if external_id in seen:
+                    continue
+                seen.add(external_id)
+                page_hits += 1
+
+                procedure = "Proroga AU/PAUR" if "proroga" in lowered else "Autorizzazione Unica / PAUR"
+                findings.append(
+                    AgentFinding(
+                        external_id=external_id,
+                        source_name="Regione Puglia AU/PAUR",
+                        source_url=source_url,
+                        title=self._project_name_from_text(object_text, object_text),
+                        finding_type="project_source",
+                        payload={
+                            "project_name": self._project_name_from_text(object_text, object_text),
+                            "proponent": proponent,
+                            "region": "Puglia",
+                            "province": None,
+                            "municipalities": municipalities,
+                            "power_mw": power_mw,
+                            "procedure": procedure,
+                            "status_raw": object_text[:1200],
+                            "source_date": adoption_date or None,
+                            "albo_registry": registry or None,
+                            "adoption_number": adoption_number or None,
+                            "sector": "eolico",
+                            "source_grade_ceiling": "A1",
+                            "project_specific": True,
+                            "source_adapter_origin": "regional_puglia_albo",
+                            "ingestion_path": "official_regional_albo_au_paur",
+                        },
+                    )
+                )
+            if page_hits == 0 and page >= 4:
+                # Daily discovery is current-facing; stop after several consecutive
+                # recent pages with no wind AU/PAUR signal.
+                pass
+        return findings
+
+    def _fetch_mase_via_dataset(self) -> list[AgentFinding]:
         response = self.session.get(
             XLSX_URL,
             timeout=(8, 30),
@@ -163,3 +314,10 @@ class SistemaPugliaWindAgent(BaseWindAgent):
             )
 
         return findings
+
+    def fetch(self) -> list[AgentFinding]:
+        combined = self._fetch_mase_via_dataset() + self._fetch_regional_albo()
+        unique: dict[str, AgentFinding] = {}
+        for finding in combined:
+            unique.setdefault(finding.external_id, finding)
+        return list(unique.values())
