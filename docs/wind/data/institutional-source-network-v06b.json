@@ -196,18 +196,18 @@
     },
     {
       "id": "puglia-au-paur",
-      "institution": "Regione Puglia / Sezione Transizione Energetica",
+      "institution": "Regione Puglia / BURP / Sezione Transizione Energetica",
       "level": "regional",
       "region": "Puglia",
-      "channel": "Autorizzazione Unica FER / PAUR / proroghe e atti autorizzativi",
+      "channel": "BURP — Autorizzazione Unica FER / PAUR / proroghe e atti autorizzativi",
       "priority": "A",
       "status": "runtime_adapter",
       "cadence_days": 3,
-      "official_url": "https://albonline.regione.puglia.it/web/guest/home",
+      "official_url": "https://burp.regione.puglia.it/it/documenti",
       "origin_collector": "new_wind_source_audit",
       "evidence_ceiling": "A1",
       "wind_adaptation": "Read current regional determinations and admit a project candidate only when proponent/company, positive MW and at least one municipality are present.",
-      "audit_note": "Separate from the Puglia VIA-FER open dataset, which mainly mirrors MASE environmental procedures."
+      "audit_note": "BURP exposes current Sezione Transizione Energetica determinations with project text, proponent, MW and municipalities; kept separate from the Puglia VIA-FER dataset that mainly mirrors MASE procedures."
     },
     {
       "id": "basilicata-au-paur",
