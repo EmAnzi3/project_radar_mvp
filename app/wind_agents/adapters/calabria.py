@@ -324,6 +324,7 @@ class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
 
     source_name = "Regione Calabria Provvedimenti"
     base_url = PROVVEDIMENTI_URL
+    baseline_revision = "calabria-regional-acts-v2"
     SEARCH_TERMS = ("eolico", "parco eolico", "repowering")
 
     @classmethod
@@ -423,17 +424,25 @@ class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
                         except ValueError:
                             pass
 
-                    object_text = values[4] if len(values) > 4 else raw_text
-                    proponent = self._proponent(object_text)
-                    municipalities = self._municipalities(object_text)
-                    power_mw = self._power_mw(object_text)
-                    project_name = self._project_name(object_text)
+                    object_text = max(values, key=len) if values else raw_text
                     act_number = self._act_number(values)
                     source_anchor = tr.find("a", href=True)
                     source_url = (
                         urljoin(PROVVEDIMENTI_URL, source_anchor.get("href") or "")
                         if source_anchor else str(PROVVEDIMENTI_URL)
                     )
+                    detail_text = ""
+                    if source_url != PROVVEDIMENTI_URL:
+                        detail_html = self._get_html(source_url)
+                        if detail_html:
+                            detail_text = self._clean(
+                                BeautifulSoup(detail_html, "html.parser").get_text(" ", strip=True)
+                            )
+                    evidence_text = self._clean(f"{object_text} {detail_text[:12000]}")
+                    proponent = self._proponent(evidence_text)
+                    municipalities = self._municipalities(evidence_text)
+                    power_mw = self._power_mw(evidence_text)
+                    project_name = self._project_name(evidence_text)
                     external_id = self._identity_id(
                         project_name,
                         proponent,
@@ -453,11 +462,11 @@ class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
                             "project_name": project_name,
                             "proponent": proponent,
                             "region": "Calabria",
-                            "province": self._province(object_text),
+                            "province": self._province(evidence_text),
                             "municipalities": municipalities,
                             "power_mw": power_mw,
-                            "procedure": self._procedure(object_text),
-                            "status_raw": self._status(object_text),
+                            "procedure": self._procedure(evidence_text),
+                            "status_raw": self._status(evidence_text),
                             "publication_date": act_date,
                             "act_number": act_number,
                             "act_type": values[0] if values else None,
