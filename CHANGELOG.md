@@ -4,6 +4,7 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-10-01 — Rafforzato il closeout del daily Wind Radar: live smoke a due passaggi sulla stessa base SQLite, cleanup dei Comuni su Sicilia/Campania/Calabria con rebaseline versionata e copertura aggiornata a **34 nodi fonte / 24 adapter istituzionali**. Il primo run resta baseline; un secondo run invariato deve produrre 0 `new` e 0 `changed`.
 - 2026-10-01 — Corretto il daily discovery Wind con **bootstrap per fonte**: il primo successo salva l'inventario esistente come `baseline`/backlog e non come `new`; solo le scansioni successive possono generare un vero nuovo progetto. La baseline non alimenta il digest actionable.
 - 2026-10-01 — Hardening fonti regionali: Sistema Puglia passa dal probe sequenziale degli ID al dataset ufficiale VIA FER XLSX; Calabria richiede pagine-progetto specifiche e recenti; Lazio usa l'ultima attività del procedimento e riconosce meglio esiti/rinvii; Sicilia normalizza anche potenze in kW e le procedure di follow-up restano separate dai nuovi progetti.
 - 2026-10-01 — Aggiunto test persistente `baseline -> unchanged -> changed` e concurrency sui check Wind per cancellare automaticamente i run PR superati.

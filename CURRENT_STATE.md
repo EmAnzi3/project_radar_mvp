@@ -31,8 +31,8 @@ Nessun merge o pubblicazione senza autorizzazione esplicita.
 ## Runtime e network
 
 - **61 player commerciali**;
-- **31 nodi istituzionali/pubblici**;
-- **21 adapter istituzionali eseguibili**;
+- **34 nodi istituzionali/pubblici**;
+- **24 adapter istituzionali eseguibili**;
 - Company Watch operativo;
 - Project Execution investigation queue sui canonici E4–E7 con scope aperti;
 - SQLite operativo separato dal canonico per raw finding, history, cursori e `watch_status`;
@@ -95,7 +95,7 @@ Verifica reale desktop **1440×1100** e mobile **390×844** completata anche sul
 - Discovery visibile: **0 sezioni**;
 - Player/Source Watch visibili: **0 sezioni**;
 - Opportunità prioritarie presente;
-- metodologia con 61 player / 31 nodi fonte / 21 adapter presente;
+- metodologia con 61 player / 34 nodi fonte / 24 adapter presente;
 - nessun errore console;
 - nessun overflow orizzontale desktop/mobile.
 
@@ -121,7 +121,7 @@ Disponibile `aggiorna_wind_radar.bat` alla radice del repository.
 
 Comportamento del normale doppio clic:
 - crea/riusa `.venv` e verifica le dipendenze;
-- interroga **tutti i 21 adapter istituzionali project-discovery a ogni run**, indipendentemente dalla cadenza precedente;
+- interroga **tutti i 24 adapter istituzionali project-discovery a ogni run**, indipendentemente dalla cadenza precedente;
 - esegue Company Watch solo sui player dovuti per cadenza;
 - persiste raw finding e storico SQLite con `baseline / new / changed / unchanged`;
 - al primo successo di ciascuna fonte crea la baseline sorgente: i record già presenti non generano falsi allarmi "nuovo";
@@ -144,7 +144,7 @@ Il criterio operativo è quindi doppio: **51 progetti sono la baseline canonica 
 
 I validator v0.6 includono regressioni canoniche, promotion, commercial/institutional network, agent architecture, project-specific enrichment, mappa province e sintassi JS.
 
-L'ultimo full live smoke completato prima delle modifiche UI results-first è **#64 — SUCCESS** su tutti i quattro gruppi. Le modifiche successive riguardano UI/documentazione/triage e non cambiano le implementazioni degli adapter live.
+Il gate live comprende i quattro gruppi istituzionali più uno **smoke a due passaggi sullo stesso SQLite**: primo passaggio = baseline sorgente, secondo passaggio = record invariati senza falsi `new/changed`. Il gate deve restare SUCCESS insieme ai validator Linux e Windows prima del closeout della PR.
 
 ## Gate successivo
 
