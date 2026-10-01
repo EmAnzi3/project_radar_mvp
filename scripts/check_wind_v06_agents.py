@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
 
 from app.wind_agents.base import AgentFinding
 from app.wind_agents.adapters.toscana import ToscanaWindAgent
+from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.execution_watch import build_execution_queue
@@ -94,6 +95,16 @@ assert len(fallback_findings) == 1, fallback_findings
 assert fallback_findings[0].finding_type == "source_channel_snapshot"
 assert fallback_findings[0].payload.get("project_specific") is False
 assert fallback_findings[0].payload.get("data_health") == "channel_only"
+
+lombardia_fallback = LombardiaWindAgent(years=[2026])
+def _synthetic_silvia_failure():
+    raise ConnectionError("synthetic SILVIA DNS failure")
+lombardia_fallback._load_sectors = _synthetic_silvia_failure
+lombardia_findings = lombardia_fallback.fetch()
+assert len(lombardia_findings) == 1, lombardia_findings
+assert lombardia_findings[0].finding_type == "source_channel_snapshot"
+assert lombardia_findings[0].payload.get("project_specific") is False
+assert lombardia_findings[0].payload.get("data_health") == "channel_only"
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
