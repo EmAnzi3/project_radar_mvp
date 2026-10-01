@@ -32,7 +32,10 @@ WIND_TERMS = (
 )
 CSV_TIMEOUT = (8, 20)
 GIS_TIMEOUT = (8, 20)
-GIS_BATCH_SIZE = 200
+# ArcGIS layer advertises maxRecordCount=1000. Use the full supported
+# batch to avoid five small round-trips for every 1000 procedures when the
+# CSV path is temporarily unavailable.
+GIS_BATCH_SIZE = 1000
 
 
 class SiciliaWindAgent(BaseWindAgent):
