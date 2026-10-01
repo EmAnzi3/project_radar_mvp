@@ -111,6 +111,7 @@ def main() -> int:
         }
         if missing_key == "municipalities":
             incomplete_event["finding"]["payload"]["municipalities"] = []
+            incomplete_event["finding"]["payload"]["area"] = "Area generica non comunale"
         else:
             incomplete_event["finding"]["payload"][missing_key] = None
         incomplete_result = classify_daily_discovery_event(
@@ -124,6 +125,30 @@ def main() -> int:
             "company" if missing_key == "proponent" else "power_mw"
         )
         assert expected_missing in incomplete_result["minimum_project_fields_missing"], incomplete_result
+
+    placeholder_event = {
+        **novel_event,
+        "external_id": "test-placeholders",
+        "finding": {
+            **novel_event["finding"],
+            "external_id": "test-placeholders",
+            "payload": {
+                **novel_event["finding"]["payload"],
+                "proponent": "N/D",
+                "power_mw": 0,
+                "municipalities": ["Non indicato"],
+            },
+        },
+    }
+    placeholder_result = classify_daily_discovery_event(
+        placeholder_event,
+        canonical=canonical,
+        discovery=[],
+    )
+    assert placeholder_result["category"] == "incomplete_project_record", placeholder_result
+    assert set(placeholder_result["minimum_project_fields_missing"]) == {
+        "company", "power_mw", "municipality"
+    }, placeholder_result
 
     historical_event = {
         "event_type": "new",
