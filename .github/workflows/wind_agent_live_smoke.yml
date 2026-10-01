@@ -260,3 +260,80 @@ jobs:
           path: reports/wind-agent-live/
           if-no-files-found: warn
           retention-days: 14
+
+
+  daily-state-two-pass-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Wind agent runtime
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            app/**
+            docs/wind/data/**
+            scripts/run_wind_agents.py
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install runtime dependencies
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+
+      - name: Run first pass as source baseline
+        run: |
+          mkdir -p reports/wind-agent-live
+          rm -f data/wind_agent.sqlite
+          python scripts/run_wind_agents.py run \
+            --source puglia-sistema-energia \
+            --output reports/wind-agent-live/two-pass-first.json
+
+      - name: Run second pass against same SQLite
+        run: |
+          python scripts/run_wind_agents.py run \
+            --source puglia-sistema-energia \
+            --output reports/wind-agent-live/two-pass-second.json
+
+      - name: Validate daily two-pass semantics
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          first = json.loads(Path('reports/wind-agent-live/two-pass-first.json').read_text(encoding='utf-8'))
+          second = json.loads(Path('reports/wind-agent-live/two-pass-second.json').read_text(encoding='utf-8'))
+          a = first['per_agent']['puglia-sistema-energia']
+          b = second['per_agent']['puglia-sistema-energia']
+
+          assert a['status'] == 'success', a
+          assert a['findings'] > 0, a
+          assert a['bootstrap_source'] is True, a
+          assert a['baseline'] == a['findings'], a
+          assert a['new'] == 0 and a['changed'] == 0, a
+
+          assert b['status'] == 'success', b
+          assert b['findings'] > 0, b
+          assert b['bootstrap_source'] is False, b
+          assert b['baseline'] == 0, b
+          assert b['new'] == 0 and b['changed'] == 0, b
+          assert b['unchanged'] == b['findings'], b
+
+          print(
+              'Two-pass daily semantics OK: '
+              f"first={a['findings']} baseline; "
+              f"second={b['unchanged']} unchanged, 0 new, 0 changed"
+          )
+          PY
+
+      - name: Upload two-pass smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-live-two-pass-${{ github.run_id }}
+          path: reports/wind-agent-live/two-pass-*.json
+          if-no-files-found: warn
+          retention-days: 14
