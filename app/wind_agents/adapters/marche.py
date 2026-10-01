@@ -203,22 +203,30 @@ class MarcheWindAgent(BaseWindAgent):
         return rows
 
     def fetch(self) -> list[AgentFinding]:
-        findings: dict[str, AgentFinding] = {}
-        errors: list[str] = []
+        last_errors: list[str] = []
 
-        for url, procedure_label in REGISTRY_URLS:
-            try:
-                rows = self._registry_findings(url, procedure_label)
-            except Exception as exc:
-                errors.append(f"{procedure_label}: {type(exc).__name__}: {exc}")
-                continue
+        # The official ASP.NET registry occasionally returns an empty/transient
+        # response to automated clients while succeeding immediately afterwards.
+        # It is a cheap source (~1-2 s), so retry the whole two-registry cycle once
+        # before degrading to a channel snapshot.
+        for _attempt in range(2):
+            findings: dict[str, AgentFinding] = {}
+            errors: list[str] = []
 
-            # The registries can repeat the same practice when a new notice is
-            # published. Keep the first/current row for a stable project identity.
-            for finding in rows:
-                findings.setdefault(finding.external_id, finding)
+            for url, procedure_label in REGISTRY_URLS:
+                try:
+                    rows = self._registry_findings(url, procedure_label)
+                except Exception as exc:
+                    errors.append(f"{procedure_label}: {type(exc).__name__}: {exc}")
+                    continue
 
-        if findings:
-            return list(findings.values())
+                # The registries can repeat the same practice when a new notice is
+                # published. Keep the first/current row for a stable project identity.
+                for finding in rows:
+                    findings.setdefault(finding.external_id, finding)
 
-        return [self._channel_snapshot(primary_error="; ".join(errors) if errors else None)]
+            if findings:
+                return list(findings.values())
+            last_errors = errors
+
+        return [self._channel_snapshot(primary_error="; ".join(last_errors) if last_errors else None)]
