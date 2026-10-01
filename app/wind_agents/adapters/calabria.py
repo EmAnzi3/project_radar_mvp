@@ -333,7 +333,7 @@ class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
 
     source_name = "Regione Calabria Provvedimenti"
     base_url = PROVVEDIMENTI_URL
-    baseline_revision = "calabria-regional-acts-v2"
+    baseline_revision = "calabria-regional-acts-v3"
     SEARCH_TERMS = ("eolico", "parco eolico", "repowering")
 
     @classmethod
