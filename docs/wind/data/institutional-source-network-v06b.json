@@ -223,6 +223,21 @@
       "evidence_ceiling": "A1",
       "wind_adaptation": "Read current Ufficio Energia notices; retain raw evidence but admit only records with company/proponent, positive MW and municipality.",
       "audit_note": "Adds the energy-authorisation layer missing from the inherited VIA/screening collector."
+    },
+    {
+      "id": "calabria-regional-acts",
+      "institution": "Regione Calabria / Provvedimenti della Regione",
+      "level": "regional",
+      "region": "Calabria",
+      "channel": "Decreti regionali VIA / PAUR / VPA / varianti e provvedimenti ambientali",
+      "priority": "A",
+      "status": "runtime_adapter",
+      "cadence_days": 3,
+      "official_url": "https://www.regione.calabria.it/provvedimenti-della-regione/",
+      "origin_collector": "new_wind_source_audit",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Search current regional decrees for wind projects and preserve project identity. New project candidates require company/proponent, positive MW and at least one municipality.",
+      "audit_note": "Added because the legacy VIA notices/search adapter returned empty_success while the regional decree registry contains current 2026 wind records with project-level metadata."
     }
   ],
   "resolved_coverage_gaps": [
