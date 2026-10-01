@@ -174,8 +174,27 @@ class BasilicataWindAgent(BaseWindAgent):
             power_mw = self._power_mw(text)
             municipalities = self._municipalities(text)
             title = self._project_name(text, anchor.get_text(" ", strip=True) or text)
-            raw_id = href if href.startswith("http") else text
-            external_id = "BASILICATA-ENERGY-" + hashlib.sha1(raw_id.encode("utf-8")).hexdigest()[:18]
+            progressivo = re.search(r"Progressivo\s+Interno\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
+            paur_id = re.search(r"ID\s+PAUR\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
+            stable_code = (
+                progressivo.group(1) if progressivo else
+                paur_id.group(1) if paur_id else
+                None
+            )
+            if stable_code:
+                safe_code = re.sub(r"[^A-Za-z0-9._-]+", "-", stable_code).strip("-")
+                external_id = f"BASILICATA-ENERGY-{safe_code}"
+            elif proponent and municipalities and power_mw:
+                identity = "|".join([
+                    self._clean(title).lower(),
+                    self._clean(proponent).lower(),
+                    "|".join(sorted(self._clean(x).lower() for x in municipalities)),
+                    f"{power_mw:.4f}",
+                ])
+                external_id = "BASILICATA-ENERGY-" + hashlib.sha1(identity.encode("utf-8")).hexdigest()[:20]
+            else:
+                raw_id = href if href.startswith("http") else text
+                external_id = "BASILICATA-ENERGY-ACT-" + hashlib.sha1(raw_id.encode("utf-8")).hexdigest()[:18]
             if external_id in seen:
                 continue
             seen.add(external_id)
