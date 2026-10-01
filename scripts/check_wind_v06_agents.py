@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
 
 from app.wind_agents.base import AgentFinding
 from app.wind_agents.adapters.toscana import ToscanaWindAgent
+from app.wind_agents.adapters.toscana_atos import ToscanaAtosWindAgent
 from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
@@ -107,6 +108,16 @@ assert len(lombardia_findings) == 1, lombardia_findings
 assert lombardia_findings[0].finding_type == "source_channel_snapshot"
 assert lombardia_findings[0].payload.get("project_specific") is False
 assert lombardia_findings[0].payload.get("data_health") == "channel_only"
+
+atos_fallback = ToscanaAtosWindAgent(max_details=1)
+def _synthetic_atos_failure():
+    raise requests.ConnectionError("synthetic ATOS DNS failure")
+atos_fallback._fetch_map_results = _synthetic_atos_failure
+atos_findings = atos_fallback.fetch()
+assert len(atos_findings) == 1, atos_findings
+assert atos_findings[0].finding_type == "source_channel_snapshot"
+assert atos_findings[0].payload.get("project_specific") is False
+assert atos_findings[0].payload.get("data_health") == "channel_only"
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
