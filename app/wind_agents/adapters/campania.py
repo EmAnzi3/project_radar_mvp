@@ -29,7 +29,7 @@ class CampaniaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Campania VIA/PAUR"
     base_url = SEARCH_URL
-    baseline_revision = "2026-10-current-project-table-v2"
+    baseline_revision = "2026-10-current-project-table-v3"
 
     def __init__(self, min_year: int | None = None) -> None:
         super().__init__()
@@ -144,9 +144,29 @@ class CampaniaWindAgent(BaseWindAgent):
 
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
+        normalized = re.sub(r"(?<=\d)\s*([,.])\s*(?=\d)", r"\1", text)
+        number = r"([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)"
+        preferred = (
+            rf"potenza\s+(?:complessiva|totale|nominale\s+totale)\s*(?:pari\s+a|pari|di)?\s*{number}\s*MW\b",
+            rf"per\s+una\s+potenza\s+complessiva\s*(?:pari\s+a|di)?\s*{number}\s*MW\b",
+        )
+        for pattern in preferred:
+            match = re.search(pattern, normalized, flags=re.I)
+            if match:
+                raw = match.group(1).replace(" ", "")
+                if "," in raw:
+                    raw = raw.replace(".", "").replace(",", ".")
+                try:
+                    value = float(raw)
+                except ValueError:
+                    continue
+                if 0 < value < 5000:
+                    return value
+
+        values: list[float] = []
         for match in re.finditer(
-            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
-            text,
+            rf"(?<![\d.,]){number}\s*MW\b",
+            normalized,
             flags=re.I,
         ):
             raw = match.group(1).replace(" ", "")
@@ -157,8 +177,8 @@ class CampaniaWindAgent(BaseWindAgent):
             except ValueError:
                 continue
             if 0 < value < 5000:
-                return value
-        return None
+                values.append(value)
+        return max(values) if values else None
 
     @classmethod
     def _municipalities(cls, territory: str, title: str) -> list[str]:
