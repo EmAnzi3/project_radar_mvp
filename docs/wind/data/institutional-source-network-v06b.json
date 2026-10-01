@@ -193,13 +193,55 @@
       "origin_collector": "app/collectors/piemonte.py",
       "evidence_ceiling": "A1",
       "wind_adaptation": "Environmental services are regional while FER AU outside state competence is delegated to Province/Città Metropolitana; preserve authority/province identity and use BUR/provincial acts as public fallback."
+    },
+    {
+      "id": "puglia-au-paur",
+      "institution": "Regione Puglia / Sezione Transizione Energetica",
+      "level": "regional",
+      "region": "Puglia",
+      "channel": "Autorizzazione Unica FER / PAUR / proroghe e atti autorizzativi",
+      "priority": "A",
+      "status": "runtime_adapter",
+      "cadence_days": 3,
+      "official_url": "https://albonline.regione.puglia.it/web/guest/home",
+      "origin_collector": "new_wind_source_audit",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Read current regional determinations and admit a project candidate only when proponent/company, positive MW and at least one municipality are present.",
+      "audit_note": "Separate from the Puglia VIA-FER open dataset, which mainly mirrors MASE environmental procedures."
+    },
+    {
+      "id": "basilicata-au-paur",
+      "institution": "Regione Basilicata / Ufficio Energia",
+      "level": "regional",
+      "region": "Basilicata",
+      "channel": "Autorizzazione Unica FER / PAUR / public-utility and expropriation notices",
+      "priority": "A",
+      "status": "runtime_adapter",
+      "cadence_days": 3,
+      "official_url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+      "origin_collector": "new_wind_source_audit",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Read current Ufficio Energia notices; retain raw evidence but admit only records with company/proponent, positive MW and municipality.",
+      "audit_note": "Adds the energy-authorisation layer missing from the inherited VIA/screening collector."
     }
   ],
   "resolved_coverage_gaps": [
-    {"region": "Abruzzo", "resolution": "first-pass VIA runtime adapter implemented; AU/BURA and SPA/API deepening still open"},
-    {"region": "Liguria", "resolution": "runtime adapter implemented on public SIRAVIAVAS in-progress registry"},
-    {"region": "Marche", "resolution": "runtime adapter implemented on regional VIA-start registry; state mirror/AU remain additive sources"},
-    {"region": "Molise", "resolution": "first-pass wind-specific runtime adapter implemented; SPA/API deepening still open"}
+    {
+      "region": "Abruzzo",
+      "resolution": "first-pass VIA runtime adapter implemented; AU/BURA and SPA/API deepening still open"
+    },
+    {
+      "region": "Liguria",
+      "resolution": "runtime adapter implemented on public SIRAVIAVAS in-progress registry"
+    },
+    {
+      "region": "Marche",
+      "resolution": "runtime adapter implemented on regional VIA-start registry; state mirror/AU remain additive sources"
+    },
+    {
+      "region": "Molise",
+      "resolution": "first-pass wind-specific runtime adapter implemented; SPA/API deepening still open"
+    }
   ],
   "remaining_priority_gap_order": [
     "Abruzzo AU/BURA runtime adapter",
