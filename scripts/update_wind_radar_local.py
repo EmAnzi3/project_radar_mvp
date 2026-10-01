@@ -139,11 +139,24 @@ def _write_daily_html(
         **(institutional.get("errors") or {}),
         **{f"company:{k}": v for k, v in (company.get("errors") or {}).items()},
     }
+    per_agent = institutional.get("per_agent") or {}
+    project_sources = {
+        source_id: counters
+        for source_id, counters in per_agent.items()
+        if counters.get("data_health") == "project_data"
+    }
     limited_sources = {
-        source_id: counters.get("data_health")
-        for source_id, counters in (institutional.get("per_agent") or {}).items()
+        source_id: counters
+        for source_id, counters in per_agent.items()
         if counters.get("data_health") == "channel_or_market_only"
     }
+    empty_sources = {
+        source_id: counters
+        for source_id, counters in per_agent.items()
+        if counters.get("data_health") == "empty_success"
+    }
+    coverage_warnings = len(source_errors) + len(limited_sources)
+
     if new_count:
         headline = f"{new_count} nuovo/i progetto/i candidato/i da verificare"
         headline_class = "alert"
@@ -157,6 +170,14 @@ def _write_daily_html(
         headline = "Nessun nuovo progetto candidato rilevato"
         headline_class = "ok"
 
+    if coverage_warnings:
+        headline += (
+            f" · attenzione: {coverage_warnings} fonte/i con copertura "
+            "degradata o errore"
+        )
+        if headline_class == "ok":
+            headline_class = "warn"
+
     errors_html = (
         "<ul>" + "".join(
             f"<li><b>{escape(str(k))}</b>: {escape(str(v))}</li>"
@@ -167,11 +188,20 @@ def _write_daily_html(
     )
     limited_html = (
         "<ul>" + "".join(
-            f"<li><b>{escape(str(k))}</b>: fonte raggiunta, ma senza dati progetto nel run corrente</li>"
+            f"<li><b>{escape(str(k))}</b>: solo snapshot di canale/mercato; "
+            "nessun dato progetto affidabile nel run corrente</li>"
             for k in sorted(limited_sources)
         ) + "</ul>"
         if limited_sources
         else '<div class="empty">Nessuna fonte limitata a solo canale/mercato.</div>'
+    )
+    empty_html = (
+        "<ul>" + "".join(
+            f"<li><b>{escape(str(k))}</b>: esecuzione riuscita, 0 finding nel run corrente</li>"
+            for k in sorted(empty_sources)
+        ) + "</ul>"
+        if empty_sources
+        else '<div class="empty">Nessuna fonte project-data vuota nel run corrente.</div>'
     )
 
     html = f"""<!doctype html>
@@ -185,7 +215,7 @@ def _write_daily_html(
 *{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}}
 main{{max-width:1320px;margin:auto;padding:24px}}h1{{margin:0 0 6px;font-size:28px}}h2{{margin:0 0 12px;font-size:18px}}
 .meta{{color:var(--muted);margin-bottom:20px}}.headline{{padding:18px 20px;border-radius:14px;font-size:20px;font-weight:800;margin-bottom:18px}}
-.headline.ok{{background:#e8f5ef;color:#086044;border:1px solid #b9dfd1}}.headline.alert{{background:#fff0ed;color:var(--red);border:1px solid #f2c4bc}}
+.headline.ok{{background:#e8f5ef;color:#086044;border:1px solid #b9dfd1}}.headline.warn{{background:#fff7e6;color:var(--amber);border:1px solid #f1d59c}}.headline.alert{{background:#fff0ed;color:var(--red);border:1px solid #f2c4bc}}
 .kpis{{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:18px}}.kpi{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}}
 .kpi small{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:700}}.kpi strong{{display:block;font-size:24px;margin-top:4px}}
 section{{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}}.empty{{color:var(--muted);padding:8px 0}}
@@ -206,6 +236,9 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <div class="kpi"><small>Identità da verificare</small><strong>{review_count}</strong></div>
 <div class="kpi"><small>Record incompleti</small><strong>{incomplete_count}</strong></div>
 <div class="kpi"><small>Storici / fuori scala filtrati</small><strong>{filtered_count}</strong></div>
+<div class="kpi"><small>Fonti con dati progetto</small><strong>{len(project_sources)}</strong></div>
+<div class="kpi"><small>Fonti solo canale</small><strong>{len(limited_sources)}</strong></div>
+<div class="kpi"><small>Fonti raggiunte senza finding</small><strong>{len(empty_sources)}</strong></div>
 <div class="kpi"><small>Errori fonte</small><strong>{len(source_errors)}</strong></div>
 </div>
 <section><h2>Nuovi progetti candidati dalla scansione giornaliera</h2>{_html_table(report.get('new_candidates') or [], 'Nessun nuovo progetto candidato.')}</section>
@@ -216,8 +249,9 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <section><h2>Record progetto incompleti — esclusi dal Radar</h2>{_html_table(report.get('incomplete_project_items') or [], 'Nessun record incompleto.')}</section>
 <section><h2>Salute fonti</h2>
 <h3>Errori</h3>{errors_html}
-<h3>Copertura limitata</h3>{limited_html}
-<div class="note">Institutional: {len(institutional.get('executed_agents') or [])} fonti eseguite · Company watch: {len(company.get('executed_companies') or [])} player eseguiti.</div>
+<h3>Copertura limitata / solo canale</h3>{limited_html}
+<h3>Fonti raggiunte senza finding</h3>{empty_html}
+<div class="note">Institutional: {len(institutional.get('executed_agents') or [])} fonti eseguite · {len(project_sources)} con dati progetto · {len(limited_sources)} solo canale · {len(empty_sources)} senza finding · Company watch: {len(company.get('executed_companies') or [])} player eseguiti.</div>
 </section>
 <p class="note">Il report è review-only: nessun candidato viene aggiunto automaticamente ai 51 progetti canonici. Un nuovo progetto deve avere almeno azienda/proponente, potenza in MW e comune; i record privi di uno di questi campi restano archiviati ma sono esclusi dal Radar operativo.</p>
 </main></body></html>"""
