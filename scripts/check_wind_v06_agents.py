@@ -64,6 +64,7 @@ required_adapters = {
     "abruzzo-via",
     "basilicata-au-paur",
     "basilicata-via",
+    "calabria-regional-acts",
     "calabria-via",
     "campania-viavas",
     "emilia-romagna-regional",
@@ -86,7 +87,7 @@ required_adapters = {
     "veneto-regional",
 }
 assert required_adapters.issubset(implemented), implemented
-assert len(implemented) >= 23, implemented
+assert len(implemented) >= 24, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
 
 # Toscana GeA must degrade transparently to a channel-only snapshot when the
