@@ -228,6 +228,21 @@ def _hash_payload(payload: dict[str, Any]) -> str:
     """
     inner = payload.get("payload") if isinstance(payload, dict) else None
     change_basis = inner.get("_change_basis") if isinstance(inner, dict) else None
+    # Backward-compatible migration for Sicilia records already persisted before
+    # _change_basis existed. This prevents one synthetic "changed" wave after
+    # upgrading the local database.
+    if (
+        not isinstance(change_basis, dict)
+        and payload.get("source_name") == "Regione Sicilia SI-VVI"
+        and isinstance(inner, dict)
+    ):
+        change_basis = {
+            "source_code": inner.get("source_code"),
+            "project_name": inner.get("project_name"),
+            "proponent": inner.get("proponent"),
+            "procedure": inner.get("procedure"),
+            "power_mw": inner.get("power_mw"),
+        }
     if isinstance(change_basis, dict):
         effective = {
             "external_id": payload.get("external_id"),
@@ -264,7 +279,7 @@ def upsert_finding(
     with closing(_connect()) as conn:
         previous = conn.execute(
             """
-            SELECT content_hash, first_seen
+            SELECT content_hash, first_seen, payload_json
             FROM raw_findings
             WHERE agent_name = ? AND source_name = ? AND external_id = ?
             """,
@@ -275,14 +290,20 @@ def upsert_finding(
             event_type = "baseline" if baseline_new else "new"
             first_seen = now
             previous_hash = None
-        elif previous["content_hash"] != content_hash:
-            event_type = "changed"
-            first_seen = previous["first_seen"]
-            previous_hash = previous["content_hash"]
         else:
-            event_type = "unchanged"
-            first_seen = previous["first_seen"]
             previous_hash = previous["content_hash"]
+            previous_semantic_hash = previous_hash
+            try:
+                previous_payload = json.loads(previous["payload_json"] or "{}")
+                previous_semantic_hash = _hash_payload(previous_payload)
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+            if previous_semantic_hash != content_hash:
+                event_type = "changed"
+            else:
+                event_type = "unchanged"
+            first_seen = previous["first_seen"]
 
         conn.execute(
             """
