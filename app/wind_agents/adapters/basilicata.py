@@ -167,8 +167,20 @@ class BasilicataWindAgent(BaseWindAgent):
                 headers={"User-Agent": "Wind-Radar-Agent/0.6"},
             )
             response.raise_for_status()
-            pages.append((ENERGY_NOTICE_URL, response.text))
+            primary_html = response.text
+            pages.append((ENERGY_NOTICE_URL, primary_html))
             seen.add(ENERGY_NOTICE_URL)
+            primary_text = self._clean(
+                BeautifulSoup(primary_html, "html.parser").get_text(" ", strip=True)
+            )
+            primary_lower = primary_text.lower()
+            if self._is_wind(primary_text) and any(
+                token in primary_lower
+                for token in ("autorizzazione unica", "paur", "p.a.u.r", "d.lgs 387")
+            ):
+                # The thematic page already exposes the current notice inventory
+                # with project text. Do not fan out to detail/search pages.
+                return pages
         except Exception as exc:
             primary_error = exc
 
@@ -177,7 +189,7 @@ class BasilicataWindAgent(BaseWindAgent):
             try:
                 search = self.session.get(
                     WP_SEARCH_URL,
-                    params={"search": term, "per_page": 30},
+                    params={"search": term, "per_page": 12},
                     timeout=(8, 25),
                     headers={"User-Agent": "Wind-Radar-Agent/0.6"},
                 )
@@ -194,9 +206,9 @@ class BasilicataWindAgent(BaseWindAgent):
                 if not url.startswith("http") or url in seen or url in discovered_urls:
                     continue
                 discovered_urls.append(url)
-                if len(discovered_urls) >= 30:
+                if len(discovered_urls) >= 8:
                     break
-            if len(discovered_urls) >= 30:
+            if len(discovered_urls) >= 8:
                 break
 
         # Fetch only a bounded current discovery window. The raw thematic page
@@ -206,7 +218,7 @@ class BasilicataWindAgent(BaseWindAgent):
             try:
                 detail = self.session.get(
                     url,
-                    timeout=(8, 15),
+                    timeout=(6, 12),
                     headers={"User-Agent": "Wind-Radar-Agent/0.6"},
                 )
                 detail.raise_for_status()
