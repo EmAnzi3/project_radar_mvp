@@ -250,7 +250,15 @@ campania_total_text = (
     "nei Comuni di Lacedonia (AV)"
 )
 assert CampaniaWindAgent._power_mw(campania_total_text) == 100.8
-assert CampaniaWindAgent.baseline_revision == "2026-10-current-project-table-v3"
+campania_places = CampaniaWindAgent._municipalities(
+    "LACEDONIA",
+    campania_total_text.replace(
+        "nei Comuni di Lacedonia (AV)",
+        "nei Comuni di Lacedonia (AV), Monteverde (AV) e Bisaccia (AV) ed opera RTN"
+    ),
+)
+assert {"LACEDONIA", "Monteverde", "Bisaccia"}.issubset(set(campania_places)), campania_places
+assert CampaniaWindAgent.baseline_revision == "2026-10-current-project-table-v4"
 
 sardegna_detail_text = (
     'Titolo progetto: Impianto Eolico denominato "WHITE AND BLUE LUIGHIEDDA" della potenza '
@@ -259,10 +267,12 @@ sardegna_detail_text = (
     'Stato del procedimento: CHIUSA Esito: NEGATIVO'
 )
 assert SardegnaWindAgent._power_mw(sardegna_detail_text) == 21.6
-assert SardegnaWindAgent._proponent(sardegna_detail_text) == "INNOVO DEVELOPMENT 8 S.R.L"
+assert SardegnaWindAgent._proponent(
+    sardegna_detail_text + " Consulta la documentazione ulteriori contenuti del portale"
+) == "INNOVO DEVELOPMENT 8 S.R.L"
 assert SardegnaWindAgent._municipality(sardegna_detail_text) == "SASSARI"
 assert SardegnaWindAgent._status(sardegna_detail_text) == "Negativo"
-assert SardegnaWindAgent.baseline_revision == "2026-10-news-project-detail-v3"
+assert SardegnaWindAgent.baseline_revision == "2026-10-news-project-detail-v4"
 
 calabria_paladino_text = (
     "Oggetto: Provvedimento di Valutazione di Impatto Ambientale ai sensi degli art. 23 e segg. "
@@ -273,10 +283,12 @@ calabria_paladino_text = (
     "Proponente: Paladino Energia S.r.l."
 )
 assert CalabriaRegionalActsWindAgent._power_mw(calabria_paladino_text) == 24.0
-assert CalabriaRegionalActsWindAgent._proponent(calabria_paladino_text) == "Paladino Energia S.r.l"
+assert CalabriaRegionalActsWindAgent._proponent(
+    calabria_paladino_text + " Ulteriori dati del provvedimento e allegati amministrativi"
+) == "Paladino Energia S.r.l"
 calabria_places = CalabriaRegionalActsWindAgent._municipalities(calabria_paladino_text)
 assert {"Gasperina", "Montauro", "Montepaone", "Palermiti", "Petrizzi", "Argusto"}.issubset(set(calabria_places)), calabria_places
-assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v2"
+assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v3"
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
