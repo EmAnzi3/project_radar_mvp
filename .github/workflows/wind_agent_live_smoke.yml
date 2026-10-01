@@ -208,6 +208,57 @@ jobs:
               )
           PY
 
+      - name: Run second pass against same SQLite
+        shell: bash
+        run: |
+          args=()
+          for source in $WIND_SMOKE_SOURCES; do
+            args+=(--source "$source")
+          done
+          python scripts/run_wind_agents.py run \
+            "${args[@]}" \
+            --output "reports/wind-agent-live/${WIND_SMOKE_GROUP}-second.json"
+
+      - name: Validate stable second pass
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          group = os.environ['WIND_SMOKE_GROUP']
+          expected = set(os.environ['WIND_SMOKE_SOURCES'].split())
+          path = Path(f'reports/wind-agent-live/{group}-second.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+
+          assert data.get('bootstrap_new_sources') is True, data.get('bootstrap_new_sources')
+          assert not data.get('errors'), data.get('errors')
+          assert set(data.get('executed_agents') or []) == expected
+
+          per_agent = data.get('per_agent') or {}
+          for source_id in sorted(expected):
+              row = per_agent[source_id]
+              assert row.get('status') == 'success', (source_id, row)
+              assert row.get('new', 0) == 0, (source_id, row)
+              assert row.get('changed', 0) == 0, (source_id, row)
+
+              health = row.get('data_health')
+              if health == 'project_data':
+                  assert row.get('bootstrap_source') is False, (source_id, row)
+                  assert row.get('baseline', 0) == 0, (source_id, row)
+                  assert row.get('unchanged', 0) == row.get('findings', 0), (source_id, row)
+
+              print(
+                  f"{source_id}: health={health} findings={row.get('findings', 0)} "
+                  f"baseline={row.get('baseline', 0)} new={row.get('new', 0)} "
+                  f"changed={row.get('changed', 0)} unchanged={row.get('unchanged', 0)} "
+                  f"duration={row.get('duration_seconds', 0)}s"
+              )
+
+          print(f'{group}: stable second pass OK — 0 new / 0 changed')
+          PY
+
       - name: Publish live smoke summary
         if: always()
         shell: bash
