@@ -293,7 +293,7 @@ assert SardegnaWindAgent._proponent(
 ) == "INNOVO DEVELOPMENT 8 S.R.L"
 assert SardegnaWindAgent._municipality(sardegna_detail_text) == "SASSARI"
 assert SardegnaWindAgent._status(sardegna_detail_text) == "Negativo"
-assert SardegnaWindAgent.baseline_revision == "2026-10-news-project-detail-v4"
+assert SardegnaWindAgent.baseline_revision == "2026-10-search-stems-v5"
 
 calabria_paladino_text = (
     "Oggetto: Provvedimento di Valutazione di Impatto Ambientale ai sensi degli art. 23 e segg. "
