@@ -17,6 +17,7 @@ from app.wind_agents.adapters.toscana import ToscanaWindAgent
 from app.wind_agents.adapters.toscana_atos import ToscanaAtosWindAgent
 from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
+from app.wind_agents.adapters.sicilia import SiciliaWindAgent
 from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
@@ -133,6 +134,21 @@ assert len(basilicata_channel_findings) == 1
 assert basilicata_channel_findings[0].finding_type == "source_channel_snapshot"
 assert basilicata_channel_findings[0].payload.get("project_specific") is False
 assert basilicata_channel_findings[0].payload.get("data_health") == "channel_only"
+
+sicilia_channel = SiciliaWindAgent()
+def _synthetic_sicilia_csv_outage():
+    raise requests.ConnectionError("synthetic Sicilia CSV timeout")
+def _synthetic_sicilia_gis_outage(_reason):
+    raise requests.Timeout("synthetic Sicilia MapServer timeout")
+sicilia_channel._findings_from_csv = _synthetic_sicilia_csv_outage
+sicilia_channel._findings_from_gis = _synthetic_sicilia_gis_outage
+sicilia_channel_findings = sicilia_channel.fetch()
+assert len(sicilia_channel_findings) == 1
+assert sicilia_channel_findings[0].finding_type == "source_channel_snapshot"
+assert sicilia_channel_findings[0].payload.get("project_specific") is False
+assert sicilia_channel_findings[0].payload.get("data_health") == "channel_only"
+assert "CSV timeout" in sicilia_channel_findings[0].payload.get("csv_availability_issue", "")
+assert "MapServer timeout" in sicilia_channel_findings[0].payload.get("gis_availability_issue", "")
 
 # Minimum-field parser guards on real-style official regional act text.
 puglia_text = (
