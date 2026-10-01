@@ -470,7 +470,7 @@ def _minimum_project_fields(payload: dict[str, Any]) -> tuple[bool, list[str]]:
     if payload.get("municipality"):
         municipalities.append(payload.get("municipality"))
 
-    unknown_tokens = {"", "n/d", "nd", "n.a.", "n/a", "unknown", "sconosciuto", "non indicato", "non disponibile"}
+    unknown_tokens = {"", "n/d", "nd", "n d", "n.a.", "n/a", "n a", "unknown", "sconosciuto", "non indicato", "non disponibile"}
     company_norm = _norm(company)
     valid_places = [
         place for place in municipalities
