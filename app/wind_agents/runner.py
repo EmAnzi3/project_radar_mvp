@@ -117,6 +117,35 @@ def due_agent_ids(as_of: date | None = None) -> list[str]:
     return sorted(due)
 
 
+def _baseline_revision(agent: Any) -> str | None:
+    value = getattr(agent, "baseline_revision", None)
+    value = str(value).strip() if value is not None else ""
+    return value or None
+
+
+def _bootstrap_decision(
+    runtime_before: dict[str, Any],
+    agent: Any,
+    *,
+    bootstrap_new_sources: bool,
+) -> tuple[bool, bool, str | None, str | None]:
+    """Return bootstrap_source, revision_bootstrap, current_revision, previous_revision."""
+    metadata = runtime_before.get("metadata") or {}
+    previous_revision = metadata.get("baseline_revision")
+    current_revision = _baseline_revision(agent)
+
+    if not bootstrap_new_sources:
+        return False, False, current_revision, previous_revision
+
+    first_success = not runtime_before.get("last_success")
+    revision_bootstrap = bool(
+        current_revision
+        and runtime_before.get("last_success")
+        and previous_revision != current_revision
+    )
+    return bool(first_success or revision_bootstrap), revision_bootstrap, current_revision, previous_revision
+
+
 def _source_health(counters: dict[str, Any]) -> str:
     if counters.get("status") == "error":
         return "error"
@@ -172,8 +201,15 @@ def run_agents(
             agent = AGENT_FACTORIES[source_id]()
             agent_started = time.monotonic()
             runtime_before = get_watch_status(source_id) or {}
-            bootstrap_source = bool(
-                bootstrap_new_sources and not runtime_before.get("last_success")
+            (
+                bootstrap_source,
+                revision_bootstrap,
+                current_revision,
+                previous_revision,
+            ) = _bootstrap_decision(
+                runtime_before,
+                agent,
+                bootstrap_new_sources=bootstrap_new_sources,
             )
             counters: dict[str, Any] = {
                 "findings": 0,
@@ -186,6 +222,9 @@ def run_agents(
                 "status": "running",
                 "data_health": "running",
                 "bootstrap_source": bootstrap_source,
+                "revision_bootstrap": revision_bootstrap,
+                "baseline_revision": current_revision,
+                "previous_baseline_revision": previous_revision,
             }
             try:
                 findings = agent.fetch()
@@ -195,6 +234,7 @@ def run_agents(
                         agent.agent_name,
                         finding,
                         baseline_new=bootstrap_source,
+                        rebaseline_existing=revision_bootstrap,
                     )
                     counters["findings"] += 1
                     counters[event] += 1
@@ -220,6 +260,11 @@ def run_agents(
                         "project_specific_findings": counters["project_specific_findings"],
                         "finding_types": counters["finding_types"],
                         "data_health": counters["data_health"],
+                        "baseline_revision": (
+                            current_revision
+                            if counters["data_health"] != "channel_or_market_only"
+                            else previous_revision
+                        ),
                     },
                 )
             except Exception as exc:
@@ -238,6 +283,7 @@ def run_agents(
                         "project_specific_findings": counters["project_specific_findings"],
                         "finding_types": counters["finding_types"],
                         "data_health": "error",
+                        "baseline_revision": previous_revision,
                     },
                 )
             counters["duration_seconds"] = round(time.monotonic() - agent_started, 1)
