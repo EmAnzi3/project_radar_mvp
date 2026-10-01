@@ -80,6 +80,33 @@ def main() -> int:
         discovery=[],
     )
     assert novel_result["category"] == "new_project_candidate", novel_result
+    assert novel_result["minimum_project_fields_complete"] is True
+
+    for missing_key in ("proponent", "power_mw", "municipalities"):
+        incomplete_event = {
+            **novel_event,
+            "external_id": f"test-incomplete-{missing_key}",
+            "finding": {
+                **novel_event["finding"],
+                "external_id": f"test-incomplete-{missing_key}",
+                "payload": dict(novel_event["finding"]["payload"]),
+            },
+        }
+        if missing_key == "municipalities":
+            incomplete_event["finding"]["payload"]["municipalities"] = []
+        else:
+            incomplete_event["finding"]["payload"][missing_key] = None
+        incomplete_result = classify_daily_discovery_event(
+            incomplete_event,
+            canonical=canonical,
+            discovery=[],
+        )
+        assert incomplete_result["category"] == "incomplete_project_record", incomplete_result
+        assert incomplete_result["minimum_project_fields_complete"] is False
+        expected_missing = "municipality" if missing_key == "municipalities" else (
+            "company" if missing_key == "proponent" else "power_mw"
+        )
+        assert expected_missing in incomplete_result["minimum_project_fields_missing"], incomplete_result
 
     historical_event = {
         "event_type": "new",
@@ -316,7 +343,8 @@ def main() -> int:
     print("Wind daily discovery checks OK")
     print(f"Canonical: {len(canonical)} projects / {total_mw:.2f} MW")
     print("Known finding via payload.project_url -> known_project_update")
-    print("Unmatched new project-specific finding -> new_project_candidate")
+    print("Unmatched new complete project-specific finding -> new_project_candidate")
+    print("Missing company/MW/municipality -> incomplete_project_record")
     print("First-seen source inventory -> baseline_project_candidate")
     print("Historical micro-wind -> non_target_scale")
     print("Unmatched verification of compliance -> existing_project_follow_up")
