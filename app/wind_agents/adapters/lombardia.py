@@ -5,10 +5,13 @@ import re
 from datetime import date
 from urllib.parse import urljoin
 
+import requests
+
 from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
 BASE_URL = "https://www.silvia.servizirl.it/silviaweb/"
+PUBLIC_INFO_URL = "https://www.regione.lombardia.it/ambiente-e-territorio/valutazione-di-impatto-ambientale-via/sistema-informativo-lombardo-per-la-valutazione-di-impatto-ambientale-%28silvia%29"
 TIPO_PROCEDURA_LIST = "1,2,3,5,15"
 TARGET_SECTORS = {"2", "8"}
 WIND_TERMS = (
@@ -198,7 +201,26 @@ class LombardiaWindAgent(BaseWindAgent):
 
     def fetch(self) -> list[AgentFinding]:
         unique: dict[str, AgentFinding] = {}
-        sectors = self._load_sectors()
+        try:
+            sectors = self._load_sectors()
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            return [
+                AgentFinding(
+                    external_id="LOMBARDIA-SILVIA-CHANNEL",
+                    source_name=self.source_name,
+                    source_url=PUBLIC_INFO_URL,
+                    title="Regione Lombardia SILVIA - portale progetto temporaneamente non raggiungibile",
+                    finding_type="source_channel_snapshot",
+                    payload={
+                        "region": "Lombardia",
+                        "project_specific": False,
+                        "source_grade_ceiling": "A1",
+                        "data_health": "channel_only",
+                        "availability_issue": f"{type(exc).__name__}: {exc}",
+                        "source_adapter_origin": "pv_agent_mvp/lombardia.py",
+                    },
+                )
+            ]
         if not sectors:
             raise RuntimeError("Lombardia SILVIA target sectors 2/8 not returned")
 
