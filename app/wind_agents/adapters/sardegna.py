@@ -37,6 +37,7 @@ class SardegnaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Sardegna SIRA VIA/PAUR"
     base_url = NEWS_URL
+    baseline_revision = "2026-10-news-project-detail-v2"
 
     def __init__(self, years: list[str] | None = None) -> None:
         super().__init__()
