@@ -111,8 +111,8 @@ class BasilicataWindAgent(BaseWindAgent):
     @classmethod
     def _proponent(cls, text: str) -> str | None:
         for pattern in (
-            r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\||$)",
-            r"Societ[aà]\s+proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\||$)",
+            r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\s+Progressivo\s+Interno|\s+ID\s+PAUR|\s+Data\s+di\s+pubblicazione|\||$)",
+            r"Societ[aà]\s+proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\s+Progressivo\s+Interno|\s+ID\s+PAUR|\s+Data\s+di\s+pubblicazione|\||$)",
             r"Societ[aà]\s+(.+?)(?:\s+ha\s+presentato|\s+ha\s+depositato|\s+richiede|\||$)",
         ):
             match = re.search(pattern, text, flags=re.I)
