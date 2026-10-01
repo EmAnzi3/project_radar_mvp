@@ -58,12 +58,10 @@
       "project_links": [
         "alia-sclafani"
       ],
-      "watch_urls": [
-        "https://socep.it/"
-      ],
+      "watch_urls": [],
       "last_checked": "2026-09-05",
       "next_action": "Verify whether the historical Asja relationship and works at the Alia-Sclafani site have continued into the current 55 MW repowering; current Civil BoP, foundations and cable packages remain open until a new project-specific award is found.",
-      "notes": "SOCEP's public work references include piazzole and substation-related civil works for the pre-existing Alia-Sclafani wind plant for Asja Ambiente Italia, plus MT cable work for another wind client. This is a same-site/client historical supplier signal, not evidence of a role in the current repowering."
+      "notes": "SOCEP's public work references include piazzole and substation-related civil works for the pre-existing Alia-Sclafani wind plant for Asja Ambiente Italia, plus MT cable work for another wind client. This is a same-site/client historical supplier signal, not evidence of a role in the current repowering. Automated polling is temporarily disabled because the public site currently fails strict TLS hostname validation; do not bypass certificate verification."
     },
     {
       "id": "vector-renewables",
