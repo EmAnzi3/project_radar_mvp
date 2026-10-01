@@ -17,8 +17,8 @@ XLSX_URL = (
     "1728acca-e2fc-4dcb-bb52-0fc1eaa628c2/download/via_fer.xlsx"
 )
 SOURCE_URL = "https://dati.puglia.it/ckan/dataset/impianti-proposti-via-fer"
-ALBO_URL = "https://albonline.regione.puglia.it/web/guest/home"
-ALBO_PREFIX = "_it_linksmt_albopretorio_albopretorio_portlet_AlboPretorioPortlet_"
+BURP_URL = "https://burp.regione.puglia.it/it/documenti"
+BURP_PREFIX = "_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_"
 WIND_TERMS = ("eolico", "eolica", "wind")
 
 
@@ -144,27 +144,6 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                 return cls._clean(match.group(1))[:900]
         return cls._clean(fallback)[:900]
 
-    def _regional_aoo_id(self) -> str:
-        try:
-            response = self.session.get(
-                ALBO_URL,
-                timeout=(8, 20),
-                headers={"User-Agent": "Wind-Radar-Agent/0.6"},
-            )
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, "html.parser")
-            select = soup.find("select", attrs={"name": re.compile(r"idAoo", re.I)})
-            if select:
-                for option in select.find_all("option"):
-                    label = self._clean(option.get_text(" ", strip=True)).lower()
-                    if "transizione energetica" in label:
-                        value = self._clean(option.get("value") or "")
-                        if value:
-                            return value
-        except Exception:
-            pass
-        return "0"
-
     @classmethod
     def _regional_external_id(
         cls,
@@ -186,79 +165,96 @@ class SistemaPugliaWindAgent(BaseWindAgent):
         safe = re.sub(r"[^A-Za-z0-9._-]+", "-", registry).strip("-")
         return f"PUGLIA-REGIONAL-ACT-{safe[:140]}" if safe else "PUGLIA-REGIONAL-ACT-UNKNOWN"
 
-    def _fetch_regional_albo(self, max_pages: int = 12) -> list[AgentFinding]:
-        """Regional AU/PAUR/proroga acts from the official Puglia Albo Pretorio."""
+    def _fetch_regional_albo(self, max_pages: int = 8) -> list[AgentFinding]:
+        """Regional wind AU/PAUR/proroga acts from the official BURP search."""
         findings: list[AgentFinding] = []
         seen: set[str] = set()
-        aoo_id = self._regional_aoo_id()
+        current_year = str(__import__("datetime").date.today().year)
+
         for page in range(1, max_pages + 1):
             params = {
-                "p_p_id": "it_linksmt_albopretorio_albopretorio_portlet_AlboPretorioPortlet",
+                "p_p_id": "it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6",
                 "p_p_lifecycle": "0",
                 "p_p_state": "normal",
                 "p_p_mode": "view",
-                f"{ALBO_PREFIX}mvcRenderCommandName": "/cercaAtto",
-                f"{ALBO_PREFIX}cur": str(page),
-                f"{ALBO_PREFIX}delta": "60",
-                f"{ALBO_PREFIX}idAoo": aoo_id,
-                f"{ALBO_PREFIX}idStatoAtto": "-1",
-                f"{ALBO_PREFIX}idTipoAtto": "0",
-                f"{ALBO_PREFIX}resetCur": "false",
+                f"{BURP_PREFIX}searchContent": "eolico",
+                f"{BURP_PREFIX}docanno": current_year,
+                f"{BURP_PREFIX}cur": str(page),
+                f"{BURP_PREFIX}delta": "50",
+                f"{BURP_PREFIX}resetCur": "false",
             }
             response = self.session.get(
-                ALBO_URL,
+                BURP_URL,
                 params=params,
-                timeout=(8, 25),
+                timeout=(8, 30),
                 headers={"User-Agent": "Wind-Radar-Agent/0.6"},
             )
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
-            rows = soup.find_all("tr")
-            if not rows:
+            plain = self._clean(soup.get_text(" ", strip=True))
+            if not plain:
                 break
-            page_hits = 0
-            for tr in rows:
-                cells = tr.find_all("td")
-                if len(cells) < 6:
+
+            chunks = re.split(
+                r"(?=DETERMINAZIONE\s+DEL\s+DIRIGENTE\s+SEZIONE\s+TRANSIZIONE\s+ENERGETICA)",
+                plain,
+                flags=re.I,
+            )
+            page_count = 0
+            for chunk in chunks:
+                text = self._clean(chunk)
+                lowered = text.lower()
+                if not self._is_wind(text):
                     continue
-                values = [self._clean(td.get_text(" ", strip=True)) for td in cells]
-                registry = values[0] if values else ""
-                adoption_number = values[2] if len(values) > 2 else ""
-                adoption_date = values[3] if len(values) > 3 else ""
-                structure = values[4] if len(values) > 4 else ""
-                object_text = values[5] if len(values) > 5 else ""
-                combined = self._clean(f"{structure} {object_text}")
-                if not self._is_wind(combined):
+                if "transizione energetica" not in lowered:
                     continue
-                lowered = combined.lower()
                 if not any(token in lowered for token in ("autorizzazione unica", "p.a.u.r", "paur", "proroga")):
                     continue
 
-                proponent = self._proponent_from_text(object_text)
-                power_mw = self._power_from_text(object_text)
-                municipalities = self._municipalities_from_text(object_text)
-                source_anchor = tr.find("a", href=True)
-                source_url = urljoin(ALBO_URL, source_anchor.get("href")) if source_anchor else str(response.url)
-                project_name = self._project_name_from_text(object_text, object_text)
-                stable = registry or f"{adoption_number}-{adoption_date}-{hashlib.sha1(object_text.encode('utf-8')).hexdigest()[:10]}"
+                # Bound one act so adjacent BURP entries cannot contaminate fields.
+                next_heading = re.search(
+                    r"\s+DETERMINAZIONE\s+DEL\s+DIRIGENTE\s+(?!SEZIONE\s+TRANSIZIONE\s+ENERGETICA)",
+                    text,
+                    flags=re.I,
+                )
+                if next_heading:
+                    text = text[: next_heading.start()]
+                    lowered = text.lower()
+
+                proponent = self._proponent_from_text(text)
+                power_mw = self._power_from_text(text)
+                municipalities = self._municipalities_from_text(text)
+                project_name = self._project_name_from_text(text, text)
+
+                registry_match = re.search(
+                    r"\b(?:ID\s+)?(?:A\.?U\.?|AU|cod\.\s*AU)\s*[:\-]?\s*([A-Z0-9]{5,12})\b",
+                    text,
+                    flags=re.I,
+                )
+                registry = registry_match.group(1) if registry_match else ""
                 external_id = self._regional_external_id(
                     project_name=project_name,
                     proponent=proponent,
                     municipalities=municipalities,
                     power_mw=power_mw,
-                    registry=stable,
+                    registry=registry or text[:180],
                 )
                 if external_id in seen:
                     continue
                 seen.add(external_id)
-                page_hits += 1
+                page_count += 1
 
+                date_match = re.search(
+                    r"SEZIONE\s+TRANSIZIONE\s+ENERGETICA\s+(\d{1,2}\s+[A-Za-zà-ù]+\s+20\d{2}),\s*n\.\s*(\d+)",
+                    text,
+                    flags=re.I,
+                )
                 procedure = "Proroga AU/PAUR" if "proroga" in lowered else "Autorizzazione Unica / PAUR"
                 findings.append(
                     AgentFinding(
                         external_id=external_id,
                         source_name="Regione Puglia AU/PAUR",
-                        source_url=source_url,
+                        source_url=str(response.url),
                         title=project_name,
                         finding_type="project_source",
                         payload={
@@ -269,20 +265,24 @@ class SistemaPugliaWindAgent(BaseWindAgent):
                             "municipalities": municipalities,
                             "power_mw": power_mw,
                             "procedure": procedure,
-                            "status_raw": object_text[:1200],
-                            "source_date": adoption_date or None,
-                            "albo_registry": registry or None,
-                            "adoption_number": adoption_number or None,
+                            "status_raw": text[:1800],
+                            "source_date": date_match.group(1) if date_match else None,
+                            "act_number": date_match.group(2) if date_match else None,
+                            "au_code": registry or None,
                             "sector": "eolico",
                             "source_grade_ceiling": "A1",
                             "project_specific": True,
-                            "source_adapter_origin": "regional_puglia_albo",
-                            "ingestion_path": "official_regional_albo_au_paur",
+                            "source_adapter_origin": "regional_puglia_burp",
+                            "ingestion_path": "official_burp_au_paur",
                         },
                     )
                 )
-            # Keep paging within the bounded window: the Albo may interleave
-            # unrelated acts even when the AOO filter is unavailable.
+
+            # Search result pages eventually repeat/empty. Stop once no useful
+            # current-year regional wind act is found after page 1.
+            if page_count == 0 and page > 1:
+                break
+
         return findings
 
     def _fetch_mase_via_dataset(self) -> list[AgentFinding]:
@@ -371,7 +371,7 @@ class PugliaRegionalAuWindAgent(SistemaPugliaWindAgent):
     """Independent regional AU/PAUR source with its own bootstrap lifecycle."""
 
     source_name = "Regione Puglia AU/PAUR"
-    base_url = ALBO_URL
+    base_url = BURP_URL
 
     def fetch(self) -> list[AgentFinding]:
         return self._fetch_regional_albo()
