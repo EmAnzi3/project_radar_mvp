@@ -22,7 +22,10 @@ SEARCH_PROCEDURES = {
     "560": "VERIFICA",
     "566": "VIA/PAUR",
 }
-SEARCH_KEYWORDS = ("eolico", "eolica", "repowering")
+# SIRA keyword search is substring-based. Shared stems preserve coverage for
+# eolico/eolica and repowering variants while avoiding four redundant POSTs
+# in the standard 2-year x 2-procedure matrix.
+SEARCH_KEYWORDS = ("eolic", "repower")
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "repowering", "parco eolico")
 
 
@@ -37,7 +40,7 @@ class SardegnaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Sardegna SIRA VIA/PAUR"
     base_url = NEWS_URL
-    baseline_revision = "2026-10-news-project-detail-v4"
+    baseline_revision = "2026-10-search-stems-v5"
 
     def __init__(self, years: list[str] | None = None) -> None:
         super().__init__()
