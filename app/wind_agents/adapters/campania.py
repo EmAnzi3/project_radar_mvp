@@ -29,7 +29,7 @@ class CampaniaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Campania VIA/PAUR"
     base_url = SEARCH_URL
-    baseline_revision = "2026-10-current-project-table-v3"
+    baseline_revision = "2026-10-current-project-table-v4"
 
     def __init__(self, min_year: int | None = None) -> None:
         super().__init__()
