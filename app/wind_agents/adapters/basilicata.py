@@ -4,6 +4,7 @@ import hashlib
 import re
 from urllib.parse import urljoin
 
+import requests
 from bs4 import BeautifulSoup
 
 from app.wind_agents.base import AgentFinding, BaseWindAgent
@@ -150,14 +151,18 @@ class BasilicataWindAgent(BaseWindAgent):
         seen: set[str] = set()
 
         # Always inspect the thematic page itself.
-        response = self.session.get(
-            ENERGY_NOTICE_URL,
-            timeout=(8, 25),
-            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
-        )
-        response.raise_for_status()
-        pages.append((ENERGY_NOTICE_URL, response.text))
-        seen.add(ENERGY_NOTICE_URL)
+        primary_error: Exception | None = None
+        try:
+            response = self.session.get(
+                ENERGY_NOTICE_URL,
+                timeout=(8, 25),
+                headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+            )
+            response.raise_for_status()
+            pages.append((ENERGY_NOTICE_URL, response.text))
+            seen.add(ENERGY_NOTICE_URL)
+        except Exception as exc:
+            primary_error = exc
 
         discovered_urls: list[str] = []
         for term in ("eolico", "PAUR eolico"):
@@ -229,6 +234,8 @@ class BasilicataWindAgent(BaseWindAgent):
             except Exception:
                 pass
 
+        if not pages and primary_error is not None:
+            raise primary_error
         return pages
 
     def _fetch_energy_notices(self) -> list[AgentFinding]:
@@ -399,4 +406,23 @@ class BasilicataEnergyWindAgent(BasilicataWindAgent):
     base_url = ENERGY_NOTICE_URL
 
     def fetch(self) -> list[AgentFinding]:
-        return self._fetch_energy_notices()
+        try:
+            return self._fetch_energy_notices()
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            return [
+                AgentFinding(
+                    external_id="BASILICATA-ENERGY-CHANNEL",
+                    source_name=self.source_name,
+                    source_url=ENERGY_NOTICE_URL,
+                    title="Regione Basilicata Ufficio Energia - canale AU/PAUR temporaneamente non raggiungibile",
+                    finding_type="source_channel_snapshot",
+                    payload={
+                        "region": "Basilicata",
+                        "project_specific": False,
+                        "source_grade_ceiling": "A1",
+                        "data_health": "channel_only",
+                        "availability_issue": f"{type(exc).__name__}: {exc}",
+                        "source_adapter_origin": "regional_basilicata_energy_notices",
+                    },
+                )
+            ]
