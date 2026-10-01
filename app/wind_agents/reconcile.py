@@ -463,12 +463,21 @@ def _minimum_project_fields(payload: dict[str, Any]) -> tuple[bool, list[str]]:
     power = _as_float(payload.get("power_mw"))
     places = _place_values(payload)
 
+    unknown_tokens = {"", "n/d", "nd", "n.a.", "n/a", "unknown", "sconosciuto", "non indicato", "non disponibile"}
+    company_norm = _norm(company)
+    valid_places = [
+        place for place in places
+        if _norm(place) not in unknown_tokens
+        and "non indicat" not in _norm(place)
+        and "sconosciut" not in _norm(place)
+    ]
+
     missing: list[str] = []
-    if not _norm(company):
+    if company_norm in unknown_tokens or "non indicat" in company_norm or "sconosciut" in company_norm:
         missing.append("company")
-    if power is None:
+    if power is None or power <= 0:
         missing.append("power_mw")
-    if not places:
+    if not valid_places:
         missing.append("municipality")
     return not missing, missing
 
