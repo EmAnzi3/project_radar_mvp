@@ -15,12 +15,11 @@ BASE_URL = "https://www.regione.calabria.it"
 SOURCE_URL = "https://www.regione.calabria.it/dipartimento-per-la-sostenibilita-ambientale/avvisi-via-e-vas/"
 PROVVEDIMENTI_URL = "https://www.regione.calabria.it/provvedimenti-della-regione/"
 SEARCH_TERMS = (
+    # Broad terms cover the former "parco/PAUR/VIA eolico" queries as subsets.
+    # Keep "repowering" separately because some notices omit the word eolico.
     "eolico",
     "eolica",
-    "parco eolico",
-    "repowering eolico",
-    "PAUR eolico",
-    "VIA eolico",
+    "repowering",
 )
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "repowering", "parco eolico")
 PROVINCE_CODES = ("CZ", "CS", "KR", "RC", "VV")
@@ -112,7 +111,10 @@ class CalabriaWindAgent(BaseWindAgent):
                 soup = BeautifulSoup(html_page, "html.parser")
                 page_text = self._clean(soup.get_text(" ", strip=True))
                 if not self._is_wind(page_text):
-                    continue
+                    # WordPress search pages are ordered result pages for the
+                    # requested term. Once a page no longer contains the term,
+                    # later pages are not useful for this daily discovery pass.
+                    break
                 for anchor in soup.find_all("a", href=True):
                     url = urljoin(search_url, anchor.get("href") or "").split("#", 1)[0]
                     parent = anchor.find_parent(["article", "li", "div", "p", "h2", "h3", "section"])
