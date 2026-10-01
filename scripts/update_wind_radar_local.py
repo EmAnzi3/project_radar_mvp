@@ -137,6 +137,11 @@ def _write_daily_html(
         **(institutional.get("errors") or {}),
         **{f"company:{k}": v for k, v in (company.get("errors") or {}).items()},
     }
+    limited_sources = {
+        source_id: counters.get("data_health")
+        for source_id, counters in (institutional.get("per_agent") or {}).items()
+        if counters.get("data_health") == "channel_or_market_only"
+    }
     if new_count:
         headline = f"{new_count} nuovo/i progetto/i candidato/i da verificare"
         headline_class = "alert"
@@ -157,6 +162,14 @@ def _write_daily_html(
         ) + "</ul>"
         if source_errors
         else '<div class="empty">Nessun errore fonte.</div>'
+    )
+    limited_html = (
+        "<ul>" + "".join(
+            f"<li><b>{escape(str(k))}</b>: fonte raggiunta, ma senza dati progetto nel run corrente</li>"
+            for k in sorted(limited_sources)
+        ) + "</ul>"
+        if limited_sources
+        else '<div class="empty">Nessuna fonte limitata a solo canale/mercato.</div>'
     )
 
     html = f"""<!doctype html>
@@ -197,7 +210,9 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <section><h2>Aggiornamenti dei {canonical['projects']} progetti già noti</h2>{_html_table(report.get('known_updates') or [], 'Nessun aggiornamento significativo dei progetti canonici.')}</section>
 <section><h2>Candidati Discovery già noti aggiornati</h2>{_html_table(report.get('discovery_updates') or [], 'Nessun aggiornamento della coda Discovery.')}</section>
 <section><h2>Identità / matching da verificare</h2>{_html_table(report.get('identity_review_items') or [], 'Nessuna identità ambigua da verificare.')}</section>
-<section><h2>Salute fonti</h2>{errors_html}
+<section><h2>Salute fonti</h2>
+<h3>Errori</h3>{errors_html}
+<h3>Copertura limitata</h3>{limited_html}
 <div class="note">Institutional: {len(institutional.get('executed_agents') or [])} fonti eseguite · Company watch: {len(company.get('executed_companies') or [])} player eseguiti.</div>
 </section>
 <p class="note">Il report è review-only: nessun candidato viene aggiunto automaticamente ai 51 progetti canonici. La promozione richiede verifica di identità, attività corrente, configurazione e stage.</p>
