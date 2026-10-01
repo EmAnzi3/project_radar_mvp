@@ -13,6 +13,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 BASE_URL = "https://portal.sardegnasira.it"
 NEWS_URL = "https://portal.sardegnasira.it/impatto-ambientale"
+NEWS_ARCHIVE_URL = "https://portal.sardegnasira.it/news-bozze"
 SEARCH_URL = "https://portal.sardegnasira.it/ricerca-dei-progetti"
 PORTLET = "_ViaProgetto_WAR_RegioneSardegnaportlet_"
 FORM = "_ViaProgetto_WAR_RegioneSardegnaportlet_:form"
@@ -165,25 +166,68 @@ class SardegnaWindAgent(BaseWindAgent):
             },
         )
 
-    def _fetch_news(self) -> list[AgentFinding]:
-        response = self.session.get(NEWS_URL, timeout=(8, 20))
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content.decode("utf-8", errors="replace"), "html.parser")
-        blocks = list(soup.select("div.news-sardegna"))
-        if not blocks:
-            blocks = list(soup.select(".news-list .row-fluid"))
-
-        findings: list[AgentFinding] = []
-        for block in blocks:
-            text = self._clean(block.get_text(" ", strip=True))
-            if len(text) < 40 or not self._is_wind(text):
-                continue
-            title_node = block.select_one(".news-sardegna-title h4") or block.select_one(".news-sardegna-title a")
-            title = self._clean(title_node.get_text(" ", strip=True)) if title_node else text[:700]
-            source_url = self._first_url(block, NEWS_URL)
-            findings.append(
-                self._finding(kind="news", title=title, text=text, source_url=source_url)
+    def _detail_context(self, source_url: str, fallback_text: str) -> tuple[str, str]:
+        """Follow a SIRA news item to the canonical project sheet when exposed."""
+        try:
+            response = self.session.get(source_url, timeout=(8, 20))
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+            text = self._clean(f"{fallback_text} {soup.get_text(' ', strip=True)}")
+            project_link = next(
+                (
+                    urljoin(source_url, anchor.get("href") or "")
+                    for anchor in soup.find_all("a", href=True)
+                    if "dettaglio-progetti-via" in (anchor.get("href") or "")
+                ),
+                None,
             )
+            if project_link:
+                detail = self.session.get(project_link, timeout=(8, 20))
+                detail.raise_for_status()
+                detail_text = self._clean(
+                    BeautifulSoup(detail.text, "html.parser").get_text(" ", strip=True)
+                )
+                return project_link, self._clean(f"{text} {detail_text}")
+            return source_url, text
+        except Exception:
+            return source_url, fallback_text
+
+    def _fetch_news(self) -> list[AgentFinding]:
+        findings: list[AgentFinding] = []
+        seen: set[str] = set()
+        for page_url in (NEWS_URL, NEWS_ARCHIVE_URL):
+            response = self.session.get(page_url, timeout=(8, 20))
+            response.raise_for_status()
+            soup = BeautifulSoup(response.content.decode("utf-8", errors="replace"), "html.parser")
+            blocks = list(soup.select("div.news-sardegna"))
+            if not blocks:
+                blocks = list(soup.select(".news-list .row-fluid"))
+            if not blocks:
+                blocks = list(soup.find_all(["article", "li"]))
+
+            for block in blocks:
+                text = self._clean(block.get_text(" ", strip=True))
+                if len(text) < 40 or not self._is_wind(text):
+                    continue
+                title_node = (
+                    block.select_one(".news-sardegna-title h4")
+                    or block.select_one(".news-sardegna-title a")
+                    or block.find(["h2", "h3", "h4"])
+                    or block.find("a")
+                )
+                title = self._clean(title_node.get_text(" ", strip=True)) if title_node else text[:700]
+                source_url = self._first_url(block, page_url)
+                source_url, evidence_text = self._detail_context(source_url, text)
+                finding = self._finding(
+                    kind="news",
+                    title=title,
+                    text=evidence_text,
+                    source_url=source_url,
+                )
+                if finding.external_id in seen:
+                    continue
+                seen.add(finding.external_id)
+                findings.append(finding)
         return findings
 
     def _get_search_form(self) -> tuple[str, str, str]:
