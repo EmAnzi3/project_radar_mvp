@@ -353,15 +353,23 @@ def _commercial_weight(item: dict[str, Any]) -> int:
 def _action_type(event: dict[str, Any]) -> str:
     finding = event.get("finding") or {}
     payload = finding.get("payload") or {}
-    best = (event.get("reconciliation") or {}).get("best") or {}
+    reconciliation = event.get("reconciliation") or {}
+    best = reconciliation.get("best") or {}
+    match_status = reconciliation.get("status")
 
     if payload.get("is_aggregated_market_intelligence"):
         return "market_intelligence"
     if finding.get("finding_type") == "company_source_snapshot":
         return "company_project_signal" if best else "company_network_update"
-    if best.get("target_kind") == "canonical":
+    if (
+        match_status in {"high_confidence_match", "review_match"}
+        and best.get("target_kind") == "canonical"
+    ):
         return "canonical_update_review"
-    if best.get("target_kind") == "discovery":
+    if (
+        match_status in {"high_confidence_match", "review_match"}
+        and best.get("target_kind") == "discovery"
+    ):
         return "discovery_refresh_review"
     return "new_project_lead"
 
