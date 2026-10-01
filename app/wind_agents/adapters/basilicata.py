@@ -191,6 +191,13 @@ class BasilicataWindAgent(BaseWindAgent):
                 return pages
         except Exception as exc:
             primary_error = exc
+            # All the secondary notice/search routes below live on the same
+            # www.regione.basilicata.it host. If the host itself cannot be
+            # reached, do not burn the daily run retrying equivalent URLs:
+            # let BasilicataEnergyWindAgent fall through immediately to the
+            # independent official Amministrazione Trasparente FER dataset.
+            if isinstance(exc, (requests.ConnectionError, requests.Timeout)):
+                raise
 
         # Secondary official surface: granted regional FER authorisations.
         # This page is useful both as a resilience path and as an authorisation
