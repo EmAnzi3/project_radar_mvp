@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import sys
+import hashlib
+import json
+import sqlite3
 from pathlib import Path
 import tempfile
 
@@ -198,6 +201,115 @@ def main() -> int:
             assert first == "baseline", first
             assert second == "unchanged", second
             assert third == "changed", third
+
+            # Sicilia migration/fallback regression:
+            # a pre-patch full-payload hash must not create a fake "changed"
+            # event when the same official procedure is read via MapServer.
+            legacy = AgentFinding(
+                external_id="SICILIA-SIVVI-1234",
+                source_name="Regione Sicilia SI-VVI",
+                source_url="https://example.invalid/sicilia.csv",
+                title="PARCO EOLICO TEST SICILIA 30 MW",
+                finding_type="project_source",
+                payload={
+                    "project_name": "PARCO EOLICO TEST SICILIA 30 MW",
+                    "proponent": "TEST WIND SRL",
+                    "region": "Sicilia",
+                    "power_mw": 30.0,
+                    "procedure": "VIA",
+                    "status_raw": "In corso",
+                    "source_code": "1234",
+                    "ingestion_path": "official_csv",
+                    "project_specific": True,
+                },
+            )
+            legacy_first = wind_state.upsert_finding(
+                "run-sicilia-1",
+                "institutional_watch",
+                legacy,
+                baseline_new=True,
+            )
+            assert legacy_first == "baseline", legacy_first
+
+            legacy_wrapper = {
+                "external_id": legacy.external_id,
+                "source_name": legacy.source_name,
+                "source_url": legacy.source_url,
+                "title": legacy.title,
+                "finding_type": legacy.finding_type,
+                "payload": legacy.payload,
+            }
+            legacy_raw = json.dumps(
+                legacy_wrapper,
+                ensure_ascii=False,
+                sort_keys=True,
+                default=str,
+            )
+            legacy_full_hash = hashlib.sha256(legacy_raw.encode("utf-8")).hexdigest()
+            conn = sqlite3.connect(wind_state.DB_PATH)
+            try:
+                conn.execute(
+                    "UPDATE raw_findings SET content_hash = ? "
+                    "WHERE agent_name = ? AND source_name = ? AND external_id = ?",
+                    (
+                        legacy_full_hash,
+                        "institutional_watch",
+                        legacy.source_name,
+                        legacy.external_id,
+                    ),
+                )
+                conn.commit()
+            finally:
+                conn.close()
+
+            basis = {
+                "source_code": "1234",
+                "project_name": "PARCO EOLICO TEST SICILIA 30 MW",
+                "proponent": "TEST WIND SRL",
+                "procedure": "VIA",
+                "power_mw": 30.0,
+            }
+            fallback = AgentFinding(
+                external_id=legacy.external_id,
+                source_name=legacy.source_name,
+                source_url="https://example.invalid/mapserver/query?id=1234",
+                title=legacy.title,
+                finding_type=legacy.finding_type,
+                payload={
+                    **legacy.payload,
+                    "status_raw": None,
+                    "latitude": 37.5,
+                    "longitude": 14.2,
+                    "ingestion_path": "official_sivvi_mapserver_fallback",
+                    "fallback_reason": "CSV timeout",
+                    "_change_basis": basis,
+                },
+            )
+            fallback_event = wind_state.upsert_finding(
+                "run-sicilia-2",
+                "institutional_watch",
+                fallback,
+            )
+            assert fallback_event == "unchanged", fallback_event
+
+            fallback_changed = AgentFinding(
+                external_id=fallback.external_id,
+                source_name=fallback.source_name,
+                source_url=fallback.source_url,
+                title=fallback.title,
+                finding_type=fallback.finding_type,
+                payload={
+                    **fallback.payload,
+                    "power_mw": 31.0,
+                    "_change_basis": {**basis, "power_mw": 31.0},
+                },
+            )
+            fallback_changed_event = wind_state.upsert_finding(
+                "run-sicilia-3",
+                "institutional_watch",
+                fallback_changed,
+            )
+            assert fallback_changed_event == "changed", fallback_changed_event
         finally:
             wind_state.DB_PATH = original_db
 
@@ -210,6 +322,7 @@ def main() -> int:
     print("Unmatched verification of compliance -> existing_project_follow_up")
     print("Archived project -> historical_or_closed")
     print("State bootstrap -> baseline / unchanged / changed")
+    print("Sicilia CSV/GIS path switch -> unchanged; semantic change -> changed")
     return 0
 
 
