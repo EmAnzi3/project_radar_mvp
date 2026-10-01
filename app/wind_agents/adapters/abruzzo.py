@@ -11,6 +11,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 PRIMARY_URL = "https://ambiente.regione.abruzzo.it/"
 FALLBACK_URL = "https://trasparenza.regione.abruzzo.it/servizi-erogati/carta-servizi/rilascio-dei-pareri-sui-progetti-assoggettati-verifica-di"
+BURA_HOME_URL = "https://bura.regione.abruzzo.it/"
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
 PROJECT_CUES = ("progetto", "proponente", "via", "paur", "assoggettabil", "comune", "mw", "pratica")
 
@@ -28,6 +29,7 @@ class AbruzzoWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Abruzzo VIA"
     base_url = PRIMARY_URL
+    baseline_revision = "abruzzo-via-bura-secondary-v1"
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -79,6 +81,110 @@ class AbruzzoWindAgent(BaseWindAgent):
         response.raise_for_status()
         return BeautifulSoup(response.text, "html.parser")
 
+    def _bura_recent_findings(self) -> list[AgentFinding]:
+        """Project-specific wind acts from recent official BURA bulletins.
+
+        This does not replace the environmental-procedure portal. It is a
+        secondary official evidence layer for authorisations, PAS, repowering
+        and other energy milestones while the legacy VIA host is unavailable.
+        """
+        home = self._get(BURA_HOME_URL)
+        bulletin_urls: list[str] = []
+        for anchor in home.find_all("a", href=True):
+            href = urljoin(BURA_HOME_URL, anchor.get("href") or "")
+            lowered = href.lower()
+            if "/bollettini/" not in lowered:
+                continue
+            if "/files/" in lowered or lowered.endswith((".pdf", ".zip")):
+                continue
+            if href not in bulletin_urls:
+                bulletin_urls.append(href)
+            if len(bulletin_urls) >= 16:
+                break
+
+        findings: dict[str, AgentFinding] = {}
+        seen_text: set[str] = set()
+        for bulletin_url in bulletin_urls:
+            try:
+                soup = self._get(bulletin_url)
+            except Exception:
+                continue
+
+            candidates = []
+            candidates.extend(soup.find_all(["article", "section"]))
+            for heading in soup.find_all(["h3", "h4"]):
+                if heading.parent is not None:
+                    candidates.append(heading.parent)
+            candidates.extend(soup.select(".views-row"))
+
+            for node in candidates:
+                text = self._clean(node.get_text(" ", strip=True))
+                if not (80 <= len(text) <= 5000) or text in seen_text:
+                    continue
+                if not self._wind_project_text(text):
+                    continue
+                lowered = text.lower()
+                if not any(
+                    cue in lowered
+                    for cue in (
+                        "autorizzazione",
+                        "procedura abilitativa",
+                        "pas",
+                        "repowering",
+                        "determinazione",
+                        "impianto eolico",
+                        "parco eolico",
+                    )
+                ):
+                    continue
+                # Reject generic forms/templates mentioning wind only as one of
+                # many selectable technologies.
+                if (
+                    "impianto eolico" in lowered
+                    and "impianto fotovoltaico" in lowered
+                    and len(text) > 2500
+                ):
+                    continue
+
+                seen_text.add(text)
+                source_url = bulletin_url
+                for anchor in node.find_all("a", href=True):
+                    href = urljoin(bulletin_url, anchor.get("href") or "")
+                    label = self._clean(anchor.get_text(" ", strip=True)).lower()
+                    if "scarica" in label or href.lower().endswith(".pdf"):
+                        source_url = href
+                        break
+
+                external_id = self._external_id(source_url, text)
+                findings[external_id] = AgentFinding(
+                    external_id=external_id,
+                    source_name=self.source_name,
+                    source_url=source_url,
+                    title=text[:700],
+                    finding_type="project_source",
+                    payload={
+                        "project_name": text[:700],
+                        "proponent": self._proponent(text),
+                        "region": "Abruzzo",
+                        "province": None,
+                        "municipalities": self._municipalities(text),
+                        "power_mw": self._power_mw(text),
+                        "procedure": "BURA - atto energia / PAS / autorizzazione",
+                        "status_raw": "Pubblicazione sul Bollettino Ufficiale Regione Abruzzo",
+                        "sector": "eolico",
+                        "source_grade_ceiling": "A1",
+                        "project_specific": True,
+                        "source_adapter_origin": "abruzzo_bura_recent",
+                        "ingestion_path": "official_bura_recent_bulletins",
+                        "evidence_note": (
+                            "Secondary official milestone source; environmental "
+                            "procedure identity should still reconcile with VIA/PAUR."
+                        ),
+                    },
+                )
+
+        return list(findings.values())
+
     def _channel_snapshot(self, *, primary_error: str | None = None) -> AgentFinding:
         source_url = PRIMARY_URL
         fallback_verified = False
@@ -121,7 +227,17 @@ class AbruzzoWindAgent(BaseWindAgent):
         try:
             root = self._get(PRIMARY_URL)
         except Exception as exc:
-            return [self._channel_snapshot(primary_error=f"{type(exc).__name__}: {exc}")]
+            primary_error = f"{type(exc).__name__}: {exc}"
+            try:
+                bura_findings = self._bura_recent_findings()
+            except Exception as bura_exc:
+                primary_error = (
+                    f"{primary_error}; BURA={type(bura_exc).__name__}: {bura_exc}"
+                )
+                bura_findings = []
+            if bura_findings:
+                return bura_findings + [self._channel_snapshot(primary_error=primary_error)]
+            return [self._channel_snapshot(primary_error=primary_error)]
 
         host = urlparse(PRIMARY_URL).netloc
         urls = [PRIMARY_URL]
