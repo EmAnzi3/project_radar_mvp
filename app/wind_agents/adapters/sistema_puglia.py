@@ -33,6 +33,10 @@ class SistemaPugliaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Sistema Puglia Energia"
     base_url = SOURCE_URL
+    # Parser/identity strategy changed from legacy DettaglioInfo-id probing to
+    # the official VIA FER XLSX inventory. Existing SQLite installations must
+    # rebaseline once so those rows are not emitted as fake daily NEW events.
+    baseline_revision = "puglia-via-fer-xlsx-v1"
 
     @staticmethod
     def _clean(value: object) -> str:
