@@ -188,14 +188,13 @@ class CampaniaWindAgent(BaseWindAgent):
                 item = cls._clean(part).strip(" -–—:;,.()")
                 if item and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
-        if values:
-            return values[:12]
         for match in re.finditer(
-            r"(?:Comune|Comuni)\s+di\s+(.+?)(?:\s*\([A-Z]{2}\)|\.|;|$)",
+            r"(?:Comune|Comuni)\s+di\s+(.+?)(?=\s+(?:ed\s+opera|e\s+opera|con\s+relative|nonch[eé])|\.|;|$)",
             title,
             flags=re.I,
         ):
-            for part in re.split(r",|\s+e\s+", match.group(1), flags=re.I):
+            segment = re.sub(r"\([A-Z]{2}\)", "", match.group(1))
+            for part in re.split(r",|\s+e\s+|\s+ed\s+", segment, flags=re.I):
                 item = cls._clean(part).strip(" -–—:;,.()")
                 if item and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
