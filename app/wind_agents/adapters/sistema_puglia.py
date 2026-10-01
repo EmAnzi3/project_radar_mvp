@@ -105,7 +105,7 @@ class SistemaPugliaWindAgent(BaseWindAgent):
     @classmethod
     def _proponent_from_text(cls, text: str) -> str | None:
         match = re.search(
-            r"Proponente\s*:\s*(.+?)(?=\s+(?:con\s+sede|sede\s+legale|C\.?F\.?|P\.?\s*I(?:VA|va)|codice\s+fiscale)|[.;]|$)",
+            r"Proponente\s*:\s*(.+?)(?=\s+(?:con\s+sede|sede\s+legale|C\.?\s*F\.?|P\.?\s*I(?:VA|va)|codice\s+fiscale|data\s+pubblicazione|aree\s+tematiche)|$)",
             text,
             flags=re.I,
         )
