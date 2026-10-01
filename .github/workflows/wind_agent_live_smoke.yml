@@ -31,7 +31,7 @@ jobs:
           - group: national-market
             sources: 'mase-via mase-provvedimenti terna-econnextion'
           - group: south-islands
-            sources: 'basilicata-via calabria-via campania-viavas puglia-sistema-energia sardegna-sira sicilia-sivvi'
+            sources: 'basilicata-au-paur basilicata-via calabria-via campania-viavas puglia-au-paur puglia-sistema-energia sardegna-sira sicilia-sivvi'
           - group: centre-north
             sources: 'emilia-romagna-regional lazio-regional lombardia-regional piemonte-regional toscana-atos toscana-gea umbria-regional veneto-regional'
 
@@ -164,6 +164,7 @@ jobs:
               f"known={discovery.get('known_project_updates', 0)} "
               f"discovery={discovery.get('discovery_candidate_updates', 0)} "
               f"review={discovery.get('identity_reviews', 0)} "
+              f"incomplete={discovery.get('incomplete_project_records', 0)} "
               f"filtered={discovery.get('filtered_non_pipeline', 0)}"
           )
           PY
@@ -237,6 +238,7 @@ jobs:
                       f"{disc.get('known_project_updates', 0)} known updates, "
                       f"{disc.get('discovery_candidate_updates', 0)} Discovery updates, "
                       f"{disc.get('identity_reviews', 0)} identity reviews, "
+                      f"{disc.get('incomplete_project_records', 0)} incomplete, "
                       f"{disc.get('filtered_non_pipeline', 0)} historical/non-target filtered"
                   )
               if data.get('errors'):
