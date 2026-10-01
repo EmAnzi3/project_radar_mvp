@@ -11,6 +11,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.base import AgentFinding
+from app.wind_agents.adapters.toscana import ToscanaWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.execution_watch import build_execution_queue
@@ -81,6 +82,18 @@ required_adapters = {
 assert required_adapters.issubset(implemented), implemented
 assert len(implemented) >= 21, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
+
+# Toscana GeA must degrade transparently to a channel-only snapshot when the
+# project API is unavailable, rather than pretending project-level coverage.
+toscana_fallback = ToscanaWindAgent(max_pages=1)
+def _synthetic_gea_failure(_page_index: int):
+    raise ConnectionError("synthetic GeA API DNS failure")
+toscana_fallback._fetch_page = _synthetic_gea_failure
+fallback_findings = toscana_fallback.fetch()
+assert len(fallback_findings) == 1, fallback_findings
+assert fallback_findings[0].finding_type == "source_channel_snapshot"
+assert fallback_findings[0].payload.get("project_specific") is False
+assert fallback_findings[0].payload.get("data_health") == "channel_only"
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
