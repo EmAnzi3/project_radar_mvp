@@ -370,9 +370,29 @@ class SiciliaWindAgent(BaseWindAgent):
         try:
             return self._findings_from_gis(csv_error or "CSV returned no wind findings")
         except Exception as gis_exc:
+            gis_error = f"{type(gis_exc).__name__}: {gis_exc}"
             if csv_error is None:
-                raise
-            raise RuntimeError(
-                "Sicilia official CSV and SI-VVI MapServer fallback both failed; "
-                f"csv={csv_error}; gis={type(gis_exc).__name__}: {gis_exc}"
-            ) from gis_exc
+                csv_error = "CSV returned no wind findings"
+            return [
+                AgentFinding(
+                    external_id="SICILIA-SIVVI-CHANNEL",
+                    source_name=self.source_name,
+                    source_url=SOURCE_URL,
+                    title="Regione Sicilia SI-VVI - canali progetto temporaneamente non raggiungibili",
+                    finding_type="source_channel_snapshot",
+                    payload={
+                        "region": "Sicilia",
+                        "project_specific": False,
+                        "source_grade_ceiling": "A1",
+                        "data_health": "channel_only",
+                        "csv_availability_issue": csv_error,
+                        "gis_availability_issue": gis_error,
+                        "source_adapter_origin": "pv_agent_mvp/sicilia.py",
+                        "ingestion_path": "official_source_outage_snapshot",
+                        "guard": (
+                            "Temporary source outage only: this snapshot is not project evidence "
+                            "and must not create or update a project candidate."
+                        ),
+                    },
+                )
+            ]
