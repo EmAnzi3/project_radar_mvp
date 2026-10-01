@@ -198,6 +198,15 @@ class CalabriaWindAgent(BaseWindAgent):
 
     @classmethod
     def _proponent(cls, text: str) -> str | None:
+        legal = re.search(
+            r"(?:Proponente|Societ[aà]\s+proponente)\s*:?\s*"
+            r"(.{2,180}?\b(?:S\.?\s*R\.?\s*L\.?|S\.?\s*P\.?\s*A\.?|SRL|SPA)\b\.?)",
+            text,
+            flags=re.I,
+        )
+        if legal:
+            return cls._clean(legal.group(1)).strip(" -–—:;,.")
+
         for pattern in (
             r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\s+PAUR|\s+VIA|\||$)",
             r"Societ[aà]\s+proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\||$)",
