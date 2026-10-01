@@ -263,6 +263,14 @@ class BasilicataWindAgent(BaseWindAgent):
                         },
                     ),
                 )
-        for finding in self._fetch_energy_notices():
-            unique.setdefault(finding.external_id, finding)
         return list(unique.values())
+
+
+class BasilicataEnergyWindAgent(BasilicataWindAgent):
+    """Independent Ufficio Energia AU/PAUR source with its own bootstrap."""
+
+    source_name = "Regione Basilicata Ufficio Energia"
+    base_url = ENERGY_NOTICE_URL
+
+    def fetch(self) -> list[AgentFinding]:
+        return self._fetch_energy_notices()
