@@ -48,7 +48,17 @@ Il report separa:
 - aggiornamenti dei 51 progetti già noti;
 - aggiornamenti di candidati Discovery già noti;
 - identità/match da verificare;
+- record progetto incompleti, conservati per audit/enrichment ma **esclusi dal Radar operativo**;
 - errori delle fonti.
+
+### Gate minimo di ammissione progetto
+
+Un record può diventare nuovo progetto candidato operativo solo se contiene contemporaneamente:
+- almeno **una azienda di riferimento**, normalmente il proponente/SPV;
+- **potenza eolica numerica > 0 espressa in MW**;
+- **collocazione geografica almeno a livello di Comune** (`municipality` / `municipalities`).
+
+Provincia, regione, area generica, coordinate o denominazioni come `N/D` non sostituiscono il Comune. I record che non superano questo gate restano nel raw/history e nel report come `incomplete_project_record`, ma non entrano nei candidati NEW né nel digest commerciale actionable. Gli aggiornamenti di un progetto già canonico/Discovery possono invece essere acquisiti anche da un singolo atto povero di campi, perché l'identità minima è già verificata nel record noto.
 
 Modalità opzionali:
 - `aggiorna_wind_radar.bat all` — scansione progetto completa + forza anche tutti i player commerciali;
@@ -64,10 +74,10 @@ Stato operativo dettagliato:
 
 La v0.6 aggiunge un motore agent-style derivato da `pv_agent_mvp`, mantenendo raw finding, storico variazioni, planner/cadenze, reconciliation ed evidence gate separati dal canonico.
 
-Stato corrente della Draft PR #5:
-- **58 player commerciali** nel Company Network;
-- **31 nodi istituzionali** nel Source Network;
-- **21 adapter istituzionali eseguibili**: MASE VIA, MASE Provvedimenti, Terna Econnextion, Lazio, Toscana GeA, ATOS Toscana, Sardegna SIRA, Sicilia SI-VVI, Sistema Puglia, Campania, Calabria, Basilicata, Emilia-Romagna, Lombardia, Piemonte, Umbria, Veneto, Abruzzo, Liguria, Marche e Molise;
+Stato corrente della Draft PR #9:
+- **61 player commerciali** nel Company Network;
+- **34 nodi istituzionali** nel Source Network;
+- **24 adapter istituzionali eseguibili**, inclusi i canali regionali AU/PAUR/atti per Puglia, Basilicata e Calabria oltre ai collector VIA/ambientali e nazionali;
 - Company Watch diretto sulle `watch_urls` con cadenze 7/14/30 giorni;
 - stato runtime persistente per `baseline / new / changed / unchanged`, cursori sorgente e ultimo successo/errore;
 - reconciliation conservativa dei finding verso canonico/Discovery **senza promozione automatica**;
