@@ -47,8 +47,8 @@ for s in sources:
 by_id = {s["id"]: s for s in sources}
 for required in [
     "mase-via", "mase-provvedimenti", "terna-econnextion",
-    "puglia-sistema-energia", "sardegna-sira", "sicilia-sivvi",
-    "basilicata-via", "calabria-via", "campania-viavas",
+    "puglia-au-paur", "puglia-sistema-energia", "sardegna-sira", "sicilia-sivvi",
+    "basilicata-au-paur", "basilicata-via", "calabria-via", "campania-viavas",
     "toscana-gea", "toscana-atos",
     "abruzzo-via", "abruzzo-fer-au", "liguria-via-procedimenti", "molise-au-eolico",
     "marche-via-regional", "marche-via-state-mirror", "marche-energy-au",
