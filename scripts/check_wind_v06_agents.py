@@ -173,6 +173,29 @@ assert BasilicataWindAgent._power_mw(basilicata_text) == 21.0
 assert BasilicataWindAgent._proponent(basilicata_text) == "Tempa dei Greci S.r.l. ex FRI-EL S.p.a"
 assert "Gorgoglione" in BasilicataWindAgent._municipalities(basilicata_text)
 
+basilicata_2026_santarcangelo = (
+    "Autorizzazione unica ex art. 12 del D.Lgs 387/2003 relativa al progetto per la costruzione "
+    "e l'esercizio di un impianto eolico, e delle relative opere accessorie, della potenza di "
+    "19,20 MW da realizzare nel Comune di Sant'Arcangelo (PZ). Società Proponente: Elettrowind Due srl "
+    "Data di pubblicazione: 24/08/2026 - Codice di pubblicazione: P26-55"
+)
+assert BasilicataWindAgent._power_mw(basilicata_2026_santarcangelo) == 19.2
+assert BasilicataWindAgent._proponent(basilicata_2026_santarcangelo) == "Elettrowind Due srl"
+assert BasilicataWindAgent._municipalities(basilicata_2026_santarcangelo) == ["Sant'Arcangelo"]
+
+basilicata_2026_servigliano = (
+    'Autorizzazione Unica Regionale ai sensi dell art. 12 comma 3 del decreto legislativo 387/2003 '
+    'per la costruzione e l esercizio di un impianto per la produzione di energia elettrica da fonte '
+    'eolica denominato "Vento di Servigliano", di potenza nominale totale pari a 30 MW integrato con '
+    'un sistema di accumulo di 21 MW, da realizzarsi nei Comuni di Montemurro e Armento con relative '
+    'opere connesse ed infrastrutture indispensabili nei comuni di Montemurro, Armento e Viggiano. '
+    'PROPONENTE: FRI-EL SERVIGLIANO S.r.l.'
+)
+assert BasilicataWindAgent._power_mw(basilicata_2026_servigliano) == 30.0
+assert BasilicataWindAgent._proponent(basilicata_2026_servigliano) == "FRI-EL SERVIGLIANO S.r.l"
+servigliano_places = BasilicataWindAgent._municipalities(basilicata_2026_servigliano)
+assert servigliano_places == ["Montemurro", "Armento"], servigliano_places
+
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
     confidence="B",
