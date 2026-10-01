@@ -461,12 +461,19 @@ def _minimum_project_fields(payload: dict[str, Any]) -> tuple[bool, list[str]]:
         or payload.get("company_name")
     )
     power = _as_float(payload.get("power_mw"))
-    places = _place_values(payload)
+    raw_municipalities = payload.get("municipalities")
+    municipalities: list[Any] = []
+    if isinstance(raw_municipalities, list):
+        municipalities.extend(raw_municipalities)
+    elif raw_municipalities:
+        municipalities.append(raw_municipalities)
+    if payload.get("municipality"):
+        municipalities.append(payload.get("municipality"))
 
     unknown_tokens = {"", "n/d", "nd", "n.a.", "n/a", "unknown", "sconosciuto", "non indicato", "non disponibile"}
     company_norm = _norm(company)
     valid_places = [
-        place for place in places
+        place for place in municipalities
         if _norm(place) not in unknown_tokens
         and "non indicat" not in _norm(place)
         and "sconosciut" not in _norm(place)
