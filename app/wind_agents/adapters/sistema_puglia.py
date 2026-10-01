@@ -118,8 +118,9 @@ class SistemaPugliaWindAgent(BaseWindAgent):
     def _municipalities_from_text(cls, text: str) -> list[str]:
         out: list[str] = []
         patterns = (
-            r"(?:nei|ne[Ii]|negli|nel|nella|sito\s+nel|sito\s+nei|da\s+realizzarsi\s+nel|da\s+realizzarsi\s+nei)\s+Comuni?\s+di\s+(.+?)(?:\.|;|,\s*localit[aà]|\s+nonch[eé]|\s+oltre\s+alle|$)",
-            r"Comune\s+di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s*\([A-Z]{2}\)|,|\.|;|\s+in\s+localit[aà]|$)",
+            r"(?:nei|negli|nel|nella|sito\s+nel|sito\s+nei|ubicat[oa]\s+nel|ubicat[oa]\s+nei|da\s+realizzarsi\s+nel|da\s+realizzarsi\s+nei|ricadenti\s+nel|ricadenti\s+nei)\s+Comuni?\s+di\s+(.+?)(?:\.|;|,\s*localit[aà]|\s+nonch[eé]|\s+oltre\s+alle|\s+e\s+delle|\s+Proponente|$)",
+            r"Comune\s+di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s*\([A-Z]{2}\)|,|\.|;|\s+in\s+localit[aà]|\s+localit[aà]|\s+Proponente|$)",
+            r"\bComuni?\s+di\s+(.+?)(?:\.|;|\s+nonch[eé]|\s+Proponente|$)",
         )
         for pattern in patterns:
             for match in re.finditer(pattern, text, flags=re.I):
