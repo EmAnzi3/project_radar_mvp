@@ -263,7 +263,7 @@ basilicata_granted_text = (
 assert BasilicataWindAgent._power_mw(basilicata_granted_text) == 19.8
 assert BasilicataWindAgent._proponent(basilicata_granted_text) == "SERRA ENERGIE S.R.L"
 assert BasilicataWindAgent._municipalities(basilicata_granted_text) == ["Tolve"]
-assert BasilicataEnergyWindAgent.baseline_revision == "basilicata-energy-v3"
+assert BasilicataEnergyWindAgent.baseline_revision == "basilicata-energy-v4-transparency-xls"
 
 campania_total_text = (
     "PAUR progetto Repowering impianto eolico composto da 14 aerogeneratori da 7,2 MW "
