@@ -13,6 +13,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 BASE_URL = "https://www.regione.calabria.it"
 SOURCE_URL = "https://www.regione.calabria.it/dipartimento-per-la-sostenibilita-ambientale/avvisi-via-e-vas/"
+PROVVEDIMENTI_URL = "https://www.regione.calabria.it/provvedimenti-della-regione/"
 SEARCH_TERMS = (
     "eolico",
     "eolica",
@@ -312,3 +313,166 @@ class CalabriaWindAgent(BaseWindAgent):
             )
             time.sleep(0.05)
         return findings
+
+class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
+    """Current regional decrees/acts, isolated from the legacy VIA notice source.
+
+    The independent source id gives this surface its own first-run baseline.
+    Project identity is semantic when company/MW/municipality are available,
+    while decree metadata remains in the payload for audit.
+    """
+
+    source_name = "Regione Calabria Provvedimenti"
+    base_url = PROVVEDIMENTI_URL
+    SEARCH_TERMS = ("eolico", "parco eolico", "repowering")
+
+    @classmethod
+    def _project_name(cls, text: str) -> str:
+        for pattern in (
+            r'(?:parco|impianto)\s+eolico\s+(?:denominato\s+)?[“"\']?([^”"\']+?)[”"\']?(?=\s+(?:di\s+potenza|composto|da\s+realizz|e\s+delle|nei\s+Comuni|Comuni|Proponente|$))',
+            r'Progetto\s*:\s*(.+?)(?=\s+Comuni?\s+(?:interessati|d.intervento)|\s+Proponente|$)',
+        ):
+            match = re.search(pattern, text, flags=re.I)
+            if match:
+                value = cls._clean(match.group(1)).strip(" -–—:;,.")
+                if value:
+                    return value[:900]
+        return cls._clean(text)[:900]
+
+    @classmethod
+    def _act_date(cls, text: str) -> str | None:
+        match = re.search(r"\b(\d{1,2})/(\d{1,2})/(20\d{2})\b", text)
+        if not match:
+            return None
+        day, month, year = match.groups()
+        try:
+            return date(int(year), int(month), int(day)).isoformat()
+        except ValueError:
+            return None
+
+    @classmethod
+    def _act_number(cls, values: list[str]) -> str | None:
+        if len(values) >= 3:
+            value = cls._clean(values[2])
+            if re.fullmatch(r"\d{1,8}", value):
+                return value
+        return None
+
+    @classmethod
+    def _identity_id(
+        cls,
+        project_name: str,
+        proponent: str | None,
+        municipalities: list[str],
+        power_mw: float | None,
+        act_number: str | None,
+        act_date: str | None,
+    ) -> str:
+        if proponent and municipalities and power_mw:
+            raw = "|".join([
+                cls._norm(project_name),
+                cls._norm(proponent),
+                "|".join(sorted(cls._norm(x) for x in municipalities)),
+                f"{power_mw:.4f}",
+            ])
+            return "CALABRIA-ACT-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:20]
+        raw = "|".join([act_number or "", act_date or "", cls._norm(project_name)])
+        return "CALABRIA-ACT-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:20]
+
+    def _search_page(self, term: str, page: int) -> str:
+        url = PROVVEDIMENTI_URL if page == 1 else urljoin(PROVVEDIMENTI_URL, f"page/{page}/")
+        response = self.session.get(
+            url,
+            params={
+                "filter_item": term,
+                "filter_type": "Decreto",
+                "searchButton": "Cerca",
+                "sort_order": "0",
+            },
+            timeout=(8, 25),
+            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+        )
+        response.raise_for_status()
+        return response.text
+
+    def fetch(self) -> list[AgentFinding]:
+        unique: dict[str, AgentFinding] = {}
+        # Search-filtered pages are compact. Four pages per term are sufficient
+        # for daily/current discovery and avoid crawling the full regional archive.
+        for term in self.SEARCH_TERMS:
+            for page in range(1, 5):
+                html_page = self._search_page(term, page)
+                soup = BeautifulSoup(html_page, "html.parser")
+                rows = soup.find_all("tr")
+                if not rows:
+                    break
+                hits = 0
+                for tr in rows:
+                    cells = tr.find_all("td")
+                    if len(cells) < 5:
+                        continue
+                    values = [self._clean(td.get_text(" ", strip=True)) for td in cells]
+                    raw_text = self._clean(" | ".join(values))
+                    if not self._is_wind(raw_text):
+                        continue
+                    act_date = self._act_date(raw_text)
+                    if act_date:
+                        try:
+                            if date.fromisoformat(act_date) < self.cutoff:
+                                continue
+                        except ValueError:
+                            pass
+
+                    object_text = values[4] if len(values) > 4 else raw_text
+                    proponent = self._proponent(object_text)
+                    municipalities = self._municipalities(object_text)
+                    power_mw = self._power_mw(object_text)
+                    project_name = self._project_name(object_text)
+                    act_number = self._act_number(values)
+                    source_anchor = tr.find("a", href=True)
+                    source_url = (
+                        urljoin(PROVVEDIMENTI_URL, source_anchor.get("href") or "")
+                        if source_anchor else str(PROVVEDIMENTI_URL)
+                    )
+                    external_id = self._identity_id(
+                        project_name,
+                        proponent,
+                        municipalities,
+                        power_mw,
+                        act_number,
+                        act_date,
+                    )
+                    hits += 1
+                    finding = AgentFinding(
+                        external_id=external_id,
+                        source_name=self.source_name,
+                        source_url=source_url,
+                        title=project_name,
+                        finding_type="project_source",
+                        payload={
+                            "project_name": project_name,
+                            "proponent": proponent,
+                            "region": "Calabria",
+                            "province": self._province(object_text),
+                            "municipalities": municipalities,
+                            "power_mw": power_mw,
+                            "procedure": self._procedure(object_text),
+                            "status_raw": self._status(object_text),
+                            "publication_date": act_date,
+                            "act_number": act_number,
+                            "act_type": values[0] if values else None,
+                            "department": values[3] if len(values) > 3 else None,
+                            "sector": "eolico",
+                            "source_grade_ceiling": "A1",
+                            "project_specific": True,
+                            "source_adapter_origin": "regional_calabria_provvedimenti",
+                            "ingestion_path": "official_regional_provvedimenti",
+                        },
+                    )
+                    # If multiple search terms find the same project, keep the
+                    # latest representation from this run.
+                    unique[external_id] = finding
+                if hits == 0 and page > 1:
+                    break
+        return list(unique.values())
+
