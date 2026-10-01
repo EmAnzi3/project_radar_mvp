@@ -6,6 +6,8 @@ import tempfile
 from datetime import date
 from pathlib import Path
 
+import requests
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -98,7 +100,7 @@ assert fallback_findings[0].payload.get("data_health") == "channel_only"
 
 lombardia_fallback = LombardiaWindAgent(years=[2026])
 def _synthetic_silvia_failure():
-    raise ConnectionError("synthetic SILVIA DNS failure")
+    raise requests.ConnectionError("synthetic SILVIA DNS failure")
 lombardia_fallback._load_sectors = _synthetic_silvia_failure
 lombardia_findings = lombardia_fallback.fetch()
 assert len(lombardia_findings) == 1, lombardia_findings
