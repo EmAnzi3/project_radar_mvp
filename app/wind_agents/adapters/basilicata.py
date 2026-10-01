@@ -84,7 +84,7 @@ class BasilicataWindAgent(BaseWindAgent):
         for match in re.finditer(
             r"(?:comune|comuni)\s+(?:di|del|della|dei)?\s*(.+?)(?="
             r"\s+(?:con\s+relative|e\s+delle\s+relative|nonch[eé]|proponente|societ[aà]\s+proponente|"
-            r"potenza|progressivo\s+interno|id\s+paur|data\s+di\s+pubblicazione)|"
+            r"(?:della|di)?\s*potenza|progressivo\s+interno|id\s+paur|data\s+di\s+pubblicazione)|"
             r"\.|;|\s+-\s+|$)",
             text,
             flags=re.I,
