@@ -19,6 +19,8 @@ from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
 from app.wind_agents.adapters.sicilia import SiciliaWindAgent
 from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
+from app.wind_agents.adapters.campania import CampaniaWindAgent
+from app.wind_agents.adapters.sardegna import SardegnaWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.execution_watch import build_execution_queue
@@ -30,7 +32,7 @@ from app.wind_agents.planner import (
     build_run_plan,
 )
 from app.wind_agents.reconcile import build_digest, reconcile_finding
-from app.wind_agents.runner import due_agent_ids, executable_agent_ids
+from app.wind_agents.runner import _bootstrap_decision, due_agent_ids, executable_agent_ids
 from app.wind_agents import state
 
 
@@ -92,6 +94,40 @@ required_adapters = {
 assert required_adapters.issubset(implemented), implemented
 assert len(implemented) >= 24, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
+
+# Parser/source revisions must rebaseline exactly once on an existing local DB.
+legacy_runtime = {
+    "last_success": "2026-09-30T12:00:00",
+    "metadata": {"data_health": "empty_success"},
+}
+campania_revision = CampaniaWindAgent()
+decision = _bootstrap_decision(
+    legacy_runtime,
+    campania_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is True and decision[1] is True, decision
+assert decision[2] == campania_revision.baseline_revision
+assert decision[3] is None
+
+migrated_runtime = {
+    "last_success": "2026-10-01T12:00:00",
+    "metadata": {"baseline_revision": campania_revision.baseline_revision},
+}
+decision = _bootstrap_decision(
+    migrated_runtime,
+    campania_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is False and decision[1] is False, decision
+
+sardegna_revision = SardegnaWindAgent(years=["2026"])
+decision = _bootstrap_decision(
+    legacy_runtime,
+    sardegna_revision,
+    bootstrap_new_sources=False,
+)
+assert decision[0] is False and decision[1] is False, decision
 
 # Toscana GeA must degrade transparently to a channel-only snapshot when the
 # project API is unavailable, rather than pretending project-level coverage.
