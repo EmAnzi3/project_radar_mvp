@@ -64,7 +64,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install agent-check dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
 
       - name: Preserve v0.5 manifest
         run: cp docs/wind/data/projects.json /tmp/projects-v05.json
@@ -183,7 +183,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install smoke dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
 
       - name: Windows SQLite lifecycle smoke
         run: python scripts/check_wind_daily_discovery.py
