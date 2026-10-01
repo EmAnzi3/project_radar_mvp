@@ -11,6 +11,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 BASE_URL = "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/"
 ENERGY_NOTICE_URL = "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento"
+WP_SEARCH_URL = "https://www.regione.basilicata.it/wp-json/wp/v2/search"
 START_URLS = (
     (urljoin(BASE_URL, "section.jsp?sec=100002"), "Screening"),
     (urljoin(BASE_URL, "section.jsp?sec=145352"), "Screening - 2025"),
@@ -138,102 +139,191 @@ class BasilicataWindAgent(BaseWindAgent):
                 return cls._clean(match.group(1))[:900]
         return cls._clean(fallback)[:900]
 
+    def _energy_candidate_pages(self) -> list[tuple[str, str]]:
+        """Discover official Basilicata energy-notice pages.
+
+        Prefer the thematic Ufficio Energia page, then use the official
+        WordPress search API as a discovery layer because the thematic page can
+        render only a subset of notices depending on CMS state.
+        """
+        pages: list[tuple[str, str]] = []
+        seen: set[str] = set()
+
+        # Always inspect the thematic page itself.
+        response = self.session.get(
+            ENERGY_NOTICE_URL,
+            timeout=(8, 25),
+            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+        )
+        response.raise_for_status()
+        pages.append((ENERGY_NOTICE_URL, response.text))
+        seen.add(ENERGY_NOTICE_URL)
+
+        for term in ("eolico", "parco eolico", "PAUR eolico"):
+            try:
+                search = self.session.get(
+                    WP_SEARCH_URL,
+                    params={"search": term, "per_page": 100},
+                    timeout=(8, 25),
+                    headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+                )
+                search.raise_for_status()
+                payload = search.json()
+            except Exception:
+                continue
+            if not isinstance(payload, list):
+                continue
+            for row in payload:
+                if not isinstance(row, dict):
+                    continue
+                url = self._clean(row.get("url") or "")
+                if not url.startswith("http") or url in seen:
+                    continue
+                seen.add(url)
+                try:
+                    detail = self.session.get(
+                        url,
+                        timeout=(8, 25),
+                        headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+                    )
+                    detail.raise_for_status()
+                    pages.append((url, detail.text))
+                except Exception:
+                    continue
+
+        # HTML search fallback if the REST search is disabled/restricted.
+        if len(pages) == 1:
+            try:
+                search = self.session.get(
+                    "https://www.regione.basilicata.it/",
+                    params={"s": "eolico"},
+                    timeout=(8, 25),
+                    headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+                )
+                search.raise_for_status()
+                soup = BeautifulSoup(search.text, "html.parser")
+                for anchor in soup.find_all("a", href=True):
+                    url = urljoin(str(search.url), anchor.get("href") or "")
+                    label = self._clean(anchor.get_text(" ", strip=True))
+                    if url in seen or not url.startswith("https://www.regione.basilicata.it/"):
+                        continue
+                    if not self._is_wind(label):
+                        continue
+                    seen.add(url)
+                    try:
+                        detail = self.session.get(url, timeout=(8, 25))
+                        detail.raise_for_status()
+                        pages.append((url, detail.text))
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+
+        return pages
+
     def _fetch_energy_notices(self) -> list[AgentFinding]:
         """Regional AU/PAUR/public-utility wind notices from Ufficio Energia."""
-        html_page = self._get_html(ENERGY_NOTICE_URL)
-        if not html_page:
-            return []
-        soup = BeautifulSoup(html_page, "html.parser")
-        full_text = self._clean(soup.get_text(" ", strip=True))
-        if not full_text:
-            return []
-
         findings: list[AgentFinding] = []
         seen: set[str] = set()
-        blocks = re.split(
-            r"(?=Data\s+di\s+pubblicazione\s*:)",
-            full_text,
-            flags=re.I,
-        )
 
-        for block in blocks:
-            text = self._clean(block)
-            lowered = text.lower()
-            if len(text) < 80 or not self._is_wind(text):
-                continue
-            if not any(token in lowered for token in ("autorizzazione unica", "paur", "p.a.u.r", "d. lgs. 387", "d.lgs 387", "d.lgs. 387")):
+        for page_url, html_page in self._energy_candidate_pages():
+            soup = BeautifulSoup(html_page, "html.parser")
+            full_text = self._clean(soup.get_text(" ", strip=True))
+            if not full_text:
                 continue
 
-            # Stop each publication block before the next unrelated metadata area.
-            proponent = self._proponent(text)
-            power_mw = self._power_mw(text)
-            municipalities = self._municipalities(text)
-            title = self._project_name(text, text)
-
-            progressivo = re.search(r"Progressivo\s+Interno\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
-            paur_id = re.search(r"ID\s+PAUR\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
-            pub_code = re.search(r"Codice\s+di\s+pubblicazione\s*:?\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
-            stable_code = (
-                progressivo.group(1) if progressivo else
-                paur_id.group(1) if paur_id else
-                pub_code.group(1) if pub_code else
-                None
-            )
-            if stable_code:
-                safe_code = re.sub(r"[^A-Za-z0-9._-]+", "-", stable_code).strip("-")
-                external_id = f"BASILICATA-ENERGY-{safe_code}"
-            elif proponent and municipalities and power_mw:
-                identity = "|".join([
-                    self._clean(title).lower(),
-                    self._clean(proponent).lower(),
-                    "|".join(sorted(self._clean(x).lower() for x in municipalities)),
-                    f"{power_mw:.4f}",
-                ])
-                external_id = "BASILICATA-ENERGY-" + hashlib.sha1(identity.encode("utf-8")).hexdigest()[:20]
-            else:
-                external_id = "BASILICATA-ENERGY-ACT-" + hashlib.sha1(text.encode("utf-8")).hexdigest()[:18]
-
-            if external_id in seen:
-                continue
-            seen.add(external_id)
-
-            date_match = re.search(
-                r"Data\s+di\s+pubblicazione\s*:\s*(\d{1,2}/\d{1,2}/20\d{2})",
-                text,
+            # A thematic listing may contain many publications; a detail page is
+            # naturally one block. Splitting on publication markers works for both.
+            blocks = re.split(
+                r"(?=Data\s+di\s+pubblicazione\s*:)",
+                full_text,
                 flags=re.I,
             )
-            procedure = "PAUR / Autorizzazione Unica" if ("paur" in lowered or "p.a.u.r" in lowered) else "Autorizzazione Unica"
-            if "proroga" in lowered:
-                procedure = "Proroga AU/PAUR"
+            if len(blocks) == 1:
+                blocks = [full_text]
 
-            findings.append(
-                AgentFinding(
-                    external_id=external_id,
-                    source_name="Regione Basilicata Ufficio Energia",
-                    source_url=ENERGY_NOTICE_URL,
-                    title=title,
-                    finding_type="project_source",
-                    payload={
-                        "project_name": title,
-                        "proponent": proponent,
-                        "region": "Basilicata",
-                        "province": self._province(text, municipalities),
-                        "municipalities": municipalities,
-                        "power_mw": power_mw,
-                        "procedure": procedure,
-                        "status_raw": text[:1800],
-                        "source_date": date_match.group(1) if date_match else None,
-                        "publication_code": pub_code.group(1) if pub_code else None,
-                        "paur_id": paur_id.group(1) if paur_id else None,
-                        "progressivo_interno": progressivo.group(1) if progressivo else None,
-                        "sector": "eolico",
-                        "source_grade_ceiling": "A1",
-                        "project_specific": True,
-                        "source_adapter_origin": "regional_basilicata_energy_notices",
-                        "ingestion_path": "official_ufficio_energia_au_paur",
-                    },
+            for block in blocks:
+                text = self._clean(block)
+                lowered = text.lower()
+                if len(text) < 80 or not self._is_wind(text):
+                    continue
+                if not any(token in lowered for token in (
+                    "autorizzazione unica", "paur", "p.a.u.r",
+                    "d. lgs. 387", "d.lgs 387", "d.lgs. 387",
+                )):
+                    continue
+
+                proponent = self._proponent(text)
+                power_mw = self._power_mw(text)
+                municipalities = self._municipalities(text)
+                title = self._project_name(text, text)
+
+                progressivo = re.search(r"Progressivo\s+Interno\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
+                paur_id = re.search(r"ID\s+PAUR\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
+                pub_code = re.search(r"Codice\s+di\s+pubblicazione\s*:?\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
+                stable_code = (
+                    progressivo.group(1) if progressivo else
+                    paur_id.group(1) if paur_id else
+                    pub_code.group(1) if pub_code else
+                    None
                 )
-            )
+                if stable_code:
+                    safe_code = re.sub(r"[^A-Za-z0-9._-]+", "-", stable_code).strip("-")
+                    external_id = f"BASILICATA-ENERGY-{safe_code}"
+                elif proponent and municipalities and power_mw:
+                    identity = "|".join([
+                        self._clean(title).lower(),
+                        self._clean(proponent).lower(),
+                        "|".join(sorted(self._clean(x).lower() for x in municipalities)),
+                        f"{power_mw:.4f}",
+                    ])
+                    external_id = "BASILICATA-ENERGY-" + hashlib.sha1(identity.encode("utf-8")).hexdigest()[:20]
+                else:
+                    external_id = "BASILICATA-ENERGY-ACT-" + hashlib.sha1(
+                        f"{page_url}|{text}".encode("utf-8")
+                    ).hexdigest()[:18]
+
+                if external_id in seen:
+                    continue
+                seen.add(external_id)
+
+                date_match = re.search(
+                    r"Data\s+di\s+pubblicazione\s*:\s*(\d{1,2}/\d{1,2}/20\d{2})",
+                    text,
+                    flags=re.I,
+                )
+                procedure = "PAUR / Autorizzazione Unica" if ("paur" in lowered or "p.a.u.r" in lowered) else "Autorizzazione Unica"
+                if "proroga" in lowered:
+                    procedure = "Proroga AU/PAUR"
+
+                findings.append(
+                    AgentFinding(
+                        external_id=external_id,
+                        source_name="Regione Basilicata Ufficio Energia",
+                        source_url=page_url,
+                        title=title,
+                        finding_type="project_source",
+                        payload={
+                            "project_name": title,
+                            "proponent": proponent,
+                            "region": "Basilicata",
+                            "province": self._province(text, municipalities),
+                            "municipalities": municipalities,
+                            "power_mw": power_mw,
+                            "procedure": procedure,
+                            "status_raw": text[:1800],
+                            "source_date": date_match.group(1) if date_match else None,
+                            "publication_code": pub_code.group(1) if pub_code else None,
+                            "paur_id": paur_id.group(1) if paur_id else None,
+                            "progressivo_interno": progressivo.group(1) if progressivo else None,
+                            "sector": "eolico",
+                            "source_grade_ceiling": "A1",
+                            "project_specific": True,
+                            "source_adapter_origin": "regional_basilicata_energy_notices",
+                            "ingestion_path": "official_ufficio_energia_au_paur",
+                        },
+                    )
+                )
         return findings
 
     def fetch(self) -> list[AgentFinding]:
