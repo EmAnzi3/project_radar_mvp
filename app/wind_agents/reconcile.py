@@ -431,6 +431,35 @@ def _parse_source_date(value: Any):
         return None
 
 
+def _minimum_project_fields(payload: dict[str, Any]) -> tuple[bool, list[str]]:
+    """Hard admission gate for NEW project candidates.
+
+    A project can enter the operational discovery queue only when the source
+    supplies: (1) at least one named company/reference entity, normally the
+    proponent; (2) positive power in MW; and (3) at least one municipality.
+    Raw findings remain stored even when this gate fails.
+    """
+    company = (
+        payload.get("proponent")
+        or payload.get("developer")
+        or payload.get("developer_or_spv")
+        or payload.get("spv")
+        or payload.get("owner")
+        or payload.get("company_name")
+    )
+    power = _as_float(payload.get("power_mw"))
+    places = _place_values(payload)
+
+    missing: list[str] = []
+    if not _norm(company):
+        missing.append("company")
+    if power is None:
+        missing.append("power_mw")
+    if not places:
+        missing.append("municipality")
+    return not missing, missing
+
+
 def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, str | None]:
     """Return eligibility bucket for daily *new-project* discovery.
 
@@ -515,6 +544,7 @@ def classify_daily_discovery_event(
     finding_type = finding.get("finding_type")
 
     eligibility, eligibility_reason = _pipeline_eligibility(payload)
+    minimum_complete, minimum_missing = _minimum_project_fields(payload)
 
     if payload.get("is_aggregated_market_intelligence"):
         category = "market_intelligence"
@@ -531,6 +561,8 @@ def classify_daily_discovery_event(
             category = "baseline_discovery_candidate"
         elif best.get("target_kind") in {"canonical", "discovery"} and status in {"review_match", "weak_match"}:
             category = "identity_review"
+        elif project_specific and not minimum_complete:
+            category = "incomplete_project_record"
         elif project_specific:
             category = "baseline_project_candidate"
         else:
@@ -542,11 +574,11 @@ def classify_daily_discovery_event(
     elif eligibility != "eligible":
         category = eligibility
     elif event_type == "new" and project_specific and status in {"unmatched", "weak_match"}:
-        category = "new_project_candidate"
+        category = "new_project_candidate" if minimum_complete else "incomplete_project_record"
     elif best.get("target_kind") == "canonical" and status in {"review_match", "weak_match"}:
         category = "identity_review"
     elif event_type == "changed" and project_specific and status in {"unmatched", "weak_match"}:
-        category = "unmatched_project_change"
+        category = "unmatched_project_change" if minimum_complete else "incomplete_project_record"
     elif project_specific:
         category = "identity_review"
     else:
@@ -559,6 +591,8 @@ def classify_daily_discovery_event(
         "project_specific": project_specific,
         "pipeline_eligibility": eligibility,
         "pipeline_eligibility_reason": eligibility_reason,
+        "minimum_project_fields_complete": minimum_complete,
+        "minimum_project_fields_missing": minimum_missing,
     }
 
 
@@ -596,9 +630,10 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "historical_or_closed": 8,
         "existing_project_follow_up": 9,
         "non_target_scale": 10,
-        "market_intelligence": 11,
-        "company_signal": 12,
-        "non_project_event": 13,
+        "incomplete_project_record": 11,
+        "market_intelligence": 12,
+        "company_signal": 13,
+        "non_project_event": 14,
     }
     items.sort(
         key=lambda row: (
@@ -621,6 +656,10 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         row for row in items
         if row.get("category") in {"identity_review", "unmatched_project_change"}
     ]
+    incomplete_records = [
+        row for row in items
+        if row.get("category") == "incomplete_project_record"
+    ]
     filtered_non_pipeline = [
         row for row in items
         if row.get("category") in {"historical_or_closed", "existing_project_follow_up", "non_target_scale"}
@@ -639,6 +678,7 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "known_project_updates": len(known_updates),
         "discovery_candidate_updates": len(discovery_updates),
         "identity_reviews": len(identity_reviews),
+        "incomplete_project_records": len(incomplete_records),
         "filtered_non_pipeline": len(filtered_non_pipeline),
         "category_counts": counts,
         "new_candidates": new_candidates,
@@ -646,9 +686,11 @@ def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
         "known_updates": known_updates,
         "discovery_updates": discovery_updates,
         "identity_review_items": identity_reviews,
+        "incomplete_project_items": incomplete_records,
         "items": items,
         "guard": (
-            "Daily discovery is review-only. A candidate is not added to the canonical "
-            "Wind Radar until identity/configuration/current activity pass the evidence gate."
+            "Daily discovery is review-only. A NEW candidate must include at least one "
+            "named company/proponent, positive MW and one municipality; then identity, "
+            "configuration and current activity must pass the evidence gate."
         ),
     }
