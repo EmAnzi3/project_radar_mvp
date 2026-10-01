@@ -258,12 +258,26 @@ class SiciliaWindAgent(BaseWindAgent):
         return findings
 
     def _gis_json(self, params: dict[str, object]) -> dict:
-        response = self.session.get(
-            SIVVI_LAYER_QUERY,
-            params=params,
-            timeout=GIS_TIMEOUT,
-            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
-        )
+        # Large objectId batches easily exceed practical GET URL limits even
+        # though the ArcGIS layer supports up to 1000 records. Use POST for
+        # feature batches; keep the tiny returnIdsOnly discovery call as GET.
+        if params.get("objectIds"):
+            response = self.session.post(
+                SIVVI_LAYER_QUERY,
+                data=params,
+                timeout=GIS_TIMEOUT,
+                headers={
+                    "User-Agent": "Wind-Radar-Agent/0.6",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            )
+        else:
+            response = self.session.get(
+                SIVVI_LAYER_QUERY,
+                params=params,
+                timeout=GIS_TIMEOUT,
+                headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+            )
         response.raise_for_status()
         data = response.json()
         if data.get("error"):
