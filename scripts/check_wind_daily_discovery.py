@@ -271,6 +271,23 @@ def main() -> int:
             assert second == "unchanged", second
             assert third == "changed", third
 
+            revised = AgentFinding(
+                external_id=sample.external_id,
+                source_name=sample.source_name,
+                source_url=sample.source_url,
+                title=sample.title,
+                finding_type=sample.finding_type,
+                payload={**changed.payload, "municipalities": ["Comune Revisionato"]},
+            )
+            revision_event = wind_state.upsert_finding(
+                "run-4",
+                "institutional_watch",
+                revised,
+                baseline_new=True,
+                rebaseline_existing=True,
+            )
+            assert revision_event == "baseline", revision_event
+
             # Sicilia migration/fallback regression:
             # a pre-patch full-payload hash must not create a fake "changed"
             # event when the same official procedure is read via MapServer.
@@ -392,7 +409,7 @@ def main() -> int:
     print("Historical micro-wind -> non_target_scale")
     print("Unmatched verification of compliance -> existing_project_follow_up")
     print("Archived project -> historical_or_closed")
-    print("State bootstrap -> baseline / unchanged / changed")
+    print("State bootstrap -> baseline / unchanged / changed; parser revision -> baseline")
     print("Sicilia CSV/GIS path switch -> unchanged; semantic change -> changed")
     return 0
 
