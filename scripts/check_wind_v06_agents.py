@@ -232,6 +232,17 @@ assert BasilicataWindAgent._proponent(basilicata_2026_servigliano) == "FRI-EL SE
 servigliano_places = BasilicataWindAgent._municipalities(basilicata_2026_servigliano)
 assert servigliano_places == ["Montemurro", "Armento"], servigliano_places
 
+basilicata_granted_text = (
+    "D.LGS 152/2006 - L.R. N. 47/1998 - Progetto per la costruzione e l'esercizio "
+    "di un impianto per la produzione di energia elettrica da fonte eolica, delle opere "
+    "connesse e delle infrastrutture indispensabili in agro del Comune di Tolve (PZ) "
+    "della potenza nominale di 19,80 MW proposto dalla società SERRA ENERGIE S.R.L."
+)
+assert BasilicataWindAgent._power_mw(basilicata_granted_text) == 19.8
+assert BasilicataWindAgent._proponent(basilicata_granted_text) == "SERRA ENERGIE S.R.L"
+assert BasilicataWindAgent._municipalities(basilicata_granted_text) == ["Tolve"]
+assert BasilicataEnergyWindAgent.baseline_revision == "basilicata-energy-v3"
+
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
     confidence="B",
