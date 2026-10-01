@@ -148,15 +148,15 @@
     },
     {
       "id": "fagioli",
-      "name": "Fagioli S.p.A.",
+      "name": "CEVA Logistics | Fagioli",
       "cluster": ["heavy_transport", "heavy_lift", "project_logistics", "offshore_logistics"],
       "commercial_priority": "A",
       "wind_relevance": "core_supply_chain",
       "relationship_status": "target",
       "known_capabilities": ["heavy transport", "heavy lifting", "renewables logistics", "offshore wind jacket handling"],
       "project_links": [],
-      "watch_urls": ["https://www.fagioli.com/en/group.php?area=1"],
-      "notes": "High-value logistics/heavy-lift network node even without a current canonical project link."
+      "watch_urls": ["https://www.cevalogistics.com/en/what-we-do/project-logistics/site-operations"],
+      "notes": "Fagioli is now integrated into CEVA Logistics project logistics; keep the node as a high-value heavy transport/heavy lift/site-operations target. No canonical project award is inferred from the acquisition."
     },
     {
       "id": "mammoet",
