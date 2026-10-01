@@ -7,6 +7,7 @@ from typing import Any
 
 from .adapters import (
     AbruzzoWindAgent,
+    BasilicataEnergyWindAgent,
     BasilicataWindAgent,
     CalabriaWindAgent,
     CampaniaWindAgent,
@@ -21,6 +22,7 @@ from .adapters import (
     PiemonteWindAgent,
     SardegnaWindAgent,
     SiciliaWindAgent,
+    PugliaRegionalAuWindAgent,
     SistemaPugliaWindAgent,
     TernaEconnextionWindAgent,
     ToscanaAtosWindAgent,
@@ -42,6 +44,7 @@ from .state import (
 # runtime status and adapter identity share the same stable key.
 AGENT_FACTORIES = {
     "abruzzo-via": AbruzzoWindAgent,
+    "basilicata-au-paur": BasilicataEnergyWindAgent,
     "basilicata-via": BasilicataWindAgent,
     "calabria-via": CalabriaWindAgent,
     "campania-viavas": CampaniaWindAgent,
@@ -54,6 +57,7 @@ AGENT_FACTORIES = {
     "mase-via": MaseWindAgent,
     "molise-au-eolico": MoliseWindAgent,
     "piemonte-regional": PiemonteWindAgent,
+    "puglia-au-paur": PugliaRegionalAuWindAgent,
     "puglia-sistema-energia": SistemaPugliaWindAgent,
     "sardegna-sira": SardegnaWindAgent,
     "sicilia-sivvi": SiciliaWindAgent,
