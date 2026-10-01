@@ -15,6 +15,10 @@ SEARCH_URL = (
     "http://viavas.regione.campania.it/"
     "opencms/opencms/VIAVAS/VIA_files_new/Ricerca_Avanzata.html"
 )
+LIST_URL = (
+    "https://viavas.regione.campania.it/"
+    "opencms/opencms/VIAVAS/VIA_files_new/TabellaElencoProgetti.jsp"
+)
 SEARCH_KEYWORDS = ("eolico", "eolica", "repowering eolico")
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "repowering", "parco eolico")
 
@@ -122,12 +126,20 @@ class CampaniaWindAgent(BaseWindAgent):
 
     @classmethod
     def _parse_date(cls, value: str) -> datetime | None:
+        cleaned = cls._clean(value)
         for fmt in ("%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d"):
             try:
-                return datetime.strptime(cls._clean(value), fmt)
+                return datetime.strptime(cleaned, fmt)
             except ValueError:
                 pass
-        return None
+        # Current project table renders Java-style dates, e.g.
+        # "Fri Sep 11 00:00:00 CEST 2026".
+        java_style = re.sub(r"\b(?:CEST|CET|UTC)\b", "", cleaned)
+        java_style = re.sub(r"\s+", " ", java_style).strip()
+        try:
+            return datetime.strptime(java_style, "%a %b %d %H:%M:%S %Y")
+        except ValueError:
+            return None
 
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
@@ -195,51 +207,76 @@ class CampaniaWindAgent(BaseWindAgent):
         raw = "|".join([date_text, title, proponent, source_url])
         return "CAMPANIA-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:18]
 
+    def _fetch_current_project_table(self) -> list[dict]:
+        response = self.session.get(
+            LIST_URL,
+            headers={
+                "User-Agent": "Wind-Radar-Agent/0.6",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+            timeout=(8, 25),
+        )
+        response.raise_for_status()
+        return self._rows(response.content.decode("utf-8", errors="replace"))
+
     def fetch(self) -> list[AgentFinding]:
         unique: dict[str, AgentFinding] = {}
+        raw_rows: list[dict] = []
+        try:
+            raw_rows.extend(self._fetch_current_project_table())
+        except Exception:
+            # Keep the inherited advanced search as fallback.
+            pass
         for keyword in SEARCH_KEYWORDS:
             html_page = self._post_search(keyword)
-            for row in self._rows(html_page):
-                project = self._clean(row.get("progetto") or "")
-                proponent = self._clean(row.get("proponente") or "")
-                raw_text = self._clean(row.get("raw_text") or "")
-                full_text = f"{project} {proponent} {raw_text}"
-                if not project or not self._is_wind(full_text):
-                    continue
-                date_text = self._clean(row.get("data_di_presentazione") or "")
-                parsed_date = self._parse_date(date_text)
-                if parsed_date is None or parsed_date < self.min_date:
-                    continue
-                source_url = self._clean(row.get("source_url") or SEARCH_URL)
-                cup = self._clean(row.get("cup") or "")
-                territory = self._clean(row.get("territori") or row.get("territorio") or "")
-                municipalities = self._municipalities(territory, project)
-                external_id = self._external_id(cup, date_text, project, proponent, source_url)
-                unique.setdefault(
-                    external_id,
-                    AgentFinding(
-                        external_id=external_id,
-                        source_name=self.source_name,
-                        source_url=source_url,
-                        title=project[:700],
-                        finding_type="project_source",
-                        payload={
-                            "project_name": project[:700],
-                            "proponent": proponent or None,
-                            "region": "Campania",
-                            "province": self._province(project + " " + territory),
-                            "municipalities": municipalities,
-                            "power_mw": self._power_mw(project),
-                            "procedure": self._procedure(project + " " + raw_text),
-                            "status_raw": self._clean(row.get("esito") or "") or None,
-                            "cup": cup or None,
-                            "date_presented": date_text,
-                            "decree": self._clean(row.get("decreto") or "") or None,
-                            "sector": "eolico",
-                            "source_grade_ceiling": "A1",
-                            "project_specific": True,
-                            "source_adapter_origin": "pv_agent_mvp/campania.py",
-                        },
-                    ),
-                )
+            raw_rows.extend(self._rows(html_page))
+
+        dedup_rows: dict[str, dict] = {}
+        for row in raw_rows:
+            key = self._clean(row.get("cup") or "") or self._clean(row.get("source_url") or "") or self._clean(row.get("raw_text") or "")
+            dedup_rows.setdefault(key, row)
+
+        for row in dedup_rows.values():
+            project = self._clean(row.get("progetto") or "")
+            proponent = self._clean(row.get("proponente") or "")
+            raw_text = self._clean(row.get("raw_text") or "")
+            full_text = f"{project} {proponent} {raw_text}"
+            if not project or not self._is_wind(full_text):
+                continue
+            date_text = self._clean(row.get("data_di_presentazione") or "")
+            parsed_date = self._parse_date(date_text)
+            if parsed_date is None or parsed_date < self.min_date:
+                continue
+            source_url = self._clean(row.get("source_url") or SEARCH_URL)
+            cup = self._clean(row.get("cup") or "")
+            territory = self._clean(row.get("territori") or row.get("territorio") or "")
+            municipalities = self._municipalities(territory, project)
+            external_id = self._external_id(cup, date_text, project, proponent, source_url)
+            unique.setdefault(
+                external_id,
+                AgentFinding(
+                    external_id=external_id,
+                    source_name=self.source_name,
+                    source_url=source_url,
+                    title=project[:700],
+                    finding_type="project_source",
+                    payload={
+                        "project_name": project[:700],
+                        "proponent": proponent or None,
+                        "region": "Campania",
+                        "province": self._province(project + " " + territory),
+                        "municipalities": municipalities,
+                        "power_mw": self._power_mw(project),
+                        "procedure": self._procedure(project + " " + raw_text),
+                        "status_raw": self._clean(row.get("esito") or "") or None,
+                        "cup": cup or None,
+                        "date_presented": date_text,
+                        "decree": self._clean(row.get("decreto") or "") or None,
+                        "sector": "eolico",
+                        "source_grade_ceiling": "A1",
+                        "project_specific": True,
+                        "source_adapter_origin": "pv_agent_mvp/campania.py",
+                    },
+                ),
+            )
         return list(unique.values())
