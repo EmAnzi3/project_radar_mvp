@@ -62,6 +62,7 @@ assert sum(bool(task.watch_urls) for task in company_catalog) >= 50, "company wa
 implemented = set(executable_agent_ids())
 required_adapters = {
     "abruzzo-via",
+    "basilicata-au-paur",
     "basilicata-via",
     "calabria-via",
     "campania-viavas",
@@ -74,6 +75,7 @@ required_adapters = {
     "mase-via",
     "molise-au-eolico",
     "piemonte-regional",
+    "puglia-au-paur",
     "puglia-sistema-energia",
     "sardegna-sira",
     "sicilia-sivvi",
@@ -84,7 +86,7 @@ required_adapters = {
     "veneto-regional",
 }
 assert required_adapters.issubset(implemented), implemented
-assert len(implemented) >= 21, implemented
+assert len(implemented) >= 23, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
 
 # Toscana GeA must degrade transparently to a channel-only snapshot when the
