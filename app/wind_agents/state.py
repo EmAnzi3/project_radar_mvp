@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import sqlite3
+from contextlib import closing
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -22,7 +23,7 @@ def _connect() -> sqlite3.Connection:
 
 
 def init_db() -> None:
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.executescript(
             """
             CREATE TABLE IF NOT EXISTS agent_runs (
@@ -91,7 +92,7 @@ def get_source_cursor(source_id: str, default: str | None = None) -> str | None:
     """
 
     init_db()
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         row = conn.execute(
             "SELECT cursor_value FROM source_cursors WHERE source_id = ?",
             (source_id,),
@@ -107,7 +108,7 @@ def set_source_cursor(
     init_db()
     now = datetime.now().isoformat(timespec="seconds")
     metadata_json = json.dumps(metadata or {}, ensure_ascii=False, sort_keys=True, default=str)
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             """
             INSERT INTO source_cursors (source_id, cursor_value, updated_at, metadata_json)
@@ -124,7 +125,7 @@ def set_source_cursor(
 
 def get_watch_status(watch_id: str) -> dict[str, Any] | None:
     init_db()
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         row = conn.execute(
             """
             SELECT watch_id, last_attempt, last_success, last_error, last_run_id, metadata_json
@@ -169,7 +170,7 @@ def mark_watch_attempt(
     previous = get_watch_status(watch_id) or {}
     last_success = now if success else previous.get("last_success")
     metadata_json = json.dumps(metadata or {}, ensure_ascii=False, sort_keys=True, default=str)
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             """
             INSERT INTO watch_status (
@@ -198,7 +199,7 @@ def begin_run(planned_tasks: int, note: str | None = None) -> str:
     init_db()
     run_id = datetime.now().strftime("%Y%m%d%H%M%S%f")
     now = datetime.now().isoformat(timespec="seconds")
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             "INSERT INTO agent_runs (run_id, started_at, planned_tasks, note) VALUES (?, ?, ?, ?)",
             (run_id, now, planned_tasks, note),
@@ -242,7 +243,7 @@ def upsert_finding(
     payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
     content_hash = _hash_payload(payload)
 
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         previous = conn.execute(
             """
             SELECT content_hash, first_seen
@@ -323,7 +324,7 @@ def upsert_finding(
 
 def finish_run(run_id: str, findings: int, changed_items: int) -> None:
     now = datetime.now().isoformat(timespec="seconds")
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             """
             UPDATE agent_runs
@@ -343,7 +344,7 @@ def get_run_events(run_id: str) -> list[dict[str, Any]]:
     """
 
     init_db()
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         rows = conn.execute(
             """
             SELECT id, run_id, agent_name, source_name, external_id, event_type,
