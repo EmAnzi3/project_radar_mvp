@@ -19,7 +19,7 @@ from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
 from app.wind_agents.adapters.sicilia import SiciliaWindAgent
 from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
-from app.wind_agents.adapters.calabria import CalabriaRegionalActsWindAgent
+from app.wind_agents.adapters.calabria import CalabriaRegionalActsWindAgent, CalabriaWindAgent
 from app.wind_agents.adapters.campania import CampaniaWindAgent
 from app.wind_agents.adapters.sardegna import SardegnaWindAgent
 from app.wind_agents.company_watch import due_company_ids
@@ -288,7 +288,30 @@ assert CalabriaRegionalActsWindAgent._proponent(
 ) == "Paladino Energia S.r.l"
 calabria_places = CalabriaRegionalActsWindAgent._municipalities(calabria_paladino_text)
 assert {"Gasperina", "Montauro", "Montepaone", "Palermiti", "Petrizzi", "Argusto"}.issubset(set(calabria_places)), calabria_places
-assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v3"
+assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v4-municipality-cleanup"
+
+
+# Regional municipality cleanup guards.
+assert SiciliaWindAgent._municipality(
+    "PROGETTO EOLICO NEL COMUNE DI ENNA IN LOCALITÀ S. ANTONINO, AVENTE POTENZA 30 MW"
+) == "ENNA"
+assert SiciliaWindAgent._municipality(
+    "PARCO EOLICO RICADENTE NEL COMUNE DI AI-DONE (EN)"
+) == "Aidone"
+assert SiciliaWindAgent._municipality(
+    "IMPIANTO DA REALIZZARSI NEL COMUNE DI SAL"
+) is None
+assert CampaniaWindAgent._municipalities(
+    "BENEVENTO, Fragneto Monforte, Casalduni, Campolattaro di 7 aerogeneratori da 4,2 MW per una potenza complessiva",
+    "",
+) == ["BENEVENTO", "Fragneto Monforte", "Casalduni", "Campolattaro"]
+assert CampaniaWindAgent._municipalities(
+    "CALITRI, Bisaccia con le relative opere di connessione",
+    "",
+) == ["CALITRI", "Bisaccia"]
+assert CalabriaWindAgent._municipalities(
+    "impianto eolico nei Comuni di Cutro e Scandale, con relative opere di connessione"
+) == ["Cutro", "Scandale"]
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
