@@ -373,20 +373,55 @@ class SardegnaWindAgent(BaseWindAgent):
                     )
         return findings
 
+    @staticmethod
+    def _next_viewstate(response_text: str) -> str | None:
+        match = re.search(
+            r'<update[^>]+id=["\']javax\.faces\.ViewState["\'][^>]*>(.*?)</update>',
+            response_text,
+            flags=re.I | re.S,
+        )
+        if not match:
+            return None
+        value = re.sub(r"^\s*<!\[CDATA\[", "", match.group(1))
+        value = re.sub(r"\]\]>\s*$", "", value)
+        value = html.unescape(value).strip()
+        return value or None
+
     def _fetch_search(self) -> list[AgentFinding]:
         findings: list[AgentFinding] = []
+
+        # A JSF/Liferay session does not need a fresh GET for every query.
+        # Reuse the same form state and advance javax.faces.ViewState from each
+        # partial response. This preserves the same search matrix while removing
+        # 11 redundant form loads from the normal 2y x 2 procedures x 3 keywords run.
+        action, encoded_url, viewstate = self._get_search_form()
+
         for year in self.years:
             for procedure_code, procedure_label in SEARCH_PROCEDURES.items():
                 for keyword in SEARCH_KEYWORDS:
-                    action, encoded_url, viewstate = self._get_search_form()
-                    response_text = self._post_search(
-                        action=action,
-                        encoded_url=encoded_url,
-                        viewstate=viewstate,
-                        year=year,
-                        procedure_code=procedure_code,
-                        keyword=keyword,
-                    )
+                    try:
+                        response_text = self._post_search(
+                            action=action,
+                            encoded_url=encoded_url,
+                            viewstate=viewstate,
+                            year=year,
+                            procedure_code=procedure_code,
+                            keyword=keyword,
+                        )
+                    except Exception:
+                        # Session/view state may expire server-side. Refresh once,
+                        # then retry the same combination without dropping coverage.
+                        action, encoded_url, viewstate = self._get_search_form()
+                        response_text = self._post_search(
+                            action=action,
+                            encoded_url=encoded_url,
+                            viewstate=viewstate,
+                            year=year,
+                            procedure_code=procedure_code,
+                            keyword=keyword,
+                        )
+
+                    viewstate = self._next_viewstate(response_text) or viewstate
                     findings.extend(self._parse_search(response_text, procedure_label, year))
         return findings
 
