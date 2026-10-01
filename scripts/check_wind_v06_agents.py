@@ -19,6 +19,7 @@ from app.wind_agents.adapters.lombardia import LombardiaWindAgent
 from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
 from app.wind_agents.adapters.sicilia import SiciliaWindAgent
 from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
+from app.wind_agents.adapters.calabria import CalabriaRegionalActsWindAgent
 from app.wind_agents.adapters.campania import CampaniaWindAgent
 from app.wind_agents.adapters.sardegna import SardegnaWindAgent
 from app.wind_agents.company_watch import due_company_ids
@@ -242,6 +243,40 @@ assert BasilicataWindAgent._power_mw(basilicata_granted_text) == 19.8
 assert BasilicataWindAgent._proponent(basilicata_granted_text) == "SERRA ENERGIE S.R.L"
 assert BasilicataWindAgent._municipalities(basilicata_granted_text) == ["Tolve"]
 assert BasilicataEnergyWindAgent.baseline_revision == "basilicata-energy-v3"
+
+campania_total_text = (
+    "PAUR progetto Repowering impianto eolico composto da 14 aerogeneratori da 7,2 MW "
+    "per una potenza complessiva di 100,8 MW e relative opere di connessione "
+    "nei Comuni di Lacedonia (AV)"
+)
+assert CampaniaWindAgent._power_mw(campania_total_text) == 100.8
+assert CampaniaWindAgent.baseline_revision == "2026-10-current-project-table-v3"
+
+sardegna_detail_text = (
+    'Titolo progetto: Impianto Eolico denominato "WHITE AND BLUE LUIGHIEDDA" della potenza '
+    'di 21, 6 MW ubicato in località Sa Lughiedda nel Comune di Sassari (SS) '
+    'Proponente: INNOVO DEVELOPMENT 8 S.R.L. Comune: SASSARI Provincia: SASSARI '
+    'Stato del procedimento: CHIUSA Esito: NEGATIVO'
+)
+assert SardegnaWindAgent._power_mw(sardegna_detail_text) == 21.6
+assert SardegnaWindAgent._proponent(sardegna_detail_text) == "INNOVO DEVELOPMENT 8 S.R.L"
+assert SardegnaWindAgent._municipality(sardegna_detail_text) == "SASSARI"
+assert SardegnaWindAgent._status(sardegna_detail_text) == "Negativo"
+assert SardegnaWindAgent.baseline_revision == "2026-10-news-project-detail-v3"
+
+calabria_paladino_text = (
+    "Oggetto: Provvedimento di Valutazione di Impatto Ambientale ai sensi degli art. 23 e segg. "
+    "Progetto: Pratica n. 162 (CZ) sul sistema Calabria SUAP Sportello Ambiente - "
+    "Parco Eolico Paladino di potenza nominale pari a 24,00 MW da realizzarsi in Provincia "
+    "di Catanzaro, nei Comuni di Gasperina, Montauro, Montepaone, Palermiti, Petrizzi e Argusto. "
+    "Comuni interessati: Gasperina, Montauro, Palermiti, Petrizzi, Montepaone e Argusto (CZ). "
+    "Proponente: Paladino Energia S.r.l."
+)
+assert CalabriaRegionalActsWindAgent._power_mw(calabria_paladino_text) == 24.0
+assert CalabriaRegionalActsWindAgent._proponent(calabria_paladino_text) == "Paladino Energia S.r.l"
+calabria_places = CalabriaRegionalActsWindAgent._municipalities(calabria_paladino_text)
+assert {"Gasperina", "Montauro", "Montepaone", "Palermiti", "Petrizzi", "Argusto"}.issubset(set(calabria_places)), calabria_places
+assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v2"
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
