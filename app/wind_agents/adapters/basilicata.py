@@ -10,6 +10,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
 BASE_URL = "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/"
+ENERGY_NOTICE_URL = "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento"
 START_URLS = (
     (urljoin(BASE_URL, "section.jsp?sec=100002"), "Screening"),
     (urljoin(BASE_URL, "section.jsp?sec=145352"), "Screening - 2025"),
@@ -125,6 +126,90 @@ class BasilicataWindAgent(BaseWindAgent):
     def _external_id(url: str) -> str:
         return "BASILICATA-WIND-" + hashlib.sha1(url.encode("utf-8")).hexdigest()[:18]
 
+    @classmethod
+    def _project_name(cls, text: str, fallback: str) -> str:
+        for pattern in (
+            r"denominat[oa]\s+[“\"']([^”\"']+)[”\"']",
+            r"parco\s+eolico\s+[“\"']([^”\"']+)[”\"']",
+            r"impianto\s+eolico\s+[“\"']([^”\"']+)[”\"']",
+        ):
+            match = re.search(pattern, text, flags=re.I)
+            if match:
+                return cls._clean(match.group(1))[:900]
+        return cls._clean(fallback)[:900]
+
+    def _fetch_energy_notices(self) -> list[AgentFinding]:
+        """Current regional AU/PAUR/public-utility wind notices from Ufficio Energia."""
+        html_page = self._get_html(ENERGY_NOTICE_URL)
+        if not html_page:
+            return []
+        soup = BeautifulSoup(html_page, "html.parser")
+        findings: list[AgentFinding] = []
+        seen: set[str] = set()
+
+        # The regional CMS changes wrappers over time. Anchor-centred extraction
+        # keeps the parser resilient while limiting each evidence window.
+        for anchor in soup.find_all("a", href=True):
+            href = urljoin(ENERGY_NOTICE_URL, anchor.get("href") or "")
+            parent = anchor.find_parent(["article", "li"])
+            if parent is None:
+                parent = anchor.parent
+                for _ in range(3):
+                    if parent is None:
+                        break
+                    text_len = len(self._clean(parent.get_text(" ", strip=True)))
+                    if 120 <= text_len <= 5000:
+                        break
+                    parent = parent.parent
+            if parent is None:
+                continue
+            text = self._clean(parent.get_text(" ", strip=True))
+            if not text or len(text) < 80 or not self._is_wind(text):
+                continue
+            lowered = text.lower()
+            if not any(token in lowered for token in ("autorizzazione unica", "paur", "p.a.u.r", "d.lgs 387", "d.lgs. 387")):
+                continue
+
+            proponent = self._proponent(text)
+            power_mw = self._power_mw(text)
+            municipalities = self._municipalities(text)
+            title = self._project_name(text, anchor.get_text(" ", strip=True) or text)
+            raw_id = href if href.startswith("http") else text
+            external_id = "BASILICATA-ENERGY-" + hashlib.sha1(raw_id.encode("utf-8")).hexdigest()[:18]
+            if external_id in seen:
+                continue
+            seen.add(external_id)
+
+            procedure = "PAUR / Autorizzazione Unica" if ("paur" in lowered or "p.a.u.r" in lowered) else "Autorizzazione Unica"
+            if "proroga" in lowered:
+                procedure = "Proroga AU/PAUR"
+
+            findings.append(
+                AgentFinding(
+                    external_id=external_id,
+                    source_name="Regione Basilicata Ufficio Energia",
+                    source_url=href if href.startswith("http") else ENERGY_NOTICE_URL,
+                    title=title,
+                    finding_type="project_source",
+                    payload={
+                        "project_name": title,
+                        "proponent": proponent,
+                        "region": "Basilicata",
+                        "province": self._province(text, municipalities),
+                        "municipalities": municipalities,
+                        "power_mw": power_mw,
+                        "procedure": procedure,
+                        "status_raw": text[:1600],
+                        "sector": "eolico",
+                        "source_grade_ceiling": "A1",
+                        "project_specific": True,
+                        "source_adapter_origin": "regional_basilicata_energy_notices",
+                        "ingestion_path": "official_ufficio_energia_au_paur",
+                    },
+                )
+            )
+        return findings
+
     def fetch(self) -> list[AgentFinding]:
         unique: dict[str, AgentFinding] = {}
         for page_url, procedure in START_URLS:
@@ -178,4 +263,6 @@ class BasilicataWindAgent(BaseWindAgent):
                         },
                     ),
                 )
+        for finding in self._fetch_energy_notices():
+            unique.setdefault(finding.external_id, finding)
         return list(unique.values())
