@@ -316,8 +316,14 @@ class SistemaPugliaWindAgent(BaseWindAgent):
         return findings
 
     def fetch(self) -> list[AgentFinding]:
-        combined = self._fetch_mase_via_dataset() + self._fetch_regional_albo()
-        unique: dict[str, AgentFinding] = {}
-        for finding in combined:
-            unique.setdefault(finding.external_id, finding)
-        return list(unique.values())
+        return self._fetch_mase_via_dataset()
+
+
+class PugliaRegionalAuWindAgent(SistemaPugliaWindAgent):
+    """Independent regional AU/PAUR source with its own bootstrap lifecycle."""
+
+    source_name = "Regione Puglia AU/PAUR"
+    base_url = ALBO_URL
+
+    def fetch(self) -> list[AgentFinding]:
+        return self._fetch_regional_albo()
