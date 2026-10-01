@@ -81,14 +81,22 @@ class BasilicataWindAgent(BaseWindAgent):
     def _municipalities(cls, text: str) -> list[str]:
         values: list[str] = []
         for match in re.finditer(
-            r"(?:comune|comuni)\s+(?:di|del|della|dei)?\s*(.+?)(?:\s*\((?:PZ|MT)\)|\.|;|\s+-\s+|$)",
+            r"(?:comune|comuni)\s+(?:di|del|della|dei)?\s*(.+?)(?="
+            r"\s+(?:con\s+relative|e\s+delle\s+relative|nonch[eé]|proponente|societ[aà]\s+proponente|"
+            r"potenza|progressivo\s+interno|id\s+paur|data\s+di\s+pubblicazione)|"
+            r"\.|;|\s+-\s+|$)",
             text,
             flags=re.I,
         ):
-            segment = cls._clean(match.group(1))
-            for part in re.split(r",|/|\s+e\s+", segment, flags=re.I):
+            segment = re.sub(r"\((?:PZ|MT)\)", "", cls._clean(match.group(1)), flags=re.I)
+            for part in re.split(r",|/|\s+e\s+|\s+ed\s+", segment, flags=re.I):
                 item = cls._clean(part).strip(" -–—:;,.()")
-                if item and 2 <= len(item) <= 80 and item.lower() not in {v.lower() for v in values}:
+                if (
+                    item
+                    and 2 <= len(item) <= 80
+                    and not re.search(r"\b(?:opere|infrastrutture|relative|connessione)\b", item, flags=re.I)
+                    and item.lower() not in {v.lower() for v in values}
+                ):
                     values.append(item)
             if values:
                 break
