@@ -9,7 +9,12 @@ from bs4 import BeautifulSoup
 from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
-BASE_URL = "https://contenuti.regione.marche.it/Regione-Utile/Ambiente/Valutazioni-e-Autorizzazioni-Ambientali/Valutazioni-di-Impatto-Ambientale-VIA/Avvio-Procedimenti-VIA"
+BASE_URL = "https://monitoraggivia.regione.marche.it/sitoregionale/avvisiregionale.aspx"
+STATE_URL = "https://monitoraggivia.regione.marche.it/sitoregionale/avvisistatali.aspx"
+REGISTRY_URLS = (
+    (BASE_URL, "VIA regionale"),
+    (STATE_URL, "VIA statale"),
+)
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
 
 
@@ -25,6 +30,7 @@ class MarcheWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Marche VIA"
     base_url = BASE_URL
+    baseline_revision = "marche-monitoraggivia-v1"
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -120,7 +126,7 @@ class MarcheWindAgent(BaseWindAgent):
             external_id="MARCHE-VIA-CHANNEL",
             source_name=self.source_name,
             source_url=BASE_URL,
-            title="Regione Marche — canale Avvio Procedimenti VIA",
+            title="Regione Marche — Monitoraggio VIA",
             finding_type="source_channel_snapshot",
             payload={
                 "region": "Marche",
@@ -133,71 +139,86 @@ class MarcheWindAgent(BaseWindAgent):
                 "primary_url": BASE_URL,
                 "primary_fetch_error": primary_error,
                 "runtime_note": (
-                    "No project rows were collected from the Marche VIA registry. "
-                    "The public channel remains monitored, but a blocked/empty fetch cannot "
-                    "be treated as project-specific evidence or used for canonical promotion."
+                    "No wind project rows were collected from the official Monitoraggio VIA "
+                    "regional/state registries in this run."
                 ),
             },
         )
 
-    def fetch(self) -> list[AgentFinding]:
-        try:
-            soup = self._get(BASE_URL)
-        except Exception as exc:
-            return [self._channel_snapshot(primary_error=f"{type(exc).__name__}: {exc}")]
+    @classmethod
+    def _row_external_id(cls, code: str | None, description: str) -> str:
+        if code:
+            safe = re.sub(r"[^A-Za-z0-9_-]+", "-", code.upper()).strip("-")
+            if safe:
+                return f"MARCHE-VIA-{safe}"
+        return cls._external_id(description)
 
-        candidates = soup.find_all("li")
-        if not candidates:
-            candidates = soup.find_all(["p", "div"])
-
-        findings: dict[str, AgentFinding] = {}
-        for node in candidates:
-            text = self._clean(node.get_text(" ", strip=True))
-            if len(text) < 40 or not self._is_wind(text):
+    def _registry_findings(self, url: str, procedure_label: str) -> list[AgentFinding]:
+        soup = self._get(url)
+        rows: list[AgentFinding] = []
+        for tr in soup.find_all("tr"):
+            cells = [self._clean(td.get_text(" ", strip=True)) for td in tr.find_all("td")]
+            if len(cells) < 5:
                 continue
-            # Avoid catching navigation/help text: an actual registry item should
-            # contain a project/procedure cue in addition to a wind term.
-            if not any(cue in text.lower() for cue in ("proponente", "procedimento", "progetto", "protocollo", "via")):
-                continue
-            source_url = BASE_URL
-            anchor = node.find("a", href=True)
-            if anchor:
-                source_url = urljoin(BASE_URL, anchor.get("href") or "")
-            external_id = self._external_id(text)
-            protocol = None
-            match_protocol = re.search(r"\bProtocollo\s*:\s*([^|\s]+(?:\|[^\s]+)*)", text, flags=re.I)
-            if match_protocol:
-                protocol = self._clean(match_protocol.group(1))[:300]
-            date_text = None
-            match_date = re.search(r"\bData\s+(?:di\s+creazione|protocollo)\s*:\s*(\d{1,2}/\d{1,2}/\d{4})", text, flags=re.I)
-            if match_date:
-                date_text = match_date.group(1)
 
-            findings[external_id] = AgentFinding(
-                external_id=external_id,
-                source_name=self.source_name,
-                source_url=source_url,
-                title=text[:700],
-                finding_type="project_source",
-                payload={
-                    "project_name": text[:700],
-                    "proponent": self._proponent(text),
-                    "region": "Marche",
-                    "province": self._province(text),
-                    "municipalities": self._municipalities(text),
-                    "power_mw": self._power_mw(text),
-                    "procedure": self._procedure(text),
-                    "status_raw": "Avvio/pubblicazione procedimento regionale",
-                    "protocol": protocol,
-                    "registry_date": date_text,
-                    "sector": "eolico",
-                    "source_grade_ceiling": "A1",
-                    "project_specific": True,
-                    "source_adapter_origin": "new_wind_source_audit/marche",
-                },
+            proponent, description, publication_date, deadline, code = cells[:5]
+            searchable = self._clean(f"{proponent} {description}")
+            if not description or not self._is_wind(searchable):
+                continue
+
+            source_url = url
+            for anchor in tr.find_all("a", href=True):
+                label = self._clean(anchor.get_text(" ", strip=True)).lower()
+                if "avviso" in label:
+                    source_url = urljoin(url, anchor.get("href") or "")
+                    break
+
+            external_id = self._row_external_id(code, description)
+            rows.append(
+                AgentFinding(
+                    external_id=external_id,
+                    source_name=self.source_name,
+                    source_url=source_url,
+                    title=description[:700],
+                    finding_type="project_source",
+                    payload={
+                        "project_name": description[:700],
+                        "proponent": proponent or None,
+                        "region": "Marche",
+                        "province": self._province(description),
+                        "municipalities": self._municipalities(description),
+                        "power_mw": self._power_mw(description),
+                        "procedure": procedure_label,
+                        "status_raw": "Avviso/pubblicazione procedimento",
+                        "practice_code": code or None,
+                        "publication_date": publication_date or None,
+                        "observation_deadline": deadline or None,
+                        "sector": "eolico",
+                        "source_grade_ceiling": "A1",
+                        "project_specific": True,
+                        "source_adapter_origin": "monitoraggivia.regione.marche.it",
+                    },
+                )
             )
+        return rows
 
-        if not findings:
-            findings["MARCHE-VIA-CHANNEL"] = self._channel_snapshot()
+    def fetch(self) -> list[AgentFinding]:
+        findings: dict[str, AgentFinding] = {}
+        errors: list[str] = []
 
-        return list(findings.values())
+        for url, procedure_label in REGISTRY_URLS:
+            try:
+                rows = self._registry_findings(url, procedure_label)
+            except Exception as exc:
+                errors.append(f"{procedure_label}: {type(exc).__name__}: {exc}")
+                continue
+
+            # The registries can repeat the same practice when a new notice is
+            # published. Keep the first/current row for a stable project identity.
+            for finding in rows:
+                findings.setdefault(finding.external_id, finding)
+
+        if findings:
+            return list(findings.values())
+
+        return [self._channel_snapshot(primary_error="; ".join(errors) if errors else None)]
