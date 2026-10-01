@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import html
 import io
 import re
 from urllib.parse import urlencode
@@ -47,10 +48,11 @@ class SiciliaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Sicilia SI-VVI"
     base_url = SOURCE_URL
+    baseline_revision = "sicilia-sivvi-v2-municipality-cleanup"
 
     @staticmethod
     def _clean(value: object) -> str:
-        return re.sub(r"\s+", " ", str(value or "")).strip()
+        return re.sub(r"\s+", " ", html.unescape(str(value or ""))).strip()
 
     @classmethod
     def _column(cls, value: object) -> str:
@@ -96,15 +98,31 @@ class SiciliaWindAgent(BaseWindAgent):
 
     @classmethod
     def _municipality(cls, text: str) -> str | None:
+        text = cls._clean(text)
         for pattern in (
             r"comune\s+di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s*\([A-Z]{2}\)|,|;|\.|\s+e\s+|$)",
             r"comune\s*:?\s*([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s+provincia|\s*\([A-Z]{2}\)|,|;|\||$)",
         ):
             match = re.search(pattern, text, flags=re.I)
-            if match:
-                value = cls._clean(match.group(1)).strip(" .,:;")
-                if value:
-                    return value
+            if not match:
+                continue
+            value = cls._clean(match.group(1)).strip(" .,:;")
+            value = re.split(
+                r"\s+(?:in\s+localit[aà]|localit[aà]|loc\.?|denominat[oa]|avente|"
+                r"nonch[eé]|con\s+relative|e\s+delle|e\s+del)\b",
+                value,
+                maxsplit=1,
+                flags=re.I,
+            )[0].strip(" .,:;-")
+            aliases = {
+                "ai-done": "Aidone",
+            }
+            value = aliases.get(value.lower(), value)
+            if len(value) < 4:
+                return None
+            if value.lower() in {"comune", "localita", "loc"}:
+                return None
+            return value
         return None
 
     @classmethod

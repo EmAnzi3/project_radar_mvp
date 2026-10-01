@@ -29,7 +29,7 @@ class CampaniaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Campania VIA/PAUR"
     base_url = SEARCH_URL
-    baseline_revision = "2026-10-current-project-table-v4"
+    baseline_revision = "2026-10-current-project-table-v5-municipality-cleanup"
 
     def __init__(self, min_year: int | None = None) -> None:
         super().__init__()
@@ -181,11 +181,26 @@ class CampaniaWindAgent(BaseWindAgent):
         return max(values) if values else None
 
     @classmethod
+    def _municipality_item(cls, value: str) -> str | None:
+        item = cls._clean(value).strip(" -–—:;,.()")
+        item = re.split(
+            r"\s+(?:con\s+(?:le\s+)?relative|con\s+opere|nonch[eé]|"
+            r"e\s+relative|ed\s+opere|di\s+\d+\s+aerogeneratori|"
+            r"per\s+una\s+potenza|da\s+\d+(?:[.,]\d+)?\s*MW)\b",
+            item,
+            maxsplit=1,
+            flags=re.I,
+        )[0].strip(" -–—:;,.()")
+        if len(item) < 3 or item.lower() in {"con", "opere", "relativa", "relative"}:
+            return None
+        return item
+
+    @classmethod
     def _municipalities(cls, territory: str, title: str) -> list[str]:
         values: list[str] = []
         if territory:
             for part in re.split(r"[,;/]+|\s+e\s+", territory, flags=re.I):
-                item = cls._clean(part).strip(" -–—:;,.()")
+                item = cls._municipality_item(part)
                 if item and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
         for match in re.finditer(
@@ -195,7 +210,7 @@ class CampaniaWindAgent(BaseWindAgent):
         ):
             segment = re.sub(r"\([A-Z]{2}\)", "", match.group(1))
             for part in re.split(r",|\s+e\s+|\s+ed\s+", segment, flags=re.I):
-                item = cls._clean(part).strip(" -–—:;,.()")
+                item = cls._municipality_item(part)
                 if item and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
             if values:

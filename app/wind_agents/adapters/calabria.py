@@ -32,6 +32,7 @@ class CalabriaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Calabria VIA/PAUR"
     base_url = SOURCE_URL
+    baseline_revision = "calabria-via-v2-municipality-cleanup"
 
     def __init__(self, max_search_pages_per_term: int = 6, min_year: int | None = None) -> None:
         super().__init__()
@@ -226,10 +227,20 @@ class CalabriaWindAgent(BaseWindAgent):
             text,
             flags=re.I,
         ):
-            segment = re.split(r"\b(?:proponente|societ[aà]|potenza|procedura)\b", match.group(1), maxsplit=1, flags=re.I)[0]
+            segment = re.split(
+                r"\b(?:proponente|societ[aà]|potenza|procedura|con|nonch[eé]|opere|relative)\b",
+                match.group(1),
+                maxsplit=1,
+                flags=re.I,
+            )[0]
             for part in re.split(r",|/|\s+e\s+", segment, flags=re.I):
                 item = cls._clean(part).strip(" -–—:;,.()")
-                if item and 2 <= len(item) <= 80 and item.lower() not in {v.lower() for v in values}:
+                if (
+                    item
+                    and 2 <= len(item) <= 80
+                    and item.lower() not in {"con", "opere", "relative"}
+                    and item.lower() not in {v.lower() for v in values}
+                ):
                     values.append(item)
             if values:
                 break
@@ -333,7 +344,7 @@ class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
 
     source_name = "Regione Calabria Provvedimenti"
     base_url = PROVVEDIMENTI_URL
-    baseline_revision = "calabria-regional-acts-v3"
+    baseline_revision = "calabria-regional-acts-v4-municipality-cleanup"
     SEARCH_TERMS = ("eolico", "parco eolico", "repowering")
 
     @classmethod

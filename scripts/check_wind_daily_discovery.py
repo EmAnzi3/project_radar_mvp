@@ -15,6 +15,9 @@ if str(ROOT) not in sys.path:
 from app.wind_agents.base import AgentFinding
 from app.wind_agents.reconcile import classify_daily_discovery_event, load_canonical_projects
 from app.wind_agents import state as wind_state
+from app.wind_agents.adapters.campania import CampaniaWindAgent
+from app.wind_agents.adapters.calabria import CalabriaWindAgent
+from app.wind_agents.adapters.sicilia import SiciliaWindAgent
 
 
 def main() -> int:
@@ -244,6 +247,27 @@ def main() -> int:
     )
     assert baseline_result["category"] == "baseline_project_candidate", baseline_result
 
+    assert SiciliaWindAgent._municipality(
+        "PROGETTO EOLICO NEL COMUNE DI ENNA IN LOCALITÀ S. ANTONINO, AVENTE POTENZA 30 MW"
+    ) == "ENNA"
+    assert SiciliaWindAgent._municipality(
+        "PARCO EOLICO RICADENTE NEL COMUNE DI AI-DONE (EN)"
+    ) == "Aidone"
+    assert SiciliaWindAgent._municipality(
+        "IMPIANTO DA REALIZZARSI NEL COMUNE DI SAL"
+    ) is None
+    assert CampaniaWindAgent._municipalities(
+        "BENEVENTO, Fragneto Monforte, Casalduni, Campolattaro di 7 aerogeneratori da 4,2 MW per una potenza complessiva",
+        "",
+    ) == ["BENEVENTO", "Fragneto Monforte", "Casalduni", "Campolattaro"]
+    assert CampaniaWindAgent._municipalities(
+        "CALITRI, Bisaccia con le relative opere di connessione",
+        "",
+    ) == ["CALITRI", "Bisaccia"]
+    assert CalabriaWindAgent._municipalities(
+        "impianto eolico nei Comuni di Cutro e Scandale, con relative opere di connessione"
+    ) == ["Cutro", "Scandale"]
+
     with tempfile.TemporaryDirectory() as tmp:
         original_db = wind_state.DB_PATH
         wind_state.DB_PATH = Path(tmp) / "wind-agent-test.sqlite"
@@ -411,6 +435,7 @@ def main() -> int:
     print("Archived project -> historical_or_closed")
     print("State bootstrap -> baseline / unchanged / changed; parser revision -> baseline")
     print("Sicilia CSV/GIS path switch -> unchanged; semantic change -> changed")
+    print("Regional municipality cleanup -> Sicilia / Campania / Calabria")
     return 0
 
 
