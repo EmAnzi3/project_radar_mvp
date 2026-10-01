@@ -31,7 +31,7 @@ jobs:
           - group: national-market
             sources: 'mase-via mase-provvedimenti terna-econnextion'
           - group: south-islands
-            sources: 'basilicata-au-paur basilicata-via calabria-via campania-viavas puglia-au-paur puglia-sistema-energia sardegna-sira sicilia-sivvi'
+            sources: 'basilicata-au-paur basilicata-via calabria-regional-acts calabria-via campania-viavas puglia-au-paur puglia-sistema-energia sardegna-sira sicilia-sivvi'
           - group: centre-north
             sources: 'emilia-romagna-regional lazio-regional lombardia-regional piemonte-regional toscana-atos toscana-gea umbria-regional veneto-regional'
 
