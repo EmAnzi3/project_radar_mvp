@@ -139,46 +139,44 @@ class BasilicataWindAgent(BaseWindAgent):
         return cls._clean(fallback)[:900]
 
     def _fetch_energy_notices(self) -> list[AgentFinding]:
-        """Current regional AU/PAUR/public-utility wind notices from Ufficio Energia."""
+        """Regional AU/PAUR/public-utility wind notices from Ufficio Energia."""
         html_page = self._get_html(ENERGY_NOTICE_URL)
         if not html_page:
             return []
         soup = BeautifulSoup(html_page, "html.parser")
+        full_text = self._clean(soup.get_text(" ", strip=True))
+        if not full_text:
+            return []
+
         findings: list[AgentFinding] = []
         seen: set[str] = set()
+        blocks = re.split(
+            r"(?=Data\s+di\s+pubblicazione\s*:)",
+            full_text,
+            flags=re.I,
+        )
 
-        # The regional CMS changes wrappers over time. Anchor-centred extraction
-        # keeps the parser resilient while limiting each evidence window.
-        for anchor in soup.find_all("a", href=True):
-            href = urljoin(ENERGY_NOTICE_URL, anchor.get("href") or "")
-            parent = anchor.find_parent(["article", "li"])
-            if parent is None:
-                parent = anchor.parent
-                for _ in range(3):
-                    if parent is None:
-                        break
-                    text_len = len(self._clean(parent.get_text(" ", strip=True)))
-                    if 120 <= text_len <= 5000:
-                        break
-                    parent = parent.parent
-            if parent is None:
-                continue
-            text = self._clean(parent.get_text(" ", strip=True))
-            if not text or len(text) < 80 or not self._is_wind(text):
-                continue
+        for block in blocks:
+            text = self._clean(block)
             lowered = text.lower()
-            if not any(token in lowered for token in ("autorizzazione unica", "paur", "p.a.u.r", "d.lgs 387", "d.lgs. 387")):
+            if len(text) < 80 or not self._is_wind(text):
+                continue
+            if not any(token in lowered for token in ("autorizzazione unica", "paur", "p.a.u.r", "d. lgs. 387", "d.lgs 387", "d.lgs. 387")):
                 continue
 
+            # Stop each publication block before the next unrelated metadata area.
             proponent = self._proponent(text)
             power_mw = self._power_mw(text)
             municipalities = self._municipalities(text)
-            title = self._project_name(text, anchor.get_text(" ", strip=True) or text)
+            title = self._project_name(text, text)
+
             progressivo = re.search(r"Progressivo\s+Interno\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
             paur_id = re.search(r"ID\s+PAUR\s*:\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
+            pub_code = re.search(r"Codice\s+di\s+pubblicazione\s*:?\s*([A-Za-z0-9._/-]+)", text, flags=re.I)
             stable_code = (
                 progressivo.group(1) if progressivo else
                 paur_id.group(1) if paur_id else
+                pub_code.group(1) if pub_code else
                 None
             )
             if stable_code:
@@ -193,12 +191,17 @@ class BasilicataWindAgent(BaseWindAgent):
                 ])
                 external_id = "BASILICATA-ENERGY-" + hashlib.sha1(identity.encode("utf-8")).hexdigest()[:20]
             else:
-                raw_id = href if href.startswith("http") else text
-                external_id = "BASILICATA-ENERGY-ACT-" + hashlib.sha1(raw_id.encode("utf-8")).hexdigest()[:18]
+                external_id = "BASILICATA-ENERGY-ACT-" + hashlib.sha1(text.encode("utf-8")).hexdigest()[:18]
+
             if external_id in seen:
                 continue
             seen.add(external_id)
 
+            date_match = re.search(
+                r"Data\s+di\s+pubblicazione\s*:\s*(\d{1,2}/\d{1,2}/20\d{2})",
+                text,
+                flags=re.I,
+            )
             procedure = "PAUR / Autorizzazione Unica" if ("paur" in lowered or "p.a.u.r" in lowered) else "Autorizzazione Unica"
             if "proroga" in lowered:
                 procedure = "Proroga AU/PAUR"
@@ -207,7 +210,7 @@ class BasilicataWindAgent(BaseWindAgent):
                 AgentFinding(
                     external_id=external_id,
                     source_name="Regione Basilicata Ufficio Energia",
-                    source_url=href if href.startswith("http") else ENERGY_NOTICE_URL,
+                    source_url=ENERGY_NOTICE_URL,
                     title=title,
                     finding_type="project_source",
                     payload={
@@ -218,7 +221,11 @@ class BasilicataWindAgent(BaseWindAgent):
                         "municipalities": municipalities,
                         "power_mw": power_mw,
                         "procedure": procedure,
-                        "status_raw": text[:1600],
+                        "status_raw": text[:1800],
+                        "source_date": date_match.group(1) if date_match else None,
+                        "publication_code": pub_code.group(1) if pub_code else None,
+                        "paur_id": paur_id.group(1) if paur_id else None,
+                        "progressivo_interno": progressivo.group(1) if progressivo else None,
                         "sector": "eolico",
                         "source_grade_ceiling": "A1",
                         "project_specific": True,
