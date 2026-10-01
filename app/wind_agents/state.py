@@ -220,7 +220,25 @@ def _finding_payload(finding: AgentFinding) -> dict[str, Any]:
 
 
 def _hash_payload(payload: dict[str, Any]) -> str:
-    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
+    """Hash stable project-change content rather than transport/enrichment noise.
+
+    An adapter may expose a private _change_basis mapping when the same official
+    record is reachable through equivalent ingestion paths. The full finding is
+    still persisted; only change detection uses this semantic basis.
+    """
+    inner = payload.get("payload") if isinstance(payload, dict) else None
+    change_basis = inner.get("_change_basis") if isinstance(inner, dict) else None
+    if isinstance(change_basis, dict):
+        effective = {
+            "external_id": payload.get("external_id"),
+            "source_name": payload.get("source_name"),
+            "title": payload.get("title"),
+            "finding_type": payload.get("finding_type"),
+            "change_basis": change_basis,
+        }
+    else:
+        effective = payload
+    raw = json.dumps(effective, ensure_ascii=False, sort_keys=True, default=str)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
