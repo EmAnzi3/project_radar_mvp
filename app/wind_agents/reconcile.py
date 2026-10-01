@@ -385,10 +385,23 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
             payload = finding.get("payload") or {}
             # Bootstrap inventory is source baseline, not a live commercial
             # change. Keep it auditable but never surface it as actionable.
+            minimum_complete, minimum_missing = _minimum_project_fields(payload)
+            item["minimum_project_fields_complete"] = minimum_complete
+            item["minimum_project_fields_missing"] = minimum_missing
+            existing_match = (
+                best.get("target_kind") in {"canonical", "discovery"}
+                and reconciliation.get("status") in {"high_confidence_match", "review_match"}
+            )
             if event.get("event_type") == "baseline":
                 item["actionable"] = False
             elif finding.get("finding_type") == "company_source_snapshot" and not (
                 payload.get("signal_excerpt") or payload.get("headings")
+            ):
+                item["actionable"] = False
+            elif (
+                finding.get("finding_type") == "project_source"
+                and not existing_match
+                and not minimum_complete
             ):
                 item["actionable"] = False
             else:
