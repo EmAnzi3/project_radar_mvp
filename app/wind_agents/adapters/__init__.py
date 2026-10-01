@@ -1,6 +1,6 @@
 from .abruzzo import AbruzzoWindAgent
 from .basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
-from .calabria import CalabriaWindAgent
+from .calabria import CalabriaRegionalActsWindAgent, CalabriaWindAgent
 from .campania import CampaniaWindAgent
 from .emilia_romagna import EmiliaRomagnaWindAgent
 from .lazio import LazioWindAgent
@@ -24,6 +24,7 @@ __all__ = [
     "AbruzzoWindAgent",
     "BasilicataEnergyWindAgent",
     "BasilicataWindAgent",
+    "CalabriaRegionalActsWindAgent",
     "CalabriaWindAgent",
     "CampaniaWindAgent",
     "EmiliaRomagnaWindAgent",
