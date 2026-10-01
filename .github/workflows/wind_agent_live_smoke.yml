@@ -56,7 +56,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install runtime dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
 
       - name: Run adapter group live
         shell: bash
@@ -359,7 +359,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install runtime dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
 
       - name: Run first pass as source baseline
         run: |
