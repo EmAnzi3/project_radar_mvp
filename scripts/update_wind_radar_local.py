@@ -132,6 +132,7 @@ def _write_daily_html(
     known_count = int(report.get("known_project_updates") or 0)
     discovery_count = int(report.get("discovery_candidate_updates") or 0)
     review_count = int(report.get("identity_reviews") or 0)
+    incomplete_count = int(report.get("incomplete_project_records") or 0)
     filtered_count = int(report.get("filtered_non_pipeline") or 0)
     source_errors = {
         **(institutional.get("errors") or {}),
@@ -202,6 +203,7 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <div class="kpi"><small>Progetti noti aggiornati</small><strong>{known_count}</strong></div>
 <div class="kpi"><small>Discovery aggiornati</small><strong>{discovery_count}</strong></div>
 <div class="kpi"><small>Identità da verificare</small><strong>{review_count}</strong></div>
+<div class="kpi"><small>Record incompleti</small><strong>{incomplete_count}</strong></div>
 <div class="kpi"><small>Storici / fuori scala filtrati</small><strong>{filtered_count}</strong></div>
 <div class="kpi"><small>Errori fonte</small><strong>{len(source_errors)}</strong></div>
 </div>
@@ -210,12 +212,13 @@ section{{background:var(--card);border:1px solid var(--line);border-radius:14px;
 <section><h2>Aggiornamenti dei {canonical['projects']} progetti già noti</h2>{_html_table(report.get('known_updates') or [], 'Nessun aggiornamento significativo dei progetti canonici.')}</section>
 <section><h2>Candidati Discovery già noti aggiornati</h2>{_html_table(report.get('discovery_updates') or [], 'Nessun aggiornamento della coda Discovery.')}</section>
 <section><h2>Identità / matching da verificare</h2>{_html_table(report.get('identity_review_items') or [], 'Nessuna identità ambigua da verificare.')}</section>
+<section><h2>Record progetto incompleti — esclusi dal Radar</h2>{_html_table(report.get('incomplete_project_items') or [], 'Nessun record incompleto.')}</section>
 <section><h2>Salute fonti</h2>
 <h3>Errori</h3>{errors_html}
 <h3>Copertura limitata</h3>{limited_html}
 <div class="note">Institutional: {len(institutional.get('executed_agents') or [])} fonti eseguite · Company watch: {len(company.get('executed_companies') or [])} player eseguiti.</div>
 </section>
-<p class="note">Il report è review-only: nessun candidato viene aggiunto automaticamente ai 51 progetti canonici. La promozione richiede verifica di identità, attività corrente, configurazione e stage.</p>
+<p class="note">Il report è review-only: nessun candidato viene aggiunto automaticamente ai 51 progetti canonici. Un nuovo progetto deve avere almeno azienda/proponente, potenza in MW e comune; i record privi di uno di questi campi restano archiviati ma sono esclusi dal Radar operativo.</p>
 </main></body></html>"""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(html, encoding="utf-8")
