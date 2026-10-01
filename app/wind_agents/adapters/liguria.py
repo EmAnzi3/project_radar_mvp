@@ -9,7 +9,8 @@ from bs4 import BeautifulSoup
 from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
-PRIMARY_URL = "https://siraviavas.regione.liguria.it/ElencoInCorsoVIA.aspx?Tipo=VIA"
+PRIMARY_BASE_URL = "https://siraviavas.regione.liguria.it/ElencoInCorsoVIA.aspx"
+PRIMARY_URL = f"{PRIMARY_BASE_URL}?Page=1&Tipo=VIA"
 SERVICE_URL = "https://servizi.regione.liguria.it/page/welcome/VIA"
 FALLBACK_URL = "https://www.regione.liguria.it/homepage-ambiente/cosa-cerchi/via-vas-aia-aua/valutazione-impatto-ambientale-via.html"
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
@@ -27,6 +28,7 @@ class LiguriaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Liguria VIA"
     base_url = PRIMARY_URL
+    baseline_revision = "liguria-siraviavas-paged-v1"
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -75,8 +77,20 @@ class LiguriaWindAgent(BaseWindAgent):
         return f"LIGURIA-VIA-{digest}"
 
     def _page(self, page: int) -> str:
-        url = PRIMARY_URL if page == 1 else f"{PRIMARY_URL}&page={page}"
-        response = self.session.get(url, timeout=60, allow_redirects=True)
+        # The SIRAVIAVAS application returns HTTP 500 for the unpaged
+        # ?Tipo=VIA route on automated clients, while its canonical paged
+        # route (?Page=N&Tipo=VIA) serves the actual registry.
+        url = f"{PRIMARY_BASE_URL}?Page={page}&Tipo=VIA"
+        response = self.session.get(
+            url,
+            timeout=(8, 20),
+            allow_redirects=True,
+            headers={
+                "User-Agent": "Wind-Radar-Agent/0.6",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Referer": "https://www.regione.liguria.it/",
+            },
+        )
         response.raise_for_status()
         return response.text
 
@@ -166,7 +180,7 @@ class LiguriaWindAgent(BaseWindAgent):
                         continue
                     found_rows += 1
                     practice = self._clean(row.get("numero_pratica"))
-                    source_url = PRIMARY_URL if page == 1 else f"{PRIMARY_URL}&page={page}"
+                    source_url = f"{PRIMARY_BASE_URL}?Page={page}&Tipo=VIA"
                     for anchor in tr.find_all("a", href=True):
                         href = anchor.get("href") or ""
                         if href and not href.startswith("mailto:"):
