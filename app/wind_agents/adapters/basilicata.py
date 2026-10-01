@@ -12,6 +12,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 BASE_URL = "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/"
 ENERGY_NOTICE_URL = "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento"
+ENERGY_GRANTED_URL = "https://www.regione.basilicata.it/?temi-ate=autorizzazione-ambientale%2Fautorizzazione-unica-ex-art-12-d-lgs-387-2003-autorizzazioni-concesse"
 WP_SEARCH_URL = "https://www.regione.basilicata.it/wp-json/wp/v2/search"
 START_URLS = (
     (urljoin(BASE_URL, "section.jsp?sec=100002"), "Screening"),
@@ -124,6 +125,8 @@ class BasilicataWindAgent(BaseWindAgent):
             r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\s+Progressivo\s+Interno|\s+ID\s+PAUR|\s+Data\s+di\s+pubblicazione|\||$)",
             r"Societ[aà]\s+proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\s+Progressivo\s+Interno|\s+ID\s+PAUR|\s+Data\s+di\s+pubblicazione|\||$)",
             r"Societ[aà]\s+(.+?)(?:\s+ha\s+presentato|\s+ha\s+depositato|\s+richiede|\||$)",
+            r"propost[oa]\s+dalla\s+societ[aà]\s+(.+?)(?:\s+[–—-]\s+|\.|;|$)",
+            r"Soggetto\s+richiedente\s*:?\s*(.+?)(?:\s+[–—-]\s+|\.|;|$)",
         ):
             match = re.search(pattern, text, flags=re.I)
             if match:
@@ -184,6 +187,26 @@ class BasilicataWindAgent(BaseWindAgent):
         except Exception as exc:
             primary_error = exc
 
+        # Secondary official surface: granted regional FER authorisations.
+        # This page is useful both as a resilience path and as an authorisation
+        # milestone source. Existing inventory is rebaselined by parser revision.
+        try:
+            granted = self.session.get(
+                ENERGY_GRANTED_URL,
+                timeout=(8, 25),
+                headers={
+                    "User-Agent": "Wind-Radar-Agent/0.6",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
+                },
+            )
+            granted.raise_for_status()
+            if ENERGY_GRANTED_URL not in seen:
+                pages.append((ENERGY_GRANTED_URL, granted.text))
+                seen.add(ENERGY_GRANTED_URL)
+        except Exception:
+            pass
+
         discovered_urls: list[str] = []
         for term in ("eolico", "PAUR eolico"):
             try:
@@ -227,7 +250,7 @@ class BasilicataWindAgent(BaseWindAgent):
                 continue
 
         # HTML search fallback if the REST search is disabled/restricted.
-        if len(pages) == 1:
+        if len(pages) <= 1:
             try:
                 search = self.session.get(
                     "https://www.regione.basilicata.it/",
@@ -269,15 +292,32 @@ class BasilicataWindAgent(BaseWindAgent):
             if not full_text:
                 continue
 
-            # A thematic listing may contain many publications; a detail page is
-            # naturally one block. Splitting on publication markers works for both.
-            blocks = re.split(
-                r"(?=Data\s+di\s+pubblicazione\s*:)",
-                full_text,
-                flags=re.I,
-            )
-            if len(blocks) == 1:
-                blocks = [full_text]
+            if page_url == ENERGY_GRANTED_URL:
+                # Granted-authorisation pages are structured as independent
+                # paragraphs/list items rather than publication-date blocks.
+                blocks = []
+                block_seen: set[str] = set()
+                for node in soup.find_all(["li", "p"]):
+                    candidate = self._clean(node.get_text(" ", strip=True))
+                    if (
+                        80 <= len(candidate) <= 5000
+                        and candidate not in block_seen
+                        and self._is_wind(candidate)
+                    ):
+                        block_seen.add(candidate)
+                        blocks.append(candidate)
+                if not blocks:
+                    blocks = [full_text]
+            else:
+                # A thematic listing may contain many publications; a detail page is
+                # naturally one block. Splitting on publication markers works for both.
+                blocks = re.split(
+                    r"(?=Data\s+di\s+pubblicazione\s*:)",
+                    full_text,
+                    flags=re.I,
+                )
+                if len(blocks) == 1:
+                    blocks = [full_text]
 
             for block in blocks:
                 text = self._clean(block)
@@ -357,7 +397,11 @@ class BasilicataWindAgent(BaseWindAgent):
                             "source_grade_ceiling": "A1",
                             "project_specific": True,
                             "source_adapter_origin": "regional_basilicata_energy_notices",
-                            "ingestion_path": "official_ufficio_energia_au_paur",
+                            "ingestion_path": (
+                                "official_au_granted"
+                                if page_url == ENERGY_GRANTED_URL
+                                else "official_ufficio_energia_au_paur"
+                            ),
                         },
                     )
                 )
@@ -424,6 +468,7 @@ class BasilicataEnergyWindAgent(BasilicataWindAgent):
 
     source_name = "Regione Basilicata Ufficio Energia"
     base_url = ENERGY_NOTICE_URL
+    baseline_revision = "basilicata-energy-v3"
 
     def fetch(self) -> list[AgentFinding]:
         try:
