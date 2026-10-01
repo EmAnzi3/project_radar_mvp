@@ -78,10 +78,29 @@ class LombardiaWindAgent(BaseWindAgent):
                 return text
         return None
 
+    def _request_json(self, path: str, *, params: dict[str, str] | None = None) -> object:
+        last_error: Exception | None = None
+        for _attempt in range(2):
+            try:
+                response = self.session.get(
+                    urljoin(BASE_URL, path),
+                    params=params,
+                    timeout=(8, 35),
+                )
+                response.raise_for_status()
+                return response.json()
+            except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as exc:
+                last_error = exc
+                # SILVIA intermittently returns HTTP 500 from otherwise healthy
+                # endpoints. One immediate retry is enough to absorb a transient
+                # without turning the daily radar into a long retry loop.
+                continue
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError(f"Lombardia SILVIA request failed: {path}")
+
     def _load_sectors(self) -> list[str]:
-        response = self.session.get(urljoin(BASE_URL, "getAllSettori.html"), timeout=90)
-        response.raise_for_status()
-        data = response.json()
+        data = self._request_json("getAllSettori.html")
         if not isinstance(data, list):
             raise RuntimeError("Lombardia getAllSettori did not return a list")
         found: list[str] = []
@@ -119,9 +138,7 @@ class LombardiaWindAgent(BaseWindAgent):
             "annoAvvio": str(year),
             "idSett": sector_id,
         }
-        response = self.session.get(urljoin(BASE_URL, "avviaRicercaProcedura.html"), params=params, timeout=90)
-        response.raise_for_status()
-        data = response.json()
+        data = self._request_json("avviaRicercaProcedura.html", params=params)
         return [row for row in data if isinstance(row, dict)] if isinstance(data, list) else []
 
     @classmethod
@@ -199,34 +216,44 @@ class LombardiaWindAgent(BaseWindAgent):
         raw = f"{title}|{cls._proponent(row) or ''}"
         return "LOMBARDIA-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:18]
 
+    def _channel_snapshot(self, issue: object) -> AgentFinding:
+        return AgentFinding(
+            external_id="LOMBARDIA-SILVIA-CHANNEL",
+            source_name=self.source_name,
+            source_url=PUBLIC_INFO_URL,
+            title="Regione Lombardia SILVIA - canale temporaneamente degradato",
+            finding_type="source_channel_snapshot",
+            payload={
+                "region": "Lombardia",
+                "project_specific": False,
+                "source_grade_ceiling": "A1",
+                "data_health": "channel_only",
+                "availability_issue": self._clean(issue),
+                "source_adapter_origin": "pv_agent_mvp/lombardia.py",
+                "guard": "Temporary SILVIA source error; do not infer project absence.",
+            },
+        )
+
     def fetch(self) -> list[AgentFinding]:
         unique: dict[str, AgentFinding] = {}
+        issues: list[str] = []
         try:
             sectors = self._load_sectors()
-        except (requests.ConnectionError, requests.Timeout) as exc:
-            return [
-                AgentFinding(
-                    external_id="LOMBARDIA-SILVIA-CHANNEL",
-                    source_name=self.source_name,
-                    source_url=PUBLIC_INFO_URL,
-                    title="Regione Lombardia SILVIA - portale progetto temporaneamente non raggiungibile",
-                    finding_type="source_channel_snapshot",
-                    payload={
-                        "region": "Lombardia",
-                        "project_specific": False,
-                        "source_grade_ceiling": "A1",
-                        "data_health": "channel_only",
-                        "availability_issue": f"{type(exc).__name__}: {exc}",
-                        "source_adapter_origin": "pv_agent_mvp/lombardia.py",
-                    },
-                )
-            ]
+        except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as exc:
+            return [self._channel_snapshot(f"{type(exc).__name__}: {exc}")]
         if not sectors:
-            raise RuntimeError("Lombardia SILVIA target sectors 2/8 not returned")
+            return [self._channel_snapshot("SILVIA target sectors 2/8 not returned")]
 
         for sector_id in sectors:
             for year in self.years:
-                for row in self._search(sector_id, year):
+                try:
+                    rows = self._search(sector_id, year)
+                except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as exc:
+                    issues.append(
+                        f"sector={sector_id} year={year}: {type(exc).__name__}: {exc}"
+                    )
+                    continue
+                for row in rows:
                     title = self._first(
                         row,
                         ["descrProgetto", "descrProcedura", "titolo", "oggetto", "descrizione", "descProcedura", "nomeProcedura", "procedura"],
@@ -265,4 +292,6 @@ class LombardiaWindAgent(BaseWindAgent):
                             "source_adapter_origin": "pv_agent_mvp/lombardia.py",
                         },
                     )
+        if issues:
+            unique["LOMBARDIA-SILVIA-CHANNEL"] = self._channel_snapshot("; ".join(issues))
         return list(unique.values())
