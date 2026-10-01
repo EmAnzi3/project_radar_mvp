@@ -191,7 +191,11 @@ class CampaniaWindAgent(BaseWindAgent):
             maxsplit=1,
             flags=re.I,
         )[0].strip(" -–—:;,.()")
-        if len(item) < 3 or item.lower() in {"con", "opere", "relativa", "relative"}:
+        if (
+            len(item) < 3
+            or item.lower() in {"con", "opere", "relativa", "relative"}
+            or re.match(r"^\d", item)
+        ):
             return None
         return item
 
