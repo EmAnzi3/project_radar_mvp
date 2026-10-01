@@ -23,6 +23,23 @@ def main() -> int:
     total_mw = round(sum(float(p.get("mw") or 0) for p in canonical), 2)
     assert abs(total_mw - 11202.52) < 0.01, total_mw
 
+    incomplete_canonical = []
+    for project in canonical:
+        company = (
+            project.get("developer")
+            or project.get("spv")
+            or project.get("owner")
+            or project.get("proponent")
+        )
+        municipalities = project.get("municipalities") or []
+        try:
+            power_ok = float(project.get("mw") or 0) > 0
+        except (TypeError, ValueError):
+            power_ok = False
+        if not company or not power_ok or not municipalities:
+            incomplete_canonical.append(project.get("id"))
+    assert not incomplete_canonical, f"canonical projects missing company/MW/municipality: {incomplete_canonical}"
+
     known = canonical[0]
     source_url = next(
         (s.get("url") for s in known.get("sources", []) if s.get("url")),
@@ -342,6 +359,7 @@ def main() -> int:
 
     print("Wind daily discovery checks OK")
     print(f"Canonical: {len(canonical)} projects / {total_mw:.2f} MW")
+    print("Canonical minimum fields -> company + MW + municipality: 51/51")
     print("Known finding via payload.project_url -> known_project_update")
     print("Unmatched new complete project-specific finding -> new_project_candidate")
     print("Missing company/MW/municipality -> incomplete_project_record")
