@@ -155,8 +155,9 @@
       "relationship_status": "target",
       "known_capabilities": ["heavy transport", "heavy lifting", "renewables logistics", "offshore wind jacket handling"],
       "project_links": [],
-      "watch_urls": ["https://www.cevalogistics.com/en/what-we-do/project-logistics/site-operations"],
-      "notes": "Fagioli is now integrated into CEVA Logistics project logistics; keep the node as a high-value heavy transport/heavy lift/site-operations target. No canonical project award is inferred from the acquisition."
+      "watch_urls": [],
+      "watch_disabled_reason": "CEVA public pages return HTTP 403 to the automated company-watch client; retain manual/browser review until a stable machine-readable source is available.",
+      "notes": "Fagioli is now integrated into CEVA Logistics project logistics; keep the node as a high-value heavy transport/heavy lift/site-operations target. No canonical project award is inferred from the acquisition. Automated polling is disabled while CEVA blocks the machine client with HTTP 403."
     },
     {
       "id": "mammoet",
