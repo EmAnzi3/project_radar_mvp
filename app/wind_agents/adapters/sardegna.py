@@ -4,7 +4,7 @@ import hashlib
 import html
 import re
 from datetime import date
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -37,7 +37,7 @@ class SardegnaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Sardegna SIRA VIA/PAUR"
     base_url = NEWS_URL
-    baseline_revision = "2026-10-news-project-detail-v2"
+    baseline_revision = "2026-10-news-project-detail-v3"
 
     def __init__(self, years: list[str] | None = None) -> None:
         super().__init__()
@@ -64,6 +64,7 @@ class SardegnaWindAgent(BaseWindAgent):
 
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
+        text = re.sub(r"(?<=\d)\s*([,.])\s*(?=\d)", r"\1", text)
         for match in re.finditer(
             r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
             text,
@@ -96,7 +97,7 @@ class SardegnaWindAgent(BaseWindAgent):
     @classmethod
     def _municipality(cls, text: str) -> str | None:
         for pattern in (
-            r"Comune\s*:?\s*([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’`\- ]+?)(?:\s+Provincia|\s*\([A-Z]{2}\)|\||$)",
+            r"Comune\s*:\s*([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’`\- ]+?)(?:\s+Provincia|\s*\([A-Z]{2}\)|\||$)",
             r"Comune di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’`\- ]+?)(?:\s*\([A-Z]{2}\)|,|;|\.|\s+e\s+|$)",
         ):
             match = re.search(pattern, text, flags=re.I)
@@ -115,6 +116,11 @@ class SardegnaWindAgent(BaseWindAgent):
     def _status(cls, text: str) -> str | None:
         lowered = cls._norm(text)
         for needle, label in (
+            ("esito: negativo", "Negativo"),
+            ("esito negativo", "Negativo"),
+            ("negativo", "Negativo"),
+            ("stato del procedimento: chiusa", "Chiuso"),
+            ("stato del procedimento chiusa", "Chiuso"),
             ("favorevole con prescrizioni", "Favorevole con prescrizioni"),
             ("favorevole", "Favorevole"),
             ("archiviat", "Archiviato"),
@@ -183,12 +189,21 @@ class SardegnaWindAgent(BaseWindAgent):
                 None,
             )
             if project_link:
-                detail = self.session.get(project_link, timeout=(8, 20))
-                detail.raise_for_status()
-                detail_text = self._clean(
-                    BeautifulSoup(detail.text, "html.parser").get_text(" ", strip=True)
-                )
-                return project_link, self._clean(f"{text} {detail_text}")
+                parsed = urlparse(project_link)
+                canonical_link = project_link
+                if "dettaglio-progetti-via" in parsed.path and parsed.query:
+                    canonical_link = f"{BASE_URL}/dettaglio-progetti-via?{parsed.query}"
+                for candidate in dict.fromkeys([canonical_link, project_link]):
+                    try:
+                        detail = self.session.get(candidate, timeout=(8, 20))
+                        detail.raise_for_status()
+                        detail_text = self._clean(
+                            BeautifulSoup(detail.text, "html.parser").get_text(" ", strip=True)
+                        )
+                        if detail_text:
+                            return candidate, self._clean(f"{text} {detail_text}")
+                    except Exception:
+                        continue
             return source_url, text
         except Exception:
             return source_url, fallback_text
