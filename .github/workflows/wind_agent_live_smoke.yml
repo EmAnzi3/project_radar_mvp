@@ -229,34 +229,51 @@ jobs:
 
           group = os.environ['WIND_SMOKE_GROUP']
           expected = set(os.environ['WIND_SMOKE_SOURCES'].split())
-          path = Path(f'reports/wind-agent-live/{group}-second.json')
-          data = json.loads(path.read_text(encoding='utf-8'))
+          first_path = Path(f'reports/wind-agent-live/{group}.json')
+          second_path = Path(f'reports/wind-agent-live/{group}-second.json')
+          first = json.loads(first_path.read_text(encoding='utf-8'))
+          data = json.loads(second_path.read_text(encoding='utf-8'))
 
           assert data.get('bootstrap_new_sources') is True, data.get('bootstrap_new_sources')
           assert not data.get('errors'), data.get('errors')
           assert set(data.get('executed_agents') or []) == expected
 
+          first_per_agent = first.get('per_agent') or {}
           per_agent = data.get('per_agent') or {}
+          recovered_sources = []
           for source_id in sorted(expected):
               row = per_agent[source_id]
+              first_row = first_per_agent.get(source_id) or {}
               assert row.get('status') == 'success', (source_id, row)
               assert row.get('new', 0) == 0, (source_id, row)
               assert row.get('changed', 0) == 0, (source_id, row)
 
               health = row.get('data_health')
+              first_health = first_row.get('data_health')
               if health == 'project_data':
-                  assert row.get('bootstrap_source') is False, (source_id, row)
-                  assert row.get('baseline', 0) == 0, (source_id, row)
-                  assert row.get('unchanged', 0) == row.get('findings', 0), (source_id, row)
+                  if first_health == 'project_data':
+                      assert row.get('bootstrap_source') is False, (source_id, row)
+                      assert row.get('baseline', 0) == 0, (source_id, row)
+                      assert row.get('unchanged', 0) == row.get('findings', 0), (source_id, row)
+                  else:
+                      # Safe recovery: the first pass had no usable project
+                      # inventory, so the first successful project-data pass
+                      # must become baseline rather than fake "new" events.
+                      assert row.get('bootstrap_source') is True, (source_id, first_row, row)
+                      assert row.get('baseline', 0) == row.get('findings', 0), (source_id, row)
+                      assert row.get('unchanged', 0) == 0, (source_id, row)
+                      recovered_sources.append(source_id)
 
               print(
-                  f"{source_id}: health={health} findings={row.get('findings', 0)} "
-                  f"baseline={row.get('baseline', 0)} new={row.get('new', 0)} "
-                  f"changed={row.get('changed', 0)} unchanged={row.get('unchanged', 0)} "
-                  f"duration={row.get('duration_seconds', 0)}s"
+                  f"{source_id}: health={health} first_health={first_health} "
+                  f"findings={row.get('findings', 0)} baseline={row.get('baseline', 0)} "
+                  f"new={row.get('new', 0)} changed={row.get('changed', 0)} "
+                  f"unchanged={row.get('unchanged', 0)} duration={row.get('duration_seconds', 0)}s"
               )
 
-          print(f'{group}: stable second pass OK — 0 new / 0 changed')
+          if recovered_sources:
+              print(f"{group}: safe source recovery bootstrap: {', '.join(recovered_sources)}")
+          print(f'{group}: second pass OK — 0 new / 0 changed')
           PY
 
       - name: Publish live smoke summary
