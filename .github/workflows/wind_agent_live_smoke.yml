@@ -67,7 +67,6 @@ jobs:
             args+=(--source "$source")
           done
           python scripts/run_wind_agents.py run \
-            --no-bootstrap \
             "${args[@]}" \
             --output "reports/wind-agent-live/${WIND_SMOKE_GROUP}.json"
 
@@ -183,6 +182,7 @@ jobs:
           data = json.loads(path.read_text(encoding='utf-8'))
           executed = set(data.get('executed_agents') or [])
           assert executed == expected, (group, executed, expected)
+          assert data.get('bootstrap_new_sources') is True, data.get('bootstrap_new_sources')
 
           per_agent = data.get('per_agent') or {}
           failures = {
@@ -193,13 +193,18 @@ jobs:
           if failures or data.get('errors'):
               raise SystemExit(f'{group} live source failures: {failures or data.get("errors")}')
 
-          print(f'{group} live source smoke OK')
+          print(f'{group} live source baseline smoke OK')
           for source_id in sorted(expected):
               row = per_agent[source_id]
+              assert row.get('bootstrap_source') is True, (source_id, row)
+              assert row.get('new', 0) == 0, (source_id, row)
+              assert row.get('changed', 0) == 0, (source_id, row)
+              assert row.get('baseline', 0) == row.get('findings', 0), (source_id, row)
               print(
                   f"{source_id}: health={row.get('data_health', 'legacy')} "
                   f"findings={row.get('findings', 0)} project_specific={row.get('project_specific_findings', 0)} "
-                  f"new={row.get('new', 0)} changed={row.get('changed', 0)}"
+                  f"baseline={row.get('baseline', 0)} new={row.get('new', 0)} "
+                  f"changed={row.get('changed', 0)} duration={row.get('duration_seconds', 0)}s"
               )
           PY
 
@@ -226,7 +231,8 @@ jobs:
                   lines.append(
                       f"- `{source_id}` — {row.get('status')}; health `{row.get('data_health', 'legacy')}`; "
                       f"findings {row.get('findings', 0)}; project-specific {row.get('project_specific_findings', 0)}; "
-                      f"new {row.get('new', 0)}; changed {row.get('changed', 0)}"
+                      f"baseline {row.get('baseline', 0)}; new {row.get('new', 0)}; "
+                      f"changed {row.get('changed', 0)}; duration {row.get('duration_seconds', 0)}s"
                   )
               if findings_report.exists():
                   raw = json.loads(findings_report.read_text(encoding='utf-8'))
@@ -235,6 +241,9 @@ jobs:
                   disc = json.loads(discovery_report.read_text(encoding='utf-8'))
                   lines.append(
                       f"- Daily classification: **{disc.get('new_project_candidates', 0)} new candidates**, "
+                      f"{disc.get('baseline_project_candidates', 0)} baseline backlog candidates, "
+                      f"{disc.get('baseline_known_projects', 0)} baseline known, "
+                      f"{disc.get('baseline_discovery_candidates', 0)} baseline Discovery, "
                       f"{disc.get('known_project_updates', 0)} known updates, "
                       f"{disc.get('discovery_candidate_updates', 0)} Discovery updates, "
                       f"{disc.get('identity_reviews', 0)} identity reviews, "
