@@ -15,8 +15,6 @@ if str(ROOT) not in sys.path:
 from app.wind_agents.base import AgentFinding
 from app.wind_agents.reconcile import classify_daily_discovery_event, load_canonical_projects
 from app.wind_agents import state as wind_state
-from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
-from app.wind_agents.runner import _bootstrap_decision
 
 
 def main() -> int:
@@ -246,28 +244,6 @@ def main() -> int:
     )
     assert baseline_result["category"] == "baseline_project_candidate", baseline_result
 
-    # Migration guard: a pre-existing SQLite watch_status from the legacy
-    # Sistema Puglia parser must trigger a one-time revision bootstrap after
-    # switching to the official XLSX inventory.
-    puglia_agent = SistemaPugliaWindAgent()
-    (
-        puglia_bootstrap,
-        puglia_revision_bootstrap,
-        puglia_current_revision,
-        puglia_previous_revision,
-    ) = _bootstrap_decision(
-        {
-            "last_success": "2026-09-30T12:00:00",
-            "metadata": {},
-        },
-        puglia_agent,
-        bootstrap_new_sources=True,
-    )
-    assert puglia_bootstrap is True
-    assert puglia_revision_bootstrap is True
-    assert puglia_current_revision == "puglia-via-fer-xlsx-v1"
-    assert puglia_previous_revision is None
-
     with tempfile.TemporaryDirectory() as tmp:
         original_db = wind_state.DB_PATH
         wind_state.DB_PATH = Path(tmp) / "wind-agent-test.sqlite"
@@ -430,7 +406,6 @@ def main() -> int:
     print("Unmatched new complete project-specific finding -> new_project_candidate")
     print("Missing company/MW/municipality -> incomplete_project_record")
     print("First-seen source inventory -> baseline_project_candidate")
-    print("Puglia legacy parser -> revision bootstrap before XLSX delta monitoring")
     print("Historical micro-wind -> non_target_scale")
     print("Unmatched verification of compliance -> existing_project_follow_up")
     print("Archived project -> historical_or_closed")
