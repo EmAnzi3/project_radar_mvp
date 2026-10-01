@@ -263,6 +263,7 @@ def upsert_finding(
     finding: AgentFinding,
     *,
     baseline_new: bool = False,
+    rebaseline_existing: bool = False,
 ) -> str:
     """Persist a raw source finding and return baseline/new/changed/unchanged.
 
@@ -300,7 +301,7 @@ def upsert_finding(
                 pass
 
             if previous_semantic_hash != content_hash:
-                event_type = "changed"
+                event_type = "baseline" if rebaseline_existing else "changed"
             else:
                 event_type = "unchanged"
             first_seen = previous["first_seen"]
