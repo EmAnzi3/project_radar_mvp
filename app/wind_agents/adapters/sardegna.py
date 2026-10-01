@@ -83,6 +83,15 @@ class SardegnaWindAgent(BaseWindAgent):
 
     @classmethod
     def _proponent(cls, text: str) -> str | None:
+        legal = re.search(
+            r"(?:Proponente|Societ[aà])\s*:?\s*"
+            r"(.{2,180}?\b(?:S\.?\s*R\.?\s*L\.?|S\.?\s*P\.?\s*A\.?|SRL|SPA)\b\.?)",
+            text,
+            flags=re.I,
+        )
+        if legal:
+            return cls._clean(legal.group(1)).strip(" -–—:;,.")
+
         for pattern in (
             r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Provincia|\s+Procedimento|\s+Oggetto|\||$)",
             r"Societ[aà]\s+(.+?)(?:\s+ha\s+presentato|\s+ha\s+depositato|\s+richiede|\||$)",
@@ -232,7 +241,15 @@ class SardegnaWindAgent(BaseWindAgent):
                     or block.find("a")
                 )
                 title = self._clean(title_node.get_text(" ", strip=True)) if title_node else text[:700]
-                source_url = self._first_url(block, page_url)
+                title_anchor = (
+                    title_node if getattr(title_node, "name", None) == "a"
+                    else title_node.find("a", href=True) if title_node else None
+                )
+                source_url = (
+                    urljoin(page_url, title_anchor.get("href") or "")
+                    if title_anchor and title_anchor.get("href")
+                    else self._first_url(block, page_url)
+                )
                 source_url, evidence_text = self._detail_context(source_url, text)
                 finding = self._finding(
                     kind="news",
