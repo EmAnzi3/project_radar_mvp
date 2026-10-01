@@ -258,7 +258,7 @@ campania_places = CampaniaWindAgent._municipalities(
     ),
 )
 assert {"LACEDONIA", "Monteverde", "Bisaccia"}.issubset(set(campania_places)), campania_places
-assert CampaniaWindAgent.baseline_revision == "2026-10-current-project-table-v4"
+assert CampaniaWindAgent.baseline_revision == "2026-10-current-project-table-v5-municipality-cleanup"
 
 sardegna_detail_text = (
     'Titolo progetto: Impianto Eolico denominato "WHITE AND BLUE LUIGHIEDDA" della potenza '
