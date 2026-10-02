@@ -41,6 +41,9 @@ assert "max-width:300px" in js, "province tooltip needs a bounded readable width
 assert "state.metric!=='mw'" in js and "state.metric!=='projects'" in js and "state.metric!=='e4mw'" in js, "selected metric must not be duplicated in tooltip"
 assert "p.lat" not in js and "p.lon" not in js, "province map must not regress to project marker coordinates"
 assert ".province-map-viz" in css
+assert "contain:layout paint" in css, "province map rendering must be paint-contained inside its panel"
+assert "clip-path:inset(0 round 15px)" in css, "province map must be hard-clipped to its rounded panel"
+assert ".province-map-viz>div" in css and "overflow:hidden!important" in css, "ECharts wrapper must not escape the province map host"
 assert ".legacy-map-compat" in css
 
-print("v0.6 province map OK: dedicated province filter, preserved search and confined non-duplicated tooltip")
+print("v0.6 province map OK: dedicated province filter, preserved search, confined tooltip and hard-clipped ECharts rendering")
