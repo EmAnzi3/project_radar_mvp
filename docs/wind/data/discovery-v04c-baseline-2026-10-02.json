@@ -1,0 +1,722 @@
+{
+  "version": "0.4.3-baseline-review",
+  "as_of": "2026-10-02",
+  "status": "discovery-layer",
+  "public_visibility": false,
+  "note": "Esiti della prima baseline operativa del daily Wind Radar. Questi record sono identità progetto verificate come distinte dai 51 canonici; restano Discovery e non vengono promossi automaticamente.",
+  "review_summary": {
+    "verified_distinct_current_candidates": 27,
+    "wind_mw_total": 919.595,
+    "canonical_promotions": 0
+  },
+  "candidates": [
+    {
+      "candidate_id": "on-santarcangelo-elettrowind",
+      "name": "Sant'Arcangelo — Elettrowind Due",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 19.2,
+      "developer_or_spv": "Elettrowind Due srl",
+      "region": "Basilicata",
+      "area": "Sant'Arcangelo (PZ)",
+      "municipalities": [
+        "Sant'Arcangelo"
+      ],
+      "procedure_state": "Autorizzazione unica / procedimento espropriativo documentato dalla Regione Basilicata nel 2026",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-cerentino-plenitude",
+      "name": "Cerentino",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 30,
+      "developer_or_spv": "Eni Plenitude Technical Services S.r.l.",
+      "region": "Basilicata",
+      "area": "Maschito / Venosa / Palazzo San Gervasio / Montemilone (PZ)",
+      "municipalities": [
+        "Maschito",
+        "Venosa",
+        "Palazzo San Gervasio",
+        "Montemilone"
+      ],
+      "procedure_state": "PAUR e dichiarazione di pubblica utilità; layout da 5 aerogeneratori x 6 MW documentato nel procedimento regionale",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-wind-farm-aliseo",
+      "name": "Wind Farm Aliseo",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 20,
+      "developer_or_spv": "Aliseo S.r.l.",
+      "region": "Basilicata",
+      "area": "Rapolla / Venosa / Melfi (PZ)",
+      "municipalities": [
+        "Rapolla",
+        "Venosa",
+        "Melfi"
+      ],
+      "procedure_state": "Autorizzazione unica e fase espropriativa documentate dalla Regione Basilicata",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-piani-della-caserma",
+      "name": "Piani della Caserma",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 22.4,
+      "developer_or_spv": "Inergia Lucana s.r.l.",
+      "region": "Basilicata",
+      "area": "Tolve / Oppido Lucano (PZ)",
+      "municipalities": [
+        "Tolve",
+        "Oppido Lucano"
+      ],
+      "procedure_state": "PAUR regionale; avviso di pubblica utilità 2025",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-corbo-alvania",
+      "name": "Corbo",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 49.5,
+      "developer_or_spv": "Alvania srl",
+      "region": "Basilicata",
+      "area": "Genzano di Lucania (PZ)",
+      "municipalities": [
+        "Genzano di Lucania"
+      ],
+      "procedure_state": "Nuovo procedimento regionale di Autorizzazione Unica / pubblica utilità pubblicato nel 2025",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "notes": "Il progetto aveva avuto un diniego in una fase precedente; l'atto regionale 2025 documenta un nuovo/corrente iter. Non promuovere al canonico senza verifica dello stato autorizzativo definitivo.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-tempa-dei-greci",
+      "name": "Tempa dei Greci",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 21,
+      "developer_or_spv": "Tempa dei Greci S.r.l. ex FRI-EL S.p.A.",
+      "region": "Basilicata",
+      "area": "Gorgoglione / Corleto Perticara / Guardia Perticara",
+      "municipalities": [
+        "Gorgoglione",
+        "Corleto Perticara",
+        "Guardia Perticara"
+      ],
+      "procedure_state": "PAUR rilasciato; procedimento di pubblica utilità documentato nel 2025",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-vento-di-servigliano",
+      "name": "Vento di Servigliano",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 30,
+      "developer_or_spv": "FRI-EL Servigliano S.r.l.",
+      "region": "Basilicata",
+      "area": "Montemurro / Armento / Viggiano",
+      "municipalities": [
+        "Montemurro",
+        "Armento",
+        "Viggiano"
+      ],
+      "procedure_state": "Autorizzazione Unica regionale / pubblica utilità 2026; BESS 21 MW separato",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-santa-irene",
+      "name": "Santa Irene",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 33.6,
+      "developer_or_spv": "Oceano Rinnovabili S.r.l.",
+      "region": "Basilicata",
+      "area": "Melfi (PZ)",
+      "municipalities": [
+        "Melfi"
+      ],
+      "procedure_state": "Autorizzazione Unica regionale; 6 aerogeneratori, 33,6 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-paladino",
+      "name": "Paladino",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 24,
+      "developer_or_spv": "Paladino Energia S.r.l.",
+      "region": "Calabria",
+      "area": "Gasperina / Montauro / Montepaone / Palermiti / Petrizzi / Argusto (CZ)",
+      "municipalities": [
+        "Gasperina",
+        "Montauro",
+        "Montepaone",
+        "Palermiti",
+        "Petrizzi",
+        "Argusto"
+      ],
+      "procedure_state": "VIA e Valutazione di Incidenza regionale, pratica 162 (CZ), decreto 2026",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Calabria",
+          "grade": "A1",
+          "url": "https://www.regione.calabria.it/provvedimenti-regionali/oggetto-provvedimento-di-valutazione-di-impatto-ambientale-ai-sensi-degli-art-23-e-segg-del-d-lgs-152-2006-e-ss-mm-ii-e-valutazione-di-incidenza-ambientale-livello-i-progetto-pratica-n-162/"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-95kr-le-serre",
+      "name": "95KR — Le Serre",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 24.8,
+      "developer_or_spv": "Limes 3 s.r.l.",
+      "region": "Calabria",
+      "area": "Cutro / Scandale (KR)",
+      "municipalities": [
+        "Cutro",
+        "Scandale"
+      ],
+      "procedure_state": "Procedimento VIA/VIncA regionale",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Calabria",
+          "grade": "A1",
+          "url": "https://www.regione.calabria.it/provvedimenti-regionali/valutazione-di-impatto-ambientale-ai-sensi-dellart-23-del-d-lgs-152-2006-e-valutazione-di-incidenza-fase-di-screening-progetto-95kr-impianto-eolico-e-opere-connesse-in-localita/"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-ariano-irpino-2",
+      "name": "Ariano Irpino 2",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 30,
+      "developer_or_spv": "ABN Wind Energy S.r.l.",
+      "region": "Campania",
+      "area": "Ariano Irpino (AV)",
+      "municipalities": [
+        "Ariano Irpino"
+      ],
+      "procedure_state": "PAUR regionale 2026; 5 aerogeneratori x 6 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Campania",
+          "grade": "A1",
+          "url": "http://viavas.regione.campania.it/opencms/opencms/VIAVAS/VIA_files_new/Progetti/prg_10185_prot_2026.638408_del_20-07-2026.via"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-calitri-bisaccia-camelia",
+      "name": "Calitri-Bisaccia — Camelia Rinnovabili",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 29.4,
+      "developer_or_spv": "Camelia Rinnovabili S.r.l.",
+      "region": "Campania",
+      "area": "Calitri / Bisaccia (AV)",
+      "municipalities": [
+        "Calitri",
+        "Bisaccia"
+      ],
+      "procedure_state": "PAUR regionale 2026; 7 aerogeneratori x 4,2 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Campania",
+          "grade": "A1",
+          "url": "http://viavas.regione.campania.it/opencms/opencms/VIAVAS/VIA_files_new/Progetti/prg_10190_prot_2026.688832_del_07-08-2026.viavi"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-reino-wind-farm",
+      "name": "Reino Wind Farm",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 29.4,
+      "developer_or_spv": "Energy Total Capital Reino Wind Farm s.r.l.",
+      "region": "Campania",
+      "area": "Benevento / Fragneto Monforte / Casalduni / Campolattaro (BN)",
+      "municipalities": [
+        "Benevento",
+        "Fragneto Monforte",
+        "Casalduni",
+        "Campolattaro"
+      ],
+      "procedure_state": "PAUR regionale 2026; 7 aerogeneratori x 4,2 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Campania",
+          "grade": "A1",
+          "url": "http://viavas.regione.campania.it/opencms/opencms/VIAVAS/VIA_files_new/Progetti/prg_10193_prot_2026.750609_del_11-09-2026.viavi"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-monte-cerchio",
+      "name": "Monte Cerchio",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 43.4,
+      "developer_or_spv": "Windtek S.r.l.",
+      "region": "Liguria / Piemonte",
+      "area": "Cairo Montenotte / Cengio (SV) / Saliceto (CN)",
+      "municipalities": [
+        "Cairo Montenotte",
+        "Cengio",
+        "Saliceto"
+      ],
+      "procedure_state": "MASE VIA PNIEC-PNRR, procedura 10686, istruttoria tecnica CTPNRR-PNIEC",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "MASE",
+          "grade": "A1",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/10455"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-sassello-forte-lodrino",
+      "name": "Sassello Forte Lodrino",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 31,
+      "developer_or_spv": "17PIUENERGIA S.r.l.",
+      "region": "Liguria",
+      "area": "Sassello (SV)",
+      "municipalities": [
+        "Sassello"
+      ],
+      "procedure_state": "MASE VIA PNIEC-PNRR, procedura 12620, istruttoria tecnica CTPNRR-PNIEC",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "MASE",
+          "grade": "A1",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/10974"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-piccapietre",
+      "name": "Piccapietre",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 22.5,
+      "developer_or_spv": "FERA s.r.l.",
+      "region": "Liguria",
+      "area": "Cairo Montenotte (SV)",
+      "municipalities": [
+        "Cairo Montenotte"
+      ],
+      "procedure_state": "Procedimento VIA nazionale censito dal registro regionale Liguria",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Liguria",
+          "grade": "A1",
+          "url": "https://docVia.regione.liguria.it/via/V467"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-stornara-nord",
+      "name": "Stornara Nord",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 61.6,
+      "developer_or_spv": "Inergia S.p.A.",
+      "region": "Puglia",
+      "area": "Stornara / Orta Nova (FG)",
+      "municipalities": [
+        "Stornara",
+        "Orta Nova"
+      ],
+      "procedure_state": "Autorizzazione Unica regionale 2026; 11 aerogeneratori, 61,6 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "notes": "Una precedente VIA nazionale risultava negativa; la Regione Puglia ha pubblicato una AU nel 2026. Tenere in Discovery e verificare la genealogia autorizzativa prima della promozione canonica.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia",
+          "grade": "A1",
+          "url": "https://regione.puglia.it/-/autorizzazione-unica-per-la-realizzazione-di-un-un-impianto-per-la-produzione-di-energia-elettrica-da-fonte-eolica-denominato-stornara-nord-comune-di-stornara-fg-"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-sparpagliata-donne-masi-tostini",
+      "name": "Contrada Sparpagliata, Donne Masi e Tostini",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 114,
+      "developer_or_spv": "Yellow Energy s.r.l.",
+      "region": "Puglia",
+      "area": "Erchie / Torre Santa Susanna / Manduria e connessioni",
+      "municipalities": [
+        "Erchie",
+        "Torre Santa Susanna",
+        "Manduria",
+        "San Pancrazio Salentino",
+        "Avetrana"
+      ],
+      "procedure_state": "Atto AU/PAUR pubblicato nel BURP 2026",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia - BURP",
+          "grade": "A1",
+          "url": "https://burp.regione.puglia.it/it/documenti?p_p_id=it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_searchContent=eolico&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_docanno=2026&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_cur=1&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_delta=50&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_resetCur=false",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-masseria-flamia-ginestrelle",
+      "name": "Masseria Flamia - Ginestrelle",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 18,
+      "developer_or_spv": "Margherita S.r.l.",
+      "region": "Puglia",
+      "area": "Ascoli Satriano (FG)",
+      "municipalities": [
+        "Ascoli Satriano"
+      ],
+      "procedure_state": "Autorizzazione Unica / PAUR regionale, determinazione 28/05/2026 n.129",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia - BURP",
+          "grade": "A1",
+          "url": "https://burp.regione.puglia.it/it/documenti?p_p_id=it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_searchContent=eolico&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_docanno=2026&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_cur=1&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_delta=50&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_resetCur=false",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-posta-pila-cerignola",
+      "name": "Posta Pila",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 29.995,
+      "developer_or_spv": "GAIA S.r.l.",
+      "region": "Puglia",
+      "area": "Cerignola (FG)",
+      "municipalities": [
+        "Cerignola"
+      ],
+      "procedure_state": "Autorizzazione Unica regionale 2026 per parco eolico Cerignola - località Posta Pila",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia - BURP",
+          "grade": "A1",
+          "url": "https://burp.regione.puglia.it/it/documenti?p_p_id=it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_searchContent=eolico&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_docanno=2026&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_cur=1&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_delta=50&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_resetCur=false",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-salice-wind",
+      "name": "Salice Wind",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 42,
+      "developer_or_spv": "Salice Wind S.r.l.",
+      "region": "Puglia",
+      "area": "Veglie / Salice Salentino (LE) e connessioni in BR",
+      "municipalities": [
+        "Veglie",
+        "Salice Salentino",
+        "Erchie",
+        "San Pancrazio Salentino"
+      ],
+      "procedure_state": "Autorizzazione Unica regionale 2026; 6 aerogeneratori, 42 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia - BURP",
+          "grade": "A1",
+          "url": "https://burp.regione.puglia.it/it/documenti?p_p_id=it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_searchContent=eolico&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_docanno=2026&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_cur=1&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_delta=50&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_resetCur=false",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-ponticello-inergia",
+      "name": "Ponticello",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 42,
+      "developer_or_spv": "Inergia S.p.A.",
+      "region": "Puglia",
+      "area": "Orta Nova / Stornarella (FG)",
+      "municipalities": [
+        "Orta Nova",
+        "Stornarella"
+      ],
+      "procedure_state": "Autorizzazione Unica regionale 2026; 10 aerogeneratori x 4,2 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "notes": "Una precedente VIA nazionale risultava negativa; la Regione Puglia ha pubblicato una AU nel 2026. Tenere in Discovery e verificare la genealogia autorizzativa prima della promozione canonica.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia",
+          "grade": "A1",
+          "url": "https://regione.puglia.it/web/guest/-/autorizzazione-unica-per-la-costruzione-e-all-esercizio-di-un-impianto-eolico-denominato-ponticello-comuni-di-orta-nova-fg-e-stornarella-fg-"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-trigno-barbara-renewable",
+      "name": "Trigno",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 29,
+      "developer_or_spv": "Barbara Renewable S.r.l.",
+      "region": "Puglia",
+      "area": "Rignano Garganico / San Severo / Lucera / Foggia",
+      "municipalities": [
+        "Rignano Garganico",
+        "San Severo",
+        "Lucera",
+        "Foggia"
+      ],
+      "procedure_state": "Autorizzazione Unica in PAUR regionale 2026; 5 aerogeneratori x 5,8 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia",
+          "grade": "A1",
+          "url": "https://regione.puglia.it/web/guest/-/autorizzazione-unica-per-la-realizzazione-di-un-impianto-di-produzione-di-energia-elettrica-da-fonte-eolica-in-localit%C3%A0-trigno-comune-di-rignano-garganico"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-masseria-salatti-posta-vassallo",
+      "name": "Masseria Salatti - Posta Vassallo",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 20,
+      "developer_or_spv": "Sigbel2 S.r.l.",
+      "region": "Puglia",
+      "area": "Ascoli Satriano / Deliceto (FG)",
+      "municipalities": [
+        "Ascoli Satriano",
+        "Deliceto"
+      ],
+      "procedure_state": "Autorizzazione Unica / PAUR regionale, determinazione 18/05/2026 n.120",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "sources": [
+        {
+          "publisher": "Regione Puglia - BURP",
+          "grade": "A1",
+          "url": "https://burp.regione.puglia.it/it/documenti?p_p_id=it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_searchContent=eolico&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_docanno=2026&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_cur=1&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_delta=50&_it_indra_regione_puglia_burp_web_SearchDocumentiPortlet_INSTANCE_LylqGTMESls6_resetCur=false",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-sv6-bric-dei-mori",
+      "name": "SV6 BRIC DEI MORI",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 43.4,
+      "developer_or_spv": "Duferco Sviluppo S.p.A.",
+      "region": "Liguria",
+      "area": "Pontinvrea / Cairo Montenotte (SV)",
+      "municipalities": [
+        "Pontinvrea",
+        "Cairo Montenotte"
+      ],
+      "procedure_state": "MASE VIA PNIEC-PNRR, procedura 12957, istruttoria tecnica CTPNRR-PNIEC; AUP provinciale per 7 aerogeneratori, 43,4 MW",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "notes": "Identità distinta da SV7 BRIC DELLE ROCCHE: diversa denominazione, comuni, configurazione e procedura.",
+      "sources": [
+        {
+          "publisher": "MASE",
+          "grade": "A1",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/11186"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-le-toppe",
+      "name": "Le Toppe",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 29.4,
+      "developer_or_spv": "Melfi Energie Rinnovabili S.r.l.",
+      "region": "Basilicata / Campania",
+      "area": "Rapone / Castelgrande / Pescopagano (PZ) / Calitri (AV)",
+      "municipalities": [
+        "Rapone",
+        "Castelgrande",
+        "Pescopagano",
+        "Calitri"
+      ],
+      "procedure_state": "Procedimento VIA/Screening regionale Basilicata",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "notes": "Identità distinta da Castelfranco in Miscano / CER; il precedente weak match era un falso accostamento.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150867&otype=1011&id=151399"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-bantia",
+      "name": "Bantia",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 30,
+      "developer_or_spv": "Eni Plenitude Renewables Italy S.p.A.",
+      "region": "Basilicata",
+      "area": "Banzi / Palazzo San Gervasio / Genzano di Lucania (PZ)",
+      "municipalities": [
+        "Banzi",
+        "Palazzo San Gervasio",
+        "Genzano di Lucania"
+      ],
+      "procedure_state": "Procedimento VIA/Screening regionale Basilicata",
+      "verification_date": "2026-10-02",
+      "verification_basis": "Baseline review: distinct from the 51 canonical projects by project identity, proponent, power and geography; official project-specific or official registry evidence retained.",
+      "notes": "Identità distinta da Serra Giannina; il precedente weak match era dovuto alla sovrapposizione territoriale.",
+      "sources": [
+        {
+          "publisher": "Regione Basilicata",
+          "grade": "A1",
+          "url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150867&otype=1011&id=151406"
+        }
+      ]
+    }
+  ]
+}

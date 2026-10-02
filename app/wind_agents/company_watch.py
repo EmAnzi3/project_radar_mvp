@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import time
 from datetime import date, datetime
 from typing import Any
 
@@ -111,16 +112,28 @@ def due_company_ids(as_of: date | None = None) -> list[str]:
 
 
 def _extract_page(url: str, session: requests.Session) -> dict[str, Any]:
-    response = session.get(
-        url,
-        timeout=45,
-        allow_redirects=True,
-        headers={
-            "User-Agent": "Wind-Radar-Company-Watch/0.6",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
-        },
-    )
+    response = None
+    last_exc: Exception | None = None
+    for attempt in range(3):
+        try:
+            response = session.get(
+                url,
+                timeout=(8, 25),
+                allow_redirects=True,
+                headers={
+                    "User-Agent": "Wind-Radar-Company-Watch/0.6",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
+                },
+            )
+            break
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            last_exc = exc
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+    if response is None:
+        assert last_exc is not None
+        raise last_exc
     response.raise_for_status()
     content_type = (response.headers.get("Content-Type") or "").lower()
 

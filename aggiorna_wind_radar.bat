@@ -52,7 +52,8 @@ if /I "%MODE%"=="offline" (
 ) else if /I "%MODE%"=="all" (
   echo [1/3] Modalita ALL: interrogo tutte le fonti e tutti i player monitorati...
 ) else (
-  echo [1/3] Aggiorno solo fonti e player dovuti secondo le rispettive cadenze...
+  echo [1/3] Scansione giornaliera: interrogo TUTTE le fonti progetto istituzionali...
+  echo       I player commerciali vengono controllati secondo cadenza.
 )
 
 "%PY%" scripts\update_wind_radar_local.py %UPDATE_ARGS%
@@ -65,6 +66,7 @@ if errorlevel 1 (
 echo.
 echo [2/3] Verifico coerenza del Wind Radar...
 for %%S in (
+  scripts\check_wind_daily_discovery.py
   scripts\check_wind_v05.py
   scripts\check_wind_v05_enrichment.py
   scripts\check_wind_v06_agents.py
@@ -93,8 +95,9 @@ if not errorlevel 1 (
 )
 
 echo.
-echo [3/3] Avvio dashboard locale...
+echo [3/3] Apro report giornaliero e dashboard...
 set "RADAR_URL=http://127.0.0.1:8766/docs/wind/"
+set "DAILY_REPORT=%CD%\reports\wind-agent\daily-discovery-latest.html"
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "try { $r=Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 '%RADAR_URL%'; if($r.Content -match 'Wind Project') { exit 0 } else { exit 1 } } catch { exit 1 }" >nul 2>nul
@@ -104,21 +107,33 @@ if errorlevel 1 (
   timeout /t 2 /nobreak >nul
 )
 
+if exist "%DAILY_REPORT%" (
+  start "" "%DAILY_REPORT%"
+) else (
+  echo ATTENZIONE: report giornaliero non trovato: %DAILY_REPORT%
+)
 start "" "%RADAR_URL%"
 
 echo.
 echo ============================================================
-echo   WIND RADAR PRONTO
+echo   WIND RADAR GIORNALIERO COMPLETATO
 echo ============================================================
+echo Report nuovi progetti: %DAILY_REPORT%
 echo Dashboard: %RADAR_URL%
 echo.
 echo Modalita disponibili:
-echo   doppio click              = aggiorna solo fonti/player dovuti
-echo   aggiorna_wind_radar.bat all      = forza refresh completo
+echo   doppio click              = scansione giornaliera di TUTTE le fonti progetto
+echo   aggiorna_wind_radar.bat all      = come sopra + forza tutti i player commerciali
 echo   aggiorna_wind_radar.bat offline  = valida e apre senza rete
 echo.
-echo NOTA: i nuovi finding NON modificano automaticamente il canonico.
-echo       Le novita vengono salvate per review con evidence gate A1/A2.
+echo NOTA: il report distingue:
+echo       - nuovi progetti candidati
+echo       - aggiornamenti dei 51 progetti gia noti
+echo       - aggiornamenti della coda Discovery
+echo       - identita da verificare / errori fonte
+echo.
+echo Nessun nuovo progetto viene aggiunto automaticamente al canonico:
+echo la promozione resta soggetta al gate di verifica.
 echo.
 git status --short
 echo.

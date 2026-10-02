@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import re
+import time
 from datetime import date
 from urllib.parse import urljoin
+
+import requests
 
 from bs4 import BeautifulSoup
 
@@ -151,7 +154,19 @@ class VenetoWindAgent(BaseWindAgent):
         unique: dict[str, AgentFinding] = {}
         for year in self.years:
             page_url = BASE_TEMPLATE.format(year=year)
-            response = self.session.get(page_url, timeout=90)
+            last_exc: Exception | None = None
+            response = None
+            for attempt in range(3):
+                try:
+                    response = self.session.get(page_url, timeout=(8, 20))
+                    break
+                except (requests.ConnectionError, requests.Timeout) as exc:
+                    last_exc = exc
+                    if attempt < 2:
+                        time.sleep(1.5 * (attempt + 1))
+            if response is None:
+                assert last_exc is not None
+                raise last_exc
             if response.status_code == 404:
                 continue
             response.raise_for_status()

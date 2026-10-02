@@ -10,13 +10,13 @@ Baseline canonica invariata:
 - **34 progetti integrati dopo promotion gate / 9.705,62 MW**;
 - BESS sempre separato dai MW wind.
 
-## Fase corrente — v0.6
+## Fase corrente — daily discovery
 
-Branch: `feat/wind-radar-v0.6-execution-intelligence`
+Branch: `feat/wind-daily-discovery`.
 
-Draft PR: **#5 — Wind Radar v0.6 — execution intelligence e commercial timing**.
+Obiettivo del branch: trasformare il motore v0.6 già derivato da `pv_agent_mvp` in uno strumento operativo giornaliero per rispondere in modo esplicito alla domanda **“ci sono nuovi progetti eolici rispetto ai 51 già noti?”**.
 
-La PR resta **Draft**. Nessun merge o pubblicazione senza autorizzazione esplicita.
+Nessun merge o pubblicazione senza autorizzazione esplicita.
 
 ### Regola probatoria
 
@@ -31,8 +31,8 @@ La PR resta **Draft**. Nessun merge o pubblicazione senza autorizzazione esplici
 ## Runtime e network
 
 - **61 player commerciali**;
-- **31 nodi istituzionali/pubblici**;
-- **21 adapter istituzionali eseguibili**;
+- **34 nodi istituzionali/pubblici**;
+- **24 adapter istituzionali eseguibili**;
 - Company Watch operativo;
 - Project Execution investigation queue sui canonici E4–E7 con scope aperti;
 - SQLite operativo separato dal canonico per raw finding, history, cursori e `watch_status`;
@@ -95,7 +95,7 @@ Verifica reale desktop **1440×1100** e mobile **390×844** completata anche sul
 - Discovery visibile: **0 sezioni**;
 - Player/Source Watch visibili: **0 sezioni**;
 - Opportunità prioritarie presente;
-- metodologia con 61 player / 31 nodi fonte / 21 adapter presente;
+- metodologia con 61 player / 34 nodi fonte / 24 adapter presente;
 - nessun errore console;
 - nessun overflow orizzontale desktop/mobile.
 
@@ -115,26 +115,36 @@ Principali punti:
 - Carlentini: Mammana foundation contractor A2 confirmed; nessuna estensione al full Civil BoP.
 
 
-## Avvio locale one-click
+## Avvio locale one-click — daily discovery
 
 Disponibile `aggiorna_wind_radar.bat` alla radice del repository.
 
-Flusso:
+Comportamento del normale doppio clic:
 - crea/riusa `.venv` e verifica le dipendenze;
-- esegue di default solo Institutional/Company Watch dovuti per cadenza;
+- interroga **tutti i 24 adapter istituzionali project-discovery a ogni run**, indipendentemente dalla cadenza precedente;
+- esegue Company Watch solo sui player dovuti per cadenza;
+- persiste raw finding e storico SQLite con `baseline / new / changed / unchanged`;
+- al primo successo di ciascuna fonte crea la baseline sorgente: i record già presenti non generano falsi allarmi "nuovo";
+- riconcilia baseline e variazioni successive contro i **51 progetti canonici** e la coda Discovery;
+- genera `reports/wind-agent/daily-discovery-latest.html`, `.csv` e `.json`;
+- separa nuovi candidati giornalieri, backlog iniziale della baseline, aggiornamenti dei canonici, aggiornamenti Discovery, identità ambigue ed errori fonte;
 - aggiorna execution investigation queue e digest review-only;
-- scrive uno status locale ignorato da Git in `docs/wind/data/local-run-status.json`;
-- esegue i validator Wind v0.5/v0.6;
-- avvia un server HTTP locale su `127.0.0.1:8766` e apre la dashboard;
+- scrive lo status locale in `docs/wind/data/local-run-status.json`;
+- esegue i validator Wind v0.5/v0.6 + daily discovery;
+- apre prima il report giornaliero e poi la dashboard locale;
 - non promuove finding né modifica automaticamente il canonico.
 
-Varianti: `all` forza tutti i watch; `offline` salta la rete.
+Varianti:
+- `all` = stessa scansione completa delle fonti progetto + forza tutti i player commerciali;
+- `offline` = nessuna rete, solo stato/validazione/apertura.
+
+Il criterio operativo è quindi doppio: **51 progetti sono la baseline canonica commerciale**, mentre lo SQLite mantiene la **baseline tecnica delle singole fonti**. Il primo run censisce ciò che esiste già; dai run successivi il BAT segnala come nuovo solo ciò che appare dopo la scansione precedente.
 
 ## Validazione
 
 I validator v0.6 includono regressioni canoniche, promotion, commercial/institutional network, agent architecture, project-specific enrichment, mappa province e sintassi JS.
 
-L'ultimo full live smoke completato prima delle modifiche UI results-first è **#64 — SUCCESS** su tutti i quattro gruppi. Le modifiche successive riguardano UI/documentazione/triage e non cambiano le implementazioni degli adapter live.
+Il gate live comprende i quattro gruppi istituzionali più uno **smoke a due passaggi sullo stesso SQLite**: primo passaggio = baseline sorgente, secondo passaggio = record invariati senza falsi `new/changed`. Il gate deve restare SUCCESS insieme ai validator Linux e Windows prima del closeout della PR.
 
 ## Gate successivo
 

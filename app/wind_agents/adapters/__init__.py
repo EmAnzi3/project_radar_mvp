@@ -1,6 +1,6 @@
 from .abruzzo import AbruzzoWindAgent
-from .basilicata import BasilicataWindAgent
-from .calabria import CalabriaWindAgent
+from .basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
+from .calabria import CalabriaRegionalActsWindAgent, CalabriaWindAgent
 from .campania import CampaniaWindAgent
 from .emilia_romagna import EmiliaRomagnaWindAgent
 from .lazio import LazioWindAgent
@@ -13,7 +13,7 @@ from .molise import MoliseWindAgent
 from .piemonte import PiemonteWindAgent
 from .sardegna import SardegnaWindAgent
 from .sicilia import SiciliaWindAgent
-from .sistema_puglia import SistemaPugliaWindAgent
+from .sistema_puglia import PugliaRegionalAuWindAgent, SistemaPugliaWindAgent
 from .terna_econnextion import TernaEconnextionWindAgent
 from .toscana import ToscanaWindAgent
 from .toscana_atos import ToscanaAtosWindAgent
@@ -22,7 +22,9 @@ from .veneto import VenetoWindAgent
 
 __all__ = [
     "AbruzzoWindAgent",
+    "BasilicataEnergyWindAgent",
     "BasilicataWindAgent",
+    "CalabriaRegionalActsWindAgent",
     "CalabriaWindAgent",
     "CampaniaWindAgent",
     "EmiliaRomagnaWindAgent",
@@ -36,6 +38,7 @@ __all__ = [
     "PiemonteWindAgent",
     "SardegnaWindAgent",
     "SiciliaWindAgent",
+    "PugliaRegionalAuWindAgent",
     "SistemaPugliaWindAgent",
     "TernaEconnextionWindAgent",
     "ToscanaWindAgent",

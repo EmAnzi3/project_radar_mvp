@@ -193,13 +193,70 @@
       "origin_collector": "app/collectors/piemonte.py",
       "evidence_ceiling": "A1",
       "wind_adaptation": "Environmental services are regional while FER AU outside state competence is delegated to Province/Città Metropolitana; preserve authority/province identity and use BUR/provincial acts as public fallback."
+    },
+    {
+      "id": "puglia-au-paur",
+      "institution": "Regione Puglia / BURP / Sezione Transizione Energetica",
+      "level": "regional",
+      "region": "Puglia",
+      "channel": "BURP — Autorizzazione Unica FER / PAUR / proroghe e atti autorizzativi",
+      "priority": "A",
+      "status": "runtime_adapter",
+      "cadence_days": 3,
+      "official_url": "https://burp.regione.puglia.it/it/documenti",
+      "origin_collector": "new_wind_source_audit",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Read current regional determinations and admit a project candidate only when proponent/company, positive MW and at least one municipality are present.",
+      "audit_note": "BURP exposes current Sezione Transizione Energetica determinations with project text, proponent, MW and municipalities; kept separate from the Puglia VIA-FER dataset that mainly mirrors MASE procedures."
+    },
+    {
+      "id": "basilicata-au-paur",
+      "institution": "Regione Basilicata / Ufficio Energia",
+      "level": "regional",
+      "region": "Basilicata",
+      "channel": "Autorizzazione Unica FER / PAUR / public-utility and expropriation notices",
+      "priority": "A",
+      "status": "runtime_adapter",
+      "cadence_days": 3,
+      "official_url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+      "origin_collector": "new_wind_source_audit",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Read current Ufficio Energia notices; retain raw evidence but admit only records with company/proponent, positive MW and municipality.",
+      "audit_note": "Adds the energy-authorisation layer missing from the inherited VIA/screening collector."
+    },
+    {
+      "id": "calabria-regional-acts",
+      "institution": "Regione Calabria / Provvedimenti della Regione",
+      "level": "regional",
+      "region": "Calabria",
+      "channel": "Decreti regionali VIA / PAUR / VPA / varianti e provvedimenti ambientali",
+      "priority": "A",
+      "status": "runtime_adapter",
+      "cadence_days": 3,
+      "official_url": "https://www.regione.calabria.it/provvedimenti-della-regione/",
+      "origin_collector": "new_wind_source_audit",
+      "evidence_ceiling": "A1",
+      "wind_adaptation": "Search current regional decrees for wind projects and preserve project identity. New project candidates require company/proponent, positive MW and at least one municipality.",
+      "audit_note": "Added because the legacy VIA notices/search adapter returned empty_success while the regional decree registry contains current 2026 wind records with project-level metadata."
     }
   ],
   "resolved_coverage_gaps": [
-    {"region": "Abruzzo", "resolution": "first-pass VIA runtime adapter implemented; AU/BURA and SPA/API deepening still open"},
-    {"region": "Liguria", "resolution": "runtime adapter implemented on public SIRAVIAVAS in-progress registry"},
-    {"region": "Marche", "resolution": "runtime adapter implemented on regional VIA-start registry; state mirror/AU remain additive sources"},
-    {"region": "Molise", "resolution": "first-pass wind-specific runtime adapter implemented; SPA/API deepening still open"}
+    {
+      "region": "Abruzzo",
+      "resolution": "first-pass VIA runtime adapter implemented; AU/BURA and SPA/API deepening still open"
+    },
+    {
+      "region": "Liguria",
+      "resolution": "runtime adapter implemented on public SIRAVIAVAS in-progress registry"
+    },
+    {
+      "region": "Marche",
+      "resolution": "runtime adapter implemented on regional VIA-start registry; state mirror/AU remain additive sources"
+    },
+    {
+      "region": "Molise",
+      "resolution": "first-pass wind-specific runtime adapter implemented; SPA/API deepening still open"
+    }
   ],
   "remaining_priority_gap_order": [
     "Abruzzo AU/BURA runtime adapter",

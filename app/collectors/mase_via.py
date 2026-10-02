@@ -138,7 +138,24 @@ def _get_token(session: requests.Session) -> str | None:
     return None
 
 
-def _search_keyword(session: requests.Session, keyword: str, max_pages: int = 2) -> list[str]:
+def _unique_preserve_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        out.append(value)
+    return out
+
+
+def _search_keyword(
+    session: requests.Session,
+    keyword: str,
+    max_pages: int = 2,
+    *,
+    preserve_order: bool = False,
+) -> list[str]:
     """
     Cerca i link alle schede progetto per una keyword.
     Ritorna URL assoluti di tipo /Oggetti/Info/{id}.
@@ -182,14 +199,158 @@ def _search_keyword(session: requests.Session, keyword: str, max_pages: int = 2)
             if "/Oggetti/Info/" in href:
                 page_links.append(urljoin(BASE_URL, href))
 
-        page_links = sorted(set(page_links))
+        page_links = _unique_preserve_order(page_links) if preserve_order else sorted(set(page_links))
 
         if not page_links:
             break
 
         links.extend(page_links)
 
-    return sorted(set(links))
+    return _unique_preserve_order(links) if preserve_order else sorted(set(links))
+
+
+def _normalize_label(value: str | None) -> str:
+    value = _clean(value) or ""
+    value = value.lower()
+    for src, dst in (("à", "a"), ("è", "e"), ("é", "e"), ("ì", "i"), ("ò", "o"), ("ù", "u")):
+        value = value.replace(src, dst)
+    return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+
+def _extract_key_value_data(soup: BeautifulSoup) -> dict[str, str]:
+    data: dict[str, str] = {}
+    for tr in soup.find_all("tr"):
+        cells = [_clean(cell.get_text(" ", strip=True)) for cell in tr.find_all(["th", "td"])]
+        if len(cells) < 2 or not cells[0] or not cells[1]:
+            continue
+        data[_normalize_label(cells[0])] = cells[1]
+    for dt in soup.find_all("dt"):
+        dd = dt.find_next_sibling("dd")
+        if not dd:
+            continue
+        key = _normalize_label(dt.get_text(" ", strip=True))
+        value = _clean(dd.get_text(" ", strip=True))
+        if key and value:
+            data[key] = value
+    return data
+
+
+def _find_info_value_exact(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
+    wanted = {_normalize_label(key) for key in keys}
+    for key, value in data.items():
+        if _normalize_label(key) in wanted:
+            return _clean(value)
+    return None
+
+
+def _clean_mase_entity(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    if re.fullmatch(r"\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2}", value):
+        return None
+    norm = _normalize_label(value)
+    if norm.startswith(("nessuna ", "nessun ", "nessuno ")):
+        return None
+    return value
+
+
+def _find_info_value(data: dict[str, str], keys: tuple[str, ...]) -> str | None:
+    wanted = tuple(_normalize_label(key) for key in keys)
+    for key, value in data.items():
+        if any(target and target in key for target in wanted):
+            return _clean(value)
+    return None
+
+
+def _extract_procedure_overview(soup: BeautifulSoup) -> dict[str, str | None]:
+    """Parse the MASE procedure summary table by column names.
+
+    The first row is a real multi-column header; treating it as a key/value row
+    produces the bogus value "Codice istanza online" for Procedura.
+    """
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if len(rows) < 2:
+            continue
+        headers = [_normalize_label(cell.get_text(" ", strip=True)) for cell in rows[0].find_all(["th", "td"])]
+        if "procedura" not in headers or "stato procedura" not in headers:
+            continue
+        values = [_clean(cell.get_text(" ", strip=True)) for cell in rows[1].find_all(["th", "td"])]
+        if not values:
+            continue
+        def value_for(label: str) -> str | None:
+            try:
+                idx = headers.index(label)
+            except ValueError:
+                return None
+            return values[idx] if idx < len(values) else None
+        return {
+            "procedure": value_for("procedura"),
+            "date_started": value_for("data avvio"),
+            "status": value_for("stato procedura"),
+        }
+    return {"procedure": None, "date_started": None, "status": None}
+
+
+def _clean_mase_geo(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    norm = _normalize_label(value)
+    if norm.startswith(("nessuna ", "nessun ", "nessuno ")):
+        return None
+    return value
+
+
+def _clean_mase_procedure(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    norm = _normalize_label(value)
+    invalid = (
+        "codice istanza online", "id", "codice", "localizzazione",
+        "proponente", "progetto", "documentazione", "scheda", "info",
+    )
+    valid = (
+        "via", "valutazione di impatto ambientale", "verifica",
+        "assoggettabilita", "pniec", "pnrr", "ottemperanza",
+        "provvedimento", "scoping", "consultazione", "in corso",
+        "conclusa", "concluso", "archiviata", "archiviato",
+    )
+    if norm in invalid:
+        return None
+    if any(item in norm for item in invalid) and not any(item in norm for item in valid):
+        return None
+    return value if any(item in norm for item in valid) else None
+
+
+def _clean_mase_status(value: str | None) -> str | None:
+    value = _clean(value)
+    if not value:
+        return None
+    if re.fullmatch(r"\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2}", value):
+        return None
+    norm = _normalize_label(value)
+    invalid = ("codice istanza online", "codice", "id", "data", "info")
+    if norm in invalid:
+        return None
+    return value
+
+
+def _extract_info_proponent_plain(text: str) -> str | None:
+    patterns = (
+        r"\bProponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Scadenza\s+presentazione|\s+Territori\s+ed\s+aree|\s+Scegli\s+la\s+procedura|\s+Procedura\s+Codice|\s+Data\s+presentazione|\s+Oggetto\s*:|$)",
+        r"\bSociet[aà]\s+proponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Territori\s+ed\s+aree|\s+Scegli\s+la\s+procedura|$)",
+        r"\bSoggetto\s+proponente\s*:\s*(.+?)(?=\s+Tipologia\s+di\s+opera\s*:|\s+Territori\s+ed\s+aree|\s+Scegli\s+la\s+procedura|$)",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.I)
+        if match:
+            candidate = _clean(match.group(1))
+            if candidate and 2 <= len(candidate) <= 250:
+                return candidate.strip(" -–—:;,.()")
+    return None
 
 
 def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
@@ -202,6 +363,30 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
 
     soup = BeautifulSoup(response.text, "lxml")
     full_text = _clean(soup.get_text(" ", strip=True)) or ""
+    info_table = _extract_key_value_data(soup)
+    overview = _extract_procedure_overview(soup)
+    procedure_raw = _clean_mase_procedure(
+        overview.get("procedure")
+        or _find_info_value(
+            info_table,
+            ("ultima procedura", "tipo procedura", "tipologia procedura", "procedimento", "procedura in corso"),
+        )
+    )
+    status_raw = _clean_mase_status(
+        overview.get("status")
+        or _find_info_value(
+            info_table,
+            ("stato procedura", "stato", "esito procedura", "esito"),
+        )
+    )
+    date_presented = _find_info_value(
+        info_table,
+        ("data presentazione", "data avvio", "data deposito", "data pubblicazione"),
+    ) or overview.get("date_started")
+    date_last_update = _find_info_value(
+        info_table,
+        ("ultimo aggiornamento", "data aggiornamento", "data provvedimento"),
+    )
 
     external_id = None
     id_match = re.search(r"/Oggetti/Info/(\d+)", url)
@@ -221,11 +406,26 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
     description = _clean(full_text[:900])
 
     proponent = (
-        _extract_first(r"Proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
+        _clean_mase_entity(
+            _find_info_value_exact(
+                info_table,
+                ("proponente", "proponenti", "societa proponente", "società proponente", "soggetto proponente"),
+            )
+        )
+        or _extract_info_proponent_plain(full_text)
+        or _extract_first(r"Proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
         or _extract_first(r"Società proponente\s+(.+?)(?:Procedura|Localizzazione|Documentazione|$)", full_text)
     )
+    proponent = _clean(proponent)
 
     region, province, municipality = _extract_region_province_municipality(full_text)
+    region = _clean_mase_geo(_find_info_value_exact(info_table, ("regioni", "regione"))) or region
+    province_text = _clean_mase_geo(_find_info_value_exact(info_table, ("province", "provincia")))
+    if province_text:
+        province = _clean(province_text.split(",", 1)[0]) or province
+    municipalities_text = _clean_mase_geo(_find_info_value_exact(info_table, ("comuni", "comune")))
+    if municipalities_text:
+        municipality = _clean(municipalities_text.split(",", 1)[0]) or municipality
 
     record = ProjectRecord(
         source="MASE VIA",
@@ -239,7 +439,10 @@ def _parse_detail(session: requests.Session, url: str) -> ProjectRecord | None:
         sector=_infer_sector(full_text),
         category="energia / ambiente",
         intervention_type="nuova costruzione" if "realizzazione" in full_text.lower() else None,
-        phase=_infer_phase(full_text),
+        phase=procedure_raw or _infer_phase(full_text),
+        status=status_raw,
+        source_date_presented=_clean(date_presented),
+        source_date_last_update=_clean(date_last_update),
         client=proponent,
         client_type="privato" if proponent else None,
         power_mw=_extract_power_mw(full_text),
@@ -253,6 +456,8 @@ def collect_mase_via(
     keywords: list[str] | None = None,
     max_pages_per_keyword: int = 1,
     max_details: int = 30,
+    *,
+    preserve_search_order: bool = False,
 ) -> list[ProjectRecord]:
     keywords = keywords or DEFAULT_KEYWORDS
 
@@ -262,11 +467,20 @@ def collect_mase_via(
 
     for keyword in keywords:
         print(f"[MASE] Cerco keyword: {keyword}")
-        links = _search_keyword(session, keyword, max_pages=max_pages_per_keyword)
+        links = _search_keyword(
+            session,
+            keyword,
+            max_pages=max_pages_per_keyword,
+            preserve_order=preserve_search_order,
+        )
         print(f"[MASE] Link trovati per '{keyword}': {len(links)}")
         all_links.extend(links)
 
-    unique_links = sorted(set(all_links))[:max_details]
+    unique_links = (
+        _unique_preserve_order(all_links)
+        if preserve_search_order
+        else sorted(set(all_links))
+    )[:max_details]
     print(f"[MASE] Totale link unici da leggere: {len(unique_links)}")
 
     records: list[ProjectRecord] = []

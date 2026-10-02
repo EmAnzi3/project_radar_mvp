@@ -163,7 +163,9 @@ for payload in (tranche_b, tranche_c, tranche_d):
     for c in payload["companies"]:
         assert c.get("last_checked") == "2026-09-05", c["id"]
         assert c.get("next_action"), f"{c['id']}: missing next_action"
-        assert c.get("watch_urls"), f"{c['id']}: missing watch_urls"
+        assert c.get("watch_urls") or c.get("watch_disabled_reason"), (
+            f"{c['id']}: missing watch_urls or explicit watch_disabled_reason"
+        )
 for update in tranche_e["updates"]:
     assert update.get("last_checked") in {"2026-09-05", "2026-09-06"}, update["id"]
     assert update.get("next_action"), f"{update['id']}: missing next_action"

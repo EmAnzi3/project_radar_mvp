@@ -1,0 +1,32 @@
+{
+  "version": "0.1.0",
+  "as_of": "2026-10-02",
+  "note": "Manual identity resolutions from the first operational baseline review. Rules are conservative and require project-name plus geography; company is mandatory where specified.",
+  "canonical_aliases": [
+    {
+      "target_id": "tricarico",
+      "aliases": [
+        "Corona Prima"
+      ],
+      "companies": [
+        "ADEST"
+      ],
+      "municipalities": [
+        "Tricarico"
+      ],
+      "require_company": true,
+      "reason": "Corona Prima is the historical/project-procedure name for the ADEST Tricarico wind project; same proponent and municipality."
+    },
+    {
+      "target_id": "tarsia-ovest",
+      "aliases": [
+        "Tarsia Ovest"
+      ],
+      "municipalities": [
+        "Tarsia"
+      ],
+      "require_company": false,
+      "reason": "Regional voltura/variant acts explicitly refer to Parco Eolico Tarsia Ovest in Tarsia; canonical identity is unchanged."
+    }
+  ]
+}

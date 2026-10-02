@@ -15,6 +15,10 @@ SEARCH_URL = (
     "http://viavas.regione.campania.it/"
     "opencms/opencms/VIAVAS/VIA_files_new/Ricerca_Avanzata.html"
 )
+LIST_URL = (
+    "https://viavas.regione.campania.it/"
+    "opencms/opencms/VIAVAS/VIA_files_new/TabellaElencoProgetti.jsp"
+)
 SEARCH_KEYWORDS = ("eolico", "eolica", "repowering eolico")
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "repowering", "parco eolico")
 
@@ -25,6 +29,7 @@ class CampaniaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Campania VIA/PAUR"
     base_url = SEARCH_URL
+    baseline_revision = "2026-10-current-project-table-v5-municipality-cleanup"
 
     def __init__(self, min_year: int | None = None) -> None:
         super().__init__()
@@ -75,14 +80,14 @@ class CampaniaWindAgent(BaseWindAgent):
             SEARCH_URL,
             data=payload,
             headers=headers,
-            timeout=90,
+            timeout=(8, 20),
             allow_redirects=False,
         )
         if response.is_redirect or response.is_permanent_redirect:
             redirected = urljoin(SEARCH_URL, response.headers.get("Location", ""))
             if "www.regione.campania.it" in redirected:
                 raise RuntimeError(f"unexpected Campania redirect: {redirected}")
-            response = self.session.get(redirected, headers=headers, timeout=90, allow_redirects=False)
+            response = self.session.get(redirected, headers=headers, timeout=(8, 20), allow_redirects=False)
         response.raise_for_status()
         return response.content.decode("utf-8", errors="replace")
 
@@ -122,18 +127,46 @@ class CampaniaWindAgent(BaseWindAgent):
 
     @classmethod
     def _parse_date(cls, value: str) -> datetime | None:
+        cleaned = cls._clean(value)
         for fmt in ("%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d"):
             try:
-                return datetime.strptime(cls._clean(value), fmt)
+                return datetime.strptime(cleaned, fmt)
             except ValueError:
                 pass
-        return None
+        # Current project table renders Java-style dates, e.g.
+        # "Fri Sep 11 00:00:00 CEST 2026".
+        java_style = re.sub(r"\b(?:CEST|CET|UTC)\b", "", cleaned)
+        java_style = re.sub(r"\s+", " ", java_style).strip()
+        try:
+            return datetime.strptime(java_style, "%a %b %d %H:%M:%S %Y")
+        except ValueError:
+            return None
 
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
+        normalized = re.sub(r"(?<=\d)\s*([,.])\s*(?=\d)", r"\1", text)
+        number = r"([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)"
+        preferred = (
+            rf"potenza\s+(?:complessiva|totale|nominale\s+totale)\s*(?:pari\s+a|pari|di)?\s*{number}\s*MW\b",
+            rf"per\s+una\s+potenza\s+complessiva\s*(?:pari\s+a|di)?\s*{number}\s*MW\b",
+        )
+        for pattern in preferred:
+            match = re.search(pattern, normalized, flags=re.I)
+            if match:
+                raw = match.group(1).replace(" ", "")
+                if "," in raw:
+                    raw = raw.replace(".", "").replace(",", ".")
+                try:
+                    value = float(raw)
+                except ValueError:
+                    continue
+                if 0 < value < 5000:
+                    return value
+
+        values: list[float] = []
         for match in re.finditer(
-            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
-            text,
+            rf"(?<![\d.,]){number}\s*MW\b",
+            normalized,
             flags=re.I,
         ):
             raw = match.group(1).replace(" ", "")
@@ -144,26 +177,44 @@ class CampaniaWindAgent(BaseWindAgent):
             except ValueError:
                 continue
             if 0 < value < 5000:
-                return value
-        return None
+                values.append(value)
+        return max(values) if values else None
+
+    @classmethod
+    def _municipality_item(cls, value: str) -> str | None:
+        item = cls._clean(value).strip(" -–—:;,.()")
+        item = re.split(
+            r"\s+(?:con\s+(?:le\s+)?relative|con\s+opere|nonch[eé]|"
+            r"e\s+relative|ed\s+opere|di\s+\d+\s+aerogeneratori|"
+            r"per\s+una\s+potenza|da\s+\d+(?:[.,]\d+)?\s*MW)\b",
+            item,
+            maxsplit=1,
+            flags=re.I,
+        )[0].strip(" -–—:;,.()")
+        if (
+            len(item) < 3
+            or item.lower() in {"con", "opere", "relativa", "relative"}
+            or re.match(r"^\d", item)
+        ):
+            return None
+        return item
 
     @classmethod
     def _municipalities(cls, territory: str, title: str) -> list[str]:
         values: list[str] = []
         if territory:
             for part in re.split(r"[,;/]+|\s+e\s+", territory, flags=re.I):
-                item = cls._clean(part).strip(" -–—:;,.()")
+                item = cls._municipality_item(part)
                 if item and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
-        if values:
-            return values[:12]
         for match in re.finditer(
-            r"(?:Comune|Comuni)\s+di\s+(.+?)(?:\s*\([A-Z]{2}\)|\.|;|$)",
+            r"(?:Comune|Comuni)\s+di\s+(.+?)(?=\s+(?:ed\s+opera|e\s+opera|con\s+relative|nonch[eé])|\.|;|$)",
             title,
             flags=re.I,
         ):
-            for part in re.split(r",|\s+e\s+", match.group(1), flags=re.I):
-                item = cls._clean(part).strip(" -–—:;,.()")
+            segment = re.sub(r"\([A-Z]{2}\)", "", match.group(1))
+            for part in re.split(r",|\s+e\s+|\s+ed\s+", segment, flags=re.I):
+                item = cls._municipality_item(part)
                 if item and item.lower() not in {v.lower() for v in values}:
                     values.append(item)
             if values:
@@ -195,51 +246,76 @@ class CampaniaWindAgent(BaseWindAgent):
         raw = "|".join([date_text, title, proponent, source_url])
         return "CAMPANIA-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:18]
 
+    def _fetch_current_project_table(self) -> list[dict]:
+        response = self.session.get(
+            LIST_URL,
+            headers={
+                "User-Agent": "Wind-Radar-Agent/0.6",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+            timeout=(8, 25),
+        )
+        response.raise_for_status()
+        return self._rows(response.content.decode("utf-8", errors="replace"))
+
     def fetch(self) -> list[AgentFinding]:
         unique: dict[str, AgentFinding] = {}
+        raw_rows: list[dict] = []
+        try:
+            raw_rows.extend(self._fetch_current_project_table())
+        except Exception:
+            # Keep the inherited advanced search as fallback.
+            pass
         for keyword in SEARCH_KEYWORDS:
             html_page = self._post_search(keyword)
-            for row in self._rows(html_page):
-                project = self._clean(row.get("progetto") or "")
-                proponent = self._clean(row.get("proponente") or "")
-                raw_text = self._clean(row.get("raw_text") or "")
-                full_text = f"{project} {proponent} {raw_text}"
-                if not project or not self._is_wind(full_text):
-                    continue
-                date_text = self._clean(row.get("data_di_presentazione") or "")
-                parsed_date = self._parse_date(date_text)
-                if parsed_date is None or parsed_date < self.min_date:
-                    continue
-                source_url = self._clean(row.get("source_url") or SEARCH_URL)
-                cup = self._clean(row.get("cup") or "")
-                territory = self._clean(row.get("territori") or row.get("territorio") or "")
-                municipalities = self._municipalities(territory, project)
-                external_id = self._external_id(cup, date_text, project, proponent, source_url)
-                unique.setdefault(
-                    external_id,
-                    AgentFinding(
-                        external_id=external_id,
-                        source_name=self.source_name,
-                        source_url=source_url,
-                        title=project[:700],
-                        finding_type="project_source",
-                        payload={
-                            "project_name": project[:700],
-                            "proponent": proponent or None,
-                            "region": "Campania",
-                            "province": self._province(project + " " + territory),
-                            "municipalities": municipalities,
-                            "power_mw": self._power_mw(project),
-                            "procedure": self._procedure(project + " " + raw_text),
-                            "status_raw": self._clean(row.get("esito") or "") or None,
-                            "cup": cup or None,
-                            "date_presented": date_text,
-                            "decree": self._clean(row.get("decreto") or "") or None,
-                            "sector": "eolico",
-                            "source_grade_ceiling": "A1",
-                            "project_specific": True,
-                            "source_adapter_origin": "pv_agent_mvp/campania.py",
-                        },
-                    ),
-                )
+            raw_rows.extend(self._rows(html_page))
+
+        dedup_rows: dict[str, dict] = {}
+        for row in raw_rows:
+            key = self._clean(row.get("cup") or "") or self._clean(row.get("source_url") or "") or self._clean(row.get("raw_text") or "")
+            dedup_rows.setdefault(key, row)
+
+        for row in dedup_rows.values():
+            project = self._clean(row.get("progetto") or "")
+            proponent = self._clean(row.get("proponente") or "")
+            raw_text = self._clean(row.get("raw_text") or "")
+            full_text = f"{project} {proponent} {raw_text}"
+            if not project or not self._is_wind(full_text):
+                continue
+            date_text = self._clean(row.get("data_di_presentazione") or "")
+            parsed_date = self._parse_date(date_text)
+            if parsed_date is None or parsed_date < self.min_date:
+                continue
+            source_url = self._clean(row.get("source_url") or SEARCH_URL)
+            cup = self._clean(row.get("cup") or "")
+            territory = self._clean(row.get("territori") or row.get("territorio") or "")
+            municipalities = self._municipalities(territory, project)
+            external_id = self._external_id(cup, date_text, project, proponent, source_url)
+            unique.setdefault(
+                external_id,
+                AgentFinding(
+                    external_id=external_id,
+                    source_name=self.source_name,
+                    source_url=source_url,
+                    title=project[:700],
+                    finding_type="project_source",
+                    payload={
+                        "project_name": project[:700],
+                        "proponent": proponent or None,
+                        "region": "Campania",
+                        "province": self._province(project + " " + territory),
+                        "municipalities": municipalities,
+                        "power_mw": self._power_mw(project),
+                        "procedure": self._procedure(project + " " + raw_text),
+                        "status_raw": self._clean(row.get("esito") or "") or None,
+                        "cup": cup or None,
+                        "date_presented": date_text,
+                        "decree": self._clean(row.get("decreto") or "") or None,
+                        "sector": "eolico",
+                        "source_grade_ceiling": "A1",
+                        "project_specific": True,
+                        "source_adapter_origin": "pv_agent_mvp/campania.py",
+                    },
+                ),
+            )
         return list(unique.values())

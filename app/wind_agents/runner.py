@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from datetime import date, datetime
+import time
 from typing import Any
 
 from .adapters import (
     AbruzzoWindAgent,
+    BasilicataEnergyWindAgent,
     BasilicataWindAgent,
+    CalabriaRegionalActsWindAgent,
     CalabriaWindAgent,
     CampaniaWindAgent,
     EmiliaRomagnaWindAgent,
@@ -20,6 +23,7 @@ from .adapters import (
     PiemonteWindAgent,
     SardegnaWindAgent,
     SiciliaWindAgent,
+    PugliaRegionalAuWindAgent,
     SistemaPugliaWindAgent,
     TernaEconnextionWindAgent,
     ToscanaAtosWindAgent,
@@ -41,7 +45,9 @@ from .state import (
 # runtime status and adapter identity share the same stable key.
 AGENT_FACTORIES = {
     "abruzzo-via": AbruzzoWindAgent,
+    "basilicata-au-paur": BasilicataEnergyWindAgent,
     "basilicata-via": BasilicataWindAgent,
+    "calabria-regional-acts": CalabriaRegionalActsWindAgent,
     "calabria-via": CalabriaWindAgent,
     "campania-viavas": CampaniaWindAgent,
     "emilia-romagna-regional": EmiliaRomagnaWindAgent,
@@ -53,6 +59,7 @@ AGENT_FACTORIES = {
     "mase-via": MaseWindAgent,
     "molise-au-eolico": MoliseWindAgent,
     "piemonte-regional": PiemonteWindAgent,
+    "puglia-au-paur": PugliaRegionalAuWindAgent,
     "puglia-sistema-energia": SistemaPugliaWindAgent,
     "sardegna-sira": SardegnaWindAgent,
     "sicilia-sivvi": SiciliaWindAgent,
@@ -110,6 +117,35 @@ def due_agent_ids(as_of: date | None = None) -> list[str]:
     return sorted(due)
 
 
+def _baseline_revision(agent: Any) -> str | None:
+    value = getattr(agent, "baseline_revision", None)
+    value = str(value).strip() if value is not None else ""
+    return value or None
+
+
+def _bootstrap_decision(
+    runtime_before: dict[str, Any],
+    agent: Any,
+    *,
+    bootstrap_new_sources: bool,
+) -> tuple[bool, bool, str | None, str | None]:
+    """Return bootstrap_source, revision_bootstrap, current_revision, previous_revision."""
+    metadata = runtime_before.get("metadata") or {}
+    previous_revision = metadata.get("baseline_revision")
+    current_revision = _baseline_revision(agent)
+
+    if not bootstrap_new_sources:
+        return False, False, current_revision, previous_revision
+
+    first_success = not runtime_before.get("last_success")
+    revision_bootstrap = bool(
+        current_revision
+        and runtime_before.get("last_success")
+        and previous_revision != current_revision
+    )
+    return bool(first_success or revision_bootstrap), revision_bootstrap, current_revision, previous_revision
+
+
 def _source_health(counters: dict[str, Any]) -> str:
     if counters.get("status") == "error":
         return "error"
@@ -124,6 +160,7 @@ def run_agents(
     source_ids: Iterable[str] | None = None,
     *,
     due_only: bool = False,
+    bootstrap_new_sources: bool = True,
 ) -> dict[str, Any]:
     """Run implemented adapters and persist raw/history/runtime state.
 
@@ -162,8 +199,21 @@ def run_agents(
     try:
         for source_id in sorted(requested):
             agent = AGENT_FACTORIES[source_id]()
+            agent_started = time.monotonic()
+            runtime_before = get_watch_status(source_id) or {}
+            (
+                bootstrap_source,
+                revision_bootstrap,
+                current_revision,
+                previous_revision,
+            ) = _bootstrap_decision(
+                runtime_before,
+                agent,
+                bootstrap_new_sources=bootstrap_new_sources,
+            )
             counters: dict[str, Any] = {
                 "findings": 0,
+                "baseline": 0,
                 "new": 0,
                 "changed": 0,
                 "unchanged": 0,
@@ -171,11 +221,21 @@ def run_agents(
                 "finding_types": {},
                 "status": "running",
                 "data_health": "running",
+                "bootstrap_source": bootstrap_source,
+                "revision_bootstrap": revision_bootstrap,
+                "baseline_revision": current_revision,
+                "previous_baseline_revision": previous_revision,
             }
             try:
                 findings = agent.fetch()
                 for finding in findings:
-                    event = upsert_finding(run_id, agent.agent_name, finding)
+                    event = upsert_finding(
+                        run_id,
+                        agent.agent_name,
+                        finding,
+                        baseline_new=bootstrap_source,
+                        rebaseline_existing=revision_bootstrap,
+                    )
                     counters["findings"] += 1
                     counters[event] += 1
                     finding_type = str(finding.finding_type or "unknown")
@@ -193,11 +253,18 @@ def run_agents(
                     success=True,
                     metadata={
                         "findings": counters["findings"],
+                        "baseline": counters["baseline"],
                         "new": counters["new"],
                         "changed": counters["changed"],
+                        "bootstrap_source": bootstrap_source,
                         "project_specific_findings": counters["project_specific_findings"],
                         "finding_types": counters["finding_types"],
                         "data_health": counters["data_health"],
+                        "baseline_revision": (
+                            current_revision
+                            if counters["data_health"] != "channel_or_market_only"
+                            else previous_revision
+                        ),
                     },
                 )
             except Exception as exc:
@@ -216,8 +283,10 @@ def run_agents(
                         "project_specific_findings": counters["project_specific_findings"],
                         "finding_types": counters["finding_types"],
                         "data_health": "error",
+                        "baseline_revision": previous_revision,
                     },
                 )
+            counters["duration_seconds"] = round(time.monotonic() - agent_started, 1)
             per_agent[source_id] = counters
     finally:
         finish_run(run_id, findings=findings_count, changed_items=changed_count)
@@ -231,7 +300,13 @@ def run_agents(
         "run_id": run_id,
         "planned_tasks": len(requested),
         "due_only": due_only,
+        "bootstrap_new_sources": bootstrap_new_sources,
         "executed_agents": sorted(requested),
+        "bootstrapped_agents": sorted(
+            source_id
+            for source_id, counters in per_agent.items()
+            if counters.get("bootstrap_source") and counters.get("status") == "success"
+        ),
         "findings": findings_count,
         "new_or_changed": changed_count,
         "errors": errors,

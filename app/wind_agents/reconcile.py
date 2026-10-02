@@ -147,7 +147,11 @@ def _place_score(finding: dict[str, Any], candidate: dict[str, Any]) -> tuple[in
 def _source_urls(candidate: dict[str, Any]) -> list[str]:
     urls: list[str] = []
     for source in candidate.get("sources") or []:
-        if isinstance(source, dict) and source.get("url"):
+        if (
+            isinstance(source, dict)
+            and source.get("url")
+            and source.get("identity_match", True) is not False
+        ):
             urls.append(str(source["url"]))
     return urls
 
@@ -218,8 +222,22 @@ def _score_candidate(finding: dict[str, Any], candidate: dict[str, Any]) -> dict
     reasons: list[str] = []
     strong_identity = False
 
+    source_checks = [
+        finding.get("source_url"),
+        payload.get("project_url"),
+        payload.get("source_url"),
+        payload.get("document_url"),
+    ]
+    source_points = 0
+    source_reason = None
+    for source_value in source_checks:
+        points, reason = _source_score(source_value, candidate)
+        if points > source_points:
+            source_points = points
+            source_reason = reason
+
     for points, reason in (
-        _source_score(finding.get("source_url"), candidate),
+        (source_points, source_reason),
         _name_score(title, candidate_name),
         _place_score(payload, candidate),
         _power_score(payload.get("power_mw"), candidate.get("wind_mw") or candidate.get("mw")),
@@ -256,6 +274,79 @@ def _score_candidate(finding: dict[str, Any], candidate: dict[str, Any]) -> dict
     }
 
 
+def _load_reconciliation_overrides() -> dict[str, Any]:
+    path = DATA / "reconciliation-overrides-v01.json"
+    if not path.exists():
+        return {}
+    data = _load_json(path)
+    return data if isinstance(data, dict) else {}
+
+
+def _manual_canonical_override(
+    finding: dict[str, Any],
+    canonical_rows: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Resolve only identities explicitly reviewed against the canonical radar.
+
+    Overrides are deliberately strict: a configured alias and configured place
+    must both match. Rules may additionally require a company match.
+    """
+    rules = _load_reconciliation_overrides().get("canonical_aliases") or []
+    payload = finding.get("payload") or {}
+    title = payload.get("project_name") or finding.get("title") or ""
+    title_norm = _norm(title)
+    proponent = (
+        payload.get("proponent")
+        or payload.get("developer")
+        or payload.get("developer_or_spv")
+        or payload.get("spv")
+        or payload.get("company_name")
+        or ""
+    )
+    finding_places = _place_values(payload)
+
+    for rule in rules:
+        aliases = [_norm(value) for value in rule.get("aliases") or [] if _norm(value)]
+        alias_match = any(
+            title_norm == alias
+            or (len(alias) >= 5 and alias in title_norm)
+            for alias in aliases
+        )
+        if not alias_match:
+            continue
+
+        required_places = {
+            _norm(value) for value in rule.get("municipalities") or [] if _norm(value)
+        }
+        if required_places:
+            place_match = any(
+                left == right
+                or (min(len(left), len(right)) >= 5 and (left in right or right in left))
+                for left in finding_places
+                for right in required_places
+            )
+            if not place_match:
+                continue
+
+        if rule.get("require_company"):
+            companies = rule.get("companies") or []
+            if not proponent or not any(_company_score(proponent, company)[0] > 0 for company in companies):
+                continue
+
+        target_id = rule.get("target_id")
+        target = next((row for row in canonical_rows if row.get("id") == target_id), None)
+        if not target:
+            continue
+
+        scored = _score_candidate(finding, _canonical_candidate(target))
+        scored["score"] = 100
+        scored["strong_identity"] = True
+        scored["reasons"] = ["manual_identity_override", *(scored.get("reasons") or [])]
+        return scored
+
+    return None
+
+
 def reconcile_finding(
     finding: dict[str, Any],
     *,
@@ -266,6 +357,18 @@ def reconcile_finding(
 
     canonical_rows = canonical if canonical is not None else load_canonical_projects()
     discovery_rows = discovery if discovery is not None else load_discovery_candidates()
+
+    manual = _manual_canonical_override(finding, canonical_rows)
+    if manual:
+        return {
+            "status": "high_confidence_match",
+            "auto_reconciled": True,
+            "margin": 100,
+            "best": manual,
+            "alternatives": [],
+            "guard": "Manual identity override is evidence-reviewed; no canonical promotion or mutation is performed.",
+        }
+
     canonical_targets = [_canonical_candidate(row) for row in canonical_rows]
     canonical_ids = {row.get("target_id") for row in canonical_targets}
     discovery_targets = [
@@ -339,15 +442,23 @@ def _commercial_weight(item: dict[str, Any]) -> int:
 def _action_type(event: dict[str, Any]) -> str:
     finding = event.get("finding") or {}
     payload = finding.get("payload") or {}
-    best = (event.get("reconciliation") or {}).get("best") or {}
+    reconciliation = event.get("reconciliation") or {}
+    best = reconciliation.get("best") or {}
+    match_status = reconciliation.get("status")
 
     if payload.get("is_aggregated_market_intelligence"):
         return "market_intelligence"
     if finding.get("finding_type") == "company_source_snapshot":
         return "company_project_signal" if best else "company_network_update"
-    if best.get("target_kind") == "canonical":
+    if (
+        match_status in {"high_confidence_match", "review_match"}
+        and best.get("target_kind") == "canonical"
+    ):
         return "canonical_update_review"
-    if best.get("target_kind") == "discovery":
+    if (
+        match_status in {"high_confidence_match", "review_match"}
+        and best.get("target_kind") == "discovery"
+    ):
         return "discovery_refresh_review"
     return "new_project_lead"
 
@@ -369,10 +480,26 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
             item["commercial_weight"] = _commercial_weight(item)
 
             payload = finding.get("payload") or {}
-            # Drop empty company snapshots from the actionable digest. They remain
-            # persisted in raw/history and can still be audited later.
-            if finding.get("finding_type") == "company_source_snapshot" and not (
+            # Bootstrap inventory is source baseline, not a live commercial
+            # change. Keep it auditable but never surface it as actionable.
+            minimum_complete, minimum_missing = _minimum_project_fields(payload)
+            item["minimum_project_fields_complete"] = minimum_complete
+            item["minimum_project_fields_missing"] = minimum_missing
+            best = reconciliation.get("best") or {}
+            existing_match = (
+                best.get("target_kind") in {"canonical", "discovery"}
+                and reconciliation.get("status") in {"high_confidence_match", "review_match"}
+            )
+            if event.get("event_type") == "baseline":
+                item["actionable"] = False
+            elif finding.get("finding_type") == "company_source_snapshot" and not (
                 payload.get("signal_excerpt") or payload.get("headings")
+            ):
+                item["actionable"] = False
+            elif (
+                finding.get("finding_type") == "project_source"
+                and not existing_match
+                and not minimum_complete
             ):
                 item["actionable"] = False
             else:
@@ -394,4 +521,303 @@ def build_digest(run_ids: list[str]) -> dict[str, Any]:
         "items": actionable,
         "non_actionable_events": len(items) - len(actionable),
         "guard": "Digest is review-only. No evidence, scope, stage, priority or canonical project is mutated automatically.",
+    }
+
+
+
+def _parse_source_date(value: Any):
+    from datetime import date, datetime
+
+    text = str(value or "").strip()
+    if not text:
+        return None
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            return datetime.strptime(text[:19], fmt).date()
+        except ValueError:
+            continue
+    try:
+        return date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
+
+def _minimum_project_fields(payload: dict[str, Any]) -> tuple[bool, list[str]]:
+    """Hard admission gate for NEW project candidates.
+
+    A project can enter the operational discovery queue only when the source
+    supplies: (1) at least one named company/reference entity, normally the
+    proponent; (2) positive power in MW; and (3) at least one municipality.
+    Raw findings remain stored even when this gate fails.
+    """
+    company = (
+        payload.get("proponent")
+        or payload.get("developer")
+        or payload.get("developer_or_spv")
+        or payload.get("spv")
+        or payload.get("owner")
+        or payload.get("company_name")
+    )
+    power = _as_float(payload.get("power_mw"))
+    raw_municipalities = payload.get("municipalities")
+    municipalities: list[Any] = []
+    if isinstance(raw_municipalities, list):
+        municipalities.extend(raw_municipalities)
+    elif raw_municipalities:
+        municipalities.append(raw_municipalities)
+    if payload.get("municipality"):
+        municipalities.append(payload.get("municipality"))
+
+    unknown_tokens = {"", "n/d", "nd", "n d", "n.a.", "n/a", "n a", "unknown", "sconosciuto", "non indicato", "non disponibile"}
+    company_norm = _norm(company)
+    valid_places = [
+        place for place in municipalities
+        if _norm(place) not in unknown_tokens
+        and "non indicat" not in _norm(place)
+        and "sconosciut" not in _norm(place)
+    ]
+
+    missing: list[str] = []
+    if company_norm in unknown_tokens or "non indicat" in company_norm or "sconosciut" in company_norm:
+        missing.append("company")
+    if power is None or power <= 0:
+        missing.append("power_mw")
+    if not valid_places:
+        missing.append("municipality")
+    return not missing, missing
+
+
+def _pipeline_eligibility(payload: dict[str, Any], *, as_of=None) -> tuple[str, str | None]:
+    """Return eligibility bucket for daily *new-project* discovery.
+
+    The radar is aimed at utility-scale projects in a live development /
+    authorisation / construction pipeline, not the historical installed fleet.
+    This filter affects only the NEW-candidate bucket; raw findings/history are
+    still retained for audit.
+    """
+
+    from datetime import date
+
+    as_of = as_of or date.today()
+    status = " ".join(
+        str(payload.get(key) or "")
+        for key in ("status_raw", "outcome", "phase", "procedure")
+    ).lower()
+
+    procedure = _norm(payload.get("procedure"))
+    if "rinviat" in status and "via" in status:
+        return "existing_project_follow_up", "screening_referred_to_via"
+    follow_up_tokens = (
+        "ottemperanza", "proroga", "valutazione preliminare",
+        "parere tecnico", "terre e rocce", "vinca", "variante",
+    )
+    if any(token in procedure for token in follow_up_tokens):
+        return "existing_project_follow_up", "existing_project_procedural_follow_up"
+
+    closed_negative_tokens = (
+        "archiviat", "negativ", "ritirat", "revocat", "annullat",
+        "improced", "non ammiss", "cessat", "chius",
+    )
+    if any(token in status for token in closed_negative_tokens):
+        return "historical_or_closed", "status_closed_or_negative"
+
+    power = _as_float(payload.get("power_mw"))
+    if power is not None and power < 10.0:
+        return "non_target_scale", "below_10_mw"
+
+    source_date = None
+    for key in ("last_act_date", "decree_date", "protocol_date", "date_received", "date_last_update", "date_presented", "publication_date"):
+        source_date = _parse_source_date(payload.get(key))
+        if source_date:
+            break
+
+    # A completed/authorised record is useful only if it is recent enough to
+    # remain a plausible commercial pipeline lead. Current/in-iter records are
+    # not rejected merely because an old procedural date is present.
+    if any(token in status for token in ("autorizzato", "concluso", "conclusa", "favorevole")):
+        if source_date and (as_of - source_date).days > 1095:
+            return "historical_or_closed", "completed_record_older_than_3y"
+
+    return "eligible", None
+
+
+def classify_daily_discovery_event(
+    event: dict[str, Any],
+    *,
+    canonical: list[dict[str, Any]] | None = None,
+    discovery: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Classify one new/changed finding for the daily project-discovery report.
+
+    The classification is intentionally conservative:
+    - canonical matches are updates to one of the 51 known projects;
+    - discovery matches are updates to already-known non-canonical candidates;
+    - only project-specific NEW findings without a credible existing match become
+      new project candidates;
+    - weak/ambiguous identity stays in review instead of being declared new.
+    """
+
+    finding = event.get("finding") or {}
+    payload = finding.get("payload") or {}
+    reconciliation = reconcile_finding(
+        finding,
+        canonical=canonical,
+        discovery=discovery,
+    )
+    best = reconciliation.get("best") or {}
+    status = reconciliation.get("status")
+    event_type = event.get("event_type")
+    project_specific = bool(payload.get("project_specific"))
+    finding_type = finding.get("finding_type")
+
+    eligibility, eligibility_reason = _pipeline_eligibility(payload)
+    minimum_complete, minimum_missing = _minimum_project_fields(payload)
+
+    if payload.get("is_aggregated_market_intelligence"):
+        category = "market_intelligence"
+    elif finding_type == "company_source_snapshot":
+        category = "company_signal"
+    elif not project_specific and finding_type != "project_source":
+        category = "non_project_event"
+    elif event_type == "baseline":
+        if eligibility != "eligible":
+            category = eligibility
+        elif best.get("target_kind") == "canonical" and status == "high_confidence_match":
+            category = "baseline_known_project"
+        elif best.get("target_kind") == "discovery" and status in {"high_confidence_match", "review_match"}:
+            category = "baseline_discovery_candidate"
+        elif best.get("target_kind") in {"canonical", "discovery"} and status in {"review_match", "weak_match"}:
+            category = "identity_review"
+        elif project_specific and not minimum_complete:
+            category = "incomplete_project_record"
+        elif project_specific:
+            category = "baseline_project_candidate"
+        else:
+            category = "non_project_event"
+    elif best.get("target_kind") == "canonical" and status == "high_confidence_match":
+        category = "known_project_update"
+    elif best.get("target_kind") == "discovery" and status in {"high_confidence_match", "review_match"}:
+        category = "discovery_candidate_update"
+    elif eligibility != "eligible":
+        category = eligibility
+    elif event_type == "new" and project_specific and status in {"unmatched", "weak_match"}:
+        category = "new_project_candidate" if minimum_complete else "incomplete_project_record"
+    elif best.get("target_kind") == "canonical" and status in {"review_match", "weak_match"}:
+        category = "identity_review"
+    elif event_type == "changed" and project_specific and status in {"unmatched", "weak_match"}:
+        category = "unmatched_project_change" if minimum_complete else "incomplete_project_record"
+    elif project_specific:
+        category = "identity_review"
+    else:
+        category = "non_project_event"
+
+    return {
+        **event,
+        "category": category,
+        "reconciliation": reconciliation,
+        "project_specific": project_specific,
+        "pipeline_eligibility": eligibility,
+        "pipeline_eligibility_reason": eligibility_reason,
+        "minimum_project_fields_complete": minimum_complete,
+        "minimum_project_fields_missing": minimum_missing,
+    }
+
+
+def build_daily_discovery_report(run_ids: list[str]) -> dict[str, Any]:
+    """Build the daily discovery report from institutional/company run events.
+
+    This report answers the operational question: did today's scan find projects
+    not already represented by the canonical 51 or by the existing Discovery
+    queue? No automatic promotion is performed.
+    """
+
+    canonical = load_canonical_projects()
+    discovery = load_discovery_candidates()
+    items: list[dict[str, Any]] = []
+
+    for run_id in run_ids:
+        for event in get_run_events(run_id):
+            items.append(
+                classify_daily_discovery_event(
+                    event,
+                    canonical=canonical,
+                    discovery=discovery,
+                )
+            )
+
+    category_order = {
+        "new_project_candidate": 0,
+        "baseline_project_candidate": 1,
+        "identity_review": 2,
+        "unmatched_project_change": 3,
+        "known_project_update": 4,
+        "discovery_candidate_update": 5,
+        "baseline_known_project": 6,
+        "baseline_discovery_candidate": 7,
+        "historical_or_closed": 8,
+        "existing_project_follow_up": 9,
+        "non_target_scale": 10,
+        "incomplete_project_record": 11,
+        "market_intelligence": 12,
+        "company_signal": 13,
+        "non_project_event": 14,
+    }
+    items.sort(
+        key=lambda row: (
+            category_order.get(row.get("category"), 99),
+            row.get("created_at") or "",
+            row.get("external_id") or "",
+        )
+    )
+
+    counts: dict[str, int] = {}
+    for row in items:
+        category = str(row.get("category") or "unknown")
+        counts[category] = counts.get(category, 0) + 1
+
+    new_candidates = [row for row in items if row.get("category") == "new_project_candidate"]
+    baseline_candidates = [row for row in items if row.get("category") == "baseline_project_candidate"]
+    known_updates = [row for row in items if row.get("category") == "known_project_update"]
+    discovery_updates = [row for row in items if row.get("category") == "discovery_candidate_update"]
+    identity_reviews = [
+        row for row in items
+        if row.get("category") in {"identity_review", "unmatched_project_change"}
+    ]
+    incomplete_records = [
+        row for row in items
+        if row.get("category") == "incomplete_project_record"
+    ]
+    filtered_non_pipeline = [
+        row for row in items
+        if row.get("category") in {"historical_or_closed", "existing_project_follow_up", "non_target_scale"}
+    ]
+
+    return {
+        "run_ids": run_ids,
+        "canonical_projects": len(canonical),
+        "discovery_candidates_known": len(discovery),
+        "events": len(items),
+        "baseline_records": sum(1 for row in items if row.get("event_type") == "baseline"),
+        "baseline_project_candidates": len(baseline_candidates),
+        "baseline_known_projects": sum(1 for row in items if row.get("category") == "baseline_known_project"),
+        "baseline_discovery_candidates": sum(1 for row in items if row.get("category") == "baseline_discovery_candidate"),
+        "new_project_candidates": len(new_candidates),
+        "known_project_updates": len(known_updates),
+        "discovery_candidate_updates": len(discovery_updates),
+        "identity_reviews": len(identity_reviews),
+        "incomplete_project_records": len(incomplete_records),
+        "filtered_non_pipeline": len(filtered_non_pipeline),
+        "category_counts": counts,
+        "new_candidates": new_candidates,
+        "baseline_candidates": baseline_candidates,
+        "known_updates": known_updates,
+        "discovery_updates": discovery_updates,
+        "identity_review_items": identity_reviews,
+        "incomplete_project_items": incomplete_records,
+        "items": items,
+        "guard": (
+            "Daily discovery is review-only. A NEW candidate must include at least one "
+            "named company/proponent, positive MW and one municipality; then identity, "
+            "configuration and current activity must pass the evidence gate."
+        ),
     }

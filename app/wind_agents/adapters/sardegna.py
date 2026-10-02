@@ -4,7 +4,7 @@ import hashlib
 import html
 import re
 from datetime import date
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -13,6 +13,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 BASE_URL = "https://portal.sardegnasira.it"
 NEWS_URL = "https://portal.sardegnasira.it/impatto-ambientale"
+NEWS_ARCHIVE_URL = "https://portal.sardegnasira.it/news-bozze"
 SEARCH_URL = "https://portal.sardegnasira.it/ricerca-dei-progetti"
 PORTLET = "_ViaProgetto_WAR_RegioneSardegnaportlet_"
 FORM = "_ViaProgetto_WAR_RegioneSardegnaportlet_:form"
@@ -21,7 +22,10 @@ SEARCH_PROCEDURES = {
     "560": "VERIFICA",
     "566": "VIA/PAUR",
 }
-SEARCH_KEYWORDS = ("eolico", "eolica", "repowering")
+# SIRA keyword search is substring-based. Shared stems preserve coverage for
+# eolico/eolica and repowering variants while avoiding four redundant POSTs
+# in the standard 2-year x 2-procedure matrix.
+SEARCH_KEYWORDS = ("eolic", "repower")
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "repowering", "parco eolico")
 
 
@@ -36,6 +40,7 @@ class SardegnaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Sardegna SIRA VIA/PAUR"
     base_url = NEWS_URL
+    baseline_revision = "2026-10-search-stems-v5"
 
     def __init__(self, years: list[str] | None = None) -> None:
         super().__init__()
@@ -62,6 +67,7 @@ class SardegnaWindAgent(BaseWindAgent):
 
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
+        text = re.sub(r"(?<=\d)\s*([,.])\s*(?=\d)", r"\1", text)
         for match in re.finditer(
             r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
             text,
@@ -80,6 +86,15 @@ class SardegnaWindAgent(BaseWindAgent):
 
     @classmethod
     def _proponent(cls, text: str) -> str | None:
+        legal = re.search(
+            r"(?:Proponente|Societ[aà])\s*:?\s*"
+            r"(.{2,180}?\b(?:S\.?\s*R\.?\s*L\.?|S\.?\s*P\.?\s*A\.?|SRL|SPA)\b\.?)",
+            text,
+            flags=re.I,
+        )
+        if legal:
+            return cls._clean(legal.group(1)).strip(" -–—:;,.")
+
         for pattern in (
             r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Provincia|\s+Procedimento|\s+Oggetto|\||$)",
             r"Societ[aà]\s+(.+?)(?:\s+ha\s+presentato|\s+ha\s+depositato|\s+richiede|\||$)",
@@ -94,7 +109,7 @@ class SardegnaWindAgent(BaseWindAgent):
     @classmethod
     def _municipality(cls, text: str) -> str | None:
         for pattern in (
-            r"Comune\s*:?\s*([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’`\- ]+?)(?:\s+Provincia|\s*\([A-Z]{2}\)|\||$)",
+            r"Comune\s*:\s*([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’`\- ]+?)(?:\s+Provincia|\s*\([A-Z]{2}\)|\||$)",
             r"Comune di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’`\- ]+?)(?:\s*\([A-Z]{2}\)|,|;|\.|\s+e\s+|$)",
         ):
             match = re.search(pattern, text, flags=re.I)
@@ -113,6 +128,11 @@ class SardegnaWindAgent(BaseWindAgent):
     def _status(cls, text: str) -> str | None:
         lowered = cls._norm(text)
         for needle, label in (
+            ("esito: negativo", "Negativo"),
+            ("esito negativo", "Negativo"),
+            ("negativo", "Negativo"),
+            ("stato del procedimento: chiusa", "Chiuso"),
+            ("stato del procedimento chiusa", "Chiuso"),
             ("favorevole con prescrizioni", "Favorevole con prescrizioni"),
             ("favorevole", "Favorevole"),
             ("archiviat", "Archiviato"),
@@ -165,31 +185,91 @@ class SardegnaWindAgent(BaseWindAgent):
             },
         )
 
-    def _fetch_news(self) -> list[AgentFinding]:
-        response = self.session.get(NEWS_URL, timeout=90)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content.decode("utf-8", errors="replace"), "html.parser")
-        blocks = list(soup.select("div.news-sardegna"))
-        if not blocks:
-            blocks = list(soup.select(".news-list .row-fluid"))
-
-        findings: list[AgentFinding] = []
-        for block in blocks:
-            text = self._clean(block.get_text(" ", strip=True))
-            if len(text) < 40 or not self._is_wind(text):
-                continue
-            title_node = block.select_one(".news-sardegna-title h4") or block.select_one(".news-sardegna-title a")
-            title = self._clean(title_node.get_text(" ", strip=True)) if title_node else text[:700]
-            source_url = self._first_url(block, NEWS_URL)
-            findings.append(
-                self._finding(kind="news", title=title, text=text, source_url=source_url)
+    def _detail_context(self, source_url: str, fallback_text: str) -> tuple[str, str]:
+        """Follow a SIRA news item to the canonical project sheet when exposed."""
+        try:
+            response = self.session.get(source_url, timeout=(8, 20))
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+            text = self._clean(f"{fallback_text} {soup.get_text(' ', strip=True)}")
+            project_link = next(
+                (
+                    urljoin(source_url, anchor.get("href") or "")
+                    for anchor in soup.find_all("a", href=True)
+                    if "dettaglio-progetti-via" in (anchor.get("href") or "")
+                ),
+                None,
             )
+            if project_link:
+                parsed = urlparse(project_link)
+                canonical_link = project_link
+                if "dettaglio-progetti-via" in parsed.path and parsed.query:
+                    canonical_link = f"{BASE_URL}/dettaglio-progetti-via?{parsed.query}"
+                for candidate in dict.fromkeys([canonical_link, project_link]):
+                    try:
+                        detail = self.session.get(candidate, timeout=(8, 20))
+                        detail.raise_for_status()
+                        detail_text = self._clean(
+                            BeautifulSoup(detail.text, "html.parser").get_text(" ", strip=True)
+                        )
+                        if detail_text:
+                            return candidate, self._clean(f"{text} {detail_text}")
+                    except Exception:
+                        continue
+            return source_url, text
+        except Exception:
+            return source_url, fallback_text
+
+    def _fetch_news(self) -> list[AgentFinding]:
+        findings: list[AgentFinding] = []
+        seen: set[str] = set()
+        for page_url in (NEWS_URL, NEWS_ARCHIVE_URL):
+            response = self.session.get(page_url, timeout=(8, 20))
+            response.raise_for_status()
+            soup = BeautifulSoup(response.content.decode("utf-8", errors="replace"), "html.parser")
+            blocks = list(soup.select("div.news-sardegna"))
+            if not blocks:
+                blocks = list(soup.select(".news-list .row-fluid"))
+            if not blocks:
+                blocks = list(soup.find_all(["article", "li"]))
+
+            for block in blocks:
+                text = self._clean(block.get_text(" ", strip=True))
+                if len(text) < 40 or not self._is_wind(text):
+                    continue
+                title_node = (
+                    block.select_one(".news-sardegna-title h4")
+                    or block.select_one(".news-sardegna-title a")
+                    or block.find(["h2", "h3", "h4"])
+                    or block.find("a")
+                )
+                title = self._clean(title_node.get_text(" ", strip=True)) if title_node else text[:700]
+                title_anchor = (
+                    title_node if getattr(title_node, "name", None) == "a"
+                    else title_node.find("a", href=True) if title_node else None
+                )
+                source_url = (
+                    urljoin(page_url, title_anchor.get("href") or "")
+                    if title_anchor and title_anchor.get("href")
+                    else self._first_url(block, page_url)
+                )
+                source_url, evidence_text = self._detail_context(source_url, text)
+                finding = self._finding(
+                    kind="news",
+                    title=title,
+                    text=evidence_text,
+                    source_url=source_url,
+                )
+                if finding.external_id in seen:
+                    continue
+                seen.add(finding.external_id)
+                findings.append(finding)
         return findings
 
     def _get_search_form(self) -> tuple[str, str, str]:
         response = self.session.get(
             SEARCH_URL,
-            timeout=90,
+            timeout=(8, 20),
             headers={
                 "User-Agent": "Wind-Radar-Agent/0.6",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -247,7 +327,7 @@ class SardegnaWindAgent(BaseWindAgent):
             "Referer": SEARCH_URL,
             "Accept": "application/xml, text/xml, */*; q=0.01",
         }
-        response = self.session.post(action, data=payload, headers=headers, timeout=90)
+        response = self.session.post(action, data=payload, headers=headers, timeout=(8, 20))
         response.raise_for_status()
         return response.text
 
@@ -296,20 +376,55 @@ class SardegnaWindAgent(BaseWindAgent):
                     )
         return findings
 
+    @staticmethod
+    def _next_viewstate(response_text: str) -> str | None:
+        match = re.search(
+            r'<update[^>]+id=["\']javax\.faces\.ViewState["\'][^>]*>(.*?)</update>',
+            response_text,
+            flags=re.I | re.S,
+        )
+        if not match:
+            return None
+        value = re.sub(r"^\s*<!\[CDATA\[", "", match.group(1))
+        value = re.sub(r"\]\]>\s*$", "", value)
+        value = html.unescape(value).strip()
+        return value or None
+
     def _fetch_search(self) -> list[AgentFinding]:
         findings: list[AgentFinding] = []
+
+        # A JSF/Liferay session does not need a fresh GET for every query.
+        # Reuse the same form state and advance javax.faces.ViewState from each
+        # partial response. This preserves the same search matrix while removing
+        # 11 redundant form loads from the normal 2y x 2 procedures x 3 keywords run.
+        action, encoded_url, viewstate = self._get_search_form()
+
         for year in self.years:
             for procedure_code, procedure_label in SEARCH_PROCEDURES.items():
                 for keyword in SEARCH_KEYWORDS:
-                    action, encoded_url, viewstate = self._get_search_form()
-                    response_text = self._post_search(
-                        action=action,
-                        encoded_url=encoded_url,
-                        viewstate=viewstate,
-                        year=year,
-                        procedure_code=procedure_code,
-                        keyword=keyword,
-                    )
+                    try:
+                        response_text = self._post_search(
+                            action=action,
+                            encoded_url=encoded_url,
+                            viewstate=viewstate,
+                            year=year,
+                            procedure_code=procedure_code,
+                            keyword=keyword,
+                        )
+                    except Exception:
+                        # Session/view state may expire server-side. Refresh once,
+                        # then retry the same combination without dropping coverage.
+                        action, encoded_url, viewstate = self._get_search_form()
+                        response_text = self._post_search(
+                            action=action,
+                            encoded_url=encoded_url,
+                            viewstate=viewstate,
+                            year=year,
+                            procedure_code=procedure_code,
+                            keyword=keyword,
+                        )
+
+                    viewstate = self._next_viewstate(response_text) or viewstate
                     findings.extend(self._parse_search(response_text, procedure_label, year))
         return findings
 
