@@ -1,0 +1,2778 @@
+{
+  "run_ids": [
+    "20261002150910138023",
+    "20261002151712476856"
+  ],
+  "canonical_projects": 51,
+  "discovery_candidates_known": 9,
+  "events": 19,
+  "baseline_records": 0,
+  "baseline_project_candidates": 0,
+  "baseline_known_projects": 0,
+  "baseline_discovery_candidates": 0,
+  "new_project_candidates": 8,
+  "known_project_updates": 0,
+  "discovery_candidate_updates": 0,
+  "identity_reviews": 0,
+  "filtered_non_pipeline": 10,
+  "category_counts": {
+    "new_project_candidate": 8,
+    "non_target_scale": 10,
+    "non_project_event": 1
+  },
+  "new_candidates": [
+    {
+      "id": 777,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-52bd7e103fa29ad1a5",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "787f8ee5a96614776113982e95c415775550141e0302af7467ab4b27698cd53d",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-52bd7e103fa29ad1a5",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "San Fele"
+          ],
+          "power_mw": 24.0,
+          "procedure": "Screening - 2025",
+          "project_name": "BREVA S.R.L. Progetto DI UN PARCO EOLICO E DELLE RELATIVE OPERE DI CONNESSIONE ALLA RTN-POTENZA NOMINALE 24MW- Località “Orti di Pierno”- Comuni di San Fele (PZ) e Atella (PZ)",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150909",
+        "title": "BREVA S.R.L. Progetto DI UN PARCO EOLICO E DELLE RELATIVE OPERE DI CONNESSIONE ALLA RTN-POTENZA NOMINALE 24MW- Località “Orti di Pierno”- Comuni di San Fele (PZ) e Atella (PZ)"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 778,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-6e55f203d24de8ccd0",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "75b30d5e344cd0f73e93459b309b75021b70de5363dae9fcd17b765bc5c2d35d",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-6e55f203d24de8ccd0",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Filiano"
+          ],
+          "power_mw": null,
+          "procedure": "Screening - 2025",
+          "project_name": "AURA S.R.L. Progetto un impianto eolico della potenza complessiva pari a 750 KW comune di Filiano (PZ) nella località di Cancello della Fìlice.",
+          "project_specific": true,
+          "proponent": "AURA S.R.L. AURA S.R.L. Progetto un impianto eolico della",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150536",
+        "title": "AURA S.R.L. Progetto un impianto eolico della potenza complessiva pari a 750 KW comune di Filiano (PZ) nella località di Cancello della Fìlice."
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 780,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-ab33ac806748d527cf",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "acdbb4d593b9cbc9dc3a153c2d0258a9b4fc558006836a33a6d78f3ca6109d31",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-ab33ac806748d527cf",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": null,
+          "procedure": "Screening - 2025",
+          "project_name": "WIND 1 S.R.L.Impianto eolico denominato “La Rucola” per la produzione di energia elettrica, da realizzare nel comune di Melfi (PZ), costituito da un aerogeneratore della potenza di 1000 kW.",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150805",
+        "title": "WIND 1 S.R.L.Impianto eolico denominato “La Rucola” per la produzione di energia elettrica, da realizzare nel comune di Melfi (PZ), costituito da un aerogeneratore della potenza di 1000 kW."
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 779,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-addc0897ec4e75bddd",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "cd630f6c690831f2658b458ef27dbdafb214528811aaaeae04500b34a5c2e53a",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-addc0897ec4e75bddd",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Filiano"
+          ],
+          "power_mw": 21.6,
+          "procedure": "Screening - 2025",
+          "project_name": "E-Way 18 S.r.l. Progetto per la costruzione e l’esercizio di un impianto di produzione di energia elettrica da fonte eolica di potenza totale pari a 21,6 MW da realizzarsi nei Comuni di Filiano (PZ) e Atella (PZ), in località “Serra dei Daini”",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=149025",
+        "title": "E-Way 18 S.r.l. Progetto per la costruzione e l’esercizio di un impianto di produzione di energia elettrica da fonte eolica di potenza totale pari a 21,6 MW da realizzarsi nei Comuni di Filiano (PZ) e Atella (PZ), in località “Serra dei Daini”"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 789,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-76fdeeab9696e58ff0",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "8a61225a8b3d57c3d63a165ed22bf64d5c1ae289bad95349165c16b964c3aadc",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-76fdeeab9696e58ff0",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Rapone",
+            "Castelgerande",
+            "Pescopagano"
+          ],
+          "power_mw": 29.4,
+          "procedure": "VIA regionale - 2026",
+          "project_name": "Impianto eolico \"Le Toppe\" di potenza nominale pari a 29.40 MW nei comuni di Rapone, Castelgerande e Pescopagano (PZ) e opere connesse da realizzarsi nei comuni di Rapone, Castlgrande, Pescopagano (PZ) e Calitri (AV).Proponente: MELFI ENERGIE RINNOVABILI",
+          "project_specific": true,
+          "proponent": "MELFI ENERGIE RINNOVABILI Proponente: MELFI ENERGIE RINNOVABILI S.r.l. Impianto eolico \"Le Toppe\" di",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150867&otype=1011&id=151399",
+        "title": "Impianto eolico \"Le Toppe\" di potenza nominale pari a 29.40 MW nei comuni di Rapone, Castelgerande e Pescopagano (PZ) e opere connesse da realizzarsi nei comuni di Rapone, Castlgrande, Pescopagano (PZ) e Calitri (AV).Proponente: MELFI ENERGIE RINNOVABILI"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 12,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "castelfranco-cer",
+          "target_name": "Castelfranco in Miscano / CER",
+          "score": 20,
+          "reasons": [
+            "power_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A+",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 783,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-c59ba8fb0959a43fa9",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "27e1fd66b4114306479db7a95f46a8c5215162065a4fb41f8fe6379420adef0c",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-c59ba8fb0959a43fa9",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Palazzo San Gervasio",
+            "Banzi",
+            "Genzano di Lucania"
+          ],
+          "power_mw": 30.0,
+          "procedure": "Screening - 2026",
+          "project_name": "REVALUE WIND 2 Srl:Impianto da fonte eolica della potenza di 30 MW composto da n.5 aerogeneratori e relative opere connesse denominato “Palazzo San Gervasio” sito nei Comuni di Palazzo San Gervasio,Banzi, Genzano di Lucania (PZ)",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150868&otype=1011&id=153217",
+        "title": "REVALUE WIND 2 Srl:Impianto da fonte eolica della potenza di 30 MW composto da n.5 aerogeneratori e relative opere connesse denominato “Palazzo San Gervasio” sito nei Comuni di Palazzo San Gervasio,Banzi, Genzano di Lucania (PZ)"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 8,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "serra-giannina",
+          "target_name": "Serra Giannina",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-piano-madama-giulia-aren",
+            "target_name": "Piano Madama Giulia",
+            "score": 20,
+            "reasons": [
+              "municipality_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "castelfranco-cer",
+            "target_name": "Castelfranco in Miscano / CER",
+            "score": 11,
+            "reasons": [
+              "power_near"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 782,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-cad155f1f5460d039c",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "00fc55362645d5ab0e12bdbf757e44c5c4ff269f62a44b2e5e283c10f9c8b0b5",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-cad155f1f5460d039c",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": null,
+          "procedure": "Screening - 2026",
+          "project_name": "GRM GROUP S.R.L. Progetto Parco Eolico,sito nel comune di Melfi (PZ) nella località Visceglie D’Araneo.",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150868&otype=1011&id=153335",
+        "title": "GRM GROUP S.R.L. Progetto Parco Eolico,sito nel comune di Melfi (PZ) nella località Visceglie D’Araneo."
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 788,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-cbd54af690e2ea3bad",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "2ed13a063c9763c184523f1cf8d749c45c117a912fb2cd606bdbe4ff34c2ed7c",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-cbd54af690e2ea3bad",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Banzi"
+          ],
+          "power_mw": 30.0,
+          "procedure": "VIA regionale - 2026",
+          "project_name": "Impianto eolico denominato “Bantia” avente potenza complessiva pari a 30 MW, da realizzarsi nei Comuni di Banzi (PZ) e Palazzo San Gervasio (PZ), con opere di connessione anche nel Comune di Genzano di Lucania (PZ). Proponente: Eni Plenitude Renewables",
+          "project_specific": true,
+          "proponent": "Eni Plenitude Renewables Proponente: Eni Plenitude Renewables Italy S.p.A. Impianto eolico denominato “Bantia” avente",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150867&otype=1011&id=151406",
+        "title": "Impianto eolico denominato “Bantia” avente potenza complessiva pari a 30 MW, da realizzarsi nei Comuni di Banzi (PZ) e Palazzo San Gervasio (PZ), con opere di connessione anche nel Comune di Genzano di Lucania (PZ). Proponente: Eni Plenitude Renewables"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 8,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "serra-giannina",
+          "target_name": "Serra Giannina",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-piano-madama-giulia-aren",
+            "target_name": "Piano Madama Giulia",
+            "score": 20,
+            "reasons": [
+              "municipality_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tarsia-ovest",
+            "target_name": "Tarsia Ovest",
+            "score": 13,
+            "reasons": [
+              "company_overlap"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "castelfranco-cer",
+            "target_name": "Castelfranco in Miscano / CER",
+            "score": 11,
+            "reasons": [
+              "power_near"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    }
+  ],
+  "baseline_candidates": [],
+  "known_updates": [],
+  "discovery_updates": [],
+  "identity_review_items": [],
+  "items": [
+    {
+      "id": 777,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-52bd7e103fa29ad1a5",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "787f8ee5a96614776113982e95c415775550141e0302af7467ab4b27698cd53d",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-52bd7e103fa29ad1a5",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "San Fele"
+          ],
+          "power_mw": 24.0,
+          "procedure": "Screening - 2025",
+          "project_name": "BREVA S.R.L. Progetto DI UN PARCO EOLICO E DELLE RELATIVE OPERE DI CONNESSIONE ALLA RTN-POTENZA NOMINALE 24MW- Località “Orti di Pierno”- Comuni di San Fele (PZ) e Atella (PZ)",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150909",
+        "title": "BREVA S.R.L. Progetto DI UN PARCO EOLICO E DELLE RELATIVE OPERE DI CONNESSIONE ALLA RTN-POTENZA NOMINALE 24MW- Località “Orti di Pierno”- Comuni di San Fele (PZ) e Atella (PZ)"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 778,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-6e55f203d24de8ccd0",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "75b30d5e344cd0f73e93459b309b75021b70de5363dae9fcd17b765bc5c2d35d",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-6e55f203d24de8ccd0",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Filiano"
+          ],
+          "power_mw": null,
+          "procedure": "Screening - 2025",
+          "project_name": "AURA S.R.L. Progetto un impianto eolico della potenza complessiva pari a 750 KW comune di Filiano (PZ) nella località di Cancello della Fìlice.",
+          "project_specific": true,
+          "proponent": "AURA S.R.L. AURA S.R.L. Progetto un impianto eolico della",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150536",
+        "title": "AURA S.R.L. Progetto un impianto eolico della potenza complessiva pari a 750 KW comune di Filiano (PZ) nella località di Cancello della Fìlice."
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 780,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-ab33ac806748d527cf",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "acdbb4d593b9cbc9dc3a153c2d0258a9b4fc558006836a33a6d78f3ca6109d31",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-ab33ac806748d527cf",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": null,
+          "procedure": "Screening - 2025",
+          "project_name": "WIND 1 S.R.L.Impianto eolico denominato “La Rucola” per la produzione di energia elettrica, da realizzare nel comune di Melfi (PZ), costituito da un aerogeneratore della potenza di 1000 kW.",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150805",
+        "title": "WIND 1 S.R.L.Impianto eolico denominato “La Rucola” per la produzione di energia elettrica, da realizzare nel comune di Melfi (PZ), costituito da un aerogeneratore della potenza di 1000 kW."
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 779,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-addc0897ec4e75bddd",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "cd630f6c690831f2658b458ef27dbdafb214528811aaaeae04500b34a5c2e53a",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-addc0897ec4e75bddd",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Filiano"
+          ],
+          "power_mw": 21.6,
+          "procedure": "Screening - 2025",
+          "project_name": "E-Way 18 S.r.l. Progetto per la costruzione e l’esercizio di un impianto di produzione di energia elettrica da fonte eolica di potenza totale pari a 21,6 MW da realizzarsi nei Comuni di Filiano (PZ) e Atella (PZ), in località “Serra dei Daini”",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=149025",
+        "title": "E-Way 18 S.r.l. Progetto per la costruzione e l’esercizio di un impianto di produzione di energia elettrica da fonte eolica di potenza totale pari a 21,6 MW da realizzarsi nei Comuni di Filiano (PZ) e Atella (PZ), in località “Serra dei Daini”"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 789,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-76fdeeab9696e58ff0",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "8a61225a8b3d57c3d63a165ed22bf64d5c1ae289bad95349165c16b964c3aadc",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-76fdeeab9696e58ff0",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Rapone",
+            "Castelgerande",
+            "Pescopagano"
+          ],
+          "power_mw": 29.4,
+          "procedure": "VIA regionale - 2026",
+          "project_name": "Impianto eolico \"Le Toppe\" di potenza nominale pari a 29.40 MW nei comuni di Rapone, Castelgerande e Pescopagano (PZ) e opere connesse da realizzarsi nei comuni di Rapone, Castlgrande, Pescopagano (PZ) e Calitri (AV).Proponente: MELFI ENERGIE RINNOVABILI",
+          "project_specific": true,
+          "proponent": "MELFI ENERGIE RINNOVABILI Proponente: MELFI ENERGIE RINNOVABILI S.r.l. Impianto eolico \"Le Toppe\" di",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150867&otype=1011&id=151399",
+        "title": "Impianto eolico \"Le Toppe\" di potenza nominale pari a 29.40 MW nei comuni di Rapone, Castelgerande e Pescopagano (PZ) e opere connesse da realizzarsi nei comuni di Rapone, Castlgrande, Pescopagano (PZ) e Calitri (AV).Proponente: MELFI ENERGIE RINNOVABILI"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 12,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "castelfranco-cer",
+          "target_name": "Castelfranco in Miscano / CER",
+          "score": 20,
+          "reasons": [
+            "power_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A+",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 783,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-c59ba8fb0959a43fa9",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "27e1fd66b4114306479db7a95f46a8c5215162065a4fb41f8fe6379420adef0c",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-c59ba8fb0959a43fa9",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Palazzo San Gervasio",
+            "Banzi",
+            "Genzano di Lucania"
+          ],
+          "power_mw": 30.0,
+          "procedure": "Screening - 2026",
+          "project_name": "REVALUE WIND 2 Srl:Impianto da fonte eolica della potenza di 30 MW composto da n.5 aerogeneratori e relative opere connesse denominato “Palazzo San Gervasio” sito nei Comuni di Palazzo San Gervasio,Banzi, Genzano di Lucania (PZ)",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150868&otype=1011&id=153217",
+        "title": "REVALUE WIND 2 Srl:Impianto da fonte eolica della potenza di 30 MW composto da n.5 aerogeneratori e relative opere connesse denominato “Palazzo San Gervasio” sito nei Comuni di Palazzo San Gervasio,Banzi, Genzano di Lucania (PZ)"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 8,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "serra-giannina",
+          "target_name": "Serra Giannina",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-piano-madama-giulia-aren",
+            "target_name": "Piano Madama Giulia",
+            "score": 20,
+            "reasons": [
+              "municipality_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "castelfranco-cer",
+            "target_name": "Castelfranco in Miscano / CER",
+            "score": 11,
+            "reasons": [
+              "power_near"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 782,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-cad155f1f5460d039c",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "00fc55362645d5ab0e12bdbf757e44c5c4ff269f62a44b2e5e283c10f9c8b0b5",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-cad155f1f5460d039c",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": null,
+          "procedure": "Screening - 2026",
+          "project_name": "GRM GROUP S.R.L. Progetto Parco Eolico,sito nel comune di Melfi (PZ) nella località Visceglie D’Araneo.",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150868&otype=1011&id=153335",
+        "title": "GRM GROUP S.R.L. Progetto Parco Eolico,sito nel comune di Melfi (PZ) nella località Visceglie D’Araneo."
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 788,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-cbd54af690e2ea3bad",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "2ed13a063c9763c184523f1cf8d749c45c117a912fb2cd606bdbe4ff34c2ed7c",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-cbd54af690e2ea3bad",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Banzi"
+          ],
+          "power_mw": 30.0,
+          "procedure": "VIA regionale - 2026",
+          "project_name": "Impianto eolico denominato “Bantia” avente potenza complessiva pari a 30 MW, da realizzarsi nei Comuni di Banzi (PZ) e Palazzo San Gervasio (PZ), con opere di connessione anche nel Comune di Genzano di Lucania (PZ). Proponente: Eni Plenitude Renewables",
+          "project_specific": true,
+          "proponent": "Eni Plenitude Renewables Proponente: Eni Plenitude Renewables Italy S.p.A. Impianto eolico denominato “Bantia” avente",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150867&otype=1011&id=151406",
+        "title": "Impianto eolico denominato “Bantia” avente potenza complessiva pari a 30 MW, da realizzarsi nei Comuni di Banzi (PZ) e Palazzo San Gervasio (PZ), con opere di connessione anche nel Comune di Genzano di Lucania (PZ). Proponente: Eni Plenitude Renewables"
+      },
+      "category": "new_project_candidate",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 8,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "serra-giannina",
+          "target_name": "Serra Giannina",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-piano-madama-giulia-aren",
+            "target_name": "Piano Madama Giulia",
+            "score": 20,
+            "reasons": [
+              "municipality_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tarsia-ovest",
+            "target_name": "Tarsia Ovest",
+            "score": 13,
+            "reasons": [
+              "company_overlap"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "castelfranco-cer",
+            "target_name": "Castelfranco in Miscano / CER",
+            "score": 11,
+            "reasons": [
+              "power_near"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    },
+    {
+      "id": 772,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-7f740ad1034ca3724c",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "c0c09ef5ca9d2d4866c49e1c2cd267813a6c862bfa5ed09972ea07fe77de9472",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-7f740ad1034ca3724c",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": 0.999,
+          "procedure": "Screening",
+          "project_name": "AURA S.R.L.. Progetto per la realizzazione di un impianto eolico da ubicare nel comune di Melfi (PZ) in località \"Masseria Marciagallo\", potenza nominale pari a 0,999 MW e delle relative opere di connessione alla RTN ricadenti nello stesso comune.",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=100002&otype=1011&id=137450",
+        "title": "AURA S.R.L.. Progetto per la realizzazione di un impianto eolico da ubicare nel comune di Melfi (PZ) in località \"Masseria Marciagallo\", potenza nominale pari a 0,999 MW e delle relative opere di connessione alla RTN ricadenti nello stesso comune."
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 781,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-9b02d4000423901494",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "11640a42d25cb18b7588ecd830051130c1ce1da989cc5db88c01b16909165ec8",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-9b02d4000423901494",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Tricarico",
+            "Grassano"
+          ],
+          "power_mw": 5.0,
+          "procedure": "Screening - 2026",
+          "project_name": "GRV Le Rose S.r.l.Progetto definitivo per la realizzazione di un parco eolico denominato “Le Rose composto da 6 aerogeneratori da 5.0 MW",
+          "project_specific": true,
+          "proponent": null,
+          "province": "MT",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2026"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=150868&otype=1011&id=151348",
+        "title": "GRV Le Rose S.r.l.Progetto definitivo per la realizzazione di un parco eolico denominato “Le Rose composto da 6 aerogeneratori da 5.0 MW"
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 20,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "tricarico",
+          "target_name": "Tricarico",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E6",
+          "priority": "A",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 773,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-c24ff72afd657265c8",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "c14cfd3cb559920afa322425602f447cdd1dd9e68bd553ac49642a9b61930ffa",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-c24ff72afd657265c8",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": 8.0,
+          "procedure": "Screening",
+          "project_name": "Progetto di un impianto per la produzione di energia da fonte eolica, della potenza di 8,0 MW, da realizzarsi nel comune di Melfi (PZ).Denominato (melfi uno) società ELIANTUS",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=100002&otype=1011&id=140902",
+        "title": "Progetto di un impianto per la produzione di energia da fonte eolica, della potenza di 8,0 MW, da realizzarsi nel comune di Melfi (PZ).Denominato (melfi uno) società ELIANTUS"
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 776,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-c2957b0af5f26fc216",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "60da92916ef9575e8ee128bb9087725759aa7c2d48205b60051aa9fb50f020fb",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-c2957b0af5f26fc216",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Maschito"
+          ],
+          "power_mw": 0.999,
+          "procedure": "Screening - 2025",
+          "project_name": "ZEFIRO S.r.l. Progetto per la realizzazione di un impianto eolico da ubicare nel comune di Maschito (PZ) in località \"Casano\", potenza nominale pari a 0,999 MW e delle relative opere di connessione alla RTN ricadenti nei comuni di Maschito e Venosa.",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150833",
+        "title": "ZEFIRO S.r.l. Progetto per la realizzazione di un impianto eolico da ubicare nel comune di Maschito (PZ) in località \"Casano\", potenza nominale pari a 0,999 MW e delle relative opere di connessione alla RTN ricadenti nei comuni di Maschito e Venosa."
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 20,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "venusia",
+          "target_name": "Venusia",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A+",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 774,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-cb24df3edbbf14d10f",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "ebf2b932d5244a223e3c1aeed87256b52a279471f1710b64f849c94c70f70ce5",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-cb24df3edbbf14d10f",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Tricarico",
+            "Grassano"
+          ],
+          "power_mw": 5.0,
+          "procedure": "Screening - 2025",
+          "project_name": "GRV Le Rose S.r.l.Progetto definitivo per la realizzazione di un parco eolico denominato “Le Rose composto da 6 aerogeneratori da 5.0 MW",
+          "project_specific": true,
+          "proponent": null,
+          "province": "MT",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=151348",
+        "title": "GRV Le Rose S.r.l.Progetto definitivo per la realizzazione di un parco eolico denominato “Le Rose composto da 6 aerogeneratori da 5.0 MW"
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 20,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "tricarico",
+          "target_name": "Tricarico",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E6",
+          "priority": "A",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 775,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-f36b056456d2d0e8b2",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "8d0b562c54bf2c3f64ae75a10ede9c89077815f6373454cbbfdde2c5f5fa04cd",
+      "created_at": "2026-10-02T15:09:17",
+      "finding": {
+        "external_id": "BASILICATA-WIND-f36b056456d2d0e8b2",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [],
+          "power_mw": 9.0,
+          "procedure": "Screening - 2025",
+          "project_name": "GRM GROUP S.R.L.. Progetto per la realizzazione di un parco eolico, denominato \" Ralle Vecchie\" - Genzano di Lucania (PZ)",
+          "project_specific": true,
+          "proponent": null,
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "Screening - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145352&otype=1011&id=150343",
+        "title": "GRM GROUP S.R.L.. Progetto per la realizzazione di un parco eolico, denominato \" Ralle Vecchie\" - Genzano di Lucania (PZ)"
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 787,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-4f0a5fad439cb6d946",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "a77d17a126375a84177a7a086f506926cc666d94568ef7af1582f46072b9b493",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-4f0a5fad439cb6d946",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Ferrandina"
+          ],
+          "power_mw": 4.2,
+          "procedure": "VIA regionale - 2025",
+          "project_name": "Parco eolico composto da 7 aerogeneratori da 4,2MW ciascuno, per una potenza complessiva di 29,4MW da realizzarsi nel comune di Ferrandina (MT) con opere di connessione nello stesso comune. Proponente: BREZZA LUCANA S.r.l.",
+          "project_specific": true,
+          "proponent": "BREZZA LUCANA S.r.l. Proponente: BREZZA LUCANA S.r.l. Parco eolico composto da 7 aerogeneratori da 4,2MW ciascuno, per una",
+          "province": "MT",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145351&otype=1011&id=148944",
+        "title": "Parco eolico composto da 7 aerogeneratori da 4,2MW ciascuno, per una potenza complessiva di 29,4MW da realizzarsi nel comune di Ferrandina (MT) con opere di connessione nello stesso comune. Proponente: BREZZA LUCANA S.r.l."
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 784,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-55144ad250d176b77b",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "b5f5ed985e56fc9f9e9eb0204be81ea6c4c6bcfd6f12013b4f339d0c761424a2",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-55144ad250d176b77b",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Balvano"
+          ],
+          "power_mw": 5.6,
+          "procedure": "VIA regionale - 2025",
+          "project_name": "Impianto eolico denominato “Saulia” composto da 5 aerogeneratori da 5,6MW ciascuno, per una potenza complessiva di 28MW sito nei comuni di Balvano (PZ), Vietri di Potenza (PZ), Savoia di Lucania (PZ) e con opere di connessione nel Comune di Picerno (PZ).",
+          "project_specific": true,
+          "proponent": "GR Value Ruoti S.r.l. Impianto eolico denominato “Saulia” composto da 5 aerogeneratori da 5,6MW ciascuno, per una",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145351&otype=1011&id=148328",
+        "title": "Impianto eolico denominato “Saulia” composto da 5 aerogeneratori da 5,6MW ciascuno, per una potenza complessiva di 28MW sito nei comuni di Balvano (PZ), Vietri di Potenza (PZ), Savoia di Lucania (PZ) e con opere di connessione nel Comune di Picerno (PZ)."
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-green-power-wind-1",
+          "target_name": "GREEN POWER WIND 1",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "venusia",
+            "target_name": "Venusia",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A+",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 786,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-8b4e44d2675abad25b",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "25c188012034d904d35d9c15b24fd3d4c9bd9dc32a1a9097a0b621f229d673fe",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-8b4e44d2675abad25b",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Melfi"
+          ],
+          "power_mw": 7.2,
+          "procedure": "VIA regionale - 2025",
+          "project_name": "Impianto eolico denominato “MELFI WIND FARM”, costituito da 4 aerogeneratori da 7.2 MW, per una potenza complessiva pari a 28.8 MW, da ubicarsi nel Comune di Melfi (Pz) e relative opere di connessione. Proponente: Energy Total Capital Melfi Wind Farm Srl",
+          "project_specific": true,
+          "proponent": "Energy Total Capital Melfi Wind Farm Srl Proponente: Energy Total Capital Melfi Wind Farm S.r.l. Impianto eolico denominato “MELFI WIND FARM”, costituito da 4 aerogeneratori da 7.2 MW, per una",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145351&otype=1011&id=147144",
+        "title": "Impianto eolico denominato “MELFI WIND FARM”, costituito da 4 aerogeneratori da 7.2 MW, per una potenza complessiva pari a 28.8 MW, da ubicarsi nel Comune di Melfi (Pz) e relative opere di connessione. Proponente: Energy Total Capital Melfi Wind Farm Srl"
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 5,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-ruvo-rwind",
+          "target_name": "Ruvo",
+          "score": 13,
+          "reasons": [
+            "company_overlap"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "tricarico",
+            "target_name": "Tricarico",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E6",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 785,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Basilicata VIA/Screening",
+      "external_id": "BASILICATA-WIND-ae5867cff664f916ec",
+      "event_type": "new",
+      "previous_hash": null,
+      "new_hash": "d11b1e1ba86991ba108bc5ae8eb507b970ab735c974f321d5b5a6b50b18b0ea6",
+      "created_at": "2026-10-02T15:09:18",
+      "finding": {
+        "external_id": "BASILICATA-WIND-ae5867cff664f916ec",
+        "finding_type": "project_source",
+        "payload": {
+          "municipalities": [
+            "Maschito",
+            "Forenza",
+            "in provincia di Potenza"
+          ],
+          "power_mw": 9.9,
+          "procedure": "VIA regionale - 2025",
+          "project_name": "Impianto eolico della potenza nominale di 9,9 MW denominato Parco Eolico MASCHITO e le relative opere di connessione, situato nei comuni di Maschito e Forenza, in provincia di Potenza (PZ). Proponente: AEI PROJECT II S.r.l.",
+          "project_specific": true,
+          "proponent": "AEI PROJECT II S.r.l. Proponente: AEI PROJECT II S.r.l. Impianto eolico della",
+          "province": "PZ",
+          "region": "Basilicata",
+          "sector": "eolico",
+          "source_adapter_origin": "pv_agent_mvp/basilicata.py",
+          "source_grade_ceiling": "A1",
+          "status_raw": "VIA regionale - 2025"
+        },
+        "source_name": "Regione Basilicata VIA/Screening",
+        "source_url": "http://valutazioneambientale.regione.basilicata.it/valutazioneambie/detail.jsp?sec=145351&otype=1011&id=148959",
+        "title": "Impianto eolico della potenza nominale di 9,9 MW denominato Parco Eolico MASCHITO e le relative opere di connessione, situato nei comuni di Maschito e Forenza, in provincia di Potenza (PZ). Proponente: AEI PROJECT II S.r.l."
+      },
+      "category": "non_target_scale",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "venusia",
+          "target_name": "Venusia",
+          "score": 28,
+          "reasons": [
+            "municipality_match",
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E7",
+          "priority": "A+",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-costa-delle-ripe",
+            "target_name": "Wind Farm Costa delle Ripe",
+            "score": 28,
+            "reasons": [
+              "municipality_match",
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "on-green-power-wind-1",
+            "target_name": "GREEN POWER WIND 1",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          },
+          {
+            "target_kind": "canonical",
+            "target_id": "serra-giannina",
+            "target_name": "Serra Giannina",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E7",
+            "priority": "A",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": true,
+      "pipeline_eligibility": "non_target_scale",
+      "pipeline_eligibility_reason": "below_10_mw"
+    },
+    {
+      "id": 790,
+      "run_id": "20261002150910138023",
+      "agent_name": "institutional_watch",
+      "source_name": "Regione Liguria VIA",
+      "external_id": "LIGURIA-VIA-CHANNEL",
+      "event_type": "changed",
+      "previous_hash": "d36910f90466caa01c660aea5c15acdaec9e6cf9093640520c71aadd1680743e",
+      "new_hash": "b99cb39274fb014492c4ad0a101b9f90f464358fb7a820e4511a65b114b5ad34",
+      "created_at": "2026-10-02T15:12:45",
+      "finding": {
+        "external_id": "LIGURIA-VIA-CHANNEL",
+        "finding_type": "source_channel_snapshot",
+        "payload": {
+          "availability": "degraded_primary_unavailable",
+          "evidence_layer": "institutional_channel",
+          "execution_scope": null,
+          "fallback_url": "https://www.regione.liguria.it/homepage-ambiente/cosa-cerchi/via-vas-aia-aua/valutazione-impatto-ambientale-via.html",
+          "fallback_verified": false,
+          "official_page_excerpt": "",
+          "primary_fetch_error": "ConnectionError: HTTPSConnectionPool(host='siraviavas.regione.liguria.it', port=443): Max retries exceeded with url: /ElencoInCorsoVIA.aspx?Tipo=VIA (Caused by NameResolutionError(\"HTTPSConnection(host='siraviavas.regione.liguria.it', port=443): Failed to resolve 'siraviavas.regione.liguria.it' ([Errno 11002] getaddrinfo failed)\")); fallback=ConnectionError: HTTPSConnectionPool(host='www.regione.liguria.it', port=443): Max retries exceeded with url: /homepage-ambiente/cosa-cerchi/via-vas-aia-aua/valutazione-impatto-ambientale-via.html (Caused by NameResolutionError(\"HTTPSConnection(host='www.regione.liguria.it', port=443): Failed to resolve 'www.regione.liguria.it' ([Errno 11002] getaddrinfo failed)\"))",
+          "primary_url": "https://siraviavas.regione.liguria.it/ElencoInCorsoVIA.aspx?Tipo=VIA",
+          "project_specific": false,
+          "region": "Liguria",
+          "runtime_note": "Primary proceedings endpoint unavailable to runner; official Regione Liguria VIA page and procedures-service link remain the monitored fallback. No project rows were claimed.",
+          "sector": "eolico",
+          "service_link_verified": false,
+          "service_url": "https://servizi.regione.liguria.it/page/welcome/VIA",
+          "source_grade_ceiling": "A1"
+        },
+        "source_name": "Regione Liguria VIA",
+        "source_url": "https://www.regione.liguria.it/homepage-ambiente/cosa-cerchi/via-vas-aia-aua/valutazione-impatto-ambientale-via.html",
+        "title": "Regione Liguria — procedimenti VIA"
+      },
+      "category": "non_project_event",
+      "reconciliation": {
+        "status": "unmatched",
+        "auto_reconciled": false,
+        "margin": 0,
+        "best": {
+          "target_kind": "canonical",
+          "target_id": "on-sv7-bric-delle-rocche",
+          "target_name": "SV7 BRIC DELLE ROCCHE",
+          "score": 8,
+          "reasons": [
+            "region_match"
+          ],
+          "strong_identity": false,
+          "stage": "E2",
+          "priority": "C",
+          "activity_class": null,
+          "status": null
+        },
+        "alternatives": [
+          {
+            "target_kind": "canonical",
+            "target_id": "on-sv9-monte-camulera",
+            "target_name": "SV9 MONTE CAMULERA",
+            "score": 8,
+            "reasons": [
+              "region_match"
+            ],
+            "strong_identity": false,
+            "stage": "E2",
+            "priority": "C",
+            "activity_class": null,
+            "status": null
+          }
+        ],
+        "guard": "Reconciliation is advisory only: no canonical/discovery write or promotion is performed."
+      },
+      "project_specific": false,
+      "pipeline_eligibility": "eligible",
+      "pipeline_eligibility_reason": null
+    }
+  ],
+  "guard": "Daily discovery is review-only. A candidate is not added to the canonical Wind Radar until identity/configuration/current activity pass the evidence gate."
+}

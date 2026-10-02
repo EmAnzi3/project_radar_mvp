@@ -1,0 +1,26 @@
+{
+  "run_ids": [
+    "20261001093024853420",
+    "20261001093629233316"
+  ],
+  "canonical_projects": 51,
+  "discovery_candidates_known": 9,
+  "events": 0,
+  "baseline_records": 0,
+  "baseline_project_candidates": 0,
+  "baseline_known_projects": 0,
+  "baseline_discovery_candidates": 0,
+  "new_project_candidates": 0,
+  "known_project_updates": 0,
+  "discovery_candidate_updates": 0,
+  "identity_reviews": 0,
+  "filtered_non_pipeline": 0,
+  "category_counts": {},
+  "new_candidates": [],
+  "baseline_candidates": [],
+  "known_updates": [],
+  "discovery_updates": [],
+  "identity_review_items": [],
+  "items": [],
+  "guard": "Daily discovery is review-only. A candidate is not added to the canonical Wind Radar until identity/configuration/current activity pass the evidence gate."
+}
