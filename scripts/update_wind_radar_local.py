@@ -92,10 +92,13 @@ def _html_table(items: list[dict[str, Any]], empty_text: str) -> str:
             else "—"
         )
         match = "—"
-        if row.get("matched_name"):
+        match_status = row.get("match_status")
+        if row.get("matched_name") and match_status in {"high_confidence_match", "review_match", "weak_match"}:
             score = row.get("match_score")
             score_text = f" ({score})" if score is not None else ""
             match = f"{escape(str(row['matched_name']))}{score_text}"
+        elif row.get("matched_name"):
+            match = "nessun match attendibile"
         rows.append(
             "<tr>"
             f"<td><b>{escape(str(row.get('project_name') or 'N/D'))}</b>"

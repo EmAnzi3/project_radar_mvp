@@ -13,7 +13,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.base import AgentFinding
-from app.wind_agents.reconcile import classify_daily_discovery_event, load_canonical_projects
+from app.wind_agents.reconcile import (\n    classify_daily_discovery_event,\n    load_canonical_projects,\n    load_discovery_candidates,\n    reconcile_finding,\n)
 from app.wind_agents import state as wind_state
 
 
@@ -39,6 +39,113 @@ def main() -> int:
         if not company or not power_ok or not municipalities:
             incomplete_canonical.append(project.get("id"))
     assert not incomplete_canonical, f"canonical projects missing company/MW/municipality: {incomplete_canonical}"
+
+    discovery = load_discovery_candidates()
+    baseline_review_ids = {
+        "on-santarcangelo-elettrowind",
+        "on-cerentino-plenitude",
+        "on-wind-farm-aliseo",
+        "on-piani-della-caserma",
+        "on-corbo-alvania",
+        "on-tempa-dei-greci",
+        "on-vento-di-servigliano",
+        "on-santa-irene",
+        "on-paladino",
+        "on-95kr-le-serre",
+        "on-ariano-irpino-2",
+        "on-calitri-bisaccia-camelia",
+        "on-reino-wind-farm",
+        "on-monte-cerchio",
+        "on-sassello-forte-lodrino",
+        "on-piccapietre",
+        "on-stornara-nord",
+        "on-sparpagliata-donne-masi-tostini",
+        "on-masseria-flamia-ginestrelle",
+        "on-posta-pila-cerignola",
+        "on-salice-wind",
+        "on-ponticello-inergia",
+        "on-trigno-barbara-renewable",
+        "on-masseria-salatti-posta-vassallo",
+        "on-sv6-bric-dei-mori",
+        "on-le-toppe",
+        "on-bantia",
+    }
+    discovery_by_id = {row.get("candidate_id"): row for row in discovery}
+    assert baseline_review_ids <= set(discovery_by_id), "baseline review candidates missing from Discovery"
+    review_mw = round(sum(float(discovery_by_id[cid].get("wind_mw") or 0) for cid in baseline_review_ids), 3)
+    assert abs(review_mw - 919.595) < 0.001, review_mw
+    assert "on-sv7-bric-delle-rocche" not in baseline_review_ids
+    assert discovery_by_id["on-sv6-bric-dei-mori"]["name"] == "SV6 BRIC DEI MORI"
+
+    corona_event = {
+        "event_type": "baseline",
+        "external_id": "test-corona-prima-alias",
+        "finding": {
+            "external_id": "test-corona-prima-alias",
+            "source_name": "Regione Basilicata Ufficio Energia",
+            "source_url": "https://example.invalid/corona-prima",
+            "title": "Corona Prima",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "Corona Prima",
+                "proponent": "ADEST S.r.l.",
+                "region": "Basilicata",
+                "municipalities": ["Tricarico"],
+                "power_mw": 42.0,
+            },
+        },
+    }
+    corona = classify_daily_discovery_event(corona_event, canonical=canonical, discovery=discovery)
+    assert corona["category"] == "baseline_known_project", corona
+    assert corona["reconciliation"]["best"]["target_id"] == "tricarico", corona
+    assert "manual_identity_override" in corona["reconciliation"]["best"]["reasons"], corona
+
+    tarsia_event = {
+        "event_type": "baseline",
+        "external_id": "test-tarsia-ovest-alias",
+        "finding": {
+            "external_id": "test-tarsia-ovest-alias",
+            "source_name": "Regione Calabria Provvedimenti",
+            "source_url": "https://example.invalid/tarsia-ovest-voltura",
+            "title": "VOLTURA del provvedimento per il progetto Parco Eolico Tarsia Ovest",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "VOLTURA del provvedimento per il progetto Parco Eolico Tarsia Ovest",
+                "region": "Calabria",
+                "municipalities": ["Tarsia"],
+            },
+        },
+    }
+    tarsia = classify_daily_discovery_event(tarsia_event, canonical=canonical, discovery=discovery)
+    assert tarsia["category"] == "baseline_known_project", tarsia
+    assert tarsia["reconciliation"]["best"]["target_id"] == "tarsia-ovest", tarsia
+
+    shared_registry_event = {
+        "event_type": "baseline",
+        "external_id": "test-shared-registry-not-identity",
+        "finding": {
+            "external_id": "test-shared-registry-not-identity",
+            "source_name": "Regione Basilicata Ufficio Energia",
+            "source_url": "https://www.regione.basilicata.it/?temi-im=espropri%2Favviso-di-avvio-di-procedimento",
+            "title": "Progetto Eolico Test Identita Non Correlata",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "Progetto Eolico Test Identita Non Correlata",
+                "proponent": "Societa Test Non Correlata S.r.l.",
+                "region": "Basilicata",
+                "municipalities": ["Comune Test Non Correlato"],
+                "power_mw": 99.9,
+            },
+        },
+    }
+    shared_registry = reconcile_finding(shared_registry_event["finding"], canonical=canonical, discovery=discovery)
+    assert shared_registry["status"] == "unmatched", shared_registry
+    if shared_registry.get("best"):
+        assert "exact_source_url" not in (shared_registry["best"].get("reasons") or []), shared_registry
+        assert "related_source_url" not in (shared_registry["best"].get("reasons") or []), shared_registry
 
     known = canonical[0]
     source_url = next(

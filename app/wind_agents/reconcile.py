@@ -147,7 +147,11 @@ def _place_score(finding: dict[str, Any], candidate: dict[str, Any]) -> tuple[in
 def _source_urls(candidate: dict[str, Any]) -> list[str]:
     urls: list[str] = []
     for source in candidate.get("sources") or []:
-        if isinstance(source, dict) and source.get("url"):
+        if (
+            isinstance(source, dict)
+            and source.get("url")
+            and source.get("identity_match", True) is not False
+        ):
             urls.append(str(source["url"]))
     return urls
 
@@ -270,6 +274,79 @@ def _score_candidate(finding: dict[str, Any], candidate: dict[str, Any]) -> dict
     }
 
 
+def _load_reconciliation_overrides() -> dict[str, Any]:
+    path = DATA / "reconciliation-overrides-v01.json"
+    if not path.exists():
+        return {}
+    data = _load_json(path)
+    return data if isinstance(data, dict) else {}
+
+
+def _manual_canonical_override(
+    finding: dict[str, Any],
+    canonical_rows: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Resolve only identities explicitly reviewed against the canonical radar.
+
+    Overrides are deliberately strict: a configured alias and configured place
+    must both match. Rules may additionally require a company match.
+    """
+    rules = _load_reconciliation_overrides().get("canonical_aliases") or []
+    payload = finding.get("payload") or {}
+    title = payload.get("project_name") or finding.get("title") or ""
+    title_norm = _norm(title)
+    proponent = (
+        payload.get("proponent")
+        or payload.get("developer")
+        or payload.get("developer_or_spv")
+        or payload.get("spv")
+        or payload.get("company_name")
+        or ""
+    )
+    finding_places = _place_values(payload)
+
+    for rule in rules:
+        aliases = [_norm(value) for value in rule.get("aliases") or [] if _norm(value)]
+        alias_match = any(
+            title_norm == alias
+            or (len(alias) >= 5 and alias in title_norm)
+            for alias in aliases
+        )
+        if not alias_match:
+            continue
+
+        required_places = {
+            _norm(value) for value in rule.get("municipalities") or [] if _norm(value)
+        }
+        if required_places:
+            place_match = any(
+                left == right
+                or (min(len(left), len(right)) >= 5 and (left in right or right in left))
+                for left in finding_places
+                for right in required_places
+            )
+            if not place_match:
+                continue
+
+        if rule.get("require_company"):
+            companies = rule.get("companies") or []
+            if not proponent or not any(_company_score(proponent, company)[0] > 0 for company in companies):
+                continue
+
+        target_id = rule.get("target_id")
+        target = next((row for row in canonical_rows if row.get("id") == target_id), None)
+        if not target:
+            continue
+
+        scored = _score_candidate(finding, _canonical_candidate(target))
+        scored["score"] = 100
+        scored["strong_identity"] = True
+        scored["reasons"] = ["manual_identity_override", *(scored.get("reasons") or [])]
+        return scored
+
+    return None
+
+
 def reconcile_finding(
     finding: dict[str, Any],
     *,
@@ -280,6 +357,18 @@ def reconcile_finding(
 
     canonical_rows = canonical if canonical is not None else load_canonical_projects()
     discovery_rows = discovery if discovery is not None else load_discovery_candidates()
+
+    manual = _manual_canonical_override(finding, canonical_rows)
+    if manual:
+        return {
+            "status": "high_confidence_match",
+            "auto_reconciled": True,
+            "margin": 100,
+            "best": manual,
+            "alternatives": [],
+            "guard": "Manual identity override is evidence-reviewed; no canonical promotion or mutation is performed.",
+        }
+
     canonical_targets = [_canonical_candidate(row) for row in canonical_rows]
     canonical_ids = {row.get("target_id") for row in canonical_targets}
     discovery_targets = [
