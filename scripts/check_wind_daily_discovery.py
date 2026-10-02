@@ -13,7 +13,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.base import AgentFinding
-from app.wind_agents.reconcile import (\n    classify_daily_discovery_event,\n    load_canonical_projects,\n    load_discovery_candidates,\n    reconcile_finding,\n)
+from app.wind_agents.reconcile import (
+    classify_daily_discovery_event,
+    load_canonical_projects,
+    load_discovery_candidates,
+    reconcile_finding,
+)
 from app.wind_agents import state as wind_state
 
 
