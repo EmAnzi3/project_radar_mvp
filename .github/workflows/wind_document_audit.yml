@@ -116,6 +116,37 @@ jobs:
           finally:
               store.close()
           PY
+      - name: Extend persistent document queue beyond the original pilot
+        run: >-
+          python scripts/wind_document_queue.py --output reports/wind-document-audit
+          --plan config/wind_document_queue_pilot.json --max-assets 6
+      - name: Verify complete queue seeding and actual additional project PDFs
+        run: |
+          python - <<'PY'
+          import json,sys
+          from pathlib import Path
+          sys.path.insert(0,str(Path('scripts').resolve()))
+          from wind_document_audit import Ledger
+          from wind_document_queue import Queue
+          root=Path('reports/wind-document-audit')
+          ledger=Ledger(root)
+          try:
+              queue=Queue(ledger); before=queue.export()
+              assert before['projects_with_source_tickets']==96
+              assert before['qualification_with_source_tickets']==57
+              assert len(before['work'])>=487
+              additional={r['project_id'] for r in before['work'] if r['project_id'] in {'on-sestino-rwe-39-6','on-mercatello-engie-36','andretta-bisaccia','RAW-038'} and r['state']=='text_available_review_pending'}
+              assert len(additional)>=2, 'Additional PDFs could not be read: inspect source_work and attempts'
+              queue.seed();after=queue.export()
+              assert before['queue_counts']==after['queue_counts'], 'Seed must not reset work'
+              assert len(before['work'])==len(after['work'])
+              assert after['complete_dossiers']==0 and after['canonical_writes']==0
+              ledger.export()
+              summary={'additional_projects_with_extracted_text':sorted(additional),'queue_counts':after['queue_counts'],'source_counts':after['source_counts'],'complete_dossiers':0}
+              (root/'D4-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+              print(json.dumps(summary,ensure_ascii=False,indent=2))
+          finally:ledger.db.close()
+          PY
       - name: Verify no canonical writes
         if: always()
         run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
@@ -128,7 +159,7 @@ jobs:
         if: always()
         run: |
           mkdir -p reports/wind-document-audit/reproduction
-          cp scripts/wind_document_*.py tests/test_wind_document_*.py config/wind_document_review_pilot.json reports/wind-document-audit/reproduction/
+          cp scripts/wind_document_*.py tests/test_wind_document_*.py config/wind_document_*pilot.json reports/wind-document-audit/reproduction/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
