@@ -1,71 +1,52 @@
 # Current State
 
-## Fase corrente — D5: memoria delle letture, non archivio PDF (05/10/2026)
+## Fase corrente — D6: leggere una volta, conservare risultati e versione (05/10/2026)
 
-Branch `feat/wind-daily-discovery`, PR #9 OPEN/DRAFT, nessun merge autorizzato. Il modulo documentale resta separato dal BAT quotidiano, da `app/wind_agents` e dai dati/dashboard in `docs/wind`.
+Branch `feat/wind-daily-discovery`, PR #9 OPEN/DRAFT. Nessun merge o pubblicazione autorizzati. Il sistema documentale resta separato dal BAT quotidiano, dal matcher `app/wind_agents` e da dati/layout `docs/wind`.
 
-La precisazione dell'utente modifica la politica precedente: i documenti sono file temporanei di lavoro. Una volta completata la lettura di una versione, si conservano informazioni, provenienza, impronta SHA-256, pagine/estratti utili, esiti e contraddizioni. Non si archivia permanentemente il PDF o il suo testo integrale. Il documento si rilegge quando cambia il contenuto, non a ogni run.
+La richiesta dell'utente è conservare informazioni e memoria della lettura, non archiviare gli originali. I PDF servono soltanto come file temporanei. Le versioni completate sono riprese solo per controlli di modifica a cadenza o per un nuovo contenuto. Un errore della fonte non significa documento invariato, né cancella i risultati precedenti. Un documento letto integralmente non è un fascicolo completo.
 
 ### Perimetro invariato
 
-- 96 identità registrate: 51 canoniche, 34 Discovery correnti, 4 da riconfermare, 7 escluse.
-- 85 classificate correnti nei registri: non sono 85 nuove certificazioni commerciali.
-- 57 gruppi di qualificazione, 4 già collegati e 53 non collegati; i 53 non sono progetti unici accertati.
-- Audit anche sui 51 canonici. I dati mancanti attivano approfondimento.
-- Il seed documentale riunisce anche `discovery-census-v04*.json`; il matcher quotidiano non viene modificato.
+96 identità: 51 canoniche, 34 Discovery correnti, 4 da riconfermare, 7 escluse. Le 85 classificate correnti non sono altrettante nuove certificazioni commerciali. 57 gruppi di qualificazione: 4 collegati e 53 non collegati, non 53 progetti unici accertati. Audit obbligatorio anche sui 51 canonici. Il seed documentale comprende i registri `discovery-census-v04*.json`; il matcher precedente non è modificato.
 
-### D5 implementata, validazione locale eseguita
+### Checkpoint già verificato D5
 
-- `scripts/wind_document_memory.py`: ricevute di evidenza, completamento esplicito per versione, rilascio file di lavoro e verifica condizionale delle modifiche.
-- `scripts/wind_document_lifecycle.py`: migrazione una tantum e riavvio da memoria senza corpus originale.
-- Primo documento completamente letto: comunicato RWE Serra Giannina, 2 pagine, versione SHA `9eb86b887b38da5012219a6ca62cd630ecf3b794523c310fa9f6d1c4b50acaed`. Non è il fascicolo completo del progetto.
-- 27 riscontri conservati (24 D3 + 3 sul comunicato RWE) con brevi estratti e riferimenti; nessun contatto o ruolo EPC inventato.
-- Snapshot locale di circa 2,2 MB, senza PDF, immagini, contenitori o testo integrale; i 13 documenti parziali e gli 811 ancora da acquisire restano in coda.
-- 114 test locali superati: 82 precedenti invariati + 32 D5. Riavvio reale dello snapshot locale senza originali: zero acquisizioni, zero letture ripetute, nessun duplicato.
-- I test HTTP sintetici verificano 304, 200 a hash invariato, contenuto cambiato, errori, redirect e budget. Il risultato della verifica HTTP live va letto nel run del commit, non dedotto dai test.
+HEAD D5 `ee443c18e060bf61b2617ecc8d8a264456a67d6f`: document audit #5 `37326178418`, Wind checks #408 e live source smoke #226 SUCCESS. Artefatto `11352147856`: memoria di circa 2,2MB senza originali o testo integrale, 27 riscontri, 1 versione completamente letta (comunicato RWE Serra Giannina di 2 pagine). Il controllo HTTP reale ha restituito304, zero byte trasferiti, zero estrazioni. Il riavvio senza originali ha prodotto zero acquisizioni. I 13 documenti parziali e gli 811 ancora da acquisire sono rimasti in coda.
 
-D5 distingue `unchanged_by_server` (304), `unchanged_by_hash`, `content_changed_review_required` e `remote_check_failed`. Il controllo è a cadenza, non a ogni run. In assenza di metadati affidabili può servire trasferire temporaneamente il file per confrontarne l'impronta, senza rieseguirne l'analisi se invariato. Un errore non cancella le informazioni precedenti.
+### Estensione D6
 
-Il workflow usa la memoria leggera nei nuovi cache/artifact. I vecchi artifact non vengono cancellati retroattivamente. Serve backup della memoria delle informazioni e delle code, non del corpus PDF. Le vecchie CLI D1–D4 restano strumenti diagnostici storici; il percorso corrente è il lifecycle D5. La coda di documenti non completati non viene spacciata per una serie di letture concluse.
+Apecchio: lette tutte le 3 pagine dell'atto del 01/10/2025. Gagliole: lette tutte le 9 pagine dell'avviso del 16/12/2024, incluse tabelle catastali e pagina finale. Otto riscontri aggiunti con URL/SHA/pagina; totali attesi dopo collaudo: 35 riscontri e 3 versioni completate (14 pagine), nessun fascicolo completo e nessun nuovo affidamento EPC. Non anticipare gli esiti CI del nuovo commit.
 
-**Fascicoli completi: 0. Nuovi affidamenti EPC certificati in D5: 0. Scritture canoniche: 0.** Il presente file non anticipa l'esito CI del proprio commit.
+La lettura Gagliole distingue comuni delle turbine, connessioni e area spazzata a Matelica; conserva la contraddizione sulle turbine Nord e il benestare Terna richiesto nel documento, senza dichiararlo tuttora mancante. I recapiti sono caselle societarie esplicite, non email dedotte o contatti EPC. I termini istruttori non diventano cronoprogrammi lavori.
 
-## Risultati precedenti preservati
+`scripts/wind_document_lifecycle.py` ora usa staging, backup SQLite e sostituzione atomica del DB. La memoria portabile prevale su workspace vecchi. Lock contro scritture concorrenti, percorsi separati, nessuna cancellazione preventiva dell'ultima memoria buona. Lo spazio di lettura è temporaneo e viene rimosso anche a fine run fallito. La modalità offline vieta qualsiasi acquisizione mancante.
 
-D1 `2f67b856368ef8a14c1e01b42e60ac244ed8c3a3`: registro separato, acquisizione e testo per pagina.
+15 nuovi test locali sui guard di persistenza/lock/WAL, oltre alla validazione delle nuove evidenze contro le versioni reali. Il workflow verifica suite Linux/Windows, preflight, importazione e riavvio offline. Rif. `docs/wind-document-read-once.md`; file `config/wind_document_read_once_{reviews,completed}.json`.
 
-D2 `2c8f2709d296c92ed8315eff6277c1597567dcf1`: Grecale, 49/49 pagine di indice e 487/487 allegati; superato il limite interno sul documento da 102.737.107 byte/148 pagine. Inventario completo non significa allegati letti.
+### Risultati precedenti preservati
 
-D3 `d6f4038b82932e613381066402410e8246f74784`: 24 riscontri su Grecale, Gagliole, Apecchio, Serra Giannina; fonti/page anchor, ruoli e cronoprogrammi distinti. Le ricevute D5 permettono di conservare i riscontri già validati anche dopo il rilascio intenzionale dei file.
+- D1 `2f67b856368ef8a14c1e01b42e60ac244ed8c3a3`: registro, acquisizione e testo per pagina.
+- D2 `2c8f2709d296c92ed8315eff6277c1597567dcf1`: Grecale49/49 pagine e487/487 allegati; letto come testo anche l'originale di102.737.107 byte/148 pagine. Non487 allegati già analizzati.
+- D3 `d6f4038b82932e613381066402410e8246f74784`: 24 riscontri su quattro progetti/record. Ricevute D5 preservano le informazioni dopo rilascio del file.
+- D4 `cd31b2a04a4f7a1a22dba112b3322c8080319f30`: Sestino179/179 e Mercatello151/151 allegati; coda825; 14 PDF/479 pagine estratte, non letture complete. Metadato Andretta1419737 restituisce404; 68 riferimenti richiedono whitelist review, 5 senzaURL. Due originali utente recuperati dalla Library e non pubblicati. ZIP/CMS provati su fixture, non su P7M reali. Test82, pilot4, checks407 e live225 PASS.
 
-D4 `cd31b2a04a4f7a1a22dba112b3322c8080319f30`: inventari Sestino 179/179 e Mercatello 151/151; coda825, 14 PDF acquisiti/479 pagine estratte. Il metadato Andretta 1419737 ha restituito404; 68 riferimenti richiedono revisione della whitelist, 5 non hanno URL. Due file forniti dall'utente sono stati recuperati dalla Library senza pubblicarli in GitHub. ZIP/CMS testati su fixture, nessun P7M reale dichiarato letto. Test82, pilot4, checks407 e live225 passati.
+Le note D4 conservano incongruenza date Andretta (p.7 vs Gantt17: 2027/2028), ruoli progettuali dalla copertina scansita Sestino e dipendenze rete Mercatello. Non sono promosse automaticamente.
 
-Le note operative D4 segnalano la contraddizione delle opere civili Andretta tra pagina7 e Gantt17 (2027/2028), i ruoli progettuali sulla copertina scansita Sestino e le dipendenze di rete Mercatello. Non sono state promosse automaticamente.
+Resta acquisizione e lettura degli arretrati, fonti da ammettere dopo verifica, documenti utente/contenitori, figure/tabelle, attualità commerciale, EPC e referenti. D6 non implementa un estrattore semantico universale né certifica autonomamente tutti gli allegati. Cache/artifact14giorni non sono un database persistente garantito: serve backup della memoria leggera, non del corpus PDF. I vecchi artifact non sono cancellati retroattivamente.
 
-Resta da completare la lettura degli arretrati, l'ampliamento controllato delle fonti, l'integrazione delle evidenze da documenti utente/contenitori, la revisione delle figure e la verifica di attualità commerciale/affidamenti. D5 non introduce un estrattore semantico che certifichi autonomamente tutti gli allegati.
+## Baseline pubblicata e vincoli probatori
 
-Riferimenti: `docs/wind-document-audit.md`, `docs/wind-document-inventory.md`, `docs/wind-document-review.md`, `docs/wind-document-queue.md`, `docs/wind-document-memory.md`.
+Baseline v0.5.0 su master `f2640616540e02448664677427698d808938520f`: 51 progetti/11.202,52MW wind, 17 seed/1.496,9MW e34 integrati/9.705,62MW. BESS separato.
 
-## Baseline pubblicata e regole probatorie
+Solo prova project-specific A1/A2 chiude uno scope execution. Owner/developer/advisor/engineering/DL/supervisione non equivalgono a EPC; storico sito e OEM non provano award corrente/BoP. Lead B/C restano segnali. Contatti solo professionali espliciti con ruolo/data, niente dati personali non pertinenti. Durate relative, obiettivi dichiarati e stime restano distinti.
 
-Baseline pubblicata v0.5.0 su master: `f2640616540e02448664677427698d808938520f`.
+## Runtime quotidiano e UI preservati
 
-- 51 progetti / 11.202,52 MW wind.
-- 17 seed / 1.496,9 MW; 34 integrati / 9.705,62 MW.
-- BESS sempre separato.
+61 player, 34 nodi fonte, 24 adapter, Company Watch e Project Execution queue E4–E7; SQLite operativo separato. BAT: baseline/new/changed/unchanged, report HTML/CSV/JSON e dashboard; `all` forza player, `offline` non usa rete. D6 non è nel BAT. Discovery resta interna, promozione soltanto dopo verifica di identità/attività/configurazione/stage; Grecale/Rospo/Sindia-Macomer/LeChiancate nel perimetro senza automatismi.
 
-Solo prova project-specific A1/A2 chiude uno scope esecutivo. Owner/developer/advisor/engineering/DL/supervision non equivalgono a execution. Storico sullo stesso sito non implica award corrente; OEM non implica BoP. Lead B/C restano segnali. Contatti solo professionali espliciti, con ruolo e data, niente recapiti dedotti o dati personali non pertinenti. Durate relative, obiettivi dichiarati e stime restano distinte.
+KPI ereditati: 12 E4+/689,7MW, 9 E7/437,7MW, 47 progetti/11.068,62MW senza contractor A1/A2. Filtri, mappa provinciale confinata, calendario e Contractor view invariati; precedenti review1440/390 non certificano queste nuove evidenze.
 
-## Runtime quotidiano (invariato)
+Enrichment pregresso da preservare/riesaminare: Progeco/Andretta supervisione; UniCredit/Tricarico finanziamento e VectorLTA; ERG/Nulvi-Ploaghe configurazione; D'Agostino/SerraGiannina leadB; PROGETTOENERGIA/Greci-Montaguto progettazione; SOCEP storico non trasferito ad Alia-Sclafani; Mammana/Carlentini fondazioni, non fullCivilBoP.
 
-61 player commerciali, 34 nodi fonte, 24 adapter istituzionali; Company Watch e Project Execution queue sugli E4–E7; SQLite operativo/raw/history separato dal canonico. `aggiorna_wind_radar.bat` interroga gli adapter, i player dovuti per cadenza, persiste baseline/new/changed/unchanged, genera `daily-discovery-latest.html/csv/json`, aggiorna status e apre dashboard/report. La baseline e gli snapshot tecnici di degrado non sono nuove opportunità. `all` forza i player; `offline` non usa rete. D5 non è ancora incorporata nel BAT.
-
-Discovery resta interna; promozione solo con identità, attività, configurazione e stage verificati. Grecale, Rospo, Sindia-Macomer e Le Chiancate restano nel perimetro di revisione senza automatismi.
-
-## Dashboard e intelligence pregresse (preservate)
-
-KPI ereditati, non nuova verifica di cantiere: 51 progetti, 12 E4+/689,7 MW, 9 E7/437,7 MW, 47 progetti/11.068,62 MW senza contractor esecutivo A1/A2 attribuito. Restano filtri, mappa provinciale ECharts confinata, maturità E0–E8, calendario, opportunità e Contractor view. Nessun cambio grafico in D5. Le precedenti review desktop1440/mobile390 appartengono alla fase UI, non certificano le nuove evidenze.
-
-Le tranche di enrichment restano additive: Progeco/Andretta supervisione, non execution; UniCredit/Tricarico financial close e Vector LTA, non BoP; configurazione ERG Nulvi-Ploaghe, procurement aperto; D'Agostino/Serra Giannina lead B; PROGETTO ENERGIA/Greci-Montaguto progettazione; storico SOCEP non trasferito al repowering Alia-Sclafani; Mammana/Carlentini fondazioni, non full Civil BoP.
-
-Conservare validator Wind, Windows e live A/B. **Nessun merge o pubblicazione senza approvazione esplicita.**
+Conservare validator Wind, Windows e live A/B. **Nessuna scrittura canonica, nessun merge o pubblicazione senza approvazione esplicita.**

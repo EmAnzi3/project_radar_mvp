@@ -63,44 +63,48 @@ jobs:
           key: wind-documents-d2-migration-${{ github.run_id }}
           restore-keys: |
             wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-
-      - name: Read once, persist evidence, release completed source, check only due changes
+      - name: Read once, persist evidence, release completed sources, check only due changes
         run: >-
           python scripts/wind_document_lifecycle.py
           --output reports/wind-document-audit --memory reports/wind-document-memory
-      - name: Prove a fresh restart without PDF archives does not reread completed sources
+      - name: Prove a fresh offline restart does not reread completed sources
         run: >-
           python scripts/wind_document_lifecycle.py
           --output reports/wind-document-warm --memory reports/wind-document-memory --no-remote
-      - name: Verify lightweight output and unchanged project perimeter
+      - name: Verify lightweight output, three completed versions and unchanged project perimeter
         run: |
           python - <<'PY'
-          import json
+          import json, sqlite3
           from pathlib import Path
           root=Path('reports/wind-document-memory')
           report=json.loads((root/'D5-summary.json').read_text(encoding='utf-8'))
           assert report['registry_counts']=={'canonical':51,'discovery_current':34,'recency_review':4,'rejected':7}
           assert report['qualification_records']==57
-          assert report['review_count']==27
-          assert report['completed_document_versions']==1
+          assert report['review_count']==35
+          assert report['completed_document_versions']==3
           assert report['source_reads']==[], 'Warm restart redownloaded a reviewed source'
           assert report['binary_files_exported']==0
           assert not any(p.suffix.lower() in {'.pdf','.png','.bin','.p7m','.zip'} for p in root.rglob('*') if p.is_file())
           assert report['complete_dossiers']==0 and report['canonical_writes']==0
-          print('D5: 27 recorded facts, 1 fully read document version, no original archive, warm restart with zero source reads.')
+          with sqlite3.connect(root/'audit.sqlite') as db:
+              plans=[json.loads(r[0]) for r in db.execute('SELECT completion_json FROM document_read_memory')]
+              assert sum(len(p['pages']) for p in plans)==14
+              for r in db.execute('SELECT extraction_json FROM versions'):
+                  assert all('text' not in p for p in json.loads(r[0]).get('pages',[])), 'Full page text leaked into durable memory'
+          print('D6: 35 recorded findings, 3 completed document versions / 14 pages, no original archive, offline restart with zero source reads.')
           PY
-      - name: Preserve live conditional-check result separately from warm summary
+      - name: Preserve conditional-check results separately from warm summary
         run: |
           python - <<'PY'
-          import sqlite3,json
+          import sqlite3,json,os
           from pathlib import Path
           root=Path('reports/wind-document-memory')
-          db=sqlite3.connect(root/'audit.sqlite')
-          rows=[json.loads(r[0]) for r in db.execute('SELECT result_json FROM document_memory_events ORDER BY id')]
-          db.close()
+          with sqlite3.connect(root/'audit.sqlite') as db:
+              rows=[json.loads(r[0]) for r in db.execute('SELECT result_json FROM document_memory_events ORDER BY id')]
           if rows:
-              print(json.dumps(rows[-1],ensure_ascii=False))
-              with open(__import__('os').environ['GITHUB_STEP_SUMMARY'],'a') as out:
-                  out.write('D5 remote check: '+rows[-1]['status']+'; bytes '+str(rows[-1]['bytes_transferred'])+'; extractions '+str(rows[-1]['text_extractions'])+'\n')
+              with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as out:
+                  for row in rows[-3:]:
+                      out.write('Remote check: '+row['status']+'; bytes '+str(row['bytes_transferred'])+'; extractions '+str(row['text_extractions'])+'\n')
           PY
       - name: Verify no canonical writes
         if: always()
