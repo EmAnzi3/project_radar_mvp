@@ -34,7 +34,7 @@ from app.wind_agents.planner import (
     build_run_plan,
 )
 from app.wind_agents.reconcile import build_digest, reconcile_finding
-from app.wind_agents.runner import _bootstrap_decision, due_agent_ids, executable_agent_ids
+from app.wind_agents.runner import _bootstrap_decision, _is_health_snapshot, due_agent_ids, executable_agent_ids
 from app.wind_agents import state
 
 
@@ -96,6 +96,27 @@ required_adapters = {
 assert required_adapters.issubset(implemented), implemented
 assert len(implemented) >= 24, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
+
+# Technical degradation snapshots must never become project new/changed events.
+health_snapshot = AgentFinding(
+    external_id="TEST-CHANNEL",
+    source_name="Test source",
+    source_url="https://example.invalid/channel",
+    title="Temporary project channel outage",
+    finding_type="source_channel_snapshot",
+    payload={"project_specific": False, "data_health": "channel_only"},
+)
+assert _is_health_snapshot(health_snapshot) is True
+assert _is_health_snapshot(
+    AgentFinding(
+        external_id="TEST-PROJECT",
+        source_name="Test source",
+        source_url="https://example.invalid/project",
+        title="Actual wind project",
+        finding_type="project_source",
+        payload={"project_specific": True},
+    )
+) is False
 
 # Parser/source revisions must rebaseline exactly once on an existing local DB.
 legacy_runtime = {

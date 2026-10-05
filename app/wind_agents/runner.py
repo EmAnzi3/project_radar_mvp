@@ -156,6 +156,14 @@ def _source_health(counters: dict[str, Any]) -> str:
     return "empty_success"
 
 
+def _is_health_snapshot(finding: Any) -> bool:
+    """Technical source-health snapshots are state, never project events."""
+    return (
+        str(getattr(finding, "finding_type", "") or "") == "source_channel_snapshot"
+        and not bool((getattr(finding, "payload", None) or {}).get("project_specific"))
+    )
+
+
 def run_agents(
     source_ids: Iterable[str] | None = None,
     *,
@@ -229,12 +237,13 @@ def run_agents(
             try:
                 findings = agent.fetch()
                 for finding in findings:
+                    health_snapshot = _is_health_snapshot(finding)
                     event = upsert_finding(
                         run_id,
                         agent.agent_name,
                         finding,
-                        baseline_new=bootstrap_source,
-                        rebaseline_existing=revision_bootstrap,
+                        baseline_new=bootstrap_source or health_snapshot,
+                        rebaseline_existing=revision_bootstrap or health_snapshot,
                     )
                     counters["findings"] += 1
                     counters[event] += 1

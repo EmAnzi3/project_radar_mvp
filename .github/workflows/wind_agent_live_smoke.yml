@@ -241,6 +241,7 @@ jobs:
           first_per_agent = first.get('per_agent') or {}
           per_agent = data.get('per_agent') or {}
           recovered_sources = []
+          degraded_sources = []
           for source_id in sorted(expected):
               row = per_agent[source_id]
               first_row = first_per_agent.get(source_id) or {}
@@ -263,6 +264,12 @@ jobs:
                       assert row.get('baseline', 0) == row.get('findings', 0), (source_id, row)
                       assert row.get('unchanged', 0) == 0, (source_id, row)
                       recovered_sources.append(source_id)
+              elif health == 'channel_or_market_only' and first_health == 'project_data':
+                  # A temporary source degradation is technical state, not a
+                  # project discovery event. Its channel snapshot is persisted
+                  # as baseline-only even when the source was healthy moments ago.
+                  assert row.get('baseline', 0) == row.get('findings', 0), (source_id, first_row, row)
+                  degraded_sources.append(source_id)
 
               print(
                   f"{source_id}: health={health} first_health={first_health} "
@@ -273,6 +280,8 @@ jobs:
 
           if recovered_sources:
               print(f"{group}: safe source recovery bootstrap: {', '.join(recovered_sources)}")
+          if degraded_sources:
+              print(f"{group}: safe source degradation snapshot: {', '.join(degraded_sources)}")
           print(f'{group}: second pass OK — 0 new / 0 changed')
           PY
 
