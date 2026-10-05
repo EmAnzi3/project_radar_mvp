@@ -1,0 +1,18 @@
+{
+  "scope": "D2 pilot: complete inventory for one MASE procedure, bounded attachment reading; not a complete dossier audit",
+  "inventories": [
+    {"project_id": "off-med-wind-grecale", "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/11241/16887"}
+  ],
+  "select_from_inventory": [
+    {"project_id": "off-med-wind-grecale", "title_pattern": "cronoprogramma", "limit": 2, "max_mib": 128},
+    {"project_id": "off-med-wind-grecale", "title_pattern": "sintesi non tecnica", "limit": 1, "max_mib": 128},
+    {"project_id": "off-med-wind-grecale", "title_pattern": "relazione (?:tecnica )?generale", "limit": 1, "max_mib": 128},
+    {"project_id": "off-med-wind-grecale", "title_pattern": "elenco.*elaborati", "limit": 1, "max_mib": 64}
+  ],
+  "assets": [
+    {"project_id": "off-med-wind-grecale", "url": "https://va.mite.gov.it/File/Documento/1181568", "label": "Large-file regression: Analisi granulometriche e composizionali", "expected": "pdf", "max_mib": 256},
+    {"project_id": "RAW-039", "url": "https://monitoraggivia.regione.marche.it/Pubblicazioni/V01037/Avviso_Pubb_2.pdf", "label": "Apecchio - verifica visiva avviso", "expected": "pdf"},
+    {"project_id": "RAW-040", "url": "https://monitoraggivia.regione.marche.it/Pubblicazioni/V01058/WEGagliole_Modulo_L1_Avviso.pdf", "label": "Gagliole - verifica visiva avviso", "expected": "pdf"},
+    {"project_id": "serra-giannina", "url": "https://it.rwe.com/-/media/RWE/RWE-Italy/documents/press/2026/2026-05-21-rwe-avvia-la-costruzione-di-un-parco-eolico-onshore-da-42-megawatt-in-italia.pdf", "label": "Serra Giannina - comunicato allegato", "expected": "pdf"}
+  ]
+}

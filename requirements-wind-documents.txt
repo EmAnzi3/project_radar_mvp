@@ -1,3 +1,5 @@
-# Optional document-audit runtime; not added to the daily BAT.
+# Isolated document-audit runtime; no dependency change to the daily BAT.
 requests==2.32.5
 pypdf==5.9.0
+pypdfium2==5.8.0
+Pillow==12.3.0

@@ -2,8 +2,8 @@ name: Wind document audit pilot
 on:
   pull_request:
     paths:
-      - 'scripts/wind_document_audit.py'
-      - 'tests/test_wind_document_audit.py'
+      - 'scripts/wind_document_*.py'
+      - 'tests/test_wind_document_*.py'
       - 'config/wind_document_*.json'
       - 'requirements-wind-documents.txt'
       - '.github/workflows/wind_document_audit.yml'
@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements-wind-documents.txt
-      - run: python -m unittest discover -s tests -p test_wind_document_audit.py -v
+      - run: python -m unittest discover -s tests -p "test_wind_document_*.py" -v
       - name: Repository preflight (tests above, no publication)
         if: runner.os == 'Windows'
         shell: pwsh
@@ -38,8 +38,9 @@ jobs:
         run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
   pilot:
     needs: checks
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,36 +49,61 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements-wind-documents.txt
-      - name: Seed persistent ledger and test live attachment access
+      - uses: actions/cache/restore@v4
+        with:
+          path: reports/wind-document-audit
+          key: wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-
+      - name: Seed ledger without pretending to read documents
         run: >-
           python scripts/wind_document_audit.py
-          --output reports/wind-document-audit
-          --seed-repo .
+          --output reports/wind-document-audit --seed-repo .
           --qualification-json config/wind_document_qualification_seed.json
           --manifest config/wind_document_pilot.json
-          --fetch --follow-limit 3
-      - name: Check census and prove PDF text was actually extracted
+      - name: Full paginated inventory and bounded large-file acquisition
+        run: >-
+          python scripts/wind_document_inventory.py --output reports/wind-document-audit
+          --plan config/wind_document_inventory_pilot.json --page-limit 200 --render-limit 4
+      - name: Warm pass reuses original hashes and pending queue
+        run: >-
+          python scripts/wind_document_inventory.py --output reports/wind-document-audit
+          --plan config/wind_document_inventory_pilot.json --skip-inventory --render-limit 0
+      - name: Verify inventory completeness and actual large-PDF readability
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          report = json.loads(Path('reports/wind-document-audit/report.json').read_text())
-          assert report['registry_counts'] == {'canonical': 51, 'discovery_current': 34, 'recency_review': 4, 'rejected': 7}, report['registry_counts']
-          assert report['qualification_records'] == 57
-          assert report['qualification_unlinked'] == 53
-          readable = [d for d in report['documents'] if d['current_extraction'].get('kind') == 'pdf' and any(p['text_characters'] >= 40 for p in d['current_extraction'].get('pages', []))]
-          assert len(readable) >= 1, 'No PDF could actually be read; inspect report.json access attempts'
+          root = Path('reports/wind-document-audit')
+          report = json.loads((root/'report.json').read_text())
+          inventory = json.loads((root/'inventory-report.json').read_text())
+          assert report['registry_counts'] == {'canonical': 51, 'discovery_current': 34, 'recency_review': 4, 'rejected': 7}
+          assert report['qualification_records'] == 57 and report['qualification_unlinked'] == 53
+          latest = inventory['inventories'][-1]
+          assert latest['status'] == 'complete_index', latest
+          assert latest['unique_documents'] == latest['expected_documents']
+          big = next(d for d in report['documents'] if d['url'].endswith('/File/Documento/1181568'))
+          assert any(v['byte_count'] > 30*1024**2 and v['extraction'].get('page_count', 0) > 0 for v in big['versions']), 'Large PDF not acquired/read: inspect attempts'
+          assert any(r['path'] for r in inventory['visual_queue']), 'No actual page render'
+          assert inventory['complete_dossiers'] == 0
           assert all(d['fascicolo_complete'] is False for d in report['documents'])
-          print('PDF with extracted text:', len(readable), '; complete dossiers certified: 0')
+          summary = {'index': latest, 'large_pdf_pages': big['current_extraction'].get('page_count'), 'large_pdf_sha256': big['current_sha256'], 'rendered_pages': sum(bool(r['path']) for r in inventory['visual_queue']), 'visual_queue': len(inventory['visual_queue']), 'complete_dossiers': 0}
+          (root/'D2-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
           PY
       - name: Verify no canonical writes
+        if: always()
         run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
-      - name: Publish access report (not a dossier-completeness certificate)
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: reports/wind-document-audit
+          key: wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Include reproducible source in the evidence artifact
         if: always()
         run: |
-          if test -f reports/wind-document-audit/report.md; then
-            cat reports/wind-document-audit/report.md >> "$GITHUB_STEP_SUMMARY"
-          fi
+          mkdir -p reports/wind-document-audit/reproduction
+          cp scripts/wind_document_audit.py scripts/wind_document_inventory.py tests/test_wind_document_*.py reports/wind-document-audit/reproduction/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
