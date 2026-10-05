@@ -1,0 +1,87 @@
+name: Wind document audit pilot
+on:
+  pull_request:
+    paths:
+      - 'scripts/wind_document_audit.py'
+      - 'tests/test_wind_document_audit.py'
+      - 'config/wind_document_*.json'
+      - 'requirements-wind-documents.txt'
+      - '.github/workflows/wind_document_audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: wind-document-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-wind-documents.txt
+      - run: python -m unittest discover -s tests -p test_wind_document_audit.py -v
+      - name: Repository preflight (tests above, no publication)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/check_before_publish.ps1 -SkipTests
+      - name: Verify existing dashboard and runtime unchanged
+        run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
+  pilot:
+    needs: checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-wind-documents.txt
+      - name: Seed persistent ledger and test live attachment access
+        run: >-
+          python scripts/wind_document_audit.py
+          --output reports/wind-document-audit
+          --seed-repo .
+          --qualification-json config/wind_document_qualification_seed.json
+          --manifest config/wind_document_pilot.json
+          --fetch --follow-limit 3
+      - name: Check census and prove PDF text was actually extracted
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('reports/wind-document-audit/report.json').read_text())
+          assert report['registry_counts'] == {'canonical': 51, 'discovery_current': 34, 'recency_review': 4, 'rejected': 7}, report['registry_counts']
+          assert report['qualification_records'] == 57
+          assert report['qualification_unlinked'] == 53
+          readable = [d for d in report['documents'] if d['current_extraction'].get('kind') == 'pdf' and any(p['text_characters'] >= 40 for p in d['current_extraction'].get('pages', []))]
+          assert len(readable) >= 1, 'No PDF could actually be read; inspect report.json access attempts'
+          assert all(d['fascicolo_complete'] is False for d in report['documents'])
+          print('PDF with extracted text:', len(readable), '; complete dossiers certified: 0')
+          PY
+      - name: Verify no canonical writes
+        run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
+      - name: Publish access report (not a dossier-completeness certificate)
+        if: always()
+        run: |
+          if test -f reports/wind-document-audit/report.md; then
+            cat reports/wind-document-audit/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wind-document-audit-${{ github.run_id }}
+          path: reports/wind-document-audit/
+          retention-days: 14
+          if-no-files-found: error

@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-10-05",
+  "guard": "Pilot resources only; no complete project document inventory implied.",
+  "assets": [
+    {"project_id":"RAW-039","label":"Apecchio - comunicazione integrazioni V01037","expected":"pdf","url":"https://monitoraggivia.regione.marche.it/Pubblicazioni/V01037/Avviso_Pubb_2.pdf"},
+    {"project_id":"RAW-040","label":"Gagliole - avviso V01058","expected":"pdf","url":"https://monitoraggivia.regione.marche.it/Pubblicazioni/V01058/WEGagliole_Modulo_L1_Avviso.pdf"},
+    {"project_id":"RAW-038","label":"Tre Vescovi - avviso V00968","expected":"pdf","url":"https://monitoraggivia.regione.marche.it/Pubblicazioni/V00968/2023_05_16_567816_modulo_avviso_pubblico_VIA.pdf"},
+    {"project_id":"on-sestino-rwe-39-6","label":"Sestino - avviso VIA","expected":"pdf","url":"https://monitoraggivia.regione.marche.it/Pubblicazioni/V00972/PESEST_Avviso_Pubblico_VIA_Rev02_LC_MB.pdf"},
+    {"project_id":"serra-giannina","label":"Serra Giannina - comunicato RWE e allegato","expected":"auto","url":"https://it.rwe.com/ufficio-stampa/2026-05-21-rwe-avvia-la-costruzione-di-un-parco-eolico-onshore-da-42-megawatt-in-italia/"},
+    {"project_id":"off-med-wind-grecale","label":"Med Wind Grecale - indice documentazione MASE","expected":"auto","url":"https://va.mite.gov.it/it-IT/Oggetti/Documentazione/11241/16887"}
+  ]
+}
