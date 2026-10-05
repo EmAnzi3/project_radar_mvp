@@ -673,12 +673,20 @@ def classify_daily_discovery_event(
     eligibility, eligibility_reason = _pipeline_eligibility(payload)
     minimum_complete, minimum_missing = _minimum_project_fields(payload)
 
+    rejected_discovery_match = (
+        best.get("target_kind") == "discovery"
+        and (best.get("status") == "rejected" or best.get("activity_class") == "rejected")
+        and status in {"high_confidence_match", "review_match"}
+    )
+
     if payload.get("is_aggregated_market_intelligence"):
         category = "market_intelligence"
     elif finding_type == "company_source_snapshot":
         category = "company_signal"
     elif not project_specific and finding_type != "project_source":
         category = "non_project_event"
+    elif rejected_discovery_match:
+        category = "historical_or_closed"
     elif event_type == "baseline":
         if eligibility != "eligible":
             category = eligibility

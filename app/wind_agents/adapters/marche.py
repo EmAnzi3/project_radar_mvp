@@ -16,6 +16,13 @@ REGISTRY_URLS = (
     (STATE_URL, "VIA statale"),
 )
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
+PROVINCE_REGION = {
+    "AN": "Marche", "AP": "Marche", "FM": "Marche", "MC": "Marche", "PU": "Marche",
+    "AR": "Toscana",
+    "PG": "Umbria", "TR": "Umbria",
+    "RN": "Emilia-Romagna", "FC": "Emilia-Romagna",
+    "TE": "Abruzzo", "AQ": "Abruzzo",
+}
 
 
 class MarcheWindAgent(BaseWindAgent):
@@ -30,7 +37,7 @@ class MarcheWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Marche VIA"
     base_url = BASE_URL
-    baseline_revision = "marche-monitoraggivia-v1"
+    baseline_revision = "marche-monitoraggivia-v2-geography-cleanup"
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -62,17 +69,24 @@ class MarcheWindAgent(BaseWindAgent):
     @classmethod
     def _municipalities(cls, text: str) -> list[str]:
         out: list[str] = []
+        text = re.sub(r"\[[^\]]+\]", " ", text)
         patterns = [
-            r"\bComuni\s+di\s+(.+?)(?=\.\s|\s+Restart\b|\s+Procedimento\b|\s+Proponente\b|$)",
-            r"\bComune\s+di\s+(.+?)(?=\.\s|\s+Proponente\b|$)",
+            r"\bComuni\s+di\s+(.+?)(?=\.\s|\s+Restart\b|\s+Procedimento\b|\s+Proponente\b|\s+denominat[oa]\b|$)",
+            r"\bComune\s+di\s+(.+?)(?=\.\s|\s+Proponente\b|\s+denominat[oa]\b|$)",
         ]
         for pattern in patterns:
             match = re.search(pattern, text, flags=re.I)
             if not match:
                 continue
-            raw = re.sub(r"\([A-Z]{2}\)", "", match.group(1))
+            raw = re.sub(r"\([^)]*\)", "", match.group(1))
             for part in re.split(r",|\s+e\s+|;", raw, flags=re.I):
                 item = cls._clean(part).strip(" -–—:;,.()")
+                item = re.split(
+                    r"\s+(?:cavidotto|cabina|relative\s+opere|opere\s+di\s+connessione)\b",
+                    item,
+                    maxsplit=1,
+                    flags=re.I,
+                )[0].strip(" -–—:;,.()")
                 if item and len(item) <= 80 and item.lower() not in {x.lower() for x in out}:
                     out.append(item)
             if out:
@@ -80,12 +94,28 @@ class MarcheWindAgent(BaseWindAgent):
         return out[:20]
 
     @classmethod
+    def _province_codes(cls, text: str) -> list[str]:
+        out: list[str] = []
+        for code in re.findall(r"\(([A-Z]{2})\)", text):
+            if code in PROVINCE_REGION and code not in out:
+                out.append(code)
+        return out
+
+    @classmethod
     def _province(cls, text: str) -> str | None:
-        codes = re.findall(r"\(([A-Z]{2})\)", text)
-        for code in codes:
-            if code in {"AN", "AP", "FM", "MC", "PU"}:
-                return code
-        return None
+        codes = cls._province_codes(text)
+        return " / ".join(codes) if codes else None
+
+    @classmethod
+    def _region(cls, text: str, procedure_label: str) -> str | None:
+        regions: list[str] = []
+        for code in cls._province_codes(text):
+            region = PROVINCE_REGION[code]
+            if region not in regions:
+                regions.append(region)
+        if regions:
+            return " / ".join(regions)
+        return "Marche" if procedure_label == "VIA regionale" else None
 
     @classmethod
     def _procedure(cls, text: str) -> str | None:
@@ -184,7 +214,7 @@ class MarcheWindAgent(BaseWindAgent):
                     payload={
                         "project_name": description[:700],
                         "proponent": proponent or None,
-                        "region": "Marche",
+                        "region": self._region(description, procedure_label),
                         "province": self._province(description),
                         "municipalities": self._municipalities(description),
                         "power_mw": self._power_mw(description),

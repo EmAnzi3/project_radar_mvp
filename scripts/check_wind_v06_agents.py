@@ -16,6 +16,7 @@ from app.wind_agents.base import AgentFinding
 from app.wind_agents.adapters.toscana import ToscanaWindAgent
 from app.wind_agents.adapters.toscana_atos import ToscanaAtosWindAgent
 from app.wind_agents.adapters.lombardia import LombardiaWindAgent
+from app.wind_agents.adapters.marche import MarcheWindAgent
 from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
 from app.wind_agents.adapters.sicilia import SiciliaWindAgent
 from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
@@ -311,6 +312,25 @@ calabria_places = CalabriaRegionalActsWindAgent._municipalities(calabria_paladin
 assert {"Gasperina", "Montauro", "Montepaone", "Palermiti", "Petrizzi", "Argusto"}.issubset(set(calabria_places)), calabria_places
 assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v4-municipality-cleanup"
 
+
+# Marche state-registry geography must reflect project geography, not portal ownership.
+marche_sestino = (
+    'Impianto eolico da 39,6 MW da installarsi nei Comuni di Sestino (AR) (aerogeneratori), '
+    'Badia Tedalda (AR), Borgo Pace e Mercatello sul Metauro (PU) (cavidotto di collegamento MT) '
+    'denominato "Sestino". [IDVIP 9755]'
+)
+assert MarcheWindAgent._municipalities(marche_sestino) == [
+    "Sestino", "Badia Tedalda", "Borgo Pace", "Mercatello sul Metauro"
+]
+assert MarcheWindAgent._province(marche_sestino) == "AR / PU"
+assert MarcheWindAgent._region(marche_sestino, "VIA statale") == "Toscana / Marche"
+assert MarcheWindAgent._region(
+    'Impianto eolico nel Comune di Mercatello sul Metauro', "VIA statale"
+) is None
+assert MarcheWindAgent._region(
+    'Impianto eolico nel Comune di Macerata (MC)', "VIA regionale"
+) == "Marche"
+assert MarcheWindAgent.baseline_revision == "marche-monitoraggivia-v2-geography-cleanup"
 
 # Regional municipality cleanup guards.
 assert SiciliaWindAgent._municipality(

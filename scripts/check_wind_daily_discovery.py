@@ -152,6 +152,42 @@ def main() -> int:
         assert "exact_source_url" not in (shared_registry["best"].get("reasons") or []), shared_registry
         assert "related_source_url" not in (shared_registry["best"].get("reasons") or []), shared_registry
 
+    discovery_after_review = load_discovery_candidates()
+    discovery_ids_after_review = {row.get("candidate_id") for row in discovery_after_review}
+    assert {
+        "on-mercatello-engie-36",
+        "on-sestino-rwe-39-6",
+        "on-monreale-lupotto-repower-30",
+        "on-badia-wind-rejected",
+        "on-buseto-strafalcio-ginosa-rejected",
+    } <= discovery_ids_after_review
+
+    badia_guard = next(row for row in discovery_after_review if row.get("candidate_id") == "on-badia-wind-rejected")
+    rejected_event = {
+        "event_type": "baseline",
+        "external_id": "test-badia-negative-guard",
+        "finding": {
+            "external_id": "test-badia-negative-guard",
+            "source_name": "Regione Marche VIA",
+            "source_url": badia_guard["sources"][0]["url"],
+            "title": "Badia Wind 54 MW",
+            "finding_type": "project_source",
+            "payload": {
+                "project_specific": True,
+                "project_name": "Badia Wind",
+                "proponent": "SCS 09 s.r.l.",
+                "region": "Toscana",
+                "municipalities": ["Badia Tedalda"],
+                "power_mw": 54.0,
+            },
+        },
+    }
+    rejected_result = classify_daily_discovery_event(
+        rejected_event, canonical=canonical, discovery=discovery_after_review
+    )
+    assert rejected_result["category"] == "historical_or_closed", rejected_result
+    assert rejected_result["reconciliation"]["best"]["target_id"] == "on-badia-wind-rejected"
+
     known = canonical[0]
     source_url = next(
         (s.get("url") for s in known.get("sources", []) if s.get("url")),
