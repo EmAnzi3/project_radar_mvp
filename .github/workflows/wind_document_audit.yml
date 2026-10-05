@@ -30,7 +30,7 @@ jobs:
           python-version: '3.12'
       - run: pip install -r requirements-wind-documents.txt
       - run: python -m unittest discover -s tests -p "test_wind_document_*.py" -v
-      - name: Repository preflight (tests above, no publication)
+      - name: Repository preflight (no publication)
         if: runner.os == 'Windows'
         shell: pwsh
         run: ./scripts/check_before_publish.ps1 -SkipTests
@@ -40,7 +40,7 @@ jobs:
     needs: checks
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,119 +51,71 @@ jobs:
       - run: pip install -r requirements-wind-documents.txt
       - uses: actions/cache/restore@v4
         with:
+          path: reports/wind-document-memory
+          key: wind-documents-memory-d5-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            wind-documents-memory-d5-${{ github.event.pull_request.number || github.ref_name }}-
+      - name: One-time migration from the existing D4 working cache
+        if: hashFiles('reports/wind-document-memory/audit.sqlite') == ''
+        uses: actions/cache/restore@v4
+        with:
           path: reports/wind-document-audit
-          key: wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: wind-documents-d2-migration-${{ github.run_id }}
           restore-keys: |
             wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-
-      - name: Seed ledger without pretending to read documents
+      - name: Read once, persist evidence, release completed source, check only due changes
         run: >-
-          python scripts/wind_document_audit.py
-          --output reports/wind-document-audit --seed-repo .
-          --qualification-json config/wind_document_qualification_seed.json
-          --manifest config/wind_document_pilot.json
-      - name: Full paginated inventory and bounded large-file acquisition
+          python scripts/wind_document_lifecycle.py
+          --output reports/wind-document-audit --memory reports/wind-document-memory
+      - name: Prove a fresh restart without PDF archives does not reread completed sources
         run: >-
-          python scripts/wind_document_inventory.py --output reports/wind-document-audit
-          --plan config/wind_document_inventory_pilot.json --page-limit 200 --render-limit 4
-      - name: Warm pass reuses original hashes and pending queue
-        run: >-
-          python scripts/wind_document_inventory.py --output reports/wind-document-audit
-          --plan config/wind_document_inventory_pilot.json --skip-inventory --render-limit 0
-      - name: Verify inventory completeness and actual large-PDF readability
+          python scripts/wind_document_lifecycle.py
+          --output reports/wind-document-warm --memory reports/wind-document-memory --no-remote
+      - name: Verify lightweight output and unchanged project perimeter
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          root = Path('reports/wind-document-audit')
-          report = json.loads((root/'report.json').read_text())
-          inventory = json.loads((root/'inventory-report.json').read_text())
-          assert report['registry_counts'] == {'canonical': 51, 'discovery_current': 34, 'recency_review': 4, 'rejected': 7}
-          assert report['qualification_records'] == 57 and report['qualification_unlinked'] == 53
-          latest = inventory['inventories'][-1]
-          assert latest['status'] == 'complete_index', latest
-          assert latest['unique_documents'] == latest['expected_documents']
-          big = next(d for d in report['documents'] if d['url'].endswith('/File/Documento/1181568'))
-          assert any(v['byte_count'] > 30*1024**2 and v['extraction'].get('page_count', 0) > 0 for v in big['versions']), 'Large PDF not acquired/read: inspect attempts'
-          assert any(r['path'] for r in inventory['visual_queue']), 'No actual page render'
-          assert inventory['complete_dossiers'] == 0
-          assert all(d['fascicolo_complete'] is False for d in report['documents'])
-          summary = {'index': latest, 'large_pdf_pages': big['current_extraction'].get('page_count'), 'large_pdf_sha256': big['current_sha256'], 'rendered_pages': sum(bool(r['path']) for r in inventory['visual_queue']), 'visual_queue': len(inventory['visual_queue']), 'complete_dossiers': 0}
-          (root/'D2-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
-          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          root=Path('reports/wind-document-memory')
+          report=json.loads((root/'D5-summary.json').read_text(encoding='utf-8'))
+          assert report['registry_counts']=={'canonical':51,'discovery_current':34,'recency_review':4,'rejected':7}
+          assert report['qualification_records']==57
+          assert report['review_count']==27
+          assert report['completed_document_versions']==1
+          assert report['source_reads']==[], 'Warm restart redownloaded a reviewed source'
+          assert report['binary_files_exported']==0
+          assert not any(p.suffix.lower() in {'.pdf','.png','.bin','.p7m','.zip'} for p in root.rglob('*') if p.is_file())
+          assert report['complete_dossiers']==0 and report['canonical_writes']==0
+          print('D5: 27 recorded facts, 1 fully read document version, no original archive, warm restart with zero source reads.')
           PY
-      - name: Import interpreted reviews against exact original versions and pages
-        run: >-
-          python scripts/wind_document_review.py --output reports/wind-document-audit
-          --reviews config/wind_document_review_pilot.json
-      - name: Verify review idempotence and evidence integrity without promoting projects
+      - name: Preserve live conditional-check result separately from warm summary
         run: |
           python - <<'PY'
-          import json
-          import sys
+          import sqlite3,json
           from pathlib import Path
-          sys.path.insert(0, str(Path('scripts').resolve()))
-          from wind_document_review import Reviews
-          store = Reviews('reports/wind-document-audit')
-          try:
-              batch = json.loads(Path('config/wind_document_review_pilot.json').read_text(encoding='utf-8'))
-              assert store.import_batch(batch) == 0, 'Second import must not duplicate reviews'
-              report = store.export()
-              assert report['review_count'] == 24 and report['projects_with_review'] == 4
-              assert all(r['evidence_integrity'] == 'pinned_evidence_available' for r in report['reviews'])
-              assert report['complete_dossiers'] == 0 and report['canonical_writes'] == 0
-              assert not any(r['commercial_currentness_certified'] for r in report['reviews'])
-              print('D3: 24 page-backed interpretations, 4 projects/records, zero duplicate reviews, zero complete dossiers')
-          finally:
-              store.close()
-          PY
-      - name: Extend persistent document queue beyond the original pilot
-        run: >-
-          python scripts/wind_document_queue.py --output reports/wind-document-audit
-          --plan config/wind_document_queue_pilot.json --max-assets 6
-      - name: Verify complete queue seeding and actual additional project PDFs
-        run: |
-          python - <<'PY'
-          import json,sys
-          from pathlib import Path
-          sys.path.insert(0,str(Path('scripts').resolve()))
-          from wind_document_audit import Ledger
-          from wind_document_queue import Queue
-          root=Path('reports/wind-document-audit')
-          ledger=Ledger(root)
-          try:
-              queue=Queue(ledger); before=queue.export()
-              assert before['projects_with_source_tickets']==96
-              assert before['qualification_with_source_tickets']==57
-              assert len(before['work'])>=487
-              additional={r['project_id'] for r in before['work'] if r['project_id'] in {'on-sestino-rwe-39-6','on-mercatello-engie-36','andretta-bisaccia','RAW-038'} and r['state']=='text_available_review_pending'}
-              assert len(additional)>=2, 'Additional PDFs could not be read: inspect source_work and attempts'
-              queue.seed();after=queue.export()
-              assert before['queue_counts']==after['queue_counts'], 'Seed must not reset work'
-              assert len(before['work'])==len(after['work'])
-              assert after['complete_dossiers']==0 and after['canonical_writes']==0
-              ledger.export()
-              summary={'additional_projects_with_extracted_text':sorted(additional),'queue_counts':after['queue_counts'],'source_counts':after['source_counts'],'complete_dossiers':0}
-              (root/'D4-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
-              print(json.dumps(summary,ensure_ascii=False,indent=2))
-          finally:ledger.db.close()
+          root=Path('reports/wind-document-memory')
+          db=sqlite3.connect(root/'audit.sqlite')
+          rows=[json.loads(r[0]) for r in db.execute('SELECT result_json FROM document_memory_events ORDER BY id')]
+          db.close()
+          if rows:
+              print(json.dumps(rows[-1],ensure_ascii=False))
+              with open(__import__('os').environ['GITHUB_STEP_SUMMARY'],'a') as out:
+                  out.write('D5 remote check: '+rows[-1]['status']+'; bytes '+str(rows[-1]['bytes_transferred'])+'; extractions '+str(rows[-1]['text_extractions'])+'\n')
           PY
       - name: Verify no canonical writes
         if: always()
         run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
       - uses: actions/cache/save@v4
-        if: always()
         with:
-          path: reports/wind-document-audit
-          key: wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Include reproducible source and review provenance in the evidence artifact
-        if: always()
-        run: |
-          mkdir -p reports/wind-document-audit/reproduction
-          cp scripts/wind_document_*.py tests/test_wind_document_*.py config/wind_document_*pilot.json reports/wind-document-audit/reproduction/
+          path: reports/wind-document-memory
+          key: wind-documents-memory-d5-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: wind-document-audit-${{ github.run_id }}
-          path: reports/wind-document-audit/
+          name: wind-document-memory-${{ github.run_id }}
+          path: reports/wind-document-memory/
           retention-days: 14
-          if-no-files-found: error
+          if-no-files-found: warn
+      - name: Remove transient reading workspaces (never cached or uploaded)
+        if: always()
+        run: rm -rf reports/wind-document-audit reports/wind-document-warm
