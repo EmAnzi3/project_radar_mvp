@@ -91,6 +91,31 @@ jobs:
           (root/'D2-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
           print(json.dumps(summary,ensure_ascii=False,indent=2))
           PY
+      - name: Import interpreted reviews against exact original versions and pages
+        run: >-
+          python scripts/wind_document_review.py --output reports/wind-document-audit
+          --reviews config/wind_document_review_pilot.json
+      - name: Verify review idempotence and evidence integrity without promoting projects
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          from wind_document_review import Reviews
+          store = Reviews('reports/wind-document-audit')
+          try:
+              batch = json.loads(Path('config/wind_document_review_pilot.json').read_text(encoding='utf-8'))
+              assert store.import_batch(batch) == 0, 'Second import must not duplicate reviews'
+              report = store.export()
+              assert report['review_count'] == 24 and report['projects_with_review'] == 4
+              assert all(r['evidence_integrity'] == 'pinned_evidence_available' for r in report['reviews'])
+              assert report['complete_dossiers'] == 0 and report['canonical_writes'] == 0
+              assert not any(r['commercial_currentness_certified'] for r in report['reviews'])
+              print('D3: 24 page-backed interpretations, 4 projects/records, zero duplicate reviews, zero complete dossiers')
+          finally:
+              store.close()
+          PY
       - name: Verify no canonical writes
         if: always()
         run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents
@@ -99,11 +124,11 @@ jobs:
         with:
           path: reports/wind-document-audit
           key: wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Include reproducible source in the evidence artifact
+      - name: Include reproducible source and review provenance in the evidence artifact
         if: always()
         run: |
           mkdir -p reports/wind-document-audit/reproduction
-          cp scripts/wind_document_audit.py scripts/wind_document_inventory.py tests/test_wind_document_*.py reports/wind-document-audit/reproduction/
+          cp scripts/wind_document_*.py tests/test_wind_document_*.py config/wind_document_review_pilot.json reports/wind-document-audit/reproduction/
       - uses: actions/upload-artifact@v4
         if: always()
         with:

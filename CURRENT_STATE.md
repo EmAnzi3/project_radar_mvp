@@ -1,153 +1,77 @@
 # Current State
 
-## Wind Project & Contractor Radar
+## Fase corrente — audit documentale D1 / D2 / D3 (05/10/2026)
+
+Branch `feat/wind-daily-discovery`, PR #9 OPEN/DRAFT, nessun merge autorizzato. Il motore documentale è additivo e separato dal BAT quotidiano, da `app/wind_agents` e dai dati/dashboard in `docs/wind`.
+
+### Perimetro censito
+
+- 96 identità registrate: 51 canoniche, 34 Discovery correnti, 4 da riconfermare, 7 escluse.
+- 85 sono classificate correnti nei registri, non certificate come opportunità commerciali odierne.
+- 57 gruppi di record da qualificare, di cui 4 già collegati e 53 non collegati. Non sono 53 progetti unici accertati.
+- Audit obbligatorio anche sui 51 canonici. Un record incompleto attiva approfondimento, non una conclusione di indisponibilità del dato.
+- Il seed documentale riunisce anche i due registri `discovery-census-v04*.json`; il matcher quotidiano precedente non è modificato da D1–D3.
+
+### Stato dimostrato e limiti
+
+D1 (`2f67b856368ef8a14c1e01b42e60ac244ed8c3a3`) conserva originali, SHA-256, testo per pagina e accessi in SQLite separata.
+
+D2 (`2c8f2709d296c92ed8315eff6277c1597567dcf1`) ha completato l'indice di una procedura Med Wind Grecale: 49 pagine / 487 allegati. Il lotto ha acquisito 8 PDF / 336 pagine, incluso un originale da 102.737.107 byte / 148 pagine prima fermato dal limite interno D1. Inventario completo non significa allegati tutti acquisiti o letti. Il document audit pilot #2, i check #405 e il live source smoke #223 sono passati su D2.
+
+D3 aggiunge riscontri interpretati con progetto, URL, SHA e pagina, regole sui ruoli aziendali/recapiti e cronoprogrammi. Lotto iniziale: 24 riscontri su Med Wind Grecale, Gagliole, Apecchio e Serra Giannina. Importazione atomica/idempotente, record immutabili, riesame esplicito quando manca un originale o cambia la versione acquisita. Test strutturali non equivalgono a prova automatica della correttezza semantica.
+
+Il presente aggiornamento non anticipa l'esito CI del proprio commit: consultare i run associati alla HEAD. Fascicoli certificati completi: **0**. Nessun nuovo affidamento EPC certificato da questo lotto. Nessuna promozione o variazione del canonico.
+
+Resta da completare: acquisizione/revisione dell'intero inventario, altre procedure e progetti, ZIP/P7M, lettura delle figure/tabelle, genealogia delle versioni e conferma dell'attualità commerciale. Cache Actions e artifact con retention 14 giorni non sostituiscono storage permanente con backup.
+
+Riferimenti operativi:
+- `docs/wind-document-audit.md`
+- `docs/wind-document-inventory.md`
+- `docs/wind-document-review.md`
+- `scripts/wind_document_audit.py`, `scripts/wind_document_inventory.py`, `scripts/wind_document_review.py`
+- `config/wind_document_review_pilot.json`
+
+## Wind Project & Contractor Radar — baseline pubblicata invariata
 
 Baseline pubblicata su `master`: **v0.5.0** (`f2640616540e02448664677427698d808938520f`).
 
-Baseline canonica invariata:
 - **51 progetti / 11.202,52 MW wind**;
 - **17 seed originari / 1.496,9 MW**;
 - **34 progetti integrati dopo promotion gate / 9.705,62 MW**;
 - BESS sempre separato dai MW wind.
 
-## Fase corrente — daily discovery
-
-Branch: `feat/wind-daily-discovery`.
-
-Obiettivo del branch: trasformare il motore v0.6 già derivato da `pv_agent_mvp` in uno strumento operativo giornaliero per rispondere in modo esplicito alla domanda **“ci sono nuovi progetti eolici rispetto ai 51 già noti?”**.
-
-Nessun merge o pubblicazione senza autorizzazione esplicita.
-
 ### Regola probatoria
 
-- solo evidenza **project-specific A1/A2** può chiudere uno scope esecutivo;
-- nessun contractor per deduzione;
-- B/C restano segnali;
-- owner/developer/advisor/engineering/DL/supervision non equivalgono a execution;
-- storico stesso sito non implica award sul progetto corrente;
-- OEM non implica BoP;
-- BESS resta separato dai MW wind.
+Solo evidenza project-specific A1/A2 può chiudere uno scope esecutivo. Nessun contractor per deduzione; B/C restano segnali. Owner, developer, advisor, engineering, direzione lavori e supervisione non equivalgono a execution. Storico sullo stesso sito non implica award sul progetto corrente; OEM non implica BoP. Contatti pubblici professionali mantengono ruolo e data; recapiti personali non pertinenti non sono raccolti nel modello commerciale. Durate relative, obiettivi dichiarati e stime sono separati.
 
-## Runtime e network
+## Runtime quotidiano e network (non modificati da D1–D3)
 
-- **61 player commerciali**;
-- **34 nodi istituzionali/pubblici**;
-- **24 adapter istituzionali eseguibili**;
-- Company Watch operativo;
-- Project Execution investigation queue sui canonici E4–E7 con scope aperti;
-- SQLite operativo separato dal canonico per raw finding, history, cursori e `watch_status`;
-- reconciliation conservativa e digest review-only;
-- nessuna scrittura automatica nel canonico.
+- 61 player commerciali, 34 nodi istituzionali/pubblici, 24 adapter istituzionali eseguibili.
+- Company Watch e Project Execution investigation queue sui canonici E4–E7 con scope aperti.
+- SQLite operativo separato dal canonico per raw finding, history, cursori e `watch_status`.
+- Reconciliation conservativa e digest review-only; nessuna scrittura automatica nel canonico.
+- Gli snapshot tecnici di degrado fonte non sono nuovi progetti.
 
-Player & Network Watch e Institutional & Source Watch **non sono più sezioni a piena pagina della dashboard**: alimentano il motore e sono documentati nella metodologia.
+`aggiorna_wind_radar.bat` crea/riusa `.venv`, verifica le dipendenze, interroga i 24 adapter a ogni run e i player dovuti per cadenza. Persiste baseline/new/changed/unchanged, genera `reports/wind-agent/daily-discovery-latest.html`, `.csv`, `.json` e lo storico, aggiorna le code di indagine, scrive `docs/wind/data/local-run-status.json`, esegue i validator e apre report/dashboard. Il primo successo della fonte è baseline, non un elenco di nuovi progetti. `all` forza anche i player; `offline` non usa rete. Il BAT non esegue il nuovo audit documentale finché il rollout non è approvato.
 
-## Discovery — policy corrente
+## Discovery e revisione
 
-Discovery è una **coda tecnica interna**, non una vista pubblica.
+Discovery resta interna. Promozione soltanto dopo identità, attività corrente, configurazione e stage verificati; conservare i progetti reali incompleti e le guardie negative utili. Med Wind Grecale, Rospo Offshore, Sindia-Macomer e Le Chiancate rimangono nel perimetro di revisione senza automatismi. La nuova analisi non considera la presenza nel registro una certificazione del fascicolo.
 
-Regola:
-- promuovere nel canonico solo candidati con identità, attività corrente, configurazione e stage sufficientemente verificati;
-- mantenere internamente i progetti reali ma incompleti;
-- rimuovere dalla coda attiva falsi, duplicati o opportunità non più valide;
-- conservare guardie negative solo quando servono a evitare reintroduzioni errate o collisioni di identità.
+## Dashboard / UI v0.6 — stato precedente preservato
 
-Triage corrente in `docs/wind/data/discovery-triage-v06.json`:
-- **Med Wind Grecale** — reale/attivo, hold interno: 698,25 MW; MASE + GU confermano fino a 45 WTG ma non una configurazione finale univoca;
-- **Rospo Offshore** — reale/attivo, hold interno: 1.005 MW + 350 MW BESS; exact 67×15 MW ancora privo di conferma A1/A2 sufficiente;
-- **Sindia-Macomer 43,4 MW** — reale/attivo, hold interno: procedura MASE in istruttoria, configurazione WTG A1/A2 ancora da chiudere;
-- **Le Chiancate** — reale/attivo, hold interno: vecchia istanza archiviata ma nuova istanza MASE del 08/06/2026 in verifica amministrativa; configurazione WTG ancora incompleta.
+Dati mostrati dalla baseline: 51 progetti / 11.202,52 MW, origine 17 seed + 34 integrati, 12 E4+ / 689,7 MW, 9 E7 / 437,7 MW, 47 progetti / 11.068,62 MW senza contractor esecutivo A1/A2 attribuito. Sono KPI ereditati, non nuove verifiche di cantiere.
 
-Nessuno dei quattro current viene cassato; nessuno viene esposto pubblicamente finché non supera il gate.
+Restano KPI, filtri, mappa ECharts per provincia, maturità E0–E8, calendario, opportunità e Contractor view; Discovery e le viste Watch non occupano sezioni a piena pagina. La mappa mantiene filtro Provincia dedicato, metrica MW/progetti/MW E4+, conteggio per provincia principale, BESS separato, tooltip e rendering confinati, zoom attivo. D1–D3 non cambiano layout o filtri.
 
-## UI v0.6 — results first
+Le precedenti review desktop 1440×1100 e mobile 390×844 appartengono alla fase UI; non costituiscono una nuova verifica visiva di questo passaggio documentale. Ogni rollout pubblico richiede autorizzazione.
 
-La home pubblica è ora orientata ai risultati:
-- **51 progetti / 11.202,52 MW** canonici;
-- origine del canonico: **17 seed + 34 integrati dopo validazione**;
-- **12 progetti E4+ / 689,7 MW**;
-- **9 progetti E7 / 437,7 MW**;
-- **47 progetti / 11.068,62 MW senza contractor esecutivo A1/A2 attribuito**.
+## Project-specific enrichment v0.6 — evidenze pregresse da conservare/riesaminare
 
-Discovery e le due viste Watch non occupano più spazio nella dashboard pubblica.
+Le tranche `commercial-enrichment-v06*.json` rimangono additive. Andretta-Bisaccia: Progeco come site management/supervisione, non execution; Tricarico: financial close UniCredit e Vector LTA, non BoP dedotto; Nulvi-Ploaghe: configurazione ERG, procurement aperto; Serra Giannina: D'Agostino lead B; Greci-Montaguto: PROGETTO ENERGIA progettazione, non execution; Alia-Sclafani: storico SOCEP non trasferito automaticamente al repowering; Carlentini: Mammana fondazioni, non estensione al full Civil BoP.
 
-Restano visibili e operativi:
-- KPI e filtri;
-- mappa ECharts choropleth per provincia;
-- stato per maturità E0–E8;
-- calendario attività/milestone;
-- opportunità prioritarie;
-- Contractor view;
-- metodologia con copertura del motore di intelligence.
+## Validazione e gate successivo
 
-## Mappa per provincia
+Conservare i validator Wind v0.5/v0.6, il controllo Windows e il live A/B su SQLite persistente. D1–D3 aggiungono i test `test_wind_document_*.py` e il workflow `wind_document_audit.yml`, che verifica accesso/inventario e riscontri su originali senza modifiche canoniche. Il prossimo risultato richiesto è estensione della copertura documentale e commerciale, non una promozione implicita del pilota.
 
-- metriche: **MW eolici**, **N. progetti**, **MW E4+**;
-- ogni progetto conteggiato una sola volta sulla provincia canonica principale;
-- BESS separato;
-- filtro Provincia dedicato;
-- click mappa non sovrascrive la ricerca testuale;
-- tooltip confinato e senza duplicazione della metrica selezionata;
-- `roam`/zoom ECharts attivi.
-
-## Browser review
-
-Verifica reale desktop **1440×1100** e mobile **390×844** completata anche sulla nuova home results-first:
-- Discovery visibile: **0 sezioni**;
-- Player/Source Watch visibili: **0 sezioni**;
-- Opportunità prioritarie presente;
-- metodologia con 61 player / 34 nodi fonte / 24 adapter presente;
-- nessun errore console;
-- nessun overflow orizzontale desktop/mobile.
-
-La review visiva precedente della mappa è stata approvata dall'utente; la nuova home results-first è in revisione tramite artifact locale.
-
-## Project-specific enrichment v0.6
-
-Le tranche `commercial-enrichment-v06.json`, `v06b.json`, `v06c.json` e `v06d.json` restano additive.
-
-Principali punti:
-- Andretta-Bisaccia: Progeco A2 site management/construction supervision, non execution award; configurazione MASE/Edison 18 WTG / 88,5 MW;
-- Tricarico: UniCredit financial close e Vector Renewables LTA, nessun BoP dedotto;
-- Nulvi-Ploaghe: ERG 27 WTG × 4,5 MW, procurement/execution principali ancora aperti;
-- Serra Giannina: D'Agostino resta lead B, nessuno scope chiuso;
-- Greci-Montaguto: PROGETTO ENERGIA A1 progettazione/executive design, non execution;
-- Alia-Sclafani: PAS corrente 9 WTG / 55 MW, SOCEP storico non trasferito al repowering;
-- Carlentini: Mammana foundation contractor A2 confirmed; nessuna estensione al full Civil BoP.
-
-
-## Avvio locale one-click — daily discovery
-
-Disponibile `aggiorna_wind_radar.bat` alla radice del repository.
-
-Comportamento del normale doppio clic:
-- crea/riusa `.venv` e verifica le dipendenze;
-- interroga **tutti i 24 adapter istituzionali project-discovery a ogni run**, indipendentemente dalla cadenza precedente;
-- esegue Company Watch solo sui player dovuti per cadenza;
-- persiste raw finding e storico SQLite con `baseline / new / changed / unchanged`;
-- al primo successo di ciascuna fonte crea la baseline sorgente: i record già presenti non generano falsi allarmi "nuovo";
-- riconcilia baseline e variazioni successive contro i **51 progetti canonici** e la coda Discovery;
-- genera `reports/wind-agent/daily-discovery-latest.html`, `.csv` e `.json`;
-- separa nuovi candidati giornalieri, backlog iniziale della baseline, aggiornamenti dei canonici, aggiornamenti Discovery, identità ambigue ed errori fonte;
-- aggiorna execution investigation queue e digest review-only;
-- scrive lo status locale in `docs/wind/data/local-run-status.json`;
-- esegue i validator Wind v0.5/v0.6 + daily discovery;
-- apre prima il report giornaliero e poi la dashboard locale;
-- non promuove finding né modifica automaticamente il canonico.
-
-Varianti:
-- `all` = stessa scansione completa delle fonti progetto + forza tutti i player commerciali;
-- `offline` = nessuna rete, solo stato/validazione/apertura.
-
-Il criterio operativo è quindi doppio: **51 progetti sono la baseline canonica commerciale**, mentre lo SQLite mantiene la **baseline tecnica delle singole fonti**. Il primo run censisce ciò che esiste già; dai run successivi il BAT segnala come nuovo solo ciò che appare dopo la scansione precedente.
-
-## Validazione
-
-I validator v0.6 includono regressioni canoniche, promotion, commercial/institutional network, agent architecture, project-specific enrichment, mappa province e sintassi JS.
-
-Il gate live comprende i quattro gruppi istituzionali più uno **smoke a due passaggi sullo stesso SQLite**: primo passaggio = baseline sorgente, secondo passaggio = record invariati senza falsi `new/changed`. Il gate deve restare SUCCESS insieme ai validator Linux e Windows prima del closeout della PR.
-
-## Gate successivo
-
-Il prossimo gate è la revisione dell'artifact **public/results-first**. Dopo approvazione esplicita: riallineamento finale PR body/CI e solo successivamente eventuale autorizzazione a merge/pubblicazione.
-
-**Nessun merge e nessuna pubblicazione prima dell'approvazione esplicita.**
+**Nessun merge e nessuna pubblicazione senza approvazione esplicita.**
