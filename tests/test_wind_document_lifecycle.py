@@ -1,5 +1,6 @@
 """Storage guards for read-once memory: no loss, no implicit network/archives."""
 import json
+from contextlib import closing
 from pathlib import Path
 import sqlite3
 import sys
@@ -15,19 +16,20 @@ class LifecycleStorageTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.base = Path(self.temp.name)
+        self.base = Path(self.temp.name).resolve()
         self.memory = self.base / 'memory'
         self.stage = self.base / 'stage'
         self.work = self.base / 'work'
 
     def db(self, parent, value):
         parent.mkdir(exist_ok=True)
-        with sqlite3.connect(parent/'audit.sqlite') as db:
+        with closing(sqlite3.connect(parent/'audit.sqlite')) as db:
             db.execute('CREATE TABLE marker(value)')
             db.execute('INSERT INTO marker VALUES(?)', (value,))
+            db.commit()
 
     def value(self, parent):
-        with sqlite3.connect(parent/'audit.sqlite') as db:
+        with closing(sqlite3.connect(parent/'audit.sqlite')) as db:
             return db.execute('SELECT value FROM marker').fetchone()[0]
 
     def test_distinct_sibling_paths(self):
