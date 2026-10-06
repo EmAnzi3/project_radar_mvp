@@ -1,0 +1,72 @@
+name: Tarsia harvester pilot
+on:
+  pull_request:
+    paths:
+      - scripts/harvest_wind_project.py
+      - config/wind_tarsia_pilot.json
+      - tests/test_harvest_wind_project.py
+      - .github/workflows/wind_tarsia_pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tarsia-harvester-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  harvest:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            docs/wind
+            scripts
+            config
+            tests
+            .github
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - run: python -m unittest discover -s tests -p test_harvest_wind_project.py -v
+      - name: Collect project sources, keep originals for analysis
+        run: python scripts/harvest_wind_project.py --config config/wind_tarsia_pilot.json --output reports/tarsia-pilot
+      - name: Restart without network or source rereading
+        run: python scripts/harvest_wind_project.py --config config/wind_tarsia_pilot.json --output reports/tarsia-pilot --offline
+      - name: Verify immutable files and offline counters
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          from pathlib import Path
+          root=Path('reports/tarsia-pilot')
+          first=json.loads((root/'harvest-first.json').read_text())
+          warm=json.loads((root/'harvest-offline.json').read_text())
+          assert warm['network_requests']==warm['bytes_transferred']==warm['text_extractions']==0
+          assert first['successful']>0, 'No source accessible: pilot did not collect content'
+          for row in json.loads((root/'manifest.json').read_text())['resources'].values():
+              if row.get('object'):
+                  assert hashlib.sha256((root/row['object']).read_bytes()).hexdigest()==row['sha256']
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as out:
+              out.write('Real collection counters (errors are not successes):\n```json\n'+json.dumps(first,indent=2)+'\n```\n')
+              out.write('Offline restart: zero requests, bytes and extractions. OneDrive upload NOT performed by this runner.\n')
+          PY
+      - name: Include repository files for targeted integration review
+        if: always()
+        run: |
+          mkdir -p reports/repository-review
+          cp -r docs/wind reports/repository-review/wind
+          cp -r scripts tests config .github reports/repository-review/
+          cp README.md CURRENT_STATE.md CHANGELOG.md AGENTS.md reports/repository-review/
+          git rev-parse HEAD > reports/repository-review/head.txt
+          git diff --exit-code -- docs/wind app/wind_agents aggiorna_wind_radar.bat
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-harvester-${{ github.run_id }}
+          path: |
+            reports/tarsia-pilot
+            reports/repository-review
+          retention-days: 14
