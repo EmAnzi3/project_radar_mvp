@@ -1,0 +1,75 @@
+name: Tarsia archive bounded reader
+on:
+  push:
+    branches: ['fix/tarsia-institutional-closeout']
+    paths: ['.github/workflows/tarsia_archive_read.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  read:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install PyMuPDF==1.26.4
+      - name: Reuse complete archive already acquired, no portal redownload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 37523274647 --repo EmAnzi3/project_radar_mvp --name tarsia-full-archive-37523274647 --dir input
+      - name: Stream one member at a time; persist each result
+        shell: bash
+        run: |
+          python -u - <<'PY'
+          import zipfile,hashlib,json,re,tempfile,shutil,gc,time
+          from pathlib import Path
+          import fitz
+          src=Path('input/PAURTarsiaovest.zip');out=Path('review');out.mkdir();(out/'text').mkdir();(out/'originals').mkdir();(out/'covers').mkdir()
+          with src.open('rb') as f:sha=hashlib.file_digest(f,'sha256').hexdigest()
+          report={'archive_url':'https://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip','archive_sha256':sha,'archive_bytes':src.stat().st_size,'source_run':37523274647,'paid_model_calls':0,'portal_downloads_this_run':0,'all_project_dossier_complete':False,'members':[]}
+          def save():
+            report['member_count']=len(report['members']);report['pdf_count']=sum(x.get('kind')=='pdf' for x in report['members']);report['pdf_pages']=sum(x.get('page_count',0) for x in report['members']);report['native_extracted']=sum(x.get('status')=='native_text_extracted' for x in report['members'])
+            (out/'manifest.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+          with zipfile.ZipFile(src) as z:
+            members=[i for i in z.infolist() if not i.is_dir()]
+            report['inventory']=[{'name':i.filename,'size':i.file_size,'compressed':i.compress_size} for i in members];report['expected_members']=len(members);save()
+            for index,info in enumerate(members):
+              row={'name':info.filename,'bytes':info.file_size,'semantic_analysis':'pending','source_archive':sha}
+              try:
+                if info.flag_bits&1:raise ValueError('Encrypted member')
+                with tempfile.TemporaryDirectory() as tmp:
+                  path=Path(tmp)/'member.bin';digest=hashlib.sha256();count=0
+                  with z.open(info) as f,path.open('wb') as g:
+                    for block in iter(lambda:f.read(1048576),b''):count+=len(block);digest.update(block);g.write(block)
+                  if count!=info.file_size:raise ValueError('Truncated member')
+                  h=digest.hexdigest();row.update(sha256=h,crc_verified=True,status='acquired')
+                  with path.open('rb') as f:is_pdf=b'%PDF-' in f.read(1024)
+                  if is_pdf:
+                    row['kind']='pdf';doc=fitz.open(path);pages=[]
+                    for n,page in enumerate(doc,1):
+                      try:text=page.get_text();err=None
+                      except Exception as exc:text='';err=str(exc)
+                      pages.append({'page':n,'text':text,'error':err,'needs_visual':len(text.strip())<80})
+                    row.update(page_count=len(pages),low_text_pages=[p['page'] for p in pages if p['needs_visual']],status='native_text_extracted',text_file='text/'+h+'.json')
+                    (out/row['text_file']).write_text(json.dumps({'name':info.filename,'sha256':h,'pages':pages},ensure_ascii=False),encoding='utf-8')
+                    selected=bool(re.search(r'cronop|CL.?02|G.?00|G.?01|relazione.?generale|tecnic.*descr|E.?01|S0?1[._]0?1|elenco.?elaborati|Relazione.*variante',info.filename,re.I))
+                    if selected:
+                      target=out/'originals'/(h+'.pdf');shutil.copyfile(path,target);row['original_file']='originals/'+h+'.pdf'
+                    # Covers aid identification; they do not certify drawings as read.
+                    if len(doc):
+                      page=doc[0];scale=min(1.5,1500/max(page.rect.width,page.rect.height));page.get_pixmap(matrix=fitz.Matrix(scale,scale)).save(str(out/'covers'/(h+'.png')));row['cover']='covers/'+h+'.png'
+                    doc.close();fitz.TOOLS.store_shrink(100)
+                  else:row['kind']='other';row['status']='acquired_format_not_interpreted'
+              except Exception as exc:row.update(status='processing_failed',error=str(exc)[:500])
+              report['members'].append(row);save();gc.collect();print(json.dumps({'progress':index+1,'total':len(members),'name':info.filename,'status':row['status']},ensure_ascii=False),flush=True)
+          report['inventory_complete_for_this_zip']=len(report['members'])==report['expected_members'];report['guard']='ZIP acquisition and native extraction, not a certificate of complete semantic/visual reading. Archive is historical; current SUAP variant remains separate.';save();print(json.dumps({k:v for k,v in report.items() if k not in ('members','inventory')},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-archive-bounded-${{ github.run_id }}
+          path: review/
+          retention-days: 14
+          if-no-files-found: error
