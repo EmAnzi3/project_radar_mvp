@@ -1,0 +1,150 @@
+name: Tarsia institutional access
+on:
+  push:
+    branches: ['fix/tarsia-institutional-closeout']
+    paths: ['.github/workflows/tarsia_institutional_access.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tarsia-institutional-access
+  cancel-in-progress: false
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            config
+            scripts
+            tests
+            docs/wind
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 beautifulsoup4==4.13.4 pypdf==5.9.0
+      - name: Collect public evidence; no login, no publication, no AI API
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, ipaddress, json, re, socket, time, zipfile
+          from concurrent.futures import ThreadPoolExecutor
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import urljoin, urlsplit, urldefrag
+          import requests
+          from bs4 import BeautifulSoup
+          from pypdf import PdfReader
+          root=Path('reports/tarsia-institutional'); root.mkdir(parents=True,exist_ok=True)
+          hosts=('regione.calabria.it','calabriasuap.it','calabriasue.it','plc-spa.it','idokacostruzioni.com','regione.sicilia.it')
+          seeds=[
+            ('project','https://www.regione.calabria.it/wp-content/uploads/2023/03/360_parco-eolico-tarsia-ovest-ddg-3509_del_13_03_2023.pdf'),
+            ('index','https://www.regione.calabria.it/?s=Tarsia+Ovest'),
+            ('index','https://www.regione.calabria.it/provvedimenti-della-regione/page/1141/'),
+            ('index','https://www.regione.calabria.it/provvedimenti-della-regione/page/1964/'),
+            ('index','https://www.regione.calabria.it/433450-2/page/1193/'),
+            ('portal','https://www.calabriasuap.it/'),
+            ('portal','https://burc.regione.calabria.it/'),
+            ('contact','https://www.plc-spa.it/plc-system/'),
+            ('contact','https://www.idokacostruzioni.com/contatti'),
+            ('identity','https://www.regione.sicilia.it/istituzioni/servizi-informativi/decreti-e-direttive/aiu-favore-eni-plenitude-renewables-italy-spa-sede-milano-ripamonti-85-p-iva-09722790962')
+          ]
+          def stamp(): return datetime.now(timezone.utc).isoformat()
+          def allowed(url):
+            p=urlsplit(url); h=(p.hostname or '').lower()
+            if p.scheme!='https' or p.username or p.password or p.port not in (None,443): return False
+            return any(h==v or h.endswith('.'+v) for v in hosts)
+          def acquire(item):
+            row=dict(item,checked_at=stamp()); u=item['url']; start=time.monotonic(); response=None
+            try:
+              with requests.Session() as session:
+                for _ in range(5):
+                  if not allowed(u): raise ValueError('Destination outside allowed public sources: '+u)
+                  addresses=socket.getaddrinfo(urlsplit(u).hostname,443)
+                  if not addresses or any(not ipaddress.ip_address(x[4][0]).is_global for x in addresses): raise ValueError('Non-public address')
+                  response=session.get(u,timeout=(7,22),stream=True,allow_redirects=False,headers={'User-Agent':'WindRadarSourceAudit/1.0','Accept-Encoding':'identity'})
+                  row.update(http_status=response.status_code,final_url=u)
+                  if response.status_code not in (301,302,303,307,308): break
+                  loc=response.headers.get('Location');response.close()
+                  if not loc: raise ValueError('Missing redirect target')
+                  u=urljoin(u,loc)
+                else: raise ValueError('Redirect limit')
+                response.raise_for_status()
+                data=bytearray()
+                for block in response.iter_content(131072):
+                  data.extend(block)
+                  if len(data)>128*1024**2 or time.monotonic()-start>100: raise ValueError('Transfer limit; source remains pending')
+                if not data: raise ValueError('Empty response')
+                if response.headers.get('Content-Encoding','identity') in ('','identity') and response.headers.get('Content-Length') and int(response.headers['Content-Length'])!=len(data): raise ValueError('Incomplete transfer')
+                sha=hashlib.sha256(data).hexdigest(); kind='pdf' if b'%PDF-' in data[:1024] else 'html'
+                dest=root/(sha+('.pdf' if kind=='pdf' else '.html'));dest.write_bytes(data)
+                row.update(status='acquired',sha256=sha,bytes=len(data),file=dest.name,kind=kind,etag=response.headers.get('ETag'),last_modified=response.headers.get('Last-Modified'))
+                if kind=='pdf':
+                  reader=PdfReader(dest,strict=False)
+                  if reader.is_encrypted and not reader.decrypt(''):raise ValueError('Encrypted PDF, not analyzed')
+                  pages=[]
+                  for n,page in enumerate(reader.pages,1):
+                    try: text=page.extract_text() or '';error=None
+                    except Exception as e:text='';error=str(e)
+                    pages.append({'page':n,'text':text,'error':error})
+                  (root/(sha+'.pages.json')).write_text(json.dumps(pages,ensure_ascii=False,indent=2),encoding='utf-8')
+                  row.update(pages=len(pages),text_file=sha+'.pages.json',analysis_status='not_analyzed',discovered=[])
+                  return row
+                soup=BeautifulSoup(data,'html.parser')
+                for tag in soup(['script','style','noscript']):tag.decompose()
+                text=soup.get_text('\n',strip=True)
+                (root/(sha+'.txt')).write_text(text,encoding='utf-8')
+                row.update(text_file=sha+'.txt',title=soup.title.get_text(' ',strip=True) if soup.title else '',links=[],discovered=[],forms=[{'action':f.get('action'),'method':f.get('method'),'inputs':[x.get('name') for x in f.find_all(['input','select'])]} for f in soup.find_all('form')])
+                if re.search(r'access denied|verify you are human|request rejected|just a moment',text[:1800],re.I):
+                  row['status']='access_challenge';return row
+                title=' '.join(h.get_text(' ',strip=True) for h in soup.find_all('h1'))
+                project_page='tarsia' in title.lower()
+                for a in soup.find_all('a',href=True):
+                  href=urldefrag(urljoin(u,a['href']))[0]; label=a.get_text(' ',strip=True)
+                  if not allowed(href):continue
+                  row['links'].append({'url':href,'label':label})
+                  parent=a.find_parent(['tr','article']);context=parent.get_text(' ',strip=True) if parent else label
+                  relevant=bool(re.search(r'tarsia',href+' '+label+' '+context,re.I))
+                  asset=bool(re.search(r'\.pdf|\.p7m|\.zip|download|allegat|File/Documento|wp-content/uploads',href+' '+label,re.I))
+                  scope=None
+                  if item['scope'] in ('index','project') and (relevant or (project_page and asset)):scope='project' if asset or relevant else None
+                  if item['scope']=='portal' and re.search(r'pubblicazion|consultazion|sportello.ambiente|banca.dati',href+' '+label,re.I):scope='portal'
+                  if scope:row['discovered'].append({'url':href,'scope':scope,'from':u,'label':label})
+                row['analysis_status']='not_analyzed'
+                return row
+            except Exception as e:row.update(status='access_failed',error=str(e)[:700]);return row
+            finally:
+              if response is not None:response.close()
+          queue=[{'url':u,'scope':s,'from':'explicit_selected_channel'} for s,u in seeds];seen=set();rows=[];pending=[]
+          with ThreadPoolExecutor(max_workers=2) as pool:
+            for depth in range(5):
+              batch=[]
+              for item in queue:
+                if item['url'] not in seen:seen.add(item['url']);batch.append(item)
+              queue=[]
+              if len(rows)+len(batch)>100:pending.extend(batch);break
+              for row in pool.map(acquire,batch):
+                rows.append(row);print(json.dumps({k:row.get(k) for k in ('url','status','http_status','bytes','pages','error')},ensure_ascii=False),flush=True)
+                queue.extend(row.get('discovered',[]))
+                (root/'access-manifest.json').write_text(json.dumps({'checked_at':stamp(),'resources':rows,'pending_discovery':queue,'all_documentation_complete':False,'paid_model_calls':0},ensure_ascii=False,indent=2),encoding='utf-8')
+              if not queue:break
+            pending.extend(x for x in queue if x['url'] not in seen)
+          report={'checked_at':stamp(),'resources':rows,'pending_discovery':pending,'all_documentation_complete':False,'paid_model_calls':0,'guard':'Access/parse is not analysis. A successful collection job does not certify a complete project inventory.'}
+          (root/'access-manifest.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+          with zipfile.ZipFile(root/'repo-input.zip','w',zipfile.ZIP_DEFLATED) as z:
+            for folder in ('config','scripts','tests','docs/wind'):
+              for p in Path(folder).rglob('*'):
+                if p.is_file() and p.suffix in ('.py','.json','.js','.html','.md','.ps1','.css','.csv') and p.stat().st_size<4000000:z.write(p,p.as_posix())
+            for name in ('README.md','AGENTS.md','CURRENT_STATE.md','CHANGELOG.md'):
+              if Path(name).exists():z.write(name)
+          print(json.dumps({'resources':len(rows),'acquired':sum(x['status']=='acquired' for x in rows),'failed':sum(x['status']!='acquired' for x in rows),'pending':len(pending)}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-institutional-${{ github.run_id }}
+          path: reports/tarsia-institutional/
+          retention-days: 14
+          if-no-files-found: error
