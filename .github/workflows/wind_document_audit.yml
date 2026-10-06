@@ -64,47 +64,55 @@ jobs:
           restore-keys: |
             wind-documents-d2-${{ github.event.pull_request.number || github.ref_name }}-
       - name: Read once, persist evidence, release completed sources, check only due changes
-        run: >-
-          python scripts/wind_document_lifecycle.py
-          --output reports/wind-document-audit --memory reports/wind-document-memory
+        run: |
+          python scripts/wind_document_lifecycle.py \
+            --output reports/wind-document-audit --memory reports/wind-document-memory \
+            | tee "$RUNNER_TEMP/wind-document-cold-run.json"
       - name: Prove a fresh offline restart does not reread completed sources
         run: >-
           python scripts/wind_document_lifecycle.py
           --output reports/wind-document-warm --memory reports/wind-document-memory --no-remote
-      - name: Verify lightweight output, three completed versions and unchanged project perimeter
+      - name: Verify versioned manifests, lightweight memory and unchanged project perimeter
         run: |
           python - <<'PY'
-          import json, sqlite3
+          import json, sqlite3, sys, os
           from pathlib import Path
-          root=Path('reports/wind-document-memory')
-          report=json.loads((root/'D5-summary.json').read_text(encoding='utf-8'))
-          assert report['registry_counts']=={'canonical':51,'discovery_current':34,'recency_review':4,'rejected':7}
-          assert report['qualification_records']==57
-          assert report['review_count']==35
-          assert report['completed_document_versions']==3
-          assert report['source_reads']==[], 'Warm restart redownloaded a reviewed source'
-          assert report['binary_files_exported']==0
+          sys.path.insert(0, 'scripts')
+          from wind_document_lifecycle import REVIEW_FILES, COMPLETION_FILES, _load
+          root = Path('reports/wind-document-memory')
+          report = json.loads((root / 'D5-summary.json').read_text(encoding='utf-8'))
+          entries = _load(Path('.'), REVIEW_FILES, 'reviews')
+          plans = _load(Path('.'), COMPLETION_FILES, 'documents')
+          expected_ids = {r['id'] for r in entries}
+          expected_versions = {(p['doc_id'], p['sha256']) for p in plans}
+          assert len(expected_ids) == len(entries), 'Duplicate review manifests'
+          assert len(expected_versions) == len(plans), 'Duplicate completion manifests'
+          assert report['registry_counts'] == {'canonical':51,'discovery_current':34,'recency_review':4,'rejected':7}
+          assert report['qualification_records'] == 57
+          assert report['review_count'] == len(entries)
+          assert report['completed_document_versions'] == len(plans)
+          assert report['source_reads'] == [], 'Warm restart redownloaded a reviewed source'
+          assert report['binary_files_exported'] == 0
           assert not any(p.suffix.lower() in {'.pdf','.png','.bin','.p7m','.zip'} for p in root.rglob('*') if p.is_file())
-          assert report['complete_dossiers']==0 and report['canonical_writes']==0
-          with sqlite3.connect(root/'audit.sqlite') as db:
-              plans=[json.loads(r[0]) for r in db.execute('SELECT completion_json FROM document_read_memory')]
-              assert sum(len(p['pages']) for p in plans)==14
+          assert report['complete_dossiers'] == 0 and report['canonical_writes'] == 0
+          with sqlite3.connect(root / 'audit.sqlite') as db:
+              assert {r[0] for r in db.execute('SELECT review_id FROM documentary_reviews')} == expected_ids
+              assert {tuple(r) for r in db.execute('SELECT doc_id,sha256 FROM document_read_memory')} == expected_versions
+              saved = [json.loads(r[0]) for r in db.execute('SELECT completion_json FROM document_read_memory')]
+              assert sum(len(p['pages']) for p in saved) == sum(len(p['pages']) for p in plans)
+              current = db.execute('SELECT COUNT(*) FROM document_read_memory m JOIN document_heads h ON h.doc_id=m.doc_id AND h.sha256=m.sha256').fetchone()[0]
+              assert current == len(plans), 'A reviewed source changed: do not certify its new version as complete'
               for r in db.execute('SELECT extraction_json FROM versions'):
-                  assert all('text' not in p for p in json.loads(r[0]).get('pages',[])), 'Full page text leaked into durable memory'
-          print('D6: 35 recorded findings, 3 completed document versions / 14 pages, no original archive, offline restart with zero source reads.')
-          PY
-      - name: Preserve conditional-check results separately from warm summary
-        run: |
-          python - <<'PY'
-          import sqlite3,json,os
-          from pathlib import Path
-          root=Path('reports/wind-document-memory')
-          with sqlite3.connect(root/'audit.sqlite') as db:
-              rows=[json.loads(r[0]) for r in db.execute('SELECT result_json FROM document_memory_events ORDER BY id')]
-          if rows:
-              with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as out:
-                  for row in rows[-3:]:
-                      out.write('Remote check: '+row['status']+'; bytes '+str(row['bytes_transferred'])+'; extractions '+str(row['text_extractions'])+'\n')
+                  assert all('text' not in p for p in json.loads(r[0]).get('pages', [])), 'Full page text leaked into durable memory'
+          message = f"D7: {len(entries)} recorded findings, {len(plans)} completed versions / {sum(len(p['pages']) for p in plans)} pages; offline restart with zero source reads."
+          print(message)
+          cold = json.loads((Path(os.environ['RUNNER_TEMP']) / 'wind-document-cold-run.json').read_text(encoding='utf-8'))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as out:
+              out.write(message + '\n\n')
+              out.write('First pass source reads: ' + str(len(cold['source_reads'])) + '\n\n')
+              for row in cold['currentness_checks']:
+                  out.write('Remote check: ' + row['status'] + '; bytes ' + str(row['bytes_transferred']) + '; extractions ' + str(row['text_extractions']) + '\n\n')
+              out.write('Queue: ' + json.dumps(report['queue_counts'], sort_keys=True) + '\n')
           PY
       - name: Verify no canonical writes
         if: always()

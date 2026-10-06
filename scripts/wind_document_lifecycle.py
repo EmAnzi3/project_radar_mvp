@@ -17,8 +17,9 @@ import sqlite3
 import tempfile
 
 REVIEW_FILES = ('wind_document_review_pilot.json', 'wind_document_memory_reviews.json',
-                'wind_document_read_once_reviews.json')
-COMPLETION_FILES = ('wind_document_completed_pilot.json', 'wind_document_read_once_completed.json')
+                'wind_document_read_once_reviews.json', 'wind_document_followup_batch.json')
+COMPLETION_FILES = ('wind_document_completed_pilot.json', 'wind_document_read_once_completed.json',
+                    'wind_document_followup_batch.json')
 ALLOWED_MEMORY_FILES = {'audit.sqlite', 'memory-report.json', 'review-report.json',
                         'review-report.html', 'D5-summary.json'}
 
