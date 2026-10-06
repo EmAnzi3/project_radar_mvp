@@ -1,0 +1,44 @@
+{
+  "project_id": "tarsia-ovest",
+  "expected_base_record_sha256": "b7d4af018305fc568465953feac50e56ca946077cc3739d531425eee9f69c714",
+  "reviewed_on": "2026-10-06",
+  "status_note": "Avvio costruzione annunciato da Plenitude il 27/11/2025. Contratto RTI comunicato da PLC il 12/12/2025; sottostazione MT/AT prevista per il 2026. Questi documenti non confermano la data effettiva di completamento né lo stato del cantiere a ottobre 2026.",
+  "sources": [
+    {"id":"tars-eni-pdf","title":"Plenitude: configurazione, avvio lavori e recapiti istituzionali (PDF, p.1)","publisher":"Eni / Plenitude","date":"2025-11-27","url":"https://www.eni.com/content/dam/enicom/documents/press-release/migrated/2025-it/11/cs-plenitude-avvia-costruzione-parco-eolico-in-calabria-13-mw.pdf","grade":"A2"},
+    {"id":"tars-plc-sales","title":"PLC System: ufficio commerciale; centralino PLC S.p.A.","publisher":"PLC","date":null,"url":"https://www.plc-spa.it/plc-system/","grade":"A2"},
+    {"id":"tars-idoka-contact","title":"Idoka Costruzioni S.r.l.: contatti societari","publisher":"Idoka Costruzioni","date":null,"url":"https://www.idokacostruzioni.com/contatti","grade":"A2"}
+  ],
+  "documentary": {
+    "reviewed_on":"2026-10-06",
+    "method":"Analisi mirata di comunicato Plenitude, accordo pubblicato da PLC e pagine contatti. Non è una certificazione dell’intero fascicolo autorizzativo.",
+    "fields":[
+      {"label":"Progetto / tipologia","value":"Tarsia Ovest — eolico onshore.","source_ids":["tars-eni-pdf"],"basis":"Onshore qualificato dalla localizzazione comunale e dalla descrizione dell’impianto; non è una citazione testuale del termine."},
+      {"label":"Localizzazione","value":"Calabria · provincia di Cosenza · Comune di Tarsia. Coordinate puntuali delle turbine e superficie non ricavate dalle fonti esaminate.","source_ids":["tars-eni-pdf"]},
+      {"label":"Potenza","value":"12,9 MW = 3 aerogeneratori da 4,3 MW; il comunicato arrotonda a circa 13 MW. Accumulo non menzionato: non è una prova che sia assente.","source_ids":["tars-eni-pdf"]},
+      {"label":"Cronoprogramma","value":"Avvio lavori annunciato il 27 novembre 2025. PLC indica il 2026 per la sottostazione MT/AT. Nessuna data certa di fine impianto, entrata in esercizio o programma delle singole lavorazioni nelle fonti esaminate.","source_ids":["tars-eni-pdf","tars-plc"]},
+      {"label":"Aziende / ruoli","value":"Plenitude: titolare/developer indicato nel comunicato. RTI: PLC System S.r.l., Idoka Costruzioni S.r.l., Michelangelo Mammana S.r.l. e Delta S.r.l. PLC ha l’incarico specifico per la sottostazione. I singoli esecutori di fondazioni, trasporti e montaggio non sono identificati.","source_ids":["tars-eni-pdf","tars-plc"]},
+      {"label":"Lavorazioni utili","value":"Attività propedeutiche all’installazione delle turbine, cavidotti e sottostazione MT/AT. Quantità operative, mezzi, giorni di noleggio e ditte per singola lavorazione non documentati.","source_ids":["tars-eni-pdf","tars-plc"]}
+    ],
+    "contacts":[
+      {"company":"PLC System S.r.l.","role":"Ufficio commerciale","email":"commerciale.system@plc-spa.com","phone":null,"scope":"Societario, non referente acquisti nominativo di Tarsia","source_ids":["tars-plc-sales"]},
+      {"company":"PLC S.p.A.","role":"Centralino del gruppo","email":null,"phone":"+39 081 0198565","scope":"Non è un numero diretto di PLC System o del cantiere","source_ids":["tars-plc-sales"]},
+      {"company":"Idoka Costruzioni S.r.l.","role":"Contatto generale societario","email":"info@idokacostruzioni.it","phone":"+39 0972 536073","scope":"Non è un referente di cantiere o procurement certificato","source_ids":["tars-idoka-contact"]},
+      {"company":"Plenitude","role":"Ufficio stampa — non commerciale","email":"ufficio.stampa@eniplenitude.com","phone":"+39 02 87103430","scope":"Recapito pubblicato nel comunicato del 27/11/2025; non acquisti","source_ids":["tars-eni-pdf"]}
+    ],
+    "gaps":[
+      "Fine lavori ed entrata in esercizio effettive da verificare; nessuna stima inventata.",
+      "OEM turbine, fondazioni, montaggio e trasporti: impresa esecutrice specifica ancora da identificare.",
+      "Delta S.r.l.: denominazione corretta secondo PLC, ma recapiti e identità esatta non accertati.",
+      "Michelangelo Mammana S.r.l.: non trasferiti automaticamente i contatti di società Mammana con diversa ragione sociale.",
+      "Atti autorizzativi completi non acquisiti in questo lotto. La cronologia precedente resta ereditata, non ricertificata."
+    ],
+    "evidence":[
+      {"source_id":"tars-eni-pdf","page":1,"sha256":"dfe7bb6d54a5182b955b324d5997957b846d0be936a4172cf019684c5cc4c52b","capture":"harvester_original","reading":"text_and_visual","scope":"intero comunicato di una pagina"},
+      {"source_id":"tars-plc","section":"Articolo del 12/12/2025, paragrafi sul RTI e sulla sottostazione","sha256":null,"capture":"web_reader_fallback","reading":"text","scope":"accordo e ruoli; originale non acquisito dal runner"},
+      {"source_id":"tars-plc-sales","section":"Contatti / Sales Department e footer PLC S.p.A.","sha256":null,"capture":"web_reader_fallback","reading":"text","scope":"soli recapiti espliciti societari; esclusi nominativi non qualificati"},
+      {"source_id":"tars-idoka-contact","section":"Contatti: ragione sociale, email e telefono","sha256":null,"capture":"web_reader_fallback","reading":"text","scope":"pagina dinamica: il solo HTML del runner non contiene i recapiti"}
+    ],
+    "whole_dossier_complete":false,
+    "paid_model_calls":0
+  }
+}

@@ -1,0 +1,10 @@
+/* Source-backed commercial reading. Empty for projects without documentary data. */
+(()=>{'use strict';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function links(p,ids){return(ids||[]).map(id=>{const s=(p.sources||[]).find(x=>x.id===id);return s&&/^https:\/\//.test(s.url||'')?`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.publisher||'Fonte')}</a>`:''}).filter(Boolean).join(' · ')}
+function render(p){const d=p.documentary;if(!d)return'';
+const fields=(d.fields||[]).map(f=>`<div class="documentary-item"><b>${esc(f.label)}</b><p>${esc(f.value)}</p><small>${links(p,f.source_ids)}${f.basis?' · '+esc(f.basis):''}</small></div>`).join('');
+const contacts=(d.contacts||[]).map(c=>{const em=c.email&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email)?`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`:'';const ph=c.phone&&/^[+\d ()-]+$/.test(c.phone)?`<a href="tel:${c.phone.replace(/[^+\d]/g,'')}">${esc(c.phone)}</a>`:'';return`<div class="documentary-item"><b>${esc(c.company)} — ${esc(c.role)}</b><p>${[em,ph].filter(Boolean).join(' · ')}</p><small>${esc(c.scope)} · ${links(p,c.source_ids)}</small></div>`}).join('');
+return`<section class="detail-section documentary-summary" data-documentary-project="${esc(p.id)}"><h3>Scheda commerciale documentata</h3><p class="detail-note">Verifica del ${esc(d.reviewed_on)}. ${esc(d.method)}</p>${fields}<h3>Contatti aziendali pubblici</h3>${contacts}<details><summary>Informazioni ancora da verificare</summary>${(d.gaps||[]).map(x=>`<p>${esc(x)}</p>`).join('')}</details></section>`}
+window.WindDocumentary={render};
+})();
