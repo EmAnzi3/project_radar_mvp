@@ -1,0 +1,95 @@
+name: Tarsia reviewed enrichment
+on:
+  pull_request:
+    paths:
+      - config/wind_tarsia_review.json
+      - scripts/apply_tarsia_review.py
+      - scripts/check_tarsia_browser.py
+      - tests/test_tarsia_enrichment.py
+      - docs/wind/**
+      - .github/workflows/wind_tarsia_review.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tarsia-review-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            docs/wind
+            scripts
+            tests
+            config
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - run: python scripts/apply_tarsia_review.py
+      - name: Idempotent regeneration
+        run: python scripts/apply_tarsia_review.py
+      - run: python -m unittest discover -s tests -p test_tarsia_enrichment.py -v
+      - run: python -m unittest discover -s tests -p test_harvest_wind_project.py -v
+      - run: node --check docs/wind/assets/app.js
+      - run: node --check docs/wind/assets/documentary-summary.js
+      - name: Windows repository preflight
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/check_before_publish.ps1 -SkipTests
+  browser:
+    needs: checks
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            docs/wind
+            scripts
+            tests
+            config
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/apply_tarsia_review.py
+      - run: python scripts/check_tarsia_browser.py
+      - name: Stage tested output blobs only; never move a branch or publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json,hashlib,urllib.request,os
+          from pathlib import Path
+          paths=['docs/wind/data/projects-2.json','docs/wind/assets/app.js','docs/wind/index.html','scripts/harvest_wind_project.py','config/wind_tarsia_pilot.json','CURRENT_STATE.md','CHANGELOG.md']
+          rows=[]
+          for name in paths:
+              raw=Path(name).read_bytes()
+              expected=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+              body=json.dumps({'content':raw.decode('utf-8'),'encoding':'utf-8'}).encode()
+              req=urllib.request.Request('https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/blobs',data=body,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+              with urllib.request.urlopen(req,timeout=30) as response: got=json.load(response)
+              assert got['sha']==expected
+              rows.append({'path':name,'mode':'100644','type':'blob','sha':expected,'sha256':hashlib.sha256(raw).hexdigest()})
+          Path('reports/tarsia-browser/tested-blobs.json').write_text(json.dumps({'workflow_head':os.environ['GITHUB_SHA'],'generated_files':rows,'branch_updated':False,'published':False},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-reviewed-${{ github.run_id }}
+          path: reports/tarsia-browser
+          retention-days: 14

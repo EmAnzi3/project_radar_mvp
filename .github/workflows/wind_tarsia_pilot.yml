@@ -1,0 +1,49 @@
+name: Tarsia harvester pilot
+# Collection is explicit, not re-run on every UI/data change in the PR.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tarsia-harvester-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  harvest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docs/wind
+            scripts
+            config
+            tests
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - run: python -m unittest discover -s tests -p test_harvest_wind_project.py -v
+      - name: Collect explicit project scope
+        run: python scripts/harvest_wind_project.py --config config/wind_tarsia_pilot.json --output reports/tarsia-pilot
+      - name: Offline restart
+        run: python scripts/harvest_wind_project.py --config config/wind_tarsia_pilot.json --output reports/tarsia-pilot --offline
+      - name: Verify no repeated access
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('reports/tarsia-pilot')
+          first=json.loads((root/'harvest-first.json').read_text())
+          warm=json.loads((root/'harvest-offline.json').read_text())
+          assert warm['network_requests']==warm['bytes_transferred']==warm['text_extractions']==0
+          assert first['successful']>0
+          print(json.dumps(first,indent=2))
+          print('OneDrive upload NOT performed by this runner.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-harvester-${{ github.run_id }}
+          path: reports/tarsia-pilot
+          retention-days: 14
