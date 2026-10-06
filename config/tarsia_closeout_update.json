@@ -1,0 +1,78 @@
+{
+  "project_id": "tarsia-ovest",
+  "reviewed_on": "2026-10-06",
+  "expected_previous_review_date": "2026-10-06",
+  "regional_sources": [
+    {"id":"tars-reg-old","title":"PAUR n.3509 del 13/03/2023: autorizzati T1, T5 e T6, con pareri allegati","publisher":"Regione Calabria","date":"2023-03-13","url":"https://www.regione.calabria.it/wp-content/uploads/2023/03/360_parco-eolico-tarsia-ovest-ddg-3509-del-13_03_2023.pdf","grade":"A1","sha256":"1e21b48e970ab8944d05343817261c18940394d01ce968df243d2b4d1a4b222f","pages":89,"reviewed_pages":[1,9,11,57,58,59,63,84]},
+    {"id":"tars-sia","title":"Studio di impatto ambientale: configurazione iniziale e durata storica","publisher":"Regione Calabria / PLT engineering","date":"2020-06-18","url":"https://www.regione.calabria.it/wp-content/uploads/2021/09/Studio-di-Impatto-Ambientale-Tarsia-Ovest.pdf","grade":"A1","sha256":"70569622fd97b781f99b45e60861483648d2a7737d8a186feb1f8e620c5a6872","pages":390,"reviewed_pages":[1,8,83,103,104,382,387]},
+    {"id":"tars-rel-elettrica","title":"Relazione tecnica descrittiva: progetto elettrico storico","publisher":"Regione Calabria / PLT engineering","date":null,"url":"https://www.regione.calabria.it/wp-content/uploads/2021/09/Relazione-Tecnica-Descrittiva.pdf","grade":"A1","sha256":"8c8e3d908bec993447d5a19e7fba69ac27662743e2036412ab1116a59c9bdb8a","pages":33,"reviewed_pages":[1,2,3,4,5,6,7,8]},
+    {"id":"tars-planimetria","title":"Planimetria pubblicata: elaborato storico di adeguamento viabilita","publisher":"Regione Calabria / PLT engineering","date":null,"url":"https://www.regione.calabria.it/wp-content/uploads/2021/09/Planimetria-Generale.pdf","grade":"A1","sha256":"1ad55a86f18bc96bd64c7034255d58596edae3ca160315a3d615cb7c4ff39ba8","pages":1,"reviewed_pages":[1]},
+    {"id":"tars-voltura","title":"Voltura n.18794 del 09/12/2025 a Eni Plenitude Renewables Italy SpA","publisher":"Regione Calabria","date":"2025-12-09","url":"https://www.regione.calabria.it/wp-content/uploads/2025/12/Atto_Numero_18794_del_09-12-2025377543620060097974.pdf","grade":"A1","sha256":"84bc8ef820e0a6010d99bfcdd575426e96e71cdef1fcef6f6da06e222062602b","pages":6,"reviewed_pages":[4,5]},
+    {"id":"tars-variante","title":"Variante: VPA favorevole n.6500 del 20/04/2026, pratica 698 CS","publisher":"Regione Calabria","date":"2026-04-20","url":"https://www.regione.calabria.it/wp-content/uploads/2026/04/PDF_97155_3746827047354100418.pdf","grade":"A1","sha256":"4fc768860e24e5fa2d8773e22b8af189fe665b82f57d8be8728f1eb0f21d1ee5","pages":15,"reviewed_pages":[1,4,5,8,9,10,11,12,13,14]},
+    {"id":"tars-plc-soa","title":"Attestazione SOA PLC System: P.IVA e codice fiscale distinti","publisher":"PLC System / attestazione SOA pubblicata dall'azienda","date":null,"url":"https://www.plc-spa.it/wp-content/uploads/2025/07/SOA_59847_17_00.pdf","grade":"A2","sha256":"8f11e642f9d3e5dd61a955768814fb47dc190fd17c889547a443a4e295f1361e","pages":1,"reviewed_pages":[1]},
+    {"id":"tars-archive","title":"Archivio tecnico storico PAUR Tarsia Ovest: elaborati e integrazioni","publisher":"Regione Calabria / documentazione progettuale depositata","date":null,"url":"https://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip","grade":"A1","sha256":"b21fa44442e09f6a21aa2a327d5bc07597ebaeb48eac7dfdd8ccfb164947f919"}
+  ],
+  "status_note": "Avvio costruzione annunciato il 27/11/2025, non verifica del cantiere odierno. PAUR 3509/2023 limitato a T1, T5 e T6; voltura 18794/2025 a Eni Plenitude Renewables Italy; VPA favorevole 6500/2026 sulla variante. La variante descrive tre Vestas V150 da 4,3 MW. Fine lavori e COD effettivi non documentati.",
+  "fields": [
+    {"label":"Progetto / tipologia","value":"Tarsia Ovest — eolico onshore. Il fascicolo storico iniziale a sette turbine non coincide con il perimetro autorizzato a tre turbine.","source_ids":["tars-reg-old","tars-variante"]},
+    {"label":"Localizzazione","value":"Calabria, provincia di Cosenza, Comune di Tarsia: turbine T1, T5 e T6. Opere di connessione e viabilita nei documenti storici restano distinte dai siti delle turbine. Non si trasformano coordinate storiche o aree catastali in localizzazione esecutiva attuale verificata.","source_ids":["tars-reg-old","tars-variante","tars-archive"]},
+    {"label":"Potenza","value":"12,9 MW: tre Vestas V150 da 4,3 MW nella variante. Vestas identifica il modello progettuale, non un ordine turbine qui provato. BESS non documentato nelle fonti analizzate: non e una prova di assenza. I 29,995 MW / sette turbine appartengono al progetto iniziale, non al perimetro autorizzato dal PAUR.","source_ids":["tars-reg-old","tars-variante","tars-sia"]},
+    {"label":"Iter autorizzativo","value":"PAUR n.3509 del 13/03/2023 per T1, T5, T6; voltura n.18794 del 09/12/2025; valutazione preliminare favorevole della variante n.6500 del 20/04/2026, pratica CalabriaSUAP Sportello Ambiente 698 CS. Acquisito il decreto con parere, non i 15 elaborati tecnici e la checklist citati dalla variante.","source_ids":["tars-reg-old","tars-voltura","tars-variante"]},
+    {"label":"Cronoprogramma","value":"Avvio annunciato da Plenitude il 27/11/2025. PLC indica il 2026 per la sottostazione, non per il COD dell'intero impianto. Il cronoprogramma storico PET-P-CL-02 del 18/06/2020 riporta 24 mesi; SIA e parere allegato al PAUR indicano circa 14 mesi. Discordanza non risolta, nessuna conversione in data odierna di fine lavori. Manca il cronoprogramma esecutivo aggiornato.","source_ids":["tars-eni-pdf","tars-plc","tars-archive","tars-sia","tars-reg-old"]},
+    {"label":"Aziende / ruoli","value":"Eni Plenitude Renewables Italy SpA: titolare della voltura. PLT engineering Srl: proponente storico. RTI comunicato da PLC: PLC System Srl, Idoka Costruzioni Srl, Michelangelo Mammana Srl e Delta Srl. PLC ha un incarico esplicito per la sottostazione; non viene assegnata per deduzione a ciascuna impresa una lavorazione. Il logo GEMSA negli elaborati storici non basta a identificare senza ambiguita la societa o un incarico esecutivo.","source_ids":["tars-voltura","tars-plc","tars-archive"]},
+    {"label":"Lavorazioni utili","value":"La variante comprende modifiche a sottostazione e accesso T1: nuovo tracciato di circa 1.480 m e cinque opere in terra armata per circa 260 m complessivi. Sono quantita progettuali della variante, non lavorazioni gia eseguite o ordini di noleggio.","source_ids":["tars-variante"]},
+    {"label":"Varie / incongruenze","value":"Il parere della variante indica hub 105 m e rotore 150 m, quindi altezza totale 180 m, ma riporta anche 189 m in un altro passaggio. La differenza resta segnalata. Non viene scelto silenziosamente un valore.","source_ids":["tars-variante"]}
+  ],
+  "company_identifiers": [
+    {"company":"Eni Plenitude Renewables Italy S.p.A.","vat":"09722790962","fiscal_code":null,"role":"Titolare del PAUR dopo voltura","source_ids":["tars-voltura"],"note":"Partita IVA esplicita a pagina 5 del decreto."},
+    {"company":"PLC System S.r.l.","vat":"03242081218","fiscal_code":"07073510633","role":"Componente RTI; incarico sottostazione","source_ids":["tars-plc-soa","tars-plc"],"note":"P.IVA e codice fiscale sono diversi: non scambiarli."},
+    {"company":"Idoka Costruzioni S.r.l.","vat":"01903670766","fiscal_code":null,"role":"Componente RTI","source_ids":["tars-idoka-contact","tars-plc"],"note":"P.IVA dichiarata nella pagina societaria Contatti."},
+    {"company":"PLC S.p.A.","vat":"05346630964","fiscal_code":null,"role":"Societa del gruppo; centralino gia censito","source_ids":["tars-plc-sales"],"note":"Non e la P.IVA di PLC System e non sostituisce l'identita del contraente."},
+    {"company":"PLT engineering S.r.l.","vat":"05857900723","fiscal_code":"05857900723","role":"Proponente storico","source_ids":["tars-archive"],"note":"Confermata dalla visura camerale contenuta nelle integrazioni del 2021; non presentata come titolare attuale."}
+  ],
+  "gaps": [
+    "Pratica CalabriaSUAP 698 CS: 15 elaborati tecnici, checklist e integrazioni richiamati dal decreto non acquisiti; accesso pubblico in timeout nei tentativi eseguiti.",
+    "Cronoprogramma esecutivo aggiornato e comunicazioni effettive di avvio/avanzamento/fine lavori non ottenuti. I documenti storici riportano durate discordanti di 24 e 14 mesi.",
+    "Delta Srl: identita univoca e P.IVA non confermate. Michelangelo Mammana Srl: da confermare corrispondenza con la societa attuale; nessun numero attribuito per sola somiglianza del nome.",
+    "Tre titoli di allegati archeologici/visibilita/fotografici nel vecchio archivio hanno copie firmate malformate o senza contenuto; non dichiarati letti.",
+    "335 PDF resi ricercabili nell'archivio storico, non 335 letture integrali certificate. Pagine solo grafiche e tre classi di residui non-PDF restano distinti dallo screening testuale completato."
+  ],
+  "archive_receipt": {
+    "archive_url":"https://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip",
+    "archive_sha256":"b21fa44442e09f6a21aa2a327d5bc07597ebaeb48eac7dfdd8ccfb164947f919",
+    "bytes":2923144842,
+    "outer_members":435,
+    "nested_members":174,
+    "nested_sha256":"c9f8bf4100bd5cc1406576b81f8646e98a26ae3becab785d486cb25d6eed203d",
+    "unique_pdf_payloads":335,
+    "unique_pdf_pages":3064,
+    "outer_failed_members":6,
+    "outer_failed_titles":3,
+    "nested_failed_members":0,
+    "source_artifact":11441511342,
+    "outer_review_artifact":11442267604,
+    "nested_review_artifact":11441614843,
+    "originals_acquired":true,
+    "whole_dossier_complete":false,
+    "whole_archive_semantic_review_complete":false,
+    "note":"Conteggi ricavati dagli inventari e dalle impronte dopo apertura delle buste CMS. Firme estratte, non validate legalmente. Archivio storico distinto dalla variante corrente. Artifact di collaudo con retention 14 giorni, non archivio permanente garantito. Nessun PDF o testo integrale aggiunto al sito."
+  },
+  "cronoprogramma_evidence": {
+    "source_id":"tars-archive",
+    "member":"integrazioni ditta 7 febbraio 2022/7 SOPRINTENDENZA/Copie di documenti gia oggetto di precedenti trasmissioni/PDF/PET-P-CL-02_Cronoprogramma esecuzione lavori.pdf",
+    "sha256":"344a12778cf120e83f428ef15d63ac60d10f804fb103c007907f3ba87a95f241",
+    "pages":[1,2],
+    "reading":"text_and_visual",
+    "issue_date":"2020-06-18",
+    "relative_months":24,
+    "current_execution_schedule":false
+  },
+  "human_action": {
+    "public_office_email":"valutazioniambientali.ambienteterritorio@pec.regione.calabria.it",
+    "request":"Collegamento o copia degli allegati della pratica 698 CS, VPA6500/2026, incluse integrazioni acustiche; cronoprogramma esecutivo e comunicazioni del PAUR3509/2023 volturato con18794/2025; copia leggibile degli allegati PET-S06.05.d/e/f.",
+    "request_sent":false,
+    "login_requirement_verified":false
+  },
+  "paid_model_calls":0,
+  "all_documentation_complete":false
+}
