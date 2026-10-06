@@ -12,7 +12,7 @@ concurrency:
 jobs:
   acquire:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 9
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,11 +25,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install requests==2.32.5 beautifulsoup4 pypdf==5.9.0
-      - name: Fetch missing public institutional resources and observed attachment links
+      - name: Query observed public forms, follow project records and all their attachments
         shell: bash
         run: |
           python - <<'PY'
-          import requests,json,re,hashlib,time,socket,ipaddress,shutil
+          import requests,json,re,hashlib,time,socket,ipaddress
           from pathlib import Path
           from urllib.parse import urlsplit,urljoin,urldefrag
           from concurrent.futures import ThreadPoolExecutor
@@ -37,12 +37,12 @@ jobs:
           from pypdf import PdfReader
           root=Path('reports/tarsia-institutional');root.mkdir(parents=True,exist_ok=True)
           seeds=[
-            ('https://www.regione.calabria.it/wp-content/uploads/2023/03/360_parco-eolico-tarsia-ovest-ddg-3509_del_13_03_2023.pdf','PAUR 3509 original'),
-            ('https://www.regione.calabria.it/provvedimenti-della-regione/page/1141/','Variante registry'),
-            ('https://www.regione.calabria.it/provvedimenti-della-regione/page/1964/?filter_department=Organizzazione%2C+Risorse+Umane&filter_type=Decreto','Voltura registry'),
-            ('https://www.regione.calabria.it/provvedimenti-della-regione/page/8852/?filter_department=Turismo%252C%2BMarketing%2BTerritoriale%2Be%2BMobilit%25C3%25A0&filter_type=Decreto','PAUR registry'),
-            ('https://www.regione.calabria.it/bandi-e-avvisi-di-gara/page/26/?filter_beneficiary=0&filter_cig=&filter_date_from=&filter_date_to=&filter_department=Procedure%2BEspropriative&filter_fund=&filter_tematic=&filter_type=rc_procedure_type_notify&pr=&searchButton=Cerca&sort_order=0','Tarsia 2021 public notice registry'),
-            ('https://www.calabriasuap.it/','SUAP entrypoint')]
+            ('https://www.regione.calabria.it/provvedimenti-della-regione/?pr=Tarsia&filter_active=&sort_order=0','Regional search pr=Tarsia'),
+            ('https://www.regione.calabria.it/provvedimenti-della-regione/?filter_item=Tarsia&filter_active=&sort_order=0','Regional subject search Tarsia'),
+            ('https://www.regione.calabria.it/bandi-e-avvisi-di-gara/?pr=Tarsia&filter_active=&sort_order=0','Regional notice search Tarsia'),
+            ('https://www.regione.calabria.it/ricerca/?search=Tarsia%20Ovest','Regional general search'),
+            ('https://energia.calabriaimpresa.eu/','Official energy portal'),
+            ('https://www.calabriaimpresa.eu/','Official enterprise portal')]
           allowed=('regione.calabria.it','calabriasuap.it','calabriaimpresa.eu')
           def validate(u):
             p=urlsplit(u);h=(p.hostname or '').lower()
@@ -55,7 +55,7 @@ jobs:
               with requests.Session() as s:
                 final=u
                 for _ in range(6):
-                  validate(final);r=s.get(final,timeout=(7,20),stream=True,allow_redirects=False,headers={'User-Agent':'WindProjectHarvester/1.1','Accept-Encoding':'identity'})
+                  validate(final);r=s.get(final,timeout=(8,25),stream=True,allow_redirects=False,headers={'User-Agent':'WindProjectHarvester/1.1','Accept-Encoding':'identity'})
                   if r.status_code not in (301,302,303,307,308):break
                   target=r.headers.get('Location');r.close()
                   if not target:raise ValueError('Redirect without target')
@@ -66,7 +66,9 @@ jobs:
                 for b in r.iter_content(131072):
                   data.extend(b)
                   if len(data)>200*1024**2 or time.monotonic()-start>100:raise ValueError('Transfer budget; not complete')
+                if r.headers.get('Content-Length') and not r.headers.get('Content-Encoding') and int(r.headers['Content-Length'])!=len(data):raise ValueError('Incomplete body')
                 r.close()
+              data=bytes(data)
               if not data:raise ValueError('Empty response')
               sha=hashlib.sha256(data).hexdigest();is_pdf=b'%PDF-' in data[:1024]
               ext='.pdf' if is_pdf else ('.zip' if data[:2]==b'PK' else '.html' if b'<html' in data[:4096].lower() else '.bin')
@@ -81,38 +83,39 @@ jobs:
                 soup=BeautifulSoup(data,'html.parser');text=soup.get_text(' ',strip=True)
                 (root/(sha+'.txt')).write_text(text,encoding='utf-8');row['title']=soup.title.get_text() if soup.title else ''
                 if re.search(r'access denied|verify you are human|request rejected|just a moment',text[:1800],re.I):row['status']='access_challenge'
-                listing='/page/' in u
+                row['tarsia_occurrences']=len(re.findall('tarsia',text,re.I))
+                listing=bool(re.search(r'/(provvedimenti-della-regione|bandi-e-avvisi-di-gara|ricerca)(/|\?)',u))
+                row['matched_rows']=[tr.get_text(' ',strip=True) for tr in soup.select('tr') if re.search(r'tarsia',tr.get_text(),re.I)]
                 for a in soup.select('a[href],iframe[src]'):
                   href=a.get('href') or a.get('src');dest=urldefrag(urljoin(final,href))[0];label2=a.get_text(' ',strip=True)
                   block=a.find_parent('tr') or a.find_parent('article')
                   context=block.get_text(' ',strip=True) if block else label2
                   project=bool(re.search(r'tarsia',label2+' '+dest+' '+context,re.I))
-                  asset=bool(re.search(r'\.(pdf|zip|p7m|docx?|xlsx?)([?#]|$)|download|allegat',dest+' '+label2,re.I))
-                  navigation=bool(re.search(r'sportello.ambiente|consultazione|procedimenti|pubblicazioni',label2,re.I))
-                  relevant=project or (depth>0 and not listing and asset) or ('calabriasuap' in u and navigation)
+                  asset=bool(re.search(r'\.(pdf|zip|p7m|docx?|xlsx?)([?#]|$)|download|allegat|visualizza|scarica',dest+' '+label2,re.I))
+                  navigation=bool(re.search(r'sportello.ambiente|consultazione|procedimenti|pubblicazioni|valutazioni.ambientali',label2,re.I))
+                  relevant=project or (depth>0 and not listing and asset) or ('calabriaimpresa.eu' in u and navigation)
                   if relevant and dest!=u:
-                    row['discovered_links'].append({'url':dest,'label':label2,'context':context[:1200]})
+                    row['discovered_links'].append({'url':dest,'label':label2,'context':context[:1400]})
               row['semantic_analysis']='pending'
             except Exception as e:row.update(status='error',error=str(e)[:800])
             row['elapsed_seconds']=round(time.monotonic()-start,3);return row
           pending=[(u,l,0) for u,l in seeds];seen=set();rows=[];start=time.monotonic();deferred=[]
           with ThreadPoolExecutor(max_workers=2) as pool:
-            while pending and len(seen)<70 and time.monotonic()-start<300:
+            while pending and len(seen)<80 and time.monotonic()-start<360:
               batch=[]
               for item in pending:
-                if item[0] not in seen:seen.add(item[0]);batch.append(item)
+                if item[0] not in seen and len(seen)<80:seen.add(item[0]);batch.append(item)
+                elif item[0] not in seen:deferred.append({'url':item[0],'reason':'resource bound'})
               pending=[]
               for row in pool.map(fetch,batch):
                 rows.append(row);print(json.dumps(row,ensure_ascii=False),flush=True)
                 for child in row['discovered_links']:
-                  if row['depth']<3:
+                  if row['depth']<4:
                     try:validate(child['url']);pending.append((child['url'],child['label'],row['depth']+1))
                     except Exception as e:deferred.append({**child,'reason':str(e)})
                   else:deferred.append({**child,'reason':'depth bound; inventory not complete'})
                 (root/'acquisition.json').write_text(json.dumps({'resources':rows,'deferred':deferred,'full_inventory_certified':False},ensure_ascii=False,indent=2),encoding='utf-8')
           (root/'remaining.json').write_text(json.dumps(pending,ensure_ascii=False,indent=2),encoding='utf-8')
-          for directory in ('config','scripts','tests','docs/wind'):
-            shutil.copytree(directory,root/'repo'/directory,dirs_exist_ok=True)
           print('ACTUAL RESULTS',len(rows),'resources',sum(r['status']=='acquired' for r in rows),'acquired',sum(r.get('file','').endswith('.pdf') for r in rows),'PDFs')
           PY
       - uses: actions/upload-artifact@v4
