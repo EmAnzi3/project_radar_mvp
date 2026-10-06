@@ -1,0 +1,64 @@
+name: Tarsia nested archive
+on:
+  push:
+    branches: ['fix/tarsia-institutional-closeout']
+    paths: ['.github/workflows/tarsia_nested_read.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  read:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install PyMuPDF==1.26.4
+      - name: Reuse acquired bytes instead of downloading again from the Region
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 37523274647 --repo EmAnzi3/project_radar_mvp --name tarsia-full-archive-37523274647 --dir input
+      - name: Extract nested archive and small exceptional originals
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib,json,shutil
+          root=Path('nested');root.mkdir();files=[]
+          with zipfile.ZipFile('input/PAURTarsiaovest.zip') as z:
+              for info in z.infolist():
+                  if info.is_dir():continue
+                  name=info.filename
+                  if name.lower().endswith('.zip'):
+                      target=root/'nested.zip'
+                  elif name.lower().endswith('.jpg') or any(x in name for x in ('PET-S06.05.d','PET-S06.05.e','PET-S06.05.f')):
+                      if info.file_size>20*1024**2:continue
+                      target=root/(hashlib.sha256(name.encode()).hexdigest()[:16]+('.jpg' if name.lower().endswith('.jpg') else '.p7m'))
+                  else:continue
+                  with z.open(info) as src,target.open('wb') as dst:shutil.copyfileobj(src,dst)
+                  with target.open('rb') as f:h=hashlib.file_digest(f,'sha256').hexdigest()
+                  files.append({'outer_member':name,'file':target.name,'sha256':h,'bytes':target.stat().st_size})
+          (root/'chain.json').write_text(json.dumps(files,ensure_ascii=False,indent=2),encoding='utf-8')
+          assert (root/'nested.zip').is_file()
+          PY
+      - name: Read all nested members, not only their titles
+        run: |
+          python -u scripts/tarsia_archive_inventory.py --source nested/nested.zip --output nested-review
+          python - <<'PY'
+          from pathlib import Path
+          import json,shutil
+          p=Path('nested-review/manifest.json');d=json.loads(p.read_text());d['container_chain']={'outer_archive_sha256':'b21fa44442e09f6a21aa2a327d5bc07597ebaeb48eac7dfdd8ccfb164947f919','nested_member':'tarsia-ovest-integr-enti_2021-10-28_1047.zip','nested_sha256':'c9f8bf4100bd5cc1406576b81f8646e98a26ae3becab785d486cb25d6eed203d'};p.write_text(json.dumps(d,ensure_ascii=False,indent=2))
+          Path('nested-review/exceptional-originals').mkdir()
+          for x in Path('nested').iterdir():
+              if x.name!='nested.zip':shutil.copyfile(x,Path('nested-review/exceptional-originals')/x.name)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-nested-${{ github.run_id }}
+          path: nested-review/
+          retention-days: 14
+          if-no-files-found: error
