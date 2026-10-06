@@ -14,109 +14,74 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 9
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            config
-            scripts
-            tests
-            docs/wind
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install requests==2.32.5 beautifulsoup4 pypdf==5.9.0
-      - name: Query observed public forms, follow project records and all their attachments
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - name: Download exact attachments observed on the four project-specific official pages
         shell: bash
         run: |
           python - <<'PY'
-          import requests,json,re,hashlib,time,socket,ipaddress
+          import requests,json,hashlib,time,socket,ipaddress,re
           from pathlib import Path
-          from urllib.parse import urlsplit,urljoin,urldefrag
+          from urllib.parse import urlsplit,urljoin
           from concurrent.futures import ThreadPoolExecutor
-          from bs4 import BeautifulSoup
           from pypdf import PdfReader
           root=Path('reports/tarsia-institutional');root.mkdir(parents=True,exist_ok=True)
-          seeds=[
-            ('https://www.regione.calabria.it/provvedimenti-della-regione/?pr=Tarsia&filter_active=&sort_order=0','Regional search pr=Tarsia'),
-            ('https://www.regione.calabria.it/provvedimenti-della-regione/?filter_item=Tarsia&filter_active=&sort_order=0','Regional subject search Tarsia'),
-            ('https://www.regione.calabria.it/bandi-e-avvisi-di-gara/?pr=Tarsia&filter_active=&sort_order=0','Regional notice search Tarsia'),
-            ('https://www.regione.calabria.it/ricerca/?search=Tarsia%20Ovest','Regional general search'),
-            ('https://energia.calabriaimpresa.eu/','Official energy portal'),
-            ('https://www.calabriaimpresa.eu/','Official enterprise portal')]
-          allowed=('regione.calabria.it','calabriasuap.it','calabriaimpresa.eu')
-          def validate(u):
-            p=urlsplit(u);h=(p.hostname or '').lower()
-            if p.scheme not in ('https','http') or p.username or p.password or p.port not in (None,80,443):raise ValueError('Invalid public URL')
-            if not any(h==a or h.endswith('.'+a) for a in allowed):raise ValueError('External destination retained for review: '+u)
-            if any(not ipaddress.ip_address(x[4][0]).is_global for x in socket.getaddrinfo(h,p.port or (443 if p.scheme=='https' else 80))):raise ValueError('Non-public destination')
+          # URLs copied from captured official detail pages, not guessed identifiers.
+          sources=[
+            ('sia-2021','https://www.regione.calabria.it/wp-content/uploads/2021/09/Studio-di-Impatto-Ambientale-Tarsia-Ovest.pdf'),
+            ('relazione-2021','https://www.regione.calabria.it/wp-content/uploads/2021/09/Relazione-Tecnica-Descrittiva.pdf'),
+            ('planimetria-2021','https://www.regione.calabria.it/wp-content/uploads/2021/09/Planimetria-Generale.pdf'),
+            ('paur-3509-2023','https://www.regione.calabria.it/wp-content/uploads/2023/03/360_parco-eolico-tarsia-ovest-ddg-3509-del-13_03_2023.pdf'),
+            ('voltura-18794-2025','https://www.regione.calabria.it/wp-content/uploads/2025/12/Atto_Numero_18794_del_09-12-2025377543620060097974.pdf'),
+            ('variante-6500-2026','https://www.regione.calabria.it/wp-content/uploads/2026/04/PDF_97155_3746827047354100418.pdf')]
+          def validate(url):
+            p=urlsplit(url);h=p.hostname or ''
+            if p.scheme!='https' or p.username or p.password or p.port not in (None,443) or not(h=='regione.calabria.it' or h.endswith('.regione.calabria.it')):raise ValueError('Unexpected source; manual review required')
+            if any(not ipaddress.ip_address(x[4][0]).is_global for x in socket.getaddrinfo(h,443)):raise ValueError('Non-public destination')
           def fetch(item):
-            u,label,depth=item;row={'url':u,'label':label,'depth':depth,'discovered_links':[]};start=time.monotonic()
+            key,url=item;out={'id':key,'url':url,'status':'pending','semantic_analysis':'pending'};start=time.monotonic();path=root/(key+'.pdf');part=path.with_suffix('.part')
             try:
-              with requests.Session() as s:
-                final=u
+              with requests.Session() as client:
+                final=url
                 for _ in range(6):
-                  validate(final);r=s.get(final,timeout=(8,25),stream=True,allow_redirects=False,headers={'User-Agent':'WindProjectHarvester/1.1','Accept-Encoding':'identity'})
+                  validate(final);r=client.get(final,stream=True,timeout=(10,40),allow_redirects=False,headers={'User-Agent':'WindProjectHarvester/1.1','Accept-Encoding':'identity'})
                   if r.status_code not in (301,302,303,307,308):break
-                  target=r.headers.get('Location');r.close()
-                  if not target:raise ValueError('Redirect without target')
-                  final=urljoin(final,target)
+                  location=r.headers.get('Location');r.close()
+                  if not location:raise ValueError('Redirect without location')
+                  final=urljoin(final,location)
                 else:raise ValueError('Redirect limit')
-                row.update(http_status=r.status_code,final_url=final,content_type=r.headers.get('Content-Type',''))
-                r.raise_for_status();data=bytearray()
-                for b in r.iter_content(131072):
-                  data.extend(b)
-                  if len(data)>200*1024**2 or time.monotonic()-start>100:raise ValueError('Transfer budget; not complete')
-                if r.headers.get('Content-Length') and not r.headers.get('Content-Encoding') and int(r.headers['Content-Length'])!=len(data):raise ValueError('Incomplete body')
-                r.close()
-              data=bytes(data)
-              if not data:raise ValueError('Empty response')
-              sha=hashlib.sha256(data).hexdigest();is_pdf=b'%PDF-' in data[:1024]
-              ext='.pdf' if is_pdf else ('.zip' if data[:2]==b'PK' else '.html' if b'<html' in data[:4096].lower() else '.bin')
-              filename=sha+ext;(root/filename).write_bytes(data);row.update(status='acquired',sha256=sha,bytes=len(data),file=filename)
-              if is_pdf:
-                pdf=PdfReader(root/filename);pages=[]
-                for n,p in enumerate(pdf.pages,1):
-                  try:pages.append({'page':n,'text':p.extract_text() or ''})
-                  except Exception as e:pages.append({'page':n,'error':str(e)})
-                (root/(sha+'.text.json')).write_text(json.dumps(pages,ensure_ascii=False),encoding='utf-8');row['pages']=len(pages)
-              elif ext=='.html':
-                soup=BeautifulSoup(data,'html.parser');text=soup.get_text(' ',strip=True)
-                (root/(sha+'.txt')).write_text(text,encoding='utf-8');row['title']=soup.title.get_text() if soup.title else ''
-                if re.search(r'access denied|verify you are human|request rejected|just a moment',text[:1800],re.I):row['status']='access_challenge'
-                row['tarsia_occurrences']=len(re.findall('tarsia',text,re.I))
-                listing=bool(re.search(r'/(provvedimenti-della-regione|bandi-e-avvisi-di-gara|ricerca)(/|\?)',u))
-                row['matched_rows']=[tr.get_text(' ',strip=True) for tr in soup.select('tr') if re.search(r'tarsia',tr.get_text(),re.I)]
-                for a in soup.select('a[href],iframe[src]'):
-                  href=a.get('href') or a.get('src');dest=urldefrag(urljoin(final,href))[0];label2=a.get_text(' ',strip=True)
-                  block=a.find_parent('tr') or a.find_parent('article')
-                  context=block.get_text(' ',strip=True) if block else label2
-                  project=bool(re.search(r'tarsia',label2+' '+dest+' '+context,re.I))
-                  asset=bool(re.search(r'\.(pdf|zip|p7m|docx?|xlsx?)([?#]|$)|download|allegat|visualizza|scarica',dest+' '+label2,re.I))
-                  navigation=bool(re.search(r'sportello.ambiente|consultazione|procedimenti|pubblicazioni|valutazioni.ambientali',label2,re.I))
-                  relevant=project or (depth>0 and not listing and asset) or ('calabriaimpresa.eu' in u and navigation)
-                  if relevant and dest!=u:
-                    row['discovered_links'].append({'url':dest,'label':label2,'context':context[:1400]})
-              row['semantic_analysis']='pending'
-            except Exception as e:row.update(status='error',error=str(e)[:800])
-            row['elapsed_seconds']=round(time.monotonic()-start,3);return row
-          pending=[(u,l,0) for u,l in seeds];seen=set();rows=[];start=time.monotonic();deferred=[]
+                out.update(http_status=r.status_code,final_url=final);r.raise_for_status();sha=hashlib.sha256();count=0
+                with part.open('wb') as f:
+                  for b in r.iter_content(131072):
+                    count+=len(b)
+                    if count>256*1024**2 or time.monotonic()-start>240:raise ValueError('Transfer budget reached; incomplete')
+                    sha.update(b);f.write(b)
+                if not count or (r.headers.get('Content-Length') and int(r.headers['Content-Length'])!=count):raise ValueError('Incomplete body')
+                with part.open('rb') as f:
+                  if b'%PDF-' not in f.read(1024):raise ValueError('Response is not PDF')
+                out.update(bytes=count,sha256=sha.hexdigest(),etag=r.headers.get('ETag'),last_modified=r.headers.get('Last-Modified'));r.close();part.replace(path)
+              out.update(status='acquired',file=path.name);pdf=PdfReader(path);pages=[];links=[]
+              for n,p in enumerate(pdf.pages,1):
+                try:txt=p.extract_text() or '';pages.append({'page':n,'text':txt})
+                except Exception as e:pages.append({'page':n,'text':'','extraction_error':str(e)});txt=''
+                links.extend(re.findall(r'https?://[^\s<>]+',txt))
+                for a in p.get('/Annots') or []:
+                  try:
+                    action=a.get_object().get('/A') or {};uri=action.get('/URI')
+                    if uri:links.append(str(uri))
+                  except Exception:pass
+              (root/(key+'.text.json')).write_text(json.dumps(pages,ensure_ascii=False),encoding='utf-8')
+              out.update(page_count=len(pages),low_text_pages=[p['page'] for p in pages if len(p['text'].strip())<60],embedded_links=sorted(set(links)))
+            except Exception as e:out.update(status='error',error=str(e)[:1000])
+            out['elapsed_seconds']=round(time.monotonic()-start,3);return out
+          results=[]
           with ThreadPoolExecutor(max_workers=2) as pool:
-            while pending and len(seen)<80 and time.monotonic()-start<360:
-              batch=[]
-              for item in pending:
-                if item[0] not in seen and len(seen)<80:seen.add(item[0]);batch.append(item)
-                elif item[0] not in seen:deferred.append({'url':item[0],'reason':'resource bound'})
-              pending=[]
-              for row in pool.map(fetch,batch):
-                rows.append(row);print(json.dumps(row,ensure_ascii=False),flush=True)
-                for child in row['discovered_links']:
-                  if row['depth']<4:
-                    try:validate(child['url']);pending.append((child['url'],child['label'],row['depth']+1))
-                    except Exception as e:deferred.append({**child,'reason':str(e)})
-                  else:deferred.append({**child,'reason':'depth bound; inventory not complete'})
-                (root/'acquisition.json').write_text(json.dumps({'resources':rows,'deferred':deferred,'full_inventory_certified':False},ensure_ascii=False,indent=2),encoding='utf-8')
-          (root/'remaining.json').write_text(json.dumps(pending,ensure_ascii=False,indent=2),encoding='utf-8')
-          print('ACTUAL RESULTS',len(rows),'resources',sum(r['status']=='acquired' for r in rows),'acquired',sum(r.get('file','').endswith('.pdf') for r in rows),'PDFs')
+            for out in pool.map(fetch,sources):
+              results.append(out);print(json.dumps(out,ensure_ascii=False),flush=True)
+              (root/'acquisition.json').write_text(json.dumps({'resources':results,'expected_attachments':6,'full_dossier_complete':False,'paid_model_calls':0},ensure_ascii=False,indent=2),encoding='utf-8')
+          if len(results)!=6 or any(r['status']!='acquired' for r in results):raise SystemExit(2)
           PY
       - uses: actions/upload-artifact@v4
         if: always()
