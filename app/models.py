@@ -66,6 +66,10 @@ class ProjectRecord(BaseModel):
     works_start: Optional[str] = None
     works_end: Optional[str] = None
 
+    # Metadati temporali della fonte, quando disponibili.
+    source_date_presented: Optional[str] = None
+    source_date_last_update: Optional[str] = None
+
     # Fonti arricchimento
     award_source_url: Optional[str] = None
     enrichment_status: Optional[str] = None

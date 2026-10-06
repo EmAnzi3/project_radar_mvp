@@ -18,9 +18,12 @@ Il Radar pubblico corrente contiene:
 
 Discovery è una coda tecnica di ricerca, **non una sezione pubblica della dashboard**. I candidati vengono:
 
+- ammessi come nuovi progetti operativi solo con **azienda/proponente + MW eolici numerici > 0 + almeno un Comune esplicito**;
 - promossi nel canonico quando identità, attività corrente, configurazione e stage sono sufficientemente verificati;
-- mantenuti internamente se reali ma ancora incompleti;
+- mantenuti nel raw/history come `incomplete_project_record` se manca anche uno solo dei tre campi minimi, senza comparire come NEW/actionable;
 - rimossi dalla coda attiva se falsi, duplicati o non più validi, conservando soltanto le guardie negative utili a evitare reintroduzioni errate.
+
+Regione, provincia, area generica, coordinate e placeholder (`N/D`, `unknown`, ecc.) non soddisfano il requisito geografico minimo: serve `municipality` o `municipalities`.
 
 La triage corrente è in `data/discovery-triage-v06.json`.
 

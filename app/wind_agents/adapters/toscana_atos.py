@@ -6,6 +6,8 @@ import json
 import re
 from datetime import date
 
+import requests
+
 from bs4 import BeautifulSoup
 
 from app.wind_agents.base import AgentFinding, BaseWindAgent
@@ -13,6 +15,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 MAP_URL = "https://atos.arrr.it/mappa_fer.php?mn=fer&mnin=mappafer"
 DETAIL_TEMPLATE = "https://atos.arrr.it/scheda_impianto_fer.php?mn=fer&id_impianto={id_impianto}"
+PUBLIC_INFO_URL = "https://www.regione.toscana.it/-/atos"
 
 
 class ToscanaAtosWindAgent(BaseWindAgent):
@@ -215,7 +218,26 @@ class ToscanaAtosWindAgent(BaseWindAgent):
         return max(valid).isoformat() if valid else None
 
     def fetch(self) -> list[AgentFinding]:
-        html_text = self._fetch_map_results()
+        try:
+            html_text = self._fetch_map_results()
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            return [
+                AgentFinding(
+                    external_id="TOSCANA-ATOS-CHANNEL",
+                    source_name=self.source_name,
+                    source_url=PUBLIC_INFO_URL,
+                    title="ATOS Toscana FER - piattaforma progetto temporaneamente non raggiungibile",
+                    finding_type="source_channel_snapshot",
+                    payload={
+                        "region": "Toscana",
+                        "project_specific": False,
+                        "source_grade_ceiling": "A1",
+                        "data_health": "channel_only",
+                        "availability_issue": f"{type(exc).__name__}: {exc}",
+                        "source_adapter_origin": "pv_agent_mvp/toscana_atos.py",
+                    },
+                )
+            ]
         rows = self._extract_array(html_text)
         markers = [self._marker(row) for row in rows if isinstance(row, (list, tuple))]
 

@@ -5,6 +5,8 @@ on:
     paths:
       - 'docs/wind/**'
       - 'app/wind_agents/**'
+      - 'app/collectors/mase_via.py'
+      - 'app/models.py'
       - 'scripts/check_wind_*.py'
       - 'scripts/run_wind_agents.py'
       - 'scripts/update_wind_radar_local.py'
@@ -16,6 +18,10 @@ on:
       - '.github/workflows/check_wind_v04.yml'
       - '.github/workflows/wind_agent_watch.yml'
   workflow_dispatch:
+
+concurrency:
+  group: wind-radar-v06-check-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate-wind-radar:
@@ -36,6 +42,7 @@ jobs:
             scripts/check_wind_industry_press.py
             scripts/check_wind_stages.py
             scripts/check_wind_v04.py
+            scripts/check_wind_daily_discovery.py
             scripts/check_wind_v05.py
             scripts/check_wind_v05_enrichment.py
             scripts/check_wind_v06_network.py
@@ -57,7 +64,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install agent-check dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
 
       - name: Preserve v0.5 manifest
         run: cp docs/wind/data/projects.json /tmp/projects-v05.json
@@ -90,6 +97,9 @@ jobs:
 
       - name: Restore v0.5 manifest
         run: cp /tmp/projects-v05.json docs/wind/data/projects.json
+
+      - name: Daily project discovery classification
+        run: python scripts/check_wind_daily_discovery.py
 
       - name: Canonical promotion v0.5 validation
         run: python scripts/check_wind_v05.py
@@ -152,3 +162,29 @@ jobs:
           node --check docs/wind/assets/contractor-direct-fix.js
           node --check docs/wind/assets/company-network-v06.js
           node --check docs/wind/assets/institutional-network-v06.js
+
+  windows-daily-discovery-smoke:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Wind daily discovery files
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            docs/wind/data/**
+            app/__init__.py
+            app/wind_agents/**
+            scripts/check_wind_daily_discovery.py
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install smoke dependencies
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
+
+      - name: Windows SQLite lifecycle smoke
+        run: python scripts/check_wind_daily_discovery.py
+

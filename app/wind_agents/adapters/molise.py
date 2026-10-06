@@ -10,6 +10,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 
 OFFICE_URL = "https://www.regione.molise.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/15585"
+PAUR_IN_PROGRESS_URL = "https://www.regione.molise.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/16041"
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "parco eolico", "repowering")
 PROJECT_CUES = ("proponente", "progetto", "comune", "mw", "autorizz", "via", "voltura", "proroga", "variante")
 
@@ -27,6 +28,7 @@ class MoliseWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Molise Eolico"
     base_url = OFFICE_URL
+    baseline_revision = "molise-official-paur-current-v1"
 
     @staticmethod
     def _clean(value: object) -> str:
@@ -78,6 +80,63 @@ class MoliseWindAgent(BaseWindAgent):
         response = self.session.get(url, timeout=60, allow_redirects=True)
         response.raise_for_status()
         return BeautifulSoup(response.text, "html.parser")
+
+    def _fetch_current_paur(self) -> list[AgentFinding]:
+        """Server-rendered official PAUR procedures currently in progress.
+
+        The dedicated wind/AU routes are SPA-backed and may expose no rows to
+        non-browser clients. The PAUR current-procedures registry is an
+        independent official server-rendered surface and is therefore useful
+        as a resilient second discovery channel for wind projects.
+        """
+        soup = self._get_soup(PAUR_IN_PROGRESS_URL)
+        findings: dict[str, AgentFinding] = {}
+        seen_urls: set[str] = set()
+
+        for anchor in soup.find_all("a", href=True):
+            label = self._clean(anchor.get_text(" ", strip=True))
+            if not (40 <= len(label) <= 4000) or not self._is_project_block(label):
+                continue
+
+            source_url = urljoin(PAUR_IN_PROGRESS_URL, anchor.get("href") or "")
+            if source_url in seen_urls:
+                continue
+            seen_urls.add(source_url)
+
+            evidence = label
+            try:
+                detail = self._get_soup(source_url)
+                detail_text = self._clean(detail.get_text(" ", strip=True))
+                if detail_text:
+                    evidence = self._clean(f"{label} {detail_text}")
+            except Exception:
+                pass
+
+            external_id = self._external_id(source_url, evidence)
+            findings[external_id] = AgentFinding(
+                external_id=external_id,
+                source_name=self.source_name,
+                source_url=source_url,
+                title=label[:700],
+                finding_type="project_source",
+                payload={
+                    "project_name": label[:700],
+                    "proponent": self._proponent(evidence),
+                    "region": "Molise",
+                    "province": None,
+                    "municipalities": self._municipalities(evidence),
+                    "power_mw": self._power_mw(evidence),
+                    "procedure": "PAUR regionale",
+                    "status_raw": "Procedura PAUR in corso",
+                    "sector": "eolico",
+                    "source_grade_ceiling": "A1",
+                    "project_specific": True,
+                    "source_adapter_origin": "regional_molise_paur_current",
+                    "ingestion_path": "official_paur_in_progress",
+                },
+            )
+
+        return list(findings.values())
 
     def fetch(self) -> list[AgentFinding]:
         office = self._get_soup(OFFICE_URL)
@@ -158,5 +217,14 @@ class MoliseWindAgent(BaseWindAgent):
                         "runtime_note": "Official wind route discovered; no project rows were parseable from server-rendered HTML in this run (SPA/API enrichment still required).",
                     },
                 )
+
+        try:
+            for finding in self._fetch_current_paur():
+                findings.setdefault(finding.external_id, finding)
+        except Exception:
+            # Keep the independently discovered AU/VIA channel snapshots.
+            # A PAUR registry outage must not turn an otherwise successful
+            # source check into a hard failure.
+            pass
 
         return list(findings.values())

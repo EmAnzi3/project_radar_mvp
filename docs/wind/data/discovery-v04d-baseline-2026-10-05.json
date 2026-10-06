@@ -1,0 +1,197 @@
+{
+  "version": "0.4.4-baseline-review",
+  "as_of": "2026-10-05",
+  "status": "discovery-layer",
+  "public_visibility": false,
+  "note": "Esiti verificati del run locale 2026-10-05. Tre identità correnti aggiunte alla Discovery; due pratiche con VIA negativa conservate come guardie per impedirne la riemersione come opportunità.",
+  "review_summary": {
+    "current_candidates": 3,
+    "rejected_guards": 2,
+    "current_wind_mw_total": 105.6,
+    "canonical_promotions": 0
+  },
+  "candidates": [
+    {
+      "candidate_id": "on-mercatello-engie-36",
+      "name": "Parco eolico Mercatello",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 36,
+      "developer_or_spv": "ENGIE MERCATELLO S.R.L.",
+      "region": "Umbria / Marche / Toscana",
+      "area": "Mercatello sul Metauro (PU) con opere/interferenze anche in Umbria e Toscana",
+      "municipalities": [
+        "Sestino",
+        "Mercatello sul Metauro",
+        "Montecalvo in Foglia",
+        "Città di Castello",
+        "Sant'Angelo in Vado",
+        "San Giustino",
+        "Borgo Pace",
+        "Urbino",
+        "Sassocorvaro",
+        "Colbordolo",
+        "Badia Tedalda"
+      ],
+      "mase_procedure_id": "13681",
+      "procedure_state": "VIA PNIEC-PNRR — istruttoria tecnica CTPNRR-PNIEC; procedimento in corso",
+      "verification_date": "2026-10-05",
+      "notes": "Identità distinta dai 51 canonici. Procedura MASE avviata il 25/02/2025 e ancora in istruttoria.",
+      "sources": [
+        {
+          "publisher": "Regione Marche Monitoraggio VIA",
+          "grade": "A1",
+          "url": "https://monitoraggivia.regione.marche.it/Pubblicazioni/V01074/Modulo_Avviso_Pubblico_V01074.pdf"
+        },
+        {
+          "publisher": "MASE",
+          "grade": "A1",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/11623"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-sestino-rwe-39-6",
+      "name": "Sestino",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 39.6,
+      "developer_or_spv": "RWE Renewables Italia S.r.l.",
+      "region": "Toscana / Marche",
+      "province": "Arezzo / Pesaro e Urbino",
+      "area": "Sestino e Badia Tedalda (AR); Borgo Pace e Mercatello sul Metauro (PU)",
+      "municipalities": [
+        "Sestino",
+        "Badia Tedalda",
+        "Borgo Pace",
+        "Mercatello sul Metauro"
+      ],
+      "wtg_count": 6,
+      "wtg_mw": 6.6,
+      "mase_procedure_id": "9755",
+      "procedure_state": "VIA PNIEC-PNRR in istruttoria; AU Toscana avviata con conferenza di servizi nel 2026",
+      "verification_date": "2026-10-05",
+      "notes": "Identità distinta da Florinas Repowering. La Regione Toscana documenta nel 2026 l'avvio dell'Autorizzazione Unica per il parco da 39,6 MW.",
+      "sources": [
+        {
+          "publisher": "Regione Marche Monitoraggio VIA",
+          "grade": "A1",
+          "url": "https://monitoraggivia.regione.marche.it/Pubblicazioni/V00972/PESEST_Avviso_Pubblico_VIA_Rev02_LC_MB.pdf"
+        },
+        {
+          "publisher": "MASE",
+          "grade": "A1",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/9782"
+        },
+        {
+          "publisher": "Regione Toscana",
+          "grade": "A1",
+          "url": "https://urpportale.rete.toscana.it/web/guest/-/conferenze-dei-servizi-energia"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-monreale-lupotto-repower-30",
+      "name": "Parco Eolico Monreale Lupotto",
+      "site_type": "onshore",
+      "status": "identity_checked",
+      "activity_class": "current",
+      "wind_mw": 30,
+      "bess_mw": 20,
+      "developer_or_spv": "Repower Renewable S.p.A.",
+      "region": "Sicilia",
+      "province": "Palermo",
+      "area": "Monreale / Piana degli Albanesi (PA)",
+      "municipalities": [
+        "Monreale",
+        "Piana degli Albanesi"
+      ],
+      "wtg_count": 5,
+      "wtg_mw": 6,
+      "procedure_state": "VIA positiva con condizioni (D.A. 7/GAB del 10/01/2024); ulteriore attività istruttoria regionale documentata nel 2025",
+      "verification_date": "2026-10-05",
+      "notes": "Configurazione corrente nell'atto VIA 2024: 5 aerogeneratori, 30 MW wind + 20 MW BESS. Evidenza regionale di oneri istruttori nel 2025 mantiene il progetto nella coda corrente.",
+      "sources": [
+        {
+          "publisher": "Regione Sicilia SI-VVI",
+          "grade": "A1",
+          "url": "https://si-vvi.regione.sicilia.it/viavas/index.php/it/component/fabrik/list/30?Itemid=332&procedura___oggetto_raw=1355&limitstart30=0&resetfilters=1&fabrik_incsessionfilters=0"
+        },
+        {
+          "publisher": "Regione Siciliana",
+          "grade": "A1",
+          "url": "https://www.regione.sicilia.it/istituzioni/servizi-informativi/decreti-e-direttive/n-7gab-10012024-pa050atp1356-codice-procedura-1356-ditta-repower-renewable-spa"
+        },
+        {
+          "publisher": "Regione Siciliana",
+          "grade": "A1",
+          "url": "https://www.regione.sicilia.it/sites/default/files/2025-10/1521_2025.pdf",
+          "identity_match": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-badia-wind-rejected",
+      "name": "Badia Wind",
+      "site_type": "onshore",
+      "status": "rejected",
+      "activity_class": "rejected",
+      "wind_mw": 54,
+      "developer_or_spv": "SCS 09 s.r.l.",
+      "region": "Toscana",
+      "province": "Arezzo",
+      "area": "Badia Tedalda (AR)",
+      "municipalities": [
+        "Badia Tedalda"
+      ],
+      "mase_procedure_id": "9773",
+      "procedure_state": "VIA PNIEC-PNRR conclusa — Decreto VIA negativo DM-2025-0000516 del 04/09/2025",
+      "verification_date": "2026-10-05",
+      "notes": "Guardia negativa: non deve rientrare nella pipeline corrente salvo nuova procedura distinta successiva.",
+      "sources": [
+        {
+          "publisher": "Regione Marche Monitoraggio VIA",
+          "grade": "A1",
+          "url": "https://monitoraggivia.regione.marche.it/Pubblicazioni/V00973/Modulo_Avviso_Pubblico_VIA%20(2).pdf"
+        },
+        {
+          "publisher": "MASE",
+          "grade": "A1",
+          "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/9797/14434"
+        }
+      ]
+    },
+    {
+      "candidate_id": "on-buseto-strafalcio-ginosa-rejected",
+      "name": "Buseto Palizzolo — Strafalcio",
+      "site_type": "onshore",
+      "status": "rejected",
+      "activity_class": "rejected",
+      "wind_mw": 24,
+      "developer_or_spv": "Ginosa s.r.l.",
+      "region": "Sicilia",
+      "province": "Trapani",
+      "area": "Contrada Strafalcio / Buseto Palizzolo (TP)",
+      "municipalities": [
+        "Buseto Palizzolo"
+      ],
+      "procedure_state": "VIA/PAUR — giudizio negativo di compatibilità ambientale, D.A. 337/GAB del 04/10/2023",
+      "verification_date": "2026-10-05",
+      "notes": "Guardia negativa relativa alla procedura 1266. Non considerare opportunità corrente salvo nuova procedura distinta.",
+      "sources": [
+        {
+          "publisher": "Regione Sicilia SI-VVI",
+          "grade": "A1",
+          "url": "https://si-vvi.regione.sicilia.it/viavas/index.php/it/component/fabrik/list/30?Itemid=332&procedura___oggetto_raw=1264&limitstart30=0&resetfilters=1&fabrik_incsessionfilters=0"
+        },
+        {
+          "publisher": "Regione Siciliana",
+          "grade": "A1",
+          "url": "https://www.regione.sicilia.it/istituzioni/servizi-informativi/decreti-e-direttive/n337gab-0410202-progetto-impianto-eolico-potenza-pari-24-mwin-cda-strafalcio-comune-buseto-palizzolo-provincia-tp"
+        }
+      ]
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import sqlite3
+from contextlib import closing
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -22,7 +23,7 @@ def _connect() -> sqlite3.Connection:
 
 
 def init_db() -> None:
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.executescript(
             """
             CREATE TABLE IF NOT EXISTS agent_runs (
@@ -91,7 +92,7 @@ def get_source_cursor(source_id: str, default: str | None = None) -> str | None:
     """
 
     init_db()
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         row = conn.execute(
             "SELECT cursor_value FROM source_cursors WHERE source_id = ?",
             (source_id,),
@@ -107,7 +108,7 @@ def set_source_cursor(
     init_db()
     now = datetime.now().isoformat(timespec="seconds")
     metadata_json = json.dumps(metadata or {}, ensure_ascii=False, sort_keys=True, default=str)
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             """
             INSERT INTO source_cursors (source_id, cursor_value, updated_at, metadata_json)
@@ -124,7 +125,7 @@ def set_source_cursor(
 
 def get_watch_status(watch_id: str) -> dict[str, Any] | None:
     init_db()
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         row = conn.execute(
             """
             SELECT watch_id, last_attempt, last_success, last_error, last_run_id, metadata_json
@@ -169,7 +170,7 @@ def mark_watch_attempt(
     previous = get_watch_status(watch_id) or {}
     last_success = now if success else previous.get("last_success")
     metadata_json = json.dumps(metadata or {}, ensure_ascii=False, sort_keys=True, default=str)
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             """
             INSERT INTO watch_status (
@@ -198,7 +199,7 @@ def begin_run(planned_tasks: int, note: str | None = None) -> str:
     init_db()
     run_id = datetime.now().strftime("%Y%m%d%H%M%S%f")
     now = datetime.now().isoformat(timespec="seconds")
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             "INSERT INTO agent_runs (run_id, started_at, planned_tasks, note) VALUES (?, ?, ?, ?)",
             (run_id, now, planned_tasks, note),
@@ -219,12 +220,52 @@ def _finding_payload(finding: AgentFinding) -> dict[str, Any]:
 
 
 def _hash_payload(payload: dict[str, Any]) -> str:
-    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
+    """Hash stable project-change content rather than transport/enrichment noise.
+
+    An adapter may expose a private _change_basis mapping when the same official
+    record is reachable through equivalent ingestion paths. The full finding is
+    still persisted; only change detection uses this semantic basis.
+    """
+    inner = payload.get("payload") if isinstance(payload, dict) else None
+    change_basis = inner.get("_change_basis") if isinstance(inner, dict) else None
+    # Backward-compatible migration for Sicilia records already persisted before
+    # _change_basis existed. This prevents one synthetic "changed" wave after
+    # upgrading the local database.
+    if (
+        not isinstance(change_basis, dict)
+        and payload.get("source_name") == "Regione Sicilia SI-VVI"
+        and isinstance(inner, dict)
+    ):
+        change_basis = {
+            "source_code": inner.get("source_code"),
+            "project_name": inner.get("project_name"),
+            "proponent": inner.get("proponent"),
+            "procedure": inner.get("procedure"),
+            "power_mw": inner.get("power_mw"),
+        }
+    if isinstance(change_basis, dict):
+        effective = {
+            "external_id": payload.get("external_id"),
+            "source_name": payload.get("source_name"),
+            "title": payload.get("title"),
+            "finding_type": payload.get("finding_type"),
+            "change_basis": change_basis,
+        }
+    else:
+        effective = payload
+    raw = json.dumps(effective, ensure_ascii=False, sort_keys=True, default=str)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
-def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
-    """Persist a raw source finding and return new/changed/unchanged.
+def upsert_finding(
+    run_id: str,
+    agent_name: str,
+    finding: AgentFinding,
+    *,
+    baseline_new: bool = False,
+    rebaseline_existing: bool = False,
+) -> str:
+    """Persist a raw source finding and return baseline/new/changed/unchanged.
 
     This mirrors the PV Agent raw/history separation. It intentionally does not
     update docs/wind canonical JSON.
@@ -236,10 +277,10 @@ def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
     payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
     content_hash = _hash_payload(payload)
 
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         previous = conn.execute(
             """
-            SELECT content_hash, first_seen
+            SELECT content_hash, first_seen, payload_json
             FROM raw_findings
             WHERE agent_name = ? AND source_name = ? AND external_id = ?
             """,
@@ -247,17 +288,23 @@ def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
         ).fetchone()
 
         if previous is None:
-            event_type = "new"
+            event_type = "baseline" if baseline_new else "new"
             first_seen = now
             previous_hash = None
-        elif previous["content_hash"] != content_hash:
-            event_type = "changed"
-            first_seen = previous["first_seen"]
-            previous_hash = previous["content_hash"]
         else:
-            event_type = "unchanged"
-            first_seen = previous["first_seen"]
             previous_hash = previous["content_hash"]
+            previous_semantic_hash = previous_hash
+            try:
+                previous_payload = json.loads(previous["payload_json"] or "{}")
+                previous_semantic_hash = _hash_payload(previous_payload)
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+            if previous_semantic_hash != content_hash:
+                event_type = "baseline" if rebaseline_existing else "changed"
+            else:
+                event_type = "unchanged"
+            first_seen = previous["first_seen"]
 
         conn.execute(
             """
@@ -289,7 +336,7 @@ def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
             ),
         )
 
-        if event_type in {"new", "changed"}:
+        if event_type in {"baseline", "new", "changed"}:
             conn.execute(
                 """
                 INSERT INTO finding_events (
@@ -317,7 +364,7 @@ def upsert_finding(run_id: str, agent_name: str, finding: AgentFinding) -> str:
 
 def finish_run(run_id: str, findings: int, changed_items: int) -> None:
     now = datetime.now().isoformat(timespec="seconds")
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         conn.execute(
             """
             UPDATE agent_runs
@@ -337,7 +384,7 @@ def get_run_events(run_id: str) -> list[dict[str, Any]]:
     """
 
     init_db()
-    with _connect() as conn:
+    with closing(_connect()) as conn:
         rows = conn.execute(
             """
             SELECT id, run_id, agent_name, source_name, external_id, event_type,

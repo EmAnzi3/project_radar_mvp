@@ -6,11 +6,23 @@ import tempfile
 from datetime import date
 from pathlib import Path
 
+import requests
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.wind_agents.base import AgentFinding
+from app.wind_agents.adapters.toscana import ToscanaWindAgent
+from app.wind_agents.adapters.toscana_atos import ToscanaAtosWindAgent
+from app.wind_agents.adapters.lombardia import LombardiaWindAgent
+from app.wind_agents.adapters.marche import MarcheWindAgent
+from app.wind_agents.adapters.sistema_puglia import SistemaPugliaWindAgent
+from app.wind_agents.adapters.sicilia import SiciliaWindAgent
+from app.wind_agents.adapters.basilicata import BasilicataEnergyWindAgent, BasilicataWindAgent
+from app.wind_agents.adapters.calabria import CalabriaRegionalActsWindAgent, CalabriaWindAgent
+from app.wind_agents.adapters.campania import CampaniaWindAgent
+from app.wind_agents.adapters.sardegna import SardegnaWindAgent
 from app.wind_agents.company_watch import due_company_ids
 from app.wind_agents.evidence import can_close_execution_scope, evidence_layer
 from app.wind_agents.execution_watch import build_execution_queue
@@ -22,7 +34,7 @@ from app.wind_agents.planner import (
     build_run_plan,
 )
 from app.wind_agents.reconcile import build_digest, reconcile_finding
-from app.wind_agents.runner import due_agent_ids, executable_agent_ids
+from app.wind_agents.runner import _bootstrap_decision, _is_health_snapshot, due_agent_ids, executable_agent_ids
 from app.wind_agents import state
 
 
@@ -57,7 +69,9 @@ assert sum(bool(task.watch_urls) for task in company_catalog) >= 50, "company wa
 implemented = set(executable_agent_ids())
 required_adapters = {
     "abruzzo-via",
+    "basilicata-au-paur",
     "basilicata-via",
+    "calabria-regional-acts",
     "calabria-via",
     "campania-viavas",
     "emilia-romagna-regional",
@@ -69,6 +83,7 @@ required_adapters = {
     "mase-via",
     "molise-au-eolico",
     "piemonte-regional",
+    "puglia-au-paur",
     "puglia-sistema-energia",
     "sardegna-sira",
     "sicilia-sivvi",
@@ -79,8 +94,286 @@ required_adapters = {
     "veneto-regional",
 }
 assert required_adapters.issubset(implemented), implemented
-assert len(implemented) >= 21, implemented
+assert len(implemented) >= 24, implemented
 assert required_adapters.issubset(catalog), f"adapter/registry id drift: {required_adapters - set(catalog)}"
+
+# Technical degradation snapshots must never become project new/changed events.
+health_snapshot = AgentFinding(
+    external_id="TEST-CHANNEL",
+    source_name="Test source",
+    source_url="https://example.invalid/channel",
+    title="Temporary project channel outage",
+    finding_type="source_channel_snapshot",
+    payload={"project_specific": False, "data_health": "channel_only"},
+)
+assert _is_health_snapshot(health_snapshot) is True
+assert _is_health_snapshot(
+    AgentFinding(
+        external_id="TEST-PROJECT",
+        source_name="Test source",
+        source_url="https://example.invalid/project",
+        title="Actual wind project",
+        finding_type="project_source",
+        payload={"project_specific": True},
+    )
+) is False
+
+# Parser/source revisions must rebaseline exactly once on an existing local DB.
+legacy_runtime = {
+    "last_success": "2026-09-30T12:00:00",
+    "metadata": {"data_health": "empty_success"},
+}
+campania_revision = CampaniaWindAgent()
+decision = _bootstrap_decision(
+    legacy_runtime,
+    campania_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is True and decision[1] is True, decision
+assert decision[2] == campania_revision.baseline_revision
+assert decision[3] is None
+
+migrated_runtime = {
+    "last_success": "2026-10-01T12:00:00",
+    "metadata": {"baseline_revision": campania_revision.baseline_revision},
+}
+decision = _bootstrap_decision(
+    migrated_runtime,
+    campania_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is False and decision[1] is False, decision
+
+puglia_revision = SistemaPugliaWindAgent()
+decision = _bootstrap_decision(
+    legacy_runtime,
+    puglia_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is True and decision[1] is True, decision
+assert decision[2] == "puglia-via-fer-xlsx-v1", decision
+assert puglia_revision.baseline_revision == "puglia-via-fer-xlsx-v1"
+
+migrated_puglia_runtime = {
+    "last_success": "2026-10-01T12:00:00",
+    "metadata": {"baseline_revision": puglia_revision.baseline_revision},
+}
+decision = _bootstrap_decision(
+    migrated_puglia_runtime,
+    puglia_revision,
+    bootstrap_new_sources=True,
+)
+assert decision[0] is False and decision[1] is False, decision
+
+sardegna_revision = SardegnaWindAgent(years=["2026"])
+decision = _bootstrap_decision(
+    legacy_runtime,
+    sardegna_revision,
+    bootstrap_new_sources=False,
+)
+assert decision[0] is False and decision[1] is False, decision
+
+# Toscana GeA must degrade transparently to a channel-only snapshot when the
+# project API is unavailable, rather than pretending project-level coverage.
+toscana_fallback = ToscanaWindAgent(max_pages=1)
+def _synthetic_gea_failure(_page_index: int):
+    raise ConnectionError("synthetic GeA API DNS failure")
+toscana_fallback._fetch_page = _synthetic_gea_failure
+fallback_findings = toscana_fallback.fetch()
+assert len(fallback_findings) == 1, fallback_findings
+assert fallback_findings[0].finding_type == "source_channel_snapshot"
+assert fallback_findings[0].payload.get("project_specific") is False
+assert fallback_findings[0].payload.get("data_health") == "channel_only"
+
+lombardia_fallback = LombardiaWindAgent(years=[2026])
+def _synthetic_silvia_failure():
+    raise requests.ConnectionError("synthetic SILVIA DNS failure")
+lombardia_fallback._load_sectors = _synthetic_silvia_failure
+lombardia_findings = lombardia_fallback.fetch()
+assert len(lombardia_findings) == 1, lombardia_findings
+assert lombardia_findings[0].finding_type == "source_channel_snapshot"
+assert lombardia_findings[0].payload.get("project_specific") is False
+assert lombardia_findings[0].payload.get("data_health") == "channel_only"
+
+atos_fallback = ToscanaAtosWindAgent(max_details=1)
+def _synthetic_atos_failure():
+    raise requests.ConnectionError("synthetic ATOS DNS failure")
+atos_fallback._fetch_map_results = _synthetic_atos_failure
+atos_findings = atos_fallback.fetch()
+assert len(atos_findings) == 1, atos_findings
+assert atos_findings[0].finding_type == "source_channel_snapshot"
+assert atos_findings[0].payload.get("project_specific") is False
+assert atos_findings[0].payload.get("data_health") == "channel_only"
+
+basilicata_channel = BasilicataEnergyWindAgent()
+def _synthetic_basilicata_outage():
+    raise requests.ConnectionError("synthetic Basilicata AU timeout")
+basilicata_channel._fetch_energy_notices = _synthetic_basilicata_outage
+basilicata_channel_findings = basilicata_channel.fetch()
+assert len(basilicata_channel_findings) == 1
+assert basilicata_channel_findings[0].finding_type == "source_channel_snapshot"
+assert basilicata_channel_findings[0].payload.get("project_specific") is False
+assert basilicata_channel_findings[0].payload.get("data_health") == "channel_only"
+
+sicilia_channel = SiciliaWindAgent()
+def _synthetic_sicilia_csv_outage():
+    raise requests.ConnectionError("synthetic Sicilia CSV timeout")
+def _synthetic_sicilia_gis_outage(_reason):
+    raise requests.Timeout("synthetic Sicilia MapServer timeout")
+sicilia_channel._findings_from_csv = _synthetic_sicilia_csv_outage
+sicilia_channel._findings_from_gis = _synthetic_sicilia_gis_outage
+sicilia_channel_findings = sicilia_channel.fetch()
+assert len(sicilia_channel_findings) == 1
+assert sicilia_channel_findings[0].finding_type == "source_channel_snapshot"
+assert sicilia_channel_findings[0].payload.get("project_specific") is False
+assert sicilia_channel_findings[0].payload.get("data_health") == "channel_only"
+assert "CSV timeout" in sicilia_channel_findings[0].payload.get("csv_availability_issue", "")
+assert "MapServer timeout" in sicilia_channel_findings[0].payload.get("gis_availability_issue", "")
+
+# Minimum-field parser guards on real-style official regional act text.
+puglia_text = (
+    'Autorizzazione Unica ai sensi dell’art. 12 del D. Lgs. n. 387/2003 '
+    'per un impianto eolico denominato "Ponticello" della potenza elettrica di 42 MW, '
+    'da realizzarsi nei Comuni di Orta Nova e Stornarella (FG). '
+    'Proponente: Inergia S.p.A. - C.F. e P. IVA: 01752630440'
+)
+assert SistemaPugliaWindAgent._power_from_text(puglia_text) == 42.0
+assert SistemaPugliaWindAgent._proponent_from_text(puglia_text) == "Inergia S.p.A"
+puglia_places = SistemaPugliaWindAgent._municipalities_from_text(puglia_text)
+assert {"Orta Nova", "Stornarella"}.issubset(set(puglia_places)), puglia_places
+
+basilicata_text = (
+    'progetto definitivo per la realizzazione del parco eolico "Tempa dei Greci" '
+    'avente una potenza complessiva di 21 MW e relative opere connesse, da realizzare '
+    'nei comuni di Gorgoglione (MT), Corleto Perticara (PZ) e Guardia Perticara (PZ). '
+    'Proponente: Tempa dei Greci S.r.l. ex FRI-EL S.p.a. '
+    'Progressivo Interno: 540 - ID PAUR: 07_2020.'
+)
+assert BasilicataWindAgent._power_mw(basilicata_text) == 21.0
+assert BasilicataWindAgent._proponent(basilicata_text) == "Tempa dei Greci S.r.l. ex FRI-EL S.p.a"
+assert "Gorgoglione" in BasilicataWindAgent._municipalities(basilicata_text)
+
+basilicata_2026_santarcangelo = (
+    "Autorizzazione unica ex art. 12 del D.Lgs 387/2003 relativa al progetto per la costruzione "
+    "e l'esercizio di un impianto eolico, e delle relative opere accessorie, della potenza di "
+    "19,20 MW da realizzare nel Comune di Sant'Arcangelo (PZ). Società Proponente: Elettrowind Due srl "
+    "Data di pubblicazione: 24/08/2026 - Codice di pubblicazione: P26-55"
+)
+assert BasilicataWindAgent._power_mw(basilicata_2026_santarcangelo) == 19.2
+assert BasilicataWindAgent._proponent(basilicata_2026_santarcangelo) == "Elettrowind Due srl"
+assert BasilicataWindAgent._municipalities(basilicata_2026_santarcangelo) == ["Sant'Arcangelo"]
+
+basilicata_2026_servigliano = (
+    'Autorizzazione Unica Regionale ai sensi dell art. 12 comma 3 del decreto legislativo 387/2003 '
+    'per la costruzione e l esercizio di un impianto per la produzione di energia elettrica da fonte '
+    'eolica denominato "Vento di Servigliano", di potenza nominale totale pari a 30 MW integrato con '
+    'un sistema di accumulo di 21 MW, da realizzarsi nei Comuni di Montemurro e Armento con relative '
+    'opere connesse ed infrastrutture indispensabili nei comuni di Montemurro, Armento e Viggiano. '
+    'PROPONENTE: FRI-EL SERVIGLIANO S.r.l.'
+)
+assert BasilicataWindAgent._power_mw(basilicata_2026_servigliano) == 30.0
+assert BasilicataWindAgent._proponent(basilicata_2026_servigliano) == "FRI-EL SERVIGLIANO S.r.l"
+servigliano_places = BasilicataWindAgent._municipalities(basilicata_2026_servigliano)
+assert servigliano_places == ["Montemurro", "Armento"], servigliano_places
+
+basilicata_granted_text = (
+    "D.LGS 152/2006 - L.R. N. 47/1998 - Progetto per la costruzione e l'esercizio "
+    "di un impianto per la produzione di energia elettrica da fonte eolica, delle opere "
+    "connesse e delle infrastrutture indispensabili in agro del Comune di Tolve (PZ) "
+    "della potenza nominale di 19,80 MW proposto dalla società SERRA ENERGIE S.R.L."
+)
+assert BasilicataWindAgent._power_mw(basilicata_granted_text) == 19.8
+assert BasilicataWindAgent._proponent(basilicata_granted_text) == "SERRA ENERGIE S.R.L"
+assert BasilicataWindAgent._municipalities(basilicata_granted_text) == ["Tolve"]
+assert BasilicataEnergyWindAgent.baseline_revision == "basilicata-energy-v4-transparency-xls"
+
+campania_total_text = (
+    "PAUR progetto Repowering impianto eolico composto da 14 aerogeneratori da 7,2 MW "
+    "per una potenza complessiva di 100,8 MW e relative opere di connessione "
+    "nei Comuni di Lacedonia (AV)"
+)
+assert CampaniaWindAgent._power_mw(campania_total_text) == 100.8
+campania_places = CampaniaWindAgent._municipalities(
+    "LACEDONIA",
+    campania_total_text.replace(
+        "nei Comuni di Lacedonia (AV)",
+        "nei Comuni di Lacedonia (AV), Monteverde (AV) e Bisaccia (AV) ed opera RTN"
+    ),
+)
+assert {"LACEDONIA", "Monteverde", "Bisaccia"}.issubset(set(campania_places)), campania_places
+assert CampaniaWindAgent.baseline_revision == "2026-10-current-project-table-v5-municipality-cleanup"
+
+sardegna_detail_text = (
+    'Titolo progetto: Impianto Eolico denominato "WHITE AND BLUE LUIGHIEDDA" della potenza '
+    'di 21, 6 MW ubicato in località Sa Lughiedda nel Comune di Sassari (SS) '
+    'Proponente: INNOVO DEVELOPMENT 8 S.R.L. Comune: SASSARI Provincia: SASSARI '
+    'Stato del procedimento: CHIUSA Esito: NEGATIVO'
+)
+assert SardegnaWindAgent._power_mw(sardegna_detail_text) == 21.6
+assert SardegnaWindAgent._proponent(
+    sardegna_detail_text + " Consulta la documentazione ulteriori contenuti del portale"
+) == "INNOVO DEVELOPMENT 8 S.R.L"
+assert SardegnaWindAgent._municipality(sardegna_detail_text) == "SASSARI"
+assert SardegnaWindAgent._status(sardegna_detail_text) == "Negativo"
+assert SardegnaWindAgent.baseline_revision == "2026-10-search-stems-v5"
+
+calabria_paladino_text = (
+    "Oggetto: Provvedimento di Valutazione di Impatto Ambientale ai sensi degli art. 23 e segg. "
+    "Progetto: Pratica n. 162 (CZ) sul sistema Calabria SUAP Sportello Ambiente - "
+    "Parco Eolico Paladino di potenza nominale pari a 24,00 MW da realizzarsi in Provincia "
+    "di Catanzaro, nei Comuni di Gasperina, Montauro, Montepaone, Palermiti, Petrizzi e Argusto. "
+    "Comuni interessati: Gasperina, Montauro, Palermiti, Petrizzi, Montepaone e Argusto (CZ). "
+    "Proponente: Paladino Energia S.r.l."
+)
+assert CalabriaRegionalActsWindAgent._power_mw(calabria_paladino_text) == 24.0
+assert CalabriaRegionalActsWindAgent._proponent(
+    calabria_paladino_text + " Ulteriori dati del provvedimento e allegati amministrativi"
+) == "Paladino Energia S.r.l"
+calabria_places = CalabriaRegionalActsWindAgent._municipalities(calabria_paladino_text)
+assert {"Gasperina", "Montauro", "Montepaone", "Palermiti", "Petrizzi", "Argusto"}.issubset(set(calabria_places)), calabria_places
+assert CalabriaRegionalActsWindAgent.baseline_revision == "calabria-regional-acts-v4-municipality-cleanup"
+
+
+# Marche state-registry geography must reflect project geography, not portal ownership.
+marche_sestino = (
+    'Impianto eolico da 39,6 MW da installarsi nei Comuni di Sestino (AR) (aerogeneratori), '
+    'Badia Tedalda (AR), Borgo Pace e Mercatello sul Metauro (PU) (cavidotto di collegamento MT) '
+    'denominato "Sestino". [IDVIP 9755]'
+)
+assert MarcheWindAgent._municipalities(marche_sestino) == [
+    "Sestino", "Badia Tedalda", "Borgo Pace", "Mercatello sul Metauro"
+]
+assert MarcheWindAgent._province(marche_sestino) == "AR / PU"
+assert MarcheWindAgent._region(marche_sestino, "VIA statale") == "Toscana / Marche"
+assert MarcheWindAgent._region(
+    'Impianto eolico nel Comune di Mercatello sul Metauro', "VIA statale"
+) is None
+assert MarcheWindAgent._region(
+    'Impianto eolico nel Comune di Macerata (MC)', "VIA regionale"
+) == "Marche"
+assert MarcheWindAgent.baseline_revision == "marche-monitoraggivia-v2-geography-cleanup"
+
+# Regional municipality cleanup guards.
+assert SiciliaWindAgent._municipality(
+    "PROGETTO EOLICO NEL COMUNE DI ENNA IN LOCALITÀ S. ANTONINO, AVENTE POTENZA 30 MW"
+) == "ENNA"
+assert SiciliaWindAgent._municipality(
+    "PARCO EOLICO RICADENTE NEL COMUNE DI AI-DONE (EN)"
+) == "Aidone"
+assert SiciliaWindAgent._municipality(
+    "IMPIANTO DA REALIZZARSI NEL COMUNE DI SAL"
+) is None
+assert CampaniaWindAgent._municipalities(
+    "BENEVENTO, Fragneto Monforte, Casalduni, Campolattaro di 7 aerogeneratori da 4,2 MW per una potenza complessiva",
+    "",
+) == ["BENEVENTO", "Fragneto Monforte", "Casalduni", "Campolattaro"]
+assert CampaniaWindAgent._municipalities(
+    "CALITRI, Bisaccia con le relative opere di connessione",
+    "",
+) == ["CALITRI", "Bisaccia"]
+assert CalabriaWindAgent._municipalities(
+    "impianto eolico nei Comuni di Cutro e Scandale, con relative opere di connessione"
+) == ["Cutro", "Scandale"]
 
 # Evidence discipline: generic capability / weak signals never close scope.
 assert not can_close_execution_scope(
@@ -189,7 +482,7 @@ with tempfile.TemporaryDirectory() as tmp:
         source_url="https://example.com/wind/1",
         title="Wind test",
         finding_type="project_source",
-        payload={"mw": 10, "project_specific": True},
+        payload={"power_mw": 10, "proponent": "Wind Test S.r.l.", "municipalities": ["Comune Test"], "project_specific": True},
     )
     assert state.upsert_finding(run_id, "test_agent", finding) == "new"
     assert state.upsert_finding(run_id, "test_agent", finding) == "unchanged"
@@ -199,7 +492,7 @@ with tempfile.TemporaryDirectory() as tmp:
         source_url="https://example.com/wind/1",
         title="Wind test",
         finding_type="project_source",
-        payload={"mw": 12, "project_specific": True},
+        payload={"power_mw": 12, "proponent": "Wind Test S.r.l.", "municipalities": ["Comune Test"], "project_specific": True},
     )
     assert state.upsert_finding(run_id, "test_agent", changed) == "changed"
     state.finish_run(run_id, findings=3, changed_items=2)

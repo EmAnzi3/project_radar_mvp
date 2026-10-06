@@ -1,0 +1,96 @@
+name: Wind commercial extraction
+on:
+  pull_request:
+    paths:
+      - 'scripts/wind_document_fast.py'
+      - 'tests/test_wind_document_fast.py'
+      - '.github/workflows/wind_document_fast.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: wind-commercial-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  fast:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-wind-documents.txt
+      - run: python -m unittest discover -s tests -p 'test_wind_document_fast.py' -v
+      - name: Restore commercial memory, never originals
+        uses: actions/cache/restore@v4
+        with:
+          path: reports/wind-commercial-memory
+          key: wind-commercial-d8-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            wind-commercial-d8-${{ github.event.pull_request.number || github.ref_name }}-
+      - name: Download verified D7 input fixture (read only)
+        uses: actions/download-artifact@v4
+        with:
+          name: wind-document-memory-37436709025
+          run-id: 37436709025
+          github-token: ${{ github.token }}
+          path: reports/wind-commercial-input
+      - name: Record input fingerprint
+        run: sha256sum reports/wind-commercial-input/audit.sqlite > "$RUNNER_TEMP/input.sha256"
+      - name: Targeted batch, at most 24 resources, two connections per source
+        id: extract
+        continue-on-error: true
+        run: |
+          python scripts/wind_document_fast.py --ledger reports/wind-commercial-input/audit.sqlite --output reports/wind-commercial-memory --limit 24 --workers 4 --per-host 2
+          cp reports/wind-commercial-memory/summary.json "$RUNNER_TEMP/first-pass.json"
+      - name: Preserve first-pass diagnostics even on partial source failure
+        if: always()
+        run: |
+          if [ -f reports/wind-commercial-memory/summary.json ]; then
+            cp reports/wind-commercial-memory/summary.json "$RUNNER_TEMP/first-pass.json"
+          fi
+      - name: Restart same batch offline without originals
+        run: python scripts/wind_document_fast.py --ledger reports/wind-commercial-input/audit.sqlite --output reports/wind-commercial-memory --limit 24 --no-remote --replay
+      - name: Validate real counters, preservation and zero rereads
+        env:
+          FIRST_OUTCOME: ${{ steps.extract.outcome }}
+        run: |
+          sha256sum --check "$RUNNER_TEMP/input.sha256"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path('reports/wind-commercial-memory')
+          warm=json.loads((root/'summary.json').read_text())
+          cold=json.loads((Path(os.environ['RUNNER_TEMP'])/'first-pass.json').read_text())
+          assert warm['inventory_documents']==825
+          assert warm['network_requests']==0 and warm['text_extractions']==0
+          assert warm['new_whole_document_completions']==0 and warm['canonical_writes']==0
+          assert not any(p.suffix.lower() in {'.pdf','.png','.jpg','.zip','.bin','.p7m'} for p in root.rglob('*'))
+          (root/'first-pass.json').write_text(json.dumps(cold,ensure_ascii=False,indent=2))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as out:
+              out.write('## Targeted commercial extraction (not verified facts)\n\n')
+              out.write('```json\n'+json.dumps({'first_pass':cold,'offline_restart':warm},ensure_ascii=False,indent=2)+'\n```\n')
+          if os.environ['FIRST_OUTCOME']!='success':
+              raise SystemExit('Partial source failures retained in diagnostics; successful packets preserved, not full live certification.')
+          PY
+      - name: Preserve lightweight progress even if another source failed
+        if: always() && hashFiles('reports/wind-commercial-memory/commercial.sqlite') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: reports/wind-commercial-memory
+          key: wind-commercial-d8-${{ github.event.pull_request.number || github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wind-commercial-memory-${{ github.run_id }}
+          path: reports/wind-commercial-memory/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Existing runtime and published data unchanged
+        if: always()
+        run: git diff --exit-code -- docs/wind aggiorna_wind_radar.bat app/wind_agents

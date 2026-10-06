@@ -13,13 +13,13 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 BASE_URL = "https://www.regione.calabria.it"
 SOURCE_URL = "https://www.regione.calabria.it/dipartimento-per-la-sostenibilita-ambientale/avvisi-via-e-vas/"
+PROVVEDIMENTI_URL = "https://www.regione.calabria.it/provvedimenti-della-regione/"
 SEARCH_TERMS = (
+    # Broad terms cover the former "parco/PAUR/VIA eolico" queries as subsets.
+    # Keep "repowering" separately because some notices omit the word eolico.
     "eolico",
     "eolica",
-    "parco eolico",
-    "repowering eolico",
-    "PAUR eolico",
-    "VIA eolico",
+    "repowering",
 )
 WIND_TERMS = ("eolico", "eolica", "aerogenerator", "repowering", "parco eolico")
 PROVINCE_CODES = ("CZ", "CS", "KR", "RC", "VV")
@@ -31,6 +31,7 @@ class CalabriaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Calabria VIA/PAUR"
     base_url = SOURCE_URL
+    baseline_revision = "calabria-via-v2-municipality-cleanup"
 
     def __init__(self, max_search_pages_per_term: int = 6, min_year: int | None = None) -> None:
         super().__init__()
@@ -58,7 +59,7 @@ class CalabriaWindAgent(BaseWindAgent):
                     "User-Agent": "Wind-Radar-Agent/0.6",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 },
-                timeout=60,
+                timeout=(8, 20),
             )
             response.raise_for_status()
             return response.content.decode("utf-8", errors="replace")
@@ -84,6 +85,8 @@ class CalabriaWindAgent(BaseWindAgent):
         path = parsed.path.lower()
         if path in {"", "/"} or "/page/" in path or ".pdf" in path:
             return False
+        if path.rstrip("/").endswith("/avvisi-via-e-vas"):
+            return False
         if any(token in path for token in ("wp-json", "feed", "privacy", "cookie", "contatti", "uffici")):
             return False
         return cls._is_wind(context + " " + path) or any(
@@ -101,11 +104,17 @@ class CalabriaWindAgent(BaseWindAgent):
             for search_url in search_urls:
                 html_page = self._get_html(search_url)
                 if not html_page:
-                    continue
+                    # If one pagination request fails, later pages of the same
+                    # WordPress search are unlikely to be usable. Do not burn
+                    # the daily BAT on repeated timeout attempts.
+                    break
                 soup = BeautifulSoup(html_page, "html.parser")
                 page_text = self._clean(soup.get_text(" ", strip=True))
                 if not self._is_wind(page_text):
-                    continue
+                    # WordPress search pages are ordered result pages for the
+                    # requested term. Once a page no longer contains the term,
+                    # later pages are not useful for this daily discovery pass.
+                    break
                 for anchor in soup.find_all("a", href=True):
                     url = urljoin(search_url, anchor.get("href") or "").split("#", 1)[0]
                     parent = anchor.find_parent(["article", "li", "div", "p", "h2", "h3", "section"])
@@ -122,14 +131,29 @@ class CalabriaWindAgent(BaseWindAgent):
         return urls
 
     @classmethod
-    def _title(cls, soup: BeautifulSoup, plain: str) -> str | None:
-        for selector in ("h1", "h2", ".entry-title", ".page-title", "title"):
-            node = soup.select_one(selector)
-            if node:
+    def _title(cls, soup: BeautifulSoup, plain: str, url: str) -> str | None:
+        candidates: list[str] = []
+        for selector in ("h1", "h2", ".entry-title", ".page-title", ".wp-block-post-title", "title"):
+            for node in soup.select(selector):
                 value = cls._clean(node.get_text(" ", strip=True))
-                if value and len(value) > 10:
-                    return value[:900]
-        return plain[:900] if plain else None
+                if value:
+                    candidates.append(value)
+        bad_prefixes = (
+            "regione calabria", "dipartimento", "risultati della ricerca",
+            "avvisi via e vas", "home", "privacy", "cookie",
+        )
+        for value in candidates:
+            value = re.sub(r"\s*[-|]\s*Regione Calabria\s*$", "", value, flags=re.I).strip(" .:-")
+            norm = cls._norm(value)
+            if len(value) < 20 or any(norm == bad or norm.startswith(bad + " ") for bad in bad_prefixes):
+                continue
+            if cls._is_wind(value + " " + url):
+                return value[:900]
+        slug = urlparse(url).path.rstrip("/").split("/")[-1].replace("-", " ")
+        slug = cls._clean(slug)
+        if len(slug) >= 20 and cls._is_wind(slug):
+            return slug[:900]
+        return None
 
     @classmethod
     def _publication_date(cls, soup: BeautifulSoup, text: str) -> str | None:
@@ -177,6 +201,15 @@ class CalabriaWindAgent(BaseWindAgent):
 
     @classmethod
     def _proponent(cls, text: str) -> str | None:
+        legal = re.search(
+            r"(?:Proponente|Societ[aà]\s+proponente)\s*:?\s*"
+            r"(.{2,180}?\b(?:S\.?\s*R\.?\s*L\.?|S\.?\s*P\.?\s*A\.?|SRL|SPA)\b\.?)",
+            text,
+            flags=re.I,
+        )
+        if legal:
+            return cls._clean(legal.group(1)).strip(" -–—:;,.")
+
         for pattern in (
             r"Proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\s+PAUR|\s+VIA|\||$)",
             r"Societ[aà]\s+proponente\s*:?\s*(.+?)(?:\s+Comune|\s+Localizz|\s+Proced|\s+Potenza|\||$)",
@@ -196,9 +229,20 @@ class CalabriaWindAgent(BaseWindAgent):
             text,
             flags=re.I,
         ):
-            for part in re.split(r",|/|\s+e\s+", match.group(1), flags=re.I):
+            segment = re.split(
+                r"\b(?:proponente|societ[aà]|potenza|procedura|con|nonch[eé]|opere|relative)\b",
+                match.group(1),
+                maxsplit=1,
+                flags=re.I,
+            )[0]
+            for part in re.split(r",|/|\s+e\s+", segment, flags=re.I):
                 item = cls._clean(part).strip(" -–—:;,.()")
-                if item and 2 <= len(item) <= 80 and item.lower() not in {v.lower() for v in values}:
+                if (
+                    item
+                    and 2 <= len(item) <= 80
+                    and item.lower() not in {"con", "opere", "relative"}
+                    and item.lower() not in {v.lower() for v in values}
+                ):
                     values.append(item)
             if values:
                 break
@@ -220,6 +264,26 @@ class CalabriaWindAgent(BaseWindAgent):
             return "VIA"
         return None
 
+    @classmethod
+    def _status(cls, text: str) -> str | None:
+        lowered = cls._norm(text)
+        checks = (
+            ("favorevole con prescrizioni", "Favorevole con prescrizioni"),
+            ("non favorevole", "Negativo"),
+            ("negativo", "Negativo"),
+            ("diniego", "Negativo"),
+            ("rigetto", "Negativo"),
+            ("archiviat", "Archiviato"),
+            ("improced", "Improcedibile"),
+            ("ritirat", "Ritirato"),
+            ("conclus", "Concluso"),
+            ("in corso", "In corso"),
+        )
+        for needle, label in checks:
+            if needle in lowered:
+                return label
+        return None
+
     @staticmethod
     def _external_id(url: str) -> str:
         return "CALABRIA-WIND-" + hashlib.sha1(url.encode("utf-8")).hexdigest()[:18]
@@ -232,17 +296,18 @@ class CalabriaWindAgent(BaseWindAgent):
                 continue
             soup = BeautifulSoup(html_page, "html.parser")
             plain = self._clean(soup.get_text(" ", strip=True))
-            title = self._title(soup, plain)
+            title = self._title(soup, plain, url)
             combined = self._clean(f"{title or ''} {plain[:9000]}")
             if not title or not self._is_wind(combined):
                 continue
             publication = self._publication_date(soup, combined)
-            if publication:
-                try:
-                    if date.fromisoformat(publication) < self.cutoff:
-                        continue
-                except ValueError:
-                    pass
+            if not publication:
+                continue
+            try:
+                if date.fromisoformat(publication) < self.cutoff:
+                    continue
+            except ValueError:
+                continue
             municipalities = self._municipalities(combined)
             findings.append(
                 AgentFinding(
@@ -259,6 +324,7 @@ class CalabriaWindAgent(BaseWindAgent):
                         "municipalities": municipalities,
                         "power_mw": self._power_mw(combined),
                         "procedure": self._procedure(combined),
+                        "status_raw": self._status(combined),
                         "publication_date": publication,
                         "sector": "eolico",
                         "source_grade_ceiling": "A1",
@@ -269,3 +335,175 @@ class CalabriaWindAgent(BaseWindAgent):
             )
             time.sleep(0.05)
         return findings
+
+class CalabriaRegionalActsWindAgent(CalabriaWindAgent):
+    """Current regional decrees/acts, isolated from the legacy VIA notice source.
+
+    The independent source id gives this surface its own first-run baseline.
+    Project identity is semantic when company/MW/municipality are available,
+    while decree metadata remains in the payload for audit.
+    """
+
+    source_name = "Regione Calabria Provvedimenti"
+    base_url = PROVVEDIMENTI_URL
+    baseline_revision = "calabria-regional-acts-v4-municipality-cleanup"
+    SEARCH_TERMS = ("eolico", "parco eolico", "repowering")
+
+    @classmethod
+    def _project_name(cls, text: str) -> str:
+        for pattern in (
+            r'(?:parco|impianto)\s+eolico\s+(?:denominato\s+)?[“"\']?([^”"\']+?)[”"\']?(?=\s+(?:di\s+potenza|composto|da\s+realizz|e\s+delle|nei\s+Comuni|Comuni|Proponente|$))',
+            r'Progetto\s*:\s*(.+?)(?=\s+Comuni?\s+(?:interessati|d.intervento)|\s+Proponente|$)',
+        ):
+            match = re.search(pattern, text, flags=re.I)
+            if match:
+                value = cls._clean(match.group(1)).strip(" -–—:;,.")
+                if value:
+                    return value[:900]
+        return cls._clean(text)[:900]
+
+    @classmethod
+    def _act_date(cls, text: str) -> str | None:
+        match = re.search(r"\b(\d{1,2})/(\d{1,2})/(20\d{2})\b", text)
+        if not match:
+            return None
+        day, month, year = match.groups()
+        try:
+            return date(int(year), int(month), int(day)).isoformat()
+        except ValueError:
+            return None
+
+    @classmethod
+    def _act_number(cls, values: list[str]) -> str | None:
+        if len(values) >= 3:
+            value = cls._clean(values[2])
+            if re.fullmatch(r"\d{1,8}", value):
+                return value
+        return None
+
+    @classmethod
+    def _identity_id(
+        cls,
+        project_name: str,
+        proponent: str | None,
+        municipalities: list[str],
+        power_mw: float | None,
+        act_number: str | None,
+        act_date: str | None,
+    ) -> str:
+        if proponent and municipalities and power_mw:
+            raw = "|".join([
+                cls._norm(project_name),
+                cls._norm(proponent),
+                "|".join(sorted(cls._norm(x) for x in municipalities)),
+                f"{power_mw:.4f}",
+            ])
+            return "CALABRIA-ACT-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:20]
+        raw = "|".join([act_number or "", act_date or "", cls._norm(project_name)])
+        return "CALABRIA-ACT-WIND-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:20]
+
+    def _search_page(self, term: str, page: int) -> str:
+        url = PROVVEDIMENTI_URL if page == 1 else urljoin(PROVVEDIMENTI_URL, f"page/{page}/")
+        response = self.session.get(
+            url,
+            params={
+                "filter_item": term,
+                "filter_type": "Decreto",
+                "searchButton": "Cerca",
+                "sort_order": "0",
+            },
+            timeout=(8, 25),
+            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+        )
+        response.raise_for_status()
+        return response.text
+
+    def fetch(self) -> list[AgentFinding]:
+        unique: dict[str, AgentFinding] = {}
+        # Search-filtered pages are compact. Four pages per term are sufficient
+        # for daily/current discovery and avoid crawling the full regional archive.
+        for term in self.SEARCH_TERMS:
+            for page in range(1, 5):
+                html_page = self._search_page(term, page)
+                soup = BeautifulSoup(html_page, "html.parser")
+                rows = soup.find_all("tr")
+                if not rows:
+                    break
+                hits = 0
+                for tr in rows:
+                    cells = tr.find_all("td")
+                    if len(cells) < 5:
+                        continue
+                    values = [self._clean(td.get_text(" ", strip=True)) for td in cells]
+                    raw_text = self._clean(" | ".join(values))
+                    if not self._is_wind(raw_text):
+                        continue
+                    act_date = self._act_date(raw_text)
+                    if act_date:
+                        try:
+                            if date.fromisoformat(act_date) < self.cutoff:
+                                continue
+                        except ValueError:
+                            pass
+
+                    object_text = max(values, key=len) if values else raw_text
+                    act_number = self._act_number(values)
+                    source_anchor = tr.find("a", href=True)
+                    source_url = (
+                        urljoin(PROVVEDIMENTI_URL, source_anchor.get("href") or "")
+                        if source_anchor else str(PROVVEDIMENTI_URL)
+                    )
+                    detail_text = ""
+                    if source_url != PROVVEDIMENTI_URL:
+                        detail_html = self._get_html(source_url)
+                        if detail_html:
+                            detail_text = self._clean(
+                                BeautifulSoup(detail_html, "html.parser").get_text(" ", strip=True)
+                            )
+                    evidence_text = self._clean(f"{object_text} {detail_text[:12000]}")
+                    proponent = self._proponent(evidence_text)
+                    municipalities = self._municipalities(evidence_text)
+                    power_mw = self._power_mw(evidence_text)
+                    project_name = self._project_name(evidence_text)
+                    external_id = self._identity_id(
+                        project_name,
+                        proponent,
+                        municipalities,
+                        power_mw,
+                        act_number,
+                        act_date,
+                    )
+                    hits += 1
+                    finding = AgentFinding(
+                        external_id=external_id,
+                        source_name=self.source_name,
+                        source_url=source_url,
+                        title=project_name,
+                        finding_type="project_source",
+                        payload={
+                            "project_name": project_name,
+                            "proponent": proponent,
+                            "region": "Calabria",
+                            "province": self._province(evidence_text),
+                            "municipalities": municipalities,
+                            "power_mw": power_mw,
+                            "procedure": self._procedure(evidence_text),
+                            "status_raw": self._status(evidence_text),
+                            "publication_date": act_date,
+                            "act_number": act_number,
+                            "act_type": values[0] if values else None,
+                            "department": values[3] if len(values) > 3 else None,
+                            "sector": "eolico",
+                            "source_grade_ceiling": "A1",
+                            "project_specific": True,
+                            "source_adapter_origin": "regional_calabria_provvedimenti",
+                            "ingestion_path": "official_regional_provvedimenti",
+                        },
+                    )
+                    # If multiple search terms find the same project, keep the
+                    # latest representation from this run.
+                    unique[external_id] = finding
+                if hits == 0 and page > 1:
+                    break
+        return list(unique.values())
+

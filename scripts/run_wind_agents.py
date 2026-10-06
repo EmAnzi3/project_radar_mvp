@@ -62,6 +62,11 @@ def main() -> None:
         action="store_true",
         help="execute only adapters due according to registry cadence + persistent live watch state",
     )
+    run_cmd.add_argument(
+        "--no-bootstrap",
+        action="store_true",
+        help="treat first-seen records as live NEW events; intended for CI/smoke tests only",
+    )
     run_cmd.add_argument("--output", help="optional JSON report path")
 
     company_run_cmd = sub.add_parser("company-run", help="watch direct sources for commercial-network companies")
@@ -135,7 +140,11 @@ def main() -> None:
         _emit(build_digest(args.run_id), args.output)
         return
 
-    result = run_agents(args.source, due_only=args.due)
+    result = run_agents(
+        args.source,
+        due_only=args.due,
+        bootstrap_new_sources=not args.no_bootstrap,
+    )
     _emit(result, args.output)
 
 

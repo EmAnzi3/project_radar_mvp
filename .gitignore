@@ -46,5 +46,5 @@ reports/*.zip
 data/local/
 
 # Wind Radar local one-click runtime outputs
-reports/wind-agent/local-*.json
+reports/wind-agent/
 docs/wind/data/local-run-status.json

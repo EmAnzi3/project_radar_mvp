@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'app/wind_agents/**'
+      - 'app/collectors/mase_via.py'
+      - 'app/models.py'
       - 'docs/wind/data/institutional-source-network-v06*.json'
       - 'scripts/run_wind_agents.py'
       - '.github/workflows/wind_agent_live_smoke.yml'
@@ -29,7 +31,7 @@ jobs:
           - group: national-market
             sources: 'mase-via mase-provvedimenti terna-econnextion'
           - group: south-islands
-            sources: 'basilicata-via calabria-via campania-viavas puglia-sistema-energia sardegna-sira sicilia-sivvi'
+            sources: 'basilicata-au-paur basilicata-via calabria-regional-acts calabria-via campania-viavas puglia-au-paur puglia-sistema-energia sardegna-sira sicilia-sivvi'
           - group: centre-north
             sources: 'emilia-romagna-regional lazio-regional lombardia-regional piemonte-regional toscana-atos toscana-gea umbria-regional veneto-regional'
 
@@ -54,7 +56,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install runtime dependencies
-        run: pip install requests beautifulsoup4 lxml pydantic openpyxl
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
 
       - name: Run adapter group live
         shell: bash
@@ -131,6 +133,41 @@ jobs:
           print(f'Exported {len(findings)} raw findings to {output}')
           PY
 
+      - name: Classify live findings against canonical 51
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from app.wind_agents.reconcile import build_daily_discovery_report
+
+          group = os.environ['WIND_SMOKE_GROUP']
+          run_report = Path(f'reports/wind-agent-live/{group}.json')
+          if not run_report.exists():
+              print('No run report; skip daily classification.')
+              raise SystemExit(0)
+          run_id = json.loads(run_report.read_text(encoding='utf-8')).get('run_id')
+          if not run_id:
+              print('No run id; skip daily classification.')
+              raise SystemExit(0)
+
+          discovery = build_daily_discovery_report([str(run_id)])
+          output = Path(f'reports/wind-agent-live/{group}-daily-discovery.json')
+          output.write_text(json.dumps(discovery, ensure_ascii=False, indent=2), encoding='utf-8')
+          assert discovery.get('canonical_projects') == 51, discovery.get('canonical_projects')
+          print(
+              f"{group}: new={discovery.get('new_project_candidates', 0)} "
+              f"known={discovery.get('known_project_updates', 0)} "
+              f"discovery={discovery.get('discovery_candidate_updates', 0)} "
+              f"review={discovery.get('identity_reviews', 0)} "
+              f"incomplete={discovery.get('incomplete_project_records', 0)} "
+              f"filtered={discovery.get('filtered_non_pipeline', 0)}"
+          )
+          PY
+
       - name: Validate live result
         shell: bash
         run: |
@@ -145,6 +182,7 @@ jobs:
           data = json.loads(path.read_text(encoding='utf-8'))
           executed = set(data.get('executed_agents') or [])
           assert executed == expected, (group, executed, expected)
+          assert data.get('bootstrap_new_sources') is True, data.get('bootstrap_new_sources')
 
           per_agent = data.get('per_agent') or {}
           failures = {
@@ -155,14 +193,96 @@ jobs:
           if failures or data.get('errors'):
               raise SystemExit(f'{group} live source failures: {failures or data.get("errors")}')
 
-          print(f'{group} live source smoke OK')
+          print(f'{group} live source baseline smoke OK')
           for source_id in sorted(expected):
               row = per_agent[source_id]
+              assert row.get('bootstrap_source') is True, (source_id, row)
+              assert row.get('new', 0) == 0, (source_id, row)
+              assert row.get('changed', 0) == 0, (source_id, row)
+              assert row.get('baseline', 0) == row.get('findings', 0), (source_id, row)
               print(
                   f"{source_id}: health={row.get('data_health', 'legacy')} "
                   f"findings={row.get('findings', 0)} project_specific={row.get('project_specific_findings', 0)} "
-                  f"new={row.get('new', 0)} changed={row.get('changed', 0)}"
+                  f"baseline={row.get('baseline', 0)} new={row.get('new', 0)} "
+                  f"changed={row.get('changed', 0)} duration={row.get('duration_seconds', 0)}s"
               )
+          PY
+
+      - name: Run second pass against same SQLite
+        shell: bash
+        run: |
+          args=()
+          for source in $WIND_SMOKE_SOURCES; do
+            args+=(--source "$source")
+          done
+          python scripts/run_wind_agents.py run \
+            "${args[@]}" \
+            --output "reports/wind-agent-live/${WIND_SMOKE_GROUP}-second.json"
+
+      - name: Validate stable second pass
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          group = os.environ['WIND_SMOKE_GROUP']
+          expected = set(os.environ['WIND_SMOKE_SOURCES'].split())
+          first_path = Path(f'reports/wind-agent-live/{group}.json')
+          second_path = Path(f'reports/wind-agent-live/{group}-second.json')
+          first = json.loads(first_path.read_text(encoding='utf-8'))
+          data = json.loads(second_path.read_text(encoding='utf-8'))
+
+          assert data.get('bootstrap_new_sources') is True, data.get('bootstrap_new_sources')
+          assert not data.get('errors'), data.get('errors')
+          assert set(data.get('executed_agents') or []) == expected
+
+          first_per_agent = first.get('per_agent') or {}
+          per_agent = data.get('per_agent') or {}
+          recovered_sources = []
+          degraded_sources = []
+          for source_id in sorted(expected):
+              row = per_agent[source_id]
+              first_row = first_per_agent.get(source_id) or {}
+              assert row.get('status') == 'success', (source_id, row)
+              assert row.get('new', 0) == 0, (source_id, row)
+              assert row.get('changed', 0) == 0, (source_id, row)
+
+              health = row.get('data_health')
+              first_health = first_row.get('data_health')
+              if health == 'project_data':
+                  if first_health == 'project_data':
+                      assert row.get('bootstrap_source') is False, (source_id, row)
+                      assert row.get('baseline', 0) == 0, (source_id, row)
+                      assert row.get('unchanged', 0) == row.get('findings', 0), (source_id, row)
+                  else:
+                      # Safe recovery: the first pass had no usable project
+                      # inventory, so the first successful project-data pass
+                      # must become baseline rather than fake "new" events.
+                      assert row.get('bootstrap_source') is True, (source_id, first_row, row)
+                      assert row.get('baseline', 0) == row.get('findings', 0), (source_id, row)
+                      assert row.get('unchanged', 0) == 0, (source_id, row)
+                      recovered_sources.append(source_id)
+              elif health == 'channel_or_market_only' and first_health == 'project_data':
+                  # A temporary source degradation is technical state, not a
+                  # project discovery event. Its channel snapshot is persisted
+                  # as baseline-only even when the source was healthy moments ago.
+                  assert row.get('baseline', 0) == row.get('findings', 0), (source_id, first_row, row)
+                  degraded_sources.append(source_id)
+
+              print(
+                  f"{source_id}: health={health} first_health={first_health} "
+                  f"findings={row.get('findings', 0)} baseline={row.get('baseline', 0)} "
+                  f"new={row.get('new', 0)} changed={row.get('changed', 0)} "
+                  f"unchanged={row.get('unchanged', 0)} duration={row.get('duration_seconds', 0)}s"
+              )
+
+          if recovered_sources:
+              print(f"{group}: safe source recovery bootstrap: {', '.join(recovered_sources)}")
+          if degraded_sources:
+              print(f"{group}: safe source degradation snapshot: {', '.join(degraded_sources)}")
+          print(f'{group}: second pass OK — 0 new / 0 changed')
           PY
 
       - name: Publish live smoke summary
@@ -177,6 +297,7 @@ jobs:
           group = os.environ['WIND_SMOKE_GROUP']
           report = Path(f'reports/wind-agent-live/{group}.json')
           findings_report = Path(f'reports/wind-agent-live/{group}-findings.json')
+          discovery_report = Path(f'reports/wind-agent-live/{group}-daily-discovery.json')
           lines = [f'## Wind Radar live smoke — {group}']
           if report.exists():
               data = json.loads(report.read_text(encoding='utf-8'))
@@ -187,11 +308,25 @@ jobs:
                   lines.append(
                       f"- `{source_id}` — {row.get('status')}; health `{row.get('data_health', 'legacy')}`; "
                       f"findings {row.get('findings', 0)}; project-specific {row.get('project_specific_findings', 0)}; "
-                      f"new {row.get('new', 0)}; changed {row.get('changed', 0)}"
+                      f"baseline {row.get('baseline', 0)}; new {row.get('new', 0)}; "
+                      f"changed {row.get('changed', 0)}; duration {row.get('duration_seconds', 0)}s"
                   )
               if findings_report.exists():
                   raw = json.loads(findings_report.read_text(encoding='utf-8'))
                   lines.append(f"- Raw findings exported for review: {raw.get('finding_count', 0)}")
+              if discovery_report.exists():
+                  disc = json.loads(discovery_report.read_text(encoding='utf-8'))
+                  lines.append(
+                      f"- Daily classification: **{disc.get('new_project_candidates', 0)} new candidates**, "
+                      f"{disc.get('baseline_project_candidates', 0)} baseline backlog candidates, "
+                      f"{disc.get('baseline_known_projects', 0)} baseline known, "
+                      f"{disc.get('baseline_discovery_candidates', 0)} baseline Discovery, "
+                      f"{disc.get('known_project_updates', 0)} known updates, "
+                      f"{disc.get('discovery_candidate_updates', 0)} Discovery updates, "
+                      f"{disc.get('identity_reviews', 0)} identity reviews, "
+                      f"{disc.get('incomplete_project_records', 0)} incomplete, "
+                      f"{disc.get('filtered_non_pipeline', 0)} historical/non-target filtered"
+                  )
               if data.get('errors'):
                   lines.append(f"- Errors: {data['errors']}")
           else:
@@ -209,5 +344,82 @@ jobs:
         with:
           name: wind-live-${{ matrix.group }}-${{ github.run_id }}
           path: reports/wind-agent-live/
+          if-no-files-found: warn
+          retention-days: 14
+
+
+  daily-state-two-pass-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Wind agent runtime
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            app/**
+            docs/wind/data/**
+            scripts/run_wind_agents.py
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install runtime dependencies
+        run: pip install requests beautifulsoup4 lxml pydantic openpyxl xlrd
+
+      - name: Run first pass as source baseline
+        run: |
+          mkdir -p reports/wind-agent-live
+          rm -f data/wind_agent.sqlite
+          python scripts/run_wind_agents.py run \
+            --source puglia-sistema-energia \
+            --output reports/wind-agent-live/two-pass-first.json
+
+      - name: Run second pass against same SQLite
+        run: |
+          python scripts/run_wind_agents.py run \
+            --source puglia-sistema-energia \
+            --output reports/wind-agent-live/two-pass-second.json
+
+      - name: Validate daily two-pass semantics
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          first = json.loads(Path('reports/wind-agent-live/two-pass-first.json').read_text(encoding='utf-8'))
+          second = json.loads(Path('reports/wind-agent-live/two-pass-second.json').read_text(encoding='utf-8'))
+          a = first['per_agent']['puglia-sistema-energia']
+          b = second['per_agent']['puglia-sistema-energia']
+
+          assert a['status'] == 'success', a
+          assert a['findings'] > 0, a
+          assert a['bootstrap_source'] is True, a
+          assert a['baseline'] == a['findings'], a
+          assert a['new'] == 0 and a['changed'] == 0, a
+
+          assert b['status'] == 'success', b
+          assert b['findings'] > 0, b
+          assert b['bootstrap_source'] is False, b
+          assert b['baseline'] == 0, b
+          assert b['new'] == 0 and b['changed'] == 0, b
+          assert b['unchanged'] == b['findings'], b
+
+          print(
+              'Two-pass daily semantics OK: '
+              f"first={a['findings']} baseline; "
+              f"second={b['unchanged']} unchanged, 0 new, 0 changed"
+          )
+          PY
+
+      - name: Upload two-pass smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-live-two-pass-${{ github.run_id }}
+          path: reports/wind-agent-live/two-pass-*.json
           if-no-files-found: warn
           retention-days: 14

@@ -11,7 +11,7 @@ from app.wind_agents.base import AgentFinding, BaseWindAgent
 
 API_BASE_URL = "https://api.regione.toscana.it"
 API_URL_TEMPLATE = API_BASE_URL + "/C01/suap-dt/v1/avvisi/eventiPubblici/{page_index}/{page_size}"
-PUBLIC_URL = "https://servizi.patti.regione.toscana.it/star-info/avvisiPubblici"
+PUBLIC_URL = "https://servizi.patti.regione.toscana.it/star-info/ente/GEA?dominio=GEA&destinazione=avvisiPubblici"
 
 WIND_TERMS = (
     "eolico",
@@ -189,7 +189,28 @@ class ToscanaWindAgent(BaseWindAgent):
         seen: set[str] = set()
 
         for page_index in range(self.max_pages):
-            data = self._fetch_page(page_index)
+            try:
+                data = self._fetch_page(page_index)
+            except Exception as exc:
+                if page_index == 0:
+                    return [
+                        AgentFinding(
+                            external_id="TOSCANA-GEA-CHANNEL",
+                            source_name=self.source_name,
+                            source_url=PUBLIC_URL,
+                            title="Regione Toscana GeA - canale pubblico disponibile, API progetto non raggiungibile",
+                            finding_type="source_channel_snapshot",
+                            payload={
+                                "region": "Toscana",
+                                "project_specific": False,
+                                "source_grade_ceiling": "A1",
+                                "data_health": "channel_only",
+                                "availability_issue": f"{type(exc).__name__}: {exc}",
+                                "source_adapter_origin": "pv_agent_mvp/toscana.py",
+                            },
+                        )
+                    ]
+                raise
             items = self._extract_items(data)
             if not items:
                 break

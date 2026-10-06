@@ -1,0 +1,7 @@
+{
+  "scope": "D4 controlled queue rollout; roots indexed within explicit budgets; no complete dossier certification",
+  "expand_projects": ["on-sestino-rwe-39-6", "on-mercatello-engie-36", "andretta-bisaccia"],
+  "acquire_projects": ["on-sestino-rwe-39-6", "on-mercatello-engie-36", "andretta-bisaccia", "RAW-038"],
+  "index_limit_per_project": 1,
+  "page_limit": 100
+}

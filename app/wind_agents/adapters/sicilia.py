@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import html
 import io
 import re
 from urllib.parse import urlencode
@@ -31,7 +32,10 @@ WIND_TERMS = (
 )
 CSV_TIMEOUT = (8, 20)
 GIS_TIMEOUT = (8, 20)
-GIS_BATCH_SIZE = 200
+# ArcGIS layer advertises maxRecordCount=1000. Use the full supported
+# batch to avoid five small round-trips for every 1000 procedures when the
+# CSV path is temporarily unavailable.
+GIS_BATCH_SIZE = 1000
 
 
 class SiciliaWindAgent(BaseWindAgent):
@@ -47,10 +51,11 @@ class SiciliaWindAgent(BaseWindAgent):
     agent_name = "institutional_watch"
     source_name = "Regione Sicilia SI-VVI"
     base_url = SOURCE_URL
+    baseline_revision = "sicilia-sivvi-v2-municipality-cleanup"
 
     @staticmethod
     def _clean(value: object) -> str:
-        return re.sub(r"\s+", " ", str(value or "")).strip()
+        return re.sub(r"\s+", " ", html.unescape(str(value or ""))).strip()
 
     @classmethod
     def _column(cls, value: object) -> str:
@@ -66,7 +71,7 @@ class SiciliaWindAgent(BaseWindAgent):
     @classmethod
     def _power_mw(cls, text: str) -> float | None:
         for match in re.finditer(
-            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*MW\b",
+            r"(?<![\d.,])([0-9]+(?:[.\s][0-9]{3})*(?:,[0-9]+)?|[0-9]+(?:\.[0-9]+)?)\s*(MW|kW|kWp)\b",
             text,
             flags=re.I,
         ):
@@ -77,6 +82,9 @@ class SiciliaWindAgent(BaseWindAgent):
                 value = float(raw)
             except ValueError:
                 continue
+            unit = match.group(2).lower()
+            if unit in {"kw", "kwp"}:
+                value /= 1000.0
             if 0 < value < 5000:
                 return value
         return None
@@ -93,16 +101,51 @@ class SiciliaWindAgent(BaseWindAgent):
 
     @classmethod
     def _municipality(cls, text: str) -> str | None:
+        text = cls._clean(text)
         for pattern in (
             r"comune\s+di\s+([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s*\([A-Z]{2}\)|,|;|\.|\s+e\s+|$)",
             r"comune\s*:?\s*([A-ZÀ-Ú][A-Za-zÀ-Úà-ú'’\- ]+?)(?:\s+provincia|\s*\([A-Z]{2}\)|,|;|\||$)",
         ):
             match = re.search(pattern, text, flags=re.I)
-            if match:
-                value = cls._clean(match.group(1)).strip(" .,:;")
-                if value:
-                    return value
+            if not match:
+                continue
+            value = cls._clean(match.group(1)).strip(" .,:;")
+            value = re.split(
+                r"\s+(?:in\s+localit[aà]|localit[aà]|loc\.?|denominat[oa]|avente|"
+                r"nonch[eé]|con\s+relative|e\s+delle|e\s+del)\b",
+                value,
+                maxsplit=1,
+                flags=re.I,
+            )[0].strip(" .,:;-")
+            aliases = {
+                "ai-done": "Aidone",
+            }
+            value = aliases.get(value.lower(), value)
+            if len(value) < 4:
+                return None
+            if value.lower() in {"comune", "localita", "loc"}:
+                return None
+            return value
         return None
+
+    @classmethod
+    def _change_basis(
+        cls,
+        *,
+        code: str | None,
+        title: str,
+        proponent: str | None,
+        procedure: str | None,
+        power_mw: float | None,
+    ) -> dict[str, object]:
+        """Stable project-change signal shared by CSV and GIS fallback."""
+        return {
+            "source_code": code,
+            "project_name": cls._clean(title),
+            "proponent": cls._clean(proponent) or None,
+            "procedure": cls._clean(procedure) or None,
+            "power_mw": power_mw,
+        }
 
     @staticmethod
     def _external_id(code: str | None, title: str, detail_url: str) -> str:
@@ -171,6 +214,7 @@ class SiciliaWindAgent(BaseWindAgent):
                 or ""
             ) or None
             status = self._clean(row.get("stato") or row.get("status") or "") or None
+            power_mw = self._power_mw(title)
 
             findings.append(
                 AgentFinding(
@@ -185,7 +229,7 @@ class SiciliaWindAgent(BaseWindAgent):
                         "region": "Sicilia",
                         "province": self._province(title),
                         "municipality": self._municipality(title),
-                        "power_mw": self._power_mw(title),
+                        "power_mw": power_mw,
                         "procedure": procedure,
                         "status_raw": status,
                         "source_code": code,
@@ -194,6 +238,13 @@ class SiciliaWindAgent(BaseWindAgent):
                         "sector": "eolico",
                         "source_grade_ceiling": "A1",
                         "project_specific": True,
+                        "_change_basis": self._change_basis(
+                            code=code,
+                            title=title[:900],
+                            proponent=proponent,
+                            procedure=procedure,
+                            power_mw=power_mw,
+                        ),
                         "source_adapter_origin": "pv_agent_mvp/sicilia.py",
                         "ingestion_path": "official_csv",
                         "enrichment_note": (
@@ -207,12 +258,26 @@ class SiciliaWindAgent(BaseWindAgent):
         return findings
 
     def _gis_json(self, params: dict[str, object]) -> dict:
-        response = self.session.get(
-            SIVVI_LAYER_QUERY,
-            params=params,
-            timeout=GIS_TIMEOUT,
-            headers={"User-Agent": "Wind-Radar-Agent/0.6"},
-        )
+        # Large objectId batches easily exceed practical GET URL limits even
+        # though the ArcGIS layer supports up to 1000 records. Use POST for
+        # feature batches; keep the tiny returnIdsOnly discovery call as GET.
+        if params.get("objectIds"):
+            response = self.session.post(
+                SIVVI_LAYER_QUERY,
+                data=params,
+                timeout=GIS_TIMEOUT,
+                headers={
+                    "User-Agent": "Wind-Radar-Agent/0.6",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            )
+        else:
+            response = self.session.get(
+                SIVVI_LAYER_QUERY,
+                params=params,
+                timeout=GIS_TIMEOUT,
+                headers={"User-Agent": "Wind-Radar-Agent/0.6"},
+            )
         response.raise_for_status()
         data = response.json()
         if data.get("error"):
@@ -281,6 +346,9 @@ class SiciliaWindAgent(BaseWindAgent):
                     continue
                 seen.add(external_id)
 
+                proponent = self._clean(attrs.get("proponente")) or None
+                power_mw = self._power_mw(title)
+
                 findings.append(
                     AgentFinding(
                         external_id=external_id,
@@ -290,11 +358,11 @@ class SiciliaWindAgent(BaseWindAgent):
                         finding_type="project_source",
                         payload={
                             "project_name": title[:900],
-                            "proponent": self._clean(attrs.get("proponente")) or None,
+                            "proponent": proponent,
                             "region": "Sicilia",
                             "province": self._province(title),
                             "municipality": self._municipality(title),
-                            "power_mw": self._power_mw(title),
+                            "power_mw": power_mw,
                             "procedure": procedure,
                             "status_raw": None,
                             "source_code": code,
@@ -305,6 +373,13 @@ class SiciliaWindAgent(BaseWindAgent):
                             "sector": "eolico",
                             "source_grade_ceiling": "A1",
                             "project_specific": True,
+                            "_change_basis": self._change_basis(
+                                code=code,
+                                title=title[:900],
+                                proponent=proponent,
+                                procedure=procedure,
+                                power_mw=power_mw,
+                            ),
                             "source_adapter_origin": "pv_agent_mvp/sicilia.py",
                             "ingestion_path": "official_sivvi_mapserver_fallback",
                             "fallback_reason": fallback_reason,
@@ -330,9 +405,29 @@ class SiciliaWindAgent(BaseWindAgent):
         try:
             return self._findings_from_gis(csv_error or "CSV returned no wind findings")
         except Exception as gis_exc:
+            gis_error = f"{type(gis_exc).__name__}: {gis_exc}"
             if csv_error is None:
-                raise
-            raise RuntimeError(
-                "Sicilia official CSV and SI-VVI MapServer fallback both failed; "
-                f"csv={csv_error}; gis={type(gis_exc).__name__}: {gis_exc}"
-            ) from gis_exc
+                csv_error = "CSV returned no wind findings"
+            return [
+                AgentFinding(
+                    external_id="SICILIA-SIVVI-CHANNEL",
+                    source_name=self.source_name,
+                    source_url=SOURCE_URL,
+                    title="Regione Sicilia SI-VVI - canali progetto temporaneamente non raggiungibili",
+                    finding_type="source_channel_snapshot",
+                    payload={
+                        "region": "Sicilia",
+                        "project_specific": False,
+                        "source_grade_ceiling": "A1",
+                        "data_health": "channel_only",
+                        "csv_availability_issue": csv_error,
+                        "gis_availability_issue": gis_error,
+                        "source_adapter_origin": "pv_agent_mvp/sicilia.py",
+                        "ingestion_path": "official_source_outage_snapshot",
+                        "guard": (
+                            "Temporary source outage only: this snapshot is not project evidence "
+                            "and must not create or update a project candidate."
+                        ),
+                    },
+                )
+            ]
