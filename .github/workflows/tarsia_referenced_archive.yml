@@ -8,69 +8,101 @@ permissions:
 jobs:
   acquire:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 15
     steps:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install requests==2.32.5
-      - name: Follow exact public archive reference from PAUR PDF page 84
+      - run: pip install requests==2.32.5 PyMuPDF==1.26.4
+      - name: Full public archive, complete member inventory and page-local extraction
         shell: bash
         run: |
           python - <<'PY'
-          import requests,hashlib,json,time,zipfile,ipaddress,socket
-          from urllib.parse import urlsplit,urljoin
+          import requests,hashlib,json,time,zipfile,ipaddress,socket,re,shutil
           from pathlib import Path
-          root=Path('archive-probe');root.mkdir()
-          urls=[
-          'http://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip',
-          'https://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip',
-          'https://www.regione.calabria.it/website/portaltemplates/view/view.cfm?23588',
-          'https://www.calabriasuap.it/',
-          'https://calabriasuap.it/']
-          rows=[]
-          for url in urls:
-            result={'url':url,'original_reference':'PAUR 3509/2023 PDF p.84; HTTPS transport variant, original notice p.57; SUAP cited by VPA6500/2026','analysis_complete':False};response=None
-            try:
-              with requests.Session() as session:
-                u=url;start=time.monotonic();visited=[]
-                for _ in range(5):
-                  p=urlsplit(u);host=p.hostname or ''
-                  if p.scheme not in ('http','https') or p.username or p.password or p.port not in (None,80,443) or not any(host==h or host.endswith('.'+h) for h in ('regione.calabria.it','calabriasuap.it')):raise ValueError('Out-of-scope redirect')
-                  port=443 if p.scheme=='https' else 80
-                  if any(not ipaddress.ip_address(a[4][0]).is_global for a in socket.getaddrinfo(host,port)):raise ValueError('Non-public host')
-                  response=session.get(u,stream=True,allow_redirects=False,timeout=(6,25),headers={'Accept-Encoding':'identity','User-Agent':'WindRadarDocumentAccess/1.0'})
-                  visited.append({'url':u,'status':response.status_code})
-                  if response.status_code not in (301,302,303,307,308):break
-                  loc=response.headers.get('Location');response.close()
-                  if not loc:raise ValueError('Missing redirect')
-                  u=urljoin(u,loc)
-                else:raise ValueError('Redirect limit')
-                result.update(http_status=response.status_code,final_url=u,requests=visited)
-                response.raise_for_status()
-                count=0;sha=hashlib.sha256();path=root/('resource-'+str(len(rows))+'.bin')
-                with path.open('wb') as f:
-                  for chunk in response.iter_content(262144):
-                    count+=len(chunk)
-                    if count>512*1024**2 or time.monotonic()-start>150:raise ValueError('Bounded transfer incomplete')
-                    sha.update(chunk);f.write(chunk)
-                result.update(bytes=count,sha256=sha.hexdigest(),file=path.name,status='acquired')
-                if zipfile.is_zipfile(path):
-                  with zipfile.ZipFile(path) as z:result.update(kind='zip',members=[{'name':m.filename,'size':m.file_size,'compressed':m.compress_size,'directory':m.is_dir()} for m in z.infolist()])
-                else:
-                  body=path.read_bytes().decode('utf-8',errors='replace');result.update(kind='non_zip',body_preview=body[:1500])
-                  if 'Documento non trovato' in body:result['status']='missing_legacy_document'
-                result['elapsed_seconds']=round(time.monotonic()-start,3)
-            except Exception as exc:result.update(status='not_acquired',error=str(exc)[:700])
-            finally:
-              if response is not None:response.close()
-            rows.append(result);print(json.dumps(result,ensure_ascii=False),flush=True)
-            (root/'archive-access.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
+          from urllib.parse import urlsplit,urljoin
+          from concurrent.futures import ThreadPoolExecutor
+          import fitz
+          root=Path('archive');root.mkdir();review=Path('review');review.mkdir();(review/'text').mkdir();(review/'selected-originals').mkdir()
+          url='https://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip'
+          report={'url':url,'reference':'PAUR3509/2023 PDF p.84','all_project_dossier_complete':False,'semantic_analysis_complete':False,'paid_model_calls':0,'members':[]}
+          start=time.monotonic();path=root/'PAURTarsiaovest.zip';resp=None
+          try:
+            with requests.Session() as session:
+              u=url
+              for _ in range(5):
+                p=urlsplit(u);host=p.hostname or ''
+                if p.scheme!='https' or p.username or p.password or p.port not in (None,443) or not (host=='regione.calabria.it' or host.endswith('.regione.calabria.it')):raise ValueError('Out-of-scope redirect')
+                if any(not ipaddress.ip_address(a[4][0]).is_global for a in socket.getaddrinfo(host,443)):raise ValueError('Non-public address')
+                resp=session.get(u,stream=True,allow_redirects=False,timeout=(8,40),headers={'Accept-Encoding':'identity','User-Agent':'WindRadarDocumentAccess/1.1'})
+                if resp.status_code not in (301,302,303,307,308):break
+                dest=resp.headers.get('Location');resp.close()
+                if not dest:raise ValueError('Missing redirect')
+                u=urljoin(u,dest)
+              else:raise ValueError('Redirect limit')
+              resp.raise_for_status();expected=int(resp.headers.get('Content-Length') or 0)
+              report.update(http_status=resp.status_code,expected_bytes=expected,etag=resp.headers.get('ETag'),last_modified=resp.headers.get('Last-Modified'),final_url=u)
+              if expected>3*1024**3 or shutil.disk_usage(root).free<expected+5*1024**3:raise ValueError('Insufficient bounded storage for declared size')
+              sha=hashlib.sha256();count=0
+              with path.open('wb') as out:
+                for block in resp.iter_content(1048576):
+                  count+=len(block)
+                  if count>3*1024**3 or time.monotonic()-start>360:raise ValueError('Download incomplete: byte/time limit, not a complete acquisition')
+                  out.write(block);sha.update(block)
+              if not count or (expected and count!=expected):raise ValueError('Incomplete response')
+              report.update(downloaded_bytes=count,archive_sha256=sha.hexdigest(),download_seconds=round(time.monotonic()-start,2))
+            if not zipfile.is_zipfile(path):raise ValueError('Response is not an intact ZIP')
+            with zipfile.ZipFile(path) as z:
+              items=[i for i in z.infolist() if not i.is_dir()]
+              if len(items)>5000 or sum(i.file_size for i in items)>6*1024**3:raise ValueError('Archive expansion limit')
+              jobs=[]
+              for info in items:
+                # Use content-addressed files, never member paths or executable contents.
+                if info.flag_bits&1:report['members'].append({'name':info.filename,'status':'encrypted_unreadable'});continue
+                if info.file_size>1024**3:report['members'].append({'name':info.filename,'status':'member_size_limit'});continue
+                data=z.read(info);h=hashlib.sha256(data).hexdigest()
+                row={'name':info.filename,'bytes':len(data),'sha256':h,'crc_verified':True,'status':'acquired_member','semantic_status':'pending'}
+                if b'%PDF-' in data[:1024]:
+                  selected=bool(re.search(r'cronop|CL.?02|G.?00|G.?01|relazione.?generale|tecnic.*descr|E.?01|S0?1[._]0?1|elenco.?elaborati|Relazione.*variante',info.filename,re.I))
+                  if selected:
+                    dest=review/'selected-originals'/(h+'.pdf');dest.write_bytes(data);row['selected_original']=str(dest.relative_to(review))
+                  jobs.append((row,data))
+                else:row['kind']='non_pdf';report['members'].append(row)
+            def process(job):
+              row,data=job
+              try:
+                doc=fitz.open(stream=data,filetype='pdf');pages=[]
+                if doc.is_encrypted:raise ValueError('Encrypted PDF')
+                for n,page in enumerate(doc,1):
+                  text=page.get_text();pages.append({'page':n,'text':text,'needs_visual':len(text.strip())<80})
+                body={'member':row['name'],'sha256':row['sha256'],'page_count':len(pages),'pages':pages,'semantic_status':'pending'}
+                (review/'text'/(row['sha256']+'.json')).write_text(json.dumps(body,ensure_ascii=False),encoding='utf-8')
+                row.update(kind='pdf',page_count=len(pages),low_text_pages=[p['page'] for p in pages if p['needs_visual']],text_file='text/'+row['sha256']+'.json')
+                doc.close()
+              except Exception as exc:row.update(status='acquired_extraction_failed',error=str(exc)[:500])
+              return row
+            with ThreadPoolExecutor(max_workers=2) as pool:
+              for row in pool.map(process,jobs):report['members'].append(row)
+            report.update(status='complete_archive_acquired',member_count=len(report['members']),pdf_count=sum(r.get('kind')=='pdf' for r in report['members']),total_pdf_pages=sum(r.get('page_count',0) for r in report['members']),elapsed_seconds=round(time.monotonic()-start,2))
+          except Exception as exc:report.update(status='incomplete',error=str(exc)[:700])
+          finally:
+            if resp is not None:resp.close()
+            for destination in (root,review):(destination/'manifest.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+            print(json.dumps({k:v for k,v in report.items() if k!='members'},ensure_ascii=False),flush=True)
+          # No original is marked semantically read by this acquisition step.
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tarsia-referenced-archive-${{ github.run_id }}
-          path: archive-probe/
+          name: tarsia-full-archive-${{ github.run_id }}
+          path: archive/
+          compression-level: 0
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-archive-review-${{ github.run_id }}
+          path: review/
           retention-days: 14
           if-no-files-found: error
