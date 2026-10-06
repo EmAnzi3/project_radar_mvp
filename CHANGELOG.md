@@ -4,6 +4,11 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+### Tarsia pilot 2026-10-06
+
+Test isolato dal master, senza integrare la Draft PR #9. Raccolta iniziale eseguita, ma includeva cinque PDF aziendali estranei: filtro corretto senza dichiararli letti. Scheda commerciale Tarsia materializzata con contatti pubblici, cronologia qualificata e Delta S.r.l. come nella fonte PLC. Un comunicato PDF acquisito e letto; tre fonti HTML usate mediante lettore web di riserva, con provenienza distinta e senza falso hash originale. OneDrive non collegato: copia/sincronizzazione cloud NON eseguita. Nessun altro progetto modificato; numero e MW invariati. Nessuna API a pagamento. Pubblicazione da verificare dopo merge mirato.
+
+
 - 2026-09-30 — Aggiunto avvio **one-click locale** del Wind Radar con `aggiorna_wind_radar.bat`: ambiente Python, watch istituzionale/company per cadenza, execution queue, digest review-only, validator v0.5/v0.6, server HTTP locale e riquadro dashboard con esito dell'ultimo run. Nessuna promozione automatica nel canonico.
 
 - 2026-09-06 — Completata la review browser della nuova **mappa ECharts per provincia**: introdotto filtro Provincia dedicato, il click sulla mappa non sovrascrive più la ricerca libera, `Mostra tutte` preserva gli altri filtri e reset/cambio metrica sono coerenti. Verificati desktop 1440×1100 e mobile 390×844 senza overflow orizzontale.

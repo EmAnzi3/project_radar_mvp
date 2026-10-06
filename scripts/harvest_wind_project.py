@@ -85,6 +85,7 @@ def extract(path, kind):
     if re.search(r'access denied|verify you are human|request rejected|just a moment', text[:1500], re.I):
         raise ValueError('Access challenge; not accepted as source content')
     return {'kind': kind, 'text': text, 'links': parser.links,
+            'dynamic_content_review_needed': len(re.sub(r'\s+', ' ', text).strip()) < 100,
             'analysis_status': 'not_analyzed', 'whole_document_read': False}
 
 
@@ -156,7 +157,7 @@ def fetch(source, old, root, hosts, force=False, offline=False):
         return result
     except Exception as exc:
         return {**(old or {}), **result, 'status': 'error', 'error': str(exc)[:400],
-                'previous_good_copy_retained': valid_old}
+                'previous_good_copy_retained': valid_old, 'last_access_error': str(exc)[:400]}
 
 
 def links_from(source, row, root, hosts):
@@ -169,6 +170,8 @@ def links_from(source, row, root, hosts):
         except ValueError: continue
         asset = bool(re.search(r'\.pdf(?:$|[?#])', url, re.I))
         relevant = bool(re.search(r'tarsia', url + ' ' + title, re.I))
+        unrelated_footer = bool(re.search(r'bilancio|sostenibil|slavery|modello.?231|policy|codice.etico|privacy|cookie', url + ' ' + title, re.I))
+        if unrelated_footer: continue
         if relevant or (source['scope'] == 'project_page' and asset and not re.search(r'logo|privacy|cookie|codice.etico', url + ' ' + title, re.I)):
             found.append({'url': url, 'title': title.strip() or urlsplit(url).path.split('/')[-1],
                 'scope': 'project_document' if asset else 'project_page', 'expected': 'pdf' if asset else 'auto',

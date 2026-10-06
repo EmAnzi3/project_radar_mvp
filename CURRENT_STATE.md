@@ -1,5 +1,10 @@
 # Current State
 
+### Tarsia pilot 2026-10-06
+
+Test isolato dal master, senza integrare la Draft PR #9. Raccolta iniziale eseguita, ma includeva cinque PDF aziendali estranei: filtro corretto senza dichiararli letti. Scheda commerciale Tarsia materializzata con contatti pubblici, cronologia qualificata e Delta S.r.l. come nella fonte PLC. Un comunicato PDF acquisito e letto; tre fonti HTML usate mediante lettore web di riserva, con provenienza distinta e senza falso hash originale. OneDrive non collegato: copia/sincronizzazione cloud NON eseguita. Nessun altro progetto modificato; numero e MW invariati. Nessuna API a pagamento. Pubblicazione da verificare dopo merge mirato.
+
+
 ## Wind Project & Contractor Radar
 
 Baseline pubblicata su `master`: **v0.5.0** (`f2640616540e02448664677427698d808938520f`).
