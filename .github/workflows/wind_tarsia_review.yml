@@ -33,10 +33,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
       - run: python scripts/apply_tarsia_review.py
       - name: Idempotent regeneration
         run: python scripts/apply_tarsia_review.py
       - run: python -m unittest discover -s tests -p test_tarsia_enrichment.py -v
+      - run: python -m unittest discover -s tests -p test_harvest_wind_project.py -v
       - run: node --check docs/wind/assets/app.js
       - run: node --check docs/wind/assets/documentary-summary.js
       - name: Windows repository preflight
@@ -73,7 +75,7 @@ jobs:
           python - <<'PY'
           import json,hashlib,urllib.request,os
           from pathlib import Path
-          paths=['docs/wind/data/projects-2.json','docs/wind/assets/app.js','docs/wind/index.html']
+          paths=['docs/wind/data/projects-2.json','docs/wind/assets/app.js','docs/wind/index.html','scripts/harvest_wind_project.py','config/wind_tarsia_pilot.json','CURRENT_STATE.md','CHANGELOG.md']
           rows=[]
           for name in paths:
               raw=Path(name).read_bytes()
