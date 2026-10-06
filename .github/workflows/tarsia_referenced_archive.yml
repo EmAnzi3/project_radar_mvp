@@ -1,0 +1,76 @@
+name: Tarsia referenced archive
+on:
+  push:
+    branches: ['fix/tarsia-institutional-closeout']
+    paths: ['.github/workflows/tarsia_referenced_archive.yml']
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5
+      - name: Follow exact public archive reference from PAUR PDF page 84
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests,hashlib,json,time,zipfile,ipaddress,socket
+          from urllib.parse import urlsplit,urljoin
+          from pathlib import Path
+          root=Path('archive-probe');root.mkdir()
+          urls=[
+          'http://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip',
+          'https://www.regione.calabria.it/website/conferenzeservizi/ambiente_territorio/files/PAURTarsiaovest.zip',
+          'https://www.regione.calabria.it/website/portaltemplates/view/view.cfm?23588',
+          'https://www.calabriasuap.it/',
+          'https://calabriasuap.it/']
+          rows=[]
+          for url in urls:
+            result={'url':url,'original_reference':'PAUR 3509/2023 PDF p.84; HTTPS transport variant, original notice p.57; SUAP cited by VPA6500/2026','analysis_complete':False};response=None
+            try:
+              with requests.Session() as session:
+                u=url;start=time.monotonic();visited=[]
+                for _ in range(5):
+                  p=urlsplit(u);host=p.hostname or ''
+                  if p.scheme not in ('http','https') or p.username or p.password or p.port not in (None,80,443) or not any(host==h or host.endswith('.'+h) for h in ('regione.calabria.it','calabriasuap.it')):raise ValueError('Out-of-scope redirect')
+                  port=443 if p.scheme=='https' else 80
+                  if any(not ipaddress.ip_address(a[4][0]).is_global for a in socket.getaddrinfo(host,port)):raise ValueError('Non-public host')
+                  response=session.get(u,stream=True,allow_redirects=False,timeout=(6,25),headers={'Accept-Encoding':'identity','User-Agent':'WindRadarDocumentAccess/1.0'})
+                  visited.append({'url':u,'status':response.status_code})
+                  if response.status_code not in (301,302,303,307,308):break
+                  loc=response.headers.get('Location');response.close()
+                  if not loc:raise ValueError('Missing redirect')
+                  u=urljoin(u,loc)
+                else:raise ValueError('Redirect limit')
+                result.update(http_status=response.status_code,final_url=u,requests=visited)
+                response.raise_for_status()
+                count=0;sha=hashlib.sha256();path=root/('resource-'+str(len(rows))+'.bin')
+                with path.open('wb') as f:
+                  for chunk in response.iter_content(262144):
+                    count+=len(chunk)
+                    if count>512*1024**2 or time.monotonic()-start>150:raise ValueError('Bounded transfer incomplete')
+                    sha.update(chunk);f.write(chunk)
+                result.update(bytes=count,sha256=sha.hexdigest(),file=path.name,status='acquired')
+                if zipfile.is_zipfile(path):
+                  with zipfile.ZipFile(path) as z:result.update(kind='zip',members=[{'name':m.filename,'size':m.file_size,'compressed':m.compress_size,'directory':m.is_dir()} for m in z.infolist()])
+                else:
+                  body=path.read_bytes().decode('utf-8',errors='replace');result.update(kind='non_zip',body_preview=body[:1500])
+                  if 'Documento non trovato' in body:result['status']='missing_legacy_document'
+                result['elapsed_seconds']=round(time.monotonic()-start,3)
+            except Exception as exc:result.update(status='not_acquired',error=str(exc)[:700])
+            finally:
+              if response is not None:response.close()
+            rows.append(result);print(json.dumps(result,ensure_ascii=False),flush=True)
+            (root/'archive-access.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarsia-referenced-archive-${{ github.run_id }}
+          path: archive-probe/
+          retention-days: 14
+          if-no-files-found: error
