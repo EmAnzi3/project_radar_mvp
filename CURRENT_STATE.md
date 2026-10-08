@@ -1,4 +1,8 @@
 # Current State
+### Tarsia institutional closeout – 2026-10-08
+
+Only Tarsia Ovest: PAUR 3509/2023 (T1 T5 T6 only), voltura 18794/2025 (EPRI VAT), VPA variant 6500/2026 (3 × 4.3 MW), legacy 2020 SIA/electrical plan distinguished from current schedule. Corporate VAT verified for EPRI, historic PLT, PLC System and Idoka; Mammana/Delta unresolved. Public document links source/paged evidence recorded; SUAP 698 CS attachment inventory unavailable and no certain current construction end/COD. Thus dossier NOT complete. All 50 other projects, totals, BAT, and PR9 unaffected. No paid API.
+
 
 ### Tarsia pilot 2026-10-06
 

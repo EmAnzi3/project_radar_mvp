@@ -30,6 +30,18 @@ def apply(root=ROOT):
   p['sources'].extend(review['sources']);p['documentary']=review['documentary']
   assert [x for x in before if x['id']!=p['id']]==[x for x in rows if x['id']!=p['id']]
   write(path,json.dumps(rows,ensure_ascii=False,indent=2)+'\n')
+ if review.get('institutional_update_version'):
+  oldsource=next((s for s in p['sources'] if s['id']=='tars-reg-old'),None)
+  if oldsource is None:raise ValueError('Missing Tarsia historic PAUR')
+  oldsource['url']='https://www.regione.calabria.it/wp-content/uploads/2023/03/360_parco-eolico-tarsia-ovest-ddg-3509-del-13_03_2023.pdf'
+  oldsource['title']='DDG 3509/2023 – PAUR limitato a T1, T5 e T6 (non a tutti e sette i WTG originari)'
+  historic=next((x for x in p['configs'] if x['source_id']=='tars-reg-old'),None)
+  if historic is None:raise ValueError('Missing historic configuration')
+  historic['note']="Istanza iniziale 7 aerogeneratori / 29,995 MW: il PAUR DDG 3509/2023 autorizza soltanto T1, T5 e T6. Non usare 29,995 MW come potenza dell'impianto autorizzato."
+  if not any(x.get('source_id')=='tars-reg-variante-2026' for x in p['configs']):
+   p['configs'].insert(0,{'date':'2026-04-20','wind_mw':12.9,'bess_mw':0,'wtg_count':3,'wtg_mw':4.3,'note':'Variante VPA regionale: 3 Vestas V150-4.3 (T1,T5,T6), modifica di opere di connessione e viabilità; nessun COD attestato.','source_id':'tars-reg-variante-2026'})
+  if [x for x in before if x['id']!=p['id']] != [x for x in rows if x['id']!=p['id']]:raise ValueError('Non-target mutation')
+  write(path,json.dumps(rows,ensure_ascii=False,indent=2)+'\\n')
  path=root/'docs/wind/assets/app.js';s=path.read_text(encoding='utf-8')
  expression="${window.WindDocumentary?.render(p)||''}"
  if expression not in s:
