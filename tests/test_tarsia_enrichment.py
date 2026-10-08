@@ -31,7 +31,10 @@ class TarsiaEnrichment(unittest.TestCase):
    self.assertTrue(r['source_ids']);self.assertTrue(set(r['source_ids'])<=ids)
  def test_no_fake_byte_provenance(self):
   ev=self.d['evidence'];self.assertEqual(ev[0]['page'],1);self.assertRegex(ev[0]['sha256'],r'^[0-9a-f]{64}$')
-  for x in ev[1:]:self.assertEqual(x['capture'],'web_reader_fallback');self.assertIsNone(x['sha256'])
+  for x in ev[1:]:
+   self.assertIsNone(x['sha256'])
+   self.assertIn(x['capture'],('web_reader_fallback','official_regional_pdf_text','official_regional_pdf_text_and_inspected_page','official_regional_historical_study'))
+   if x['capture'].startswith('official_regional_'):self.assertIsInstance(x['page'],int)
  def test_render_dependency_order(self):
   html=(ROOT/'docs/wind/index.html').read_text(encoding='utf-8')
   self.assertLess(html.index('assets/documentary-summary.js'),html.index('assets/app.js'))
