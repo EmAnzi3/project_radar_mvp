@@ -26,7 +26,18 @@ class TarsiaInstitutional(unittest.TestCase):
   self.assertIsNone(companies['Delta S.r.l.']['vat_id'])
   self.assertIsNone(companies['Michelangelo Mammana S.r.l. (denominazione PLC)']['vat_id'])
   for v in companies.values():
-   if v['vat_id']:self.assertRegex(v['vat_id'],r'^\\d{11}$')
+   if v['vat_id']:self.assertRegex(v['vat_id'],r'^\d{11})
+ def test_unfinished_census_explicit(self):
+  self.assertFalse(self.p['documentary']['whole_dossier_complete'])
+  self.assertEqual(self.p['documentary']['paid_model_calls'],0)
+  missing=next(x for x in self.p['documentary']['dossier_coverage'] if 'SUAP' in x['group'])
+  self.assertEqual(missing['status'],'allegati_non_acquisiti')
+ def test_anchored_fields_and_company_links(self):
+  ids={s['id'] for s in self.p['sources']}
+  for row in self.p['documentary']['fields']+self.p['documentary']['contacts']+self.p['documentary']['company_registry']+self.p['documentary']['dossier_coverage']:
+   self.assertTrue(set(row.get('source_ids',[])) <= ids)
+if __name__ == '__main__':unittest.main()
+)
  def test_unfinished_census_explicit(self):
   self.assertFalse(self.p['documentary']['whole_dossier_complete'])
   self.assertEqual(self.p['documentary']['paid_model_calls'],0)

@@ -41,7 +41,7 @@ def apply(root=ROOT):
   if not any(x.get('source_id')=='tars-reg-variante-2026' for x in p['configs']):
    p['configs'].insert(0,{'date':'2026-04-20','wind_mw':12.9,'bess_mw':0,'wtg_count':3,'wtg_mw':4.3,'note':'Variante VPA regionale: 3 Vestas V150-4.3 (T1,T5,T6), modifica di opere di connessione e viabilità; nessun COD attestato.','source_id':'tars-reg-variante-2026'})
   if [x for x in before if x['id']!=p['id']] != [x for x in rows if x['id']!=p['id']]:raise ValueError('Non-target mutation')
-  write(path,json.dumps(rows,ensure_ascii=False,indent=2)+'\\n')
+  write(path,json.dumps(rows,ensure_ascii=False,indent=2)+'\n')
  path=root/'docs/wind/assets/app.js';s=path.read_text(encoding='utf-8')
  expression="${window.WindDocumentary?.render(p)||''}"
  if expression not in s:
