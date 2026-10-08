@@ -4,6 +4,8 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-10-08 — Tarsia institutional closeout: PAUR/voltura/variant and original technical reports linked with qualified scope; P.IVA verified or explicitly unknown; regional annex availability gap stated. Project-only enrichment, no unrelated radar changes.
+
 ### Tarsia pilot 2026-10-06
 
 Test isolato dal master, senza integrare la Draft PR #9. Raccolta iniziale eseguita, ma includeva cinque PDF aziendali estranei: filtro corretto senza dichiararli letti. Scheda commerciale Tarsia materializzata con contatti pubblici, cronologia qualificata e Delta S.r.l. come nella fonte PLC. Un comunicato PDF acquisito e letto; tre fonti HTML usate mediante lettore web di riserva, con provenienza distinta e senza falso hash originale. OneDrive non collegato: copia/sincronizzazione cloud NON eseguita. Nessun altro progetto modificato; numero e MW invariati. Nessuna API a pagamento. Pubblicazione da verificare dopo merge mirato.
