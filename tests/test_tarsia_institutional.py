@@ -26,7 +26,7 @@ class TarsiaInstitutional(unittest.TestCase):
   self.assertIsNone(companies['Delta S.r.l.']['vat_id'])
   self.assertIsNone(companies['Michelangelo Mammana S.r.l. (denominazione PLC)']['vat_id'])
   for v in companies.values():
-   if v['vat_id']:self.assertRegex(v['vat_id'],r'^\d{11})
+   if v['vat_id']:self.assertRegex(v['vat_id'],r'^\d{11}$')
  def test_unfinished_census_explicit(self):
   self.assertFalse(self.p['documentary']['whole_dossier_complete'])
   self.assertEqual(self.p['documentary']['paid_model_calls'],0)
