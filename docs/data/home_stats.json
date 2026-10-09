@@ -1,506 +1,506 @@
 {
-  "generated_at_utc": "2026-09-08T19:48:37.157811+00:00",
-  "total_records": 510889,
+  "generated_at_utc": "2026-10-09T16:44:11.381074+00:00",
+  "total_records": 513689,
   "total_branches": 39,
   "total_with_contractor": 145189,
-  "total_without_contractor": 365700,
-  "national_coverage_pct": 28.4,
-  "total_value_eur": 9193326643240.0,
-  "avg_project_value_eur": 17994763.33,
+  "total_without_contractor": 368500,
+  "national_coverage_pct": 28.3,
+  "total_value_eur": 9229778941450.0,
+  "avg_project_value_eur": 17967639.84,
   "top_branches_by_count": [
     {
       "branch": "Roma Nomentana",
       "slug": "Roma_Nomentana",
-      "count": 52397,
+      "count": 52624,
       "with_contractor": 10950,
-      "without_contractor": 41447,
-      "coverage_pct": 20.9,
-      "total_value_eur": 799905625140.0,
-      "avg_value_eur": 15266248.55
+      "without_contractor": 41674,
+      "coverage_pct": 20.8,
+      "total_value_eur": 802993287760.0,
+      "avg_value_eur": 15259069.77
     },
     {
       "branch": "Catania",
       "slug": "Catania",
-      "count": 46087,
+      "count": 46218,
       "with_contractor": 8702,
-      "without_contractor": 37385,
-      "coverage_pct": 18.9,
-      "total_value_eur": 834117124940.0,
-      "avg_value_eur": 18098750.73
+      "without_contractor": 37516,
+      "coverage_pct": 18.8,
+      "total_value_eur": 835512265780.0,
+      "avg_value_eur": 18077637.84
     },
     {
       "branch": "Napoli",
       "slug": "Napoli",
-      "count": 37231,
+      "count": 37417,
       "with_contractor": 6840,
-      "without_contractor": 30391,
-      "coverage_pct": 18.4,
-      "total_value_eur": 792363002740.0,
-      "avg_value_eur": 21282345.43
+      "without_contractor": 30577,
+      "coverage_pct": 18.3,
+      "total_value_eur": 798223496100.0,
+      "avg_value_eur": 21333177.33
     },
     {
       "branch": "Bari",
       "slug": "Bari",
-      "count": 35534,
+      "count": 35676,
       "with_contractor": 10914,
-      "without_contractor": 24620,
-      "coverage_pct": 30.7,
-      "total_value_eur": 611788700180.0,
-      "avg_value_eur": 17216995.0
+      "without_contractor": 24762,
+      "coverage_pct": 30.6,
+      "total_value_eur": 612723147970.0,
+      "avg_value_eur": 17174659.38
     },
     {
       "branch": "Rimini",
       "slug": "Rimini",
-      "count": 33032,
+      "count": 33184,
       "with_contractor": 8076,
-      "without_contractor": 24956,
-      "coverage_pct": 24.4,
-      "total_value_eur": 428128245170.0,
-      "avg_value_eur": 12961014.93
+      "without_contractor": 25108,
+      "coverage_pct": 24.3,
+      "total_value_eur": 430700218640.0,
+      "avg_value_eur": 12979153.17
     },
     {
       "branch": "Cosenza",
       "slug": "Cosenza",
-      "count": 28922,
+      "count": 29155,
       "with_contractor": 6364,
-      "without_contractor": 22558,
-      "coverage_pct": 22.0,
-      "total_value_eur": 421759997220.0,
-      "avg_value_eur": 14582670.54
+      "without_contractor": 22791,
+      "coverage_pct": 21.8,
+      "total_value_eur": 423184523460.0,
+      "avg_value_eur": 14514989.66
     },
     {
       "branch": "SALERNO",
       "slug": "SALERNO",
-      "count": 20598,
+      "count": 20727,
       "with_contractor": 4663,
-      "without_contractor": 15935,
-      "coverage_pct": 22.6,
-      "total_value_eur": 382958396860.0,
-      "avg_value_eur": 18592018.49
+      "without_contractor": 16064,
+      "coverage_pct": 22.5,
+      "total_value_eur": 384604454840.0,
+      "avg_value_eur": 18555722.24
     },
     {
       "branch": "Roma Aurelia",
       "slug": "Roma_Aurelia",
-      "count": 19478,
+      "count": 19566,
       "with_contractor": 5302,
-      "without_contractor": 14176,
-      "coverage_pct": 27.2,
-      "total_value_eur": 363811721450.0,
-      "avg_value_eur": 18678084.07
+      "without_contractor": 14264,
+      "coverage_pct": 27.1,
+      "total_value_eur": 365122655440.0,
+      "avg_value_eur": 18661078.17
     },
     {
       "branch": "Torino",
       "slug": "Torino",
-      "count": 18733,
+      "count": 18918,
       "with_contractor": 5790,
-      "without_contractor": 12943,
-      "coverage_pct": 30.9,
-      "total_value_eur": 289307399110.0,
-      "avg_value_eur": 15443730.27
+      "without_contractor": 13128,
+      "coverage_pct": 30.6,
+      "total_value_eur": 288140162220.0,
+      "avg_value_eur": 15231005.51
     },
     {
       "branch": "Udine",
       "slug": "Udine",
-      "count": 15648,
+      "count": 15866,
       "with_contractor": 4529,
-      "without_contractor": 11119,
-      "coverage_pct": 28.9,
-      "total_value_eur": 201016919720.0,
-      "avg_value_eur": 12846173.29
+      "without_contractor": 11337,
+      "coverage_pct": 28.5,
+      "total_value_eur": 203974900340.0,
+      "avg_value_eur": 12856101.12
     },
     {
       "branch": "AMBIGUA",
       "slug": "AMBIGUA",
-      "count": 15601,
+      "count": 15674,
       "with_contractor": 4967,
-      "without_contractor": 10634,
-      "coverage_pct": 31.8,
-      "total_value_eur": 436656924620.0,
-      "avg_value_eur": 27989034.33
+      "without_contractor": 10707,
+      "coverage_pct": 31.7,
+      "total_value_eur": 436911482790.0,
+      "avg_value_eur": 27874919.15
     },
     {
       "branch": "Firenze",
       "slug": "Firenze",
-      "count": 13680,
+      "count": 13748,
       "with_contractor": 4455,
-      "without_contractor": 9225,
-      "coverage_pct": 32.6,
-      "total_value_eur": 202355723850.0,
-      "avg_value_eur": 14792085.08
+      "without_contractor": 9293,
+      "coverage_pct": 32.4,
+      "total_value_eur": 203251956420.0,
+      "avg_value_eur": 14784110.88
     }
   ],
   "top_branches_by_value": [
     {
       "branch": "Catania",
       "slug": "Catania",
-      "count": 46087,
+      "count": 46218,
       "with_contractor": 8702,
-      "without_contractor": 37385,
-      "coverage_pct": 18.9,
-      "total_value_eur": 834117124940.0,
-      "avg_value_eur": 18098750.73
+      "without_contractor": 37516,
+      "coverage_pct": 18.8,
+      "total_value_eur": 835512265780.0,
+      "avg_value_eur": 18077637.84
     },
     {
       "branch": "Roma Nomentana",
       "slug": "Roma_Nomentana",
-      "count": 52397,
+      "count": 52624,
       "with_contractor": 10950,
-      "without_contractor": 41447,
-      "coverage_pct": 20.9,
-      "total_value_eur": 799905625140.0,
-      "avg_value_eur": 15266248.55
+      "without_contractor": 41674,
+      "coverage_pct": 20.8,
+      "total_value_eur": 802993287760.0,
+      "avg_value_eur": 15259069.77
     },
     {
       "branch": "Napoli",
       "slug": "Napoli",
-      "count": 37231,
+      "count": 37417,
       "with_contractor": 6840,
-      "without_contractor": 30391,
-      "coverage_pct": 18.4,
-      "total_value_eur": 792363002740.0,
-      "avg_value_eur": 21282345.43
+      "without_contractor": 30577,
+      "coverage_pct": 18.3,
+      "total_value_eur": 798223496100.0,
+      "avg_value_eur": 21333177.33
     },
     {
       "branch": "Bari",
       "slug": "Bari",
-      "count": 35534,
+      "count": 35676,
       "with_contractor": 10914,
-      "without_contractor": 24620,
-      "coverage_pct": 30.7,
-      "total_value_eur": 611788700180.0,
-      "avg_value_eur": 17216995.0
+      "without_contractor": 24762,
+      "coverage_pct": 30.6,
+      "total_value_eur": 612723147970.0,
+      "avg_value_eur": 17174659.38
     },
     {
       "branch": "AMBIGUA",
       "slug": "AMBIGUA",
-      "count": 15601,
+      "count": 15674,
       "with_contractor": 4967,
-      "without_contractor": 10634,
-      "coverage_pct": 31.8,
-      "total_value_eur": 436656924620.0,
-      "avg_value_eur": 27989034.33
+      "without_contractor": 10707,
+      "coverage_pct": 31.7,
+      "total_value_eur": 436911482790.0,
+      "avg_value_eur": 27874919.15
     },
     {
       "branch": "Rimini",
       "slug": "Rimini",
-      "count": 33032,
+      "count": 33184,
       "with_contractor": 8076,
-      "without_contractor": 24956,
-      "coverage_pct": 24.4,
-      "total_value_eur": 428128245170.0,
-      "avg_value_eur": 12961014.93
+      "without_contractor": 25108,
+      "coverage_pct": 24.3,
+      "total_value_eur": 430700218640.0,
+      "avg_value_eur": 12979153.17
     },
     {
       "branch": "Cosenza",
       "slug": "Cosenza",
-      "count": 28922,
+      "count": 29155,
       "with_contractor": 6364,
-      "without_contractor": 22558,
-      "coverage_pct": 22.0,
-      "total_value_eur": 421759997220.0,
-      "avg_value_eur": 14582670.54
+      "without_contractor": 22791,
+      "coverage_pct": 21.8,
+      "total_value_eur": 423184523460.0,
+      "avg_value_eur": 14514989.66
     },
     {
       "branch": "SALERNO",
       "slug": "SALERNO",
-      "count": 20598,
+      "count": 20727,
       "with_contractor": 4663,
-      "without_contractor": 15935,
-      "coverage_pct": 22.6,
-      "total_value_eur": 382958396860.0,
-      "avg_value_eur": 18592018.49
+      "without_contractor": 16064,
+      "coverage_pct": 22.5,
+      "total_value_eur": 384604454840.0,
+      "avg_value_eur": 18555722.24
     },
     {
       "branch": "Roma Aurelia",
       "slug": "Roma_Aurelia",
-      "count": 19478,
+      "count": 19566,
       "with_contractor": 5302,
-      "without_contractor": 14176,
-      "coverage_pct": 27.2,
-      "total_value_eur": 363811721450.0,
-      "avg_value_eur": 18678084.07
+      "without_contractor": 14264,
+      "coverage_pct": 27.1,
+      "total_value_eur": 365122655440.0,
+      "avg_value_eur": 18661078.17
     },
     {
       "branch": "Torino",
       "slug": "Torino",
-      "count": 18733,
+      "count": 18918,
       "with_contractor": 5790,
-      "without_contractor": 12943,
-      "coverage_pct": 30.9,
-      "total_value_eur": 289307399110.0,
-      "avg_value_eur": 15443730.27
+      "without_contractor": 13128,
+      "coverage_pct": 30.6,
+      "total_value_eur": 288140162220.0,
+      "avg_value_eur": 15231005.51
     },
     {
       "branch": "Milano Ovest",
       "slug": "Milano_Ovest",
-      "count": 12543,
+      "count": 12603,
       "with_contractor": 4306,
-      "without_contractor": 8237,
-      "coverage_pct": 34.3,
-      "total_value_eur": 277493205490.0,
-      "avg_value_eur": 22123352.11
+      "without_contractor": 8297,
+      "coverage_pct": 34.2,
+      "total_value_eur": 279030641020.0,
+      "avg_value_eur": 22140017.54
     },
     {
       "branch": "Milano Nord",
       "slug": "Milano_Nord",
-      "count": 9376,
+      "count": 9412,
       "with_contractor": 3510,
-      "without_contractor": 5866,
-      "coverage_pct": 37.4,
-      "total_value_eur": 244888857310.0,
-      "avg_value_eur": 26118692.12
+      "without_contractor": 5902,
+      "coverage_pct": 37.3,
+      "total_value_eur": 243983404270.0,
+      "avg_value_eur": 25922588.64
     }
   ],
   "top_branches_by_coverage": [
     {
       "branch": "Milano Est",
       "slug": "Milano_Est",
-      "count": 6508,
+      "count": 6540,
       "with_contractor": 2497,
-      "without_contractor": 4011,
-      "coverage_pct": 38.4,
-      "total_value_eur": 204196704190.0,
-      "avg_value_eur": 31376260.63
+      "without_contractor": 4043,
+      "coverage_pct": 38.2,
+      "total_value_eur": 206779614600.0,
+      "avg_value_eur": 31617678.07
     },
     {
       "branch": "Milano Nord",
       "slug": "Milano_Nord",
-      "count": 9376,
+      "count": 9412,
       "with_contractor": 3510,
-      "without_contractor": 5866,
-      "coverage_pct": 37.4,
-      "total_value_eur": 244888857310.0,
-      "avg_value_eur": 26118692.12
-    },
-    {
-      "branch": "Treviso",
-      "slug": "Treviso",
-      "count": 7106,
-      "with_contractor": 2626,
-      "without_contractor": 4480,
-      "coverage_pct": 37.0,
-      "total_value_eur": 95361299680.0,
-      "avg_value_eur": 13419828.27
+      "without_contractor": 5902,
+      "coverage_pct": 37.3,
+      "total_value_eur": 243983404270.0,
+      "avg_value_eur": 25922588.64
     },
     {
       "branch": "Venezia",
       "slug": "Venezia",
-      "count": 4884,
+      "count": 4909,
       "with_contractor": 1807,
-      "without_contractor": 3077,
-      "coverage_pct": 37.0,
-      "total_value_eur": 111711636950.0,
-      "avg_value_eur": 22872980.54
+      "without_contractor": 3102,
+      "coverage_pct": 36.8,
+      "total_value_eur": 111173770390.0,
+      "avg_value_eur": 22646928.17
+    },
+    {
+      "branch": "Treviso",
+      "slug": "Treviso",
+      "count": 7146,
+      "with_contractor": 2626,
+      "without_contractor": 4520,
+      "coverage_pct": 36.7,
+      "total_value_eur": 96122552850.0,
+      "avg_value_eur": 13451238.85
     },
     {
       "branch": "Milano Sud",
       "slug": "Milano_Sud",
-      "count": 9395,
+      "count": 9435,
       "with_contractor": 3402,
-      "without_contractor": 5993,
-      "coverage_pct": 36.2,
-      "total_value_eur": 241235742790.0,
-      "avg_value_eur": 25677034.89
+      "without_contractor": 6033,
+      "coverage_pct": 36.1,
+      "total_value_eur": 239853998140.0,
+      "avg_value_eur": 25421727.41
     },
     {
       "branch": "Trento",
       "slug": "Trento",
-      "count": 6163,
+      "count": 6260,
       "with_contractor": 2170,
-      "without_contractor": 3993,
-      "coverage_pct": 35.2,
-      "total_value_eur": 110143521210.0,
-      "avg_value_eur": 17871737.99
+      "without_contractor": 4090,
+      "coverage_pct": 34.7,
+      "total_value_eur": 111491465730.0,
+      "avg_value_eur": 17810138.3
     },
     {
       "branch": "Milano Ovest",
       "slug": "Milano_Ovest",
-      "count": 12543,
+      "count": 12603,
       "with_contractor": 4306,
-      "without_contractor": 8237,
-      "coverage_pct": 34.3,
-      "total_value_eur": 277493205490.0,
-      "avg_value_eur": 22123352.11
+      "without_contractor": 8297,
+      "coverage_pct": 34.2,
+      "total_value_eur": 279030641020.0,
+      "avg_value_eur": 22140017.54
     },
     {
       "branch": "Genova",
       "slug": "Genova",
-      "count": 5721,
+      "count": 5763,
       "with_contractor": 1906,
-      "without_contractor": 3815,
-      "coverage_pct": 33.3,
-      "total_value_eur": 90002869980.0,
-      "avg_value_eur": 15732017.13
+      "without_contractor": 3857,
+      "coverage_pct": 33.1,
+      "total_value_eur": 91995448870.0,
+      "avg_value_eur": 15963117.97
     },
     {
       "branch": "Padova",
       "slug": "Padova",
-      "count": 12806,
+      "count": 12844,
       "with_contractor": 4235,
-      "without_contractor": 8571,
-      "coverage_pct": 33.1,
-      "total_value_eur": 158315478500.0,
-      "avg_value_eur": 12362601.79
+      "without_contractor": 8609,
+      "coverage_pct": 33.0,
+      "total_value_eur": 159476572950.0,
+      "avg_value_eur": 12416425.8
     },
     {
       "branch": "Lucca",
       "slug": "Lucca",
-      "count": 6742,
+      "count": 6762,
       "with_contractor": 2210,
-      "without_contractor": 4532,
-      "coverage_pct": 32.8,
-      "total_value_eur": 100619467600.0,
-      "avg_value_eur": 14924275.82
+      "without_contractor": 4552,
+      "coverage_pct": 32.7,
+      "total_value_eur": 101130691300.0,
+      "avg_value_eur": 14955736.66
     },
     {
       "branch": "Firenze",
       "slug": "Firenze",
-      "count": 13680,
+      "count": 13748,
       "with_contractor": 4455,
-      "without_contractor": 9225,
-      "coverage_pct": 32.6,
-      "total_value_eur": 202355723850.0,
-      "avg_value_eur": 14792085.08
+      "without_contractor": 9293,
+      "coverage_pct": 32.4,
+      "total_value_eur": 203251956420.0,
+      "avg_value_eur": 14784110.88
     },
     {
       "branch": "Livorno",
       "slug": "Livorno",
-      "count": 7357,
+      "count": 7371,
       "with_contractor": 2379,
-      "without_contractor": 4978,
+      "without_contractor": 4992,
       "coverage_pct": 32.3,
-      "total_value_eur": 107175716820.0,
-      "avg_value_eur": 14567856.03
+      "total_value_eur": 107132218490.0,
+      "avg_value_eur": 14534285.51
     }
   ],
   "areas": [
     {
       "area": "Nord-Ovest",
-      "count": 104814,
+      "count": 105438,
       "with_contractor": 34186,
-      "without_contractor": 70628,
-      "total_value_eur": 2028582660870.0,
-      "coverage_pct": 32.6,
-      "avg_value_eur": 19354119.31
+      "without_contractor": 71252,
+      "total_value_eur": 2031930583340.0,
+      "coverage_pct": 32.4,
+      "avg_value_eur": 19271330.86
     },
     {
       "area": "Nord-Est",
-      "count": 60704,
+      "count": 61219,
       "with_contractor": 19602,
-      "without_contractor": 41102,
-      "total_value_eur": 898010628770.0,
-      "coverage_pct": 32.3,
-      "avg_value_eur": 14793269.45
+      "without_contractor": 41617,
+      "total_value_eur": 904155883770.0,
+      "coverage_pct": 32.0,
+      "avg_value_eur": 14769203.74
     },
     {
       "area": "Centro",
-      "count": 116125,
+      "count": 116643,
       "with_contractor": 31666,
-      "without_contractor": 84459,
-      "total_value_eur": 1601139538610.0,
-      "coverage_pct": 27.3,
-      "avg_value_eur": 13788069.22
+      "without_contractor": 84977,
+      "total_value_eur": 1608320605500.0,
+      "coverage_pct": 27.1,
+      "avg_value_eur": 13788402.27
     },
     {
       "area": "Sud",
-      "count": 264566,
+      "count": 265821,
       "with_contractor": 59685,
-      "without_contractor": 204881,
-      "total_value_eur": 4639702770940.0,
-      "coverage_pct": 22.6,
-      "avg_value_eur": 17537033.37
+      "without_contractor": 206136,
+      "total_value_eur": 4658836287150.0,
+      "coverage_pct": 22.5,
+      "avg_value_eur": 17526216.09
     }
   ],
   "segments": [
     {
       "name": "Edilizia",
-      "count": 331689
+      "count": 333360
     },
     {
       "name": "Lavori pubblici strade",
-      "count": 113866
+      "count": 114499
     },
     {
       "name": "Impiantisti sottoservizi",
-      "count": 84458
+      "count": 86864
     },
     {
       "name": "Completamento e finitura edifici",
-      "count": 8994
+      "count": 7187
     },
     {
       "name": "Impiantisti",
-      "count": 3557
+      "count": 3600
     },
     {
       "name": "Industria",
-      "count": 2198
+      "count": 2207
     },
     {
       "name": "Altro",
-      "count": 2003
+      "count": 2020
     },
     {
       "name": "Demolizioni",
-      "count": 402
+      "count": 403
     },
     {
       "name": "Verde",
-      "count": 283
+      "count": 285
     },
     {
       "name": "Agricoltura / silvicoltura",
-      "count": 177
+      "count": 178
     }
   ],
   "regions": [
     {
       "name": "LAZIO",
-      "count": 65374
+      "count": 65675
     },
     {
       "name": "LOMBARDIA",
-      "count": 61918
+      "count": 62166
     },
     {
       "name": "CAMPANIA",
-      "count": 51432
+      "count": 51687
     },
     {
       "name": "SICILIA",
-      "count": 46087
+      "count": 46218
     },
     {
       "name": "EMILIA-ROMAGNA",
-      "count": 30434
+      "count": 30587
     },
     {
       "name": "VENETO",
-      "count": 30363
+      "count": 30480
     },
     {
       "name": "PIEMONTE",
-      "count": 29388
+      "count": 29679
     },
     {
       "name": "CALABRIA",
-      "count": 28922
-    },
-    {
-      "name": "PUGLIA",
-      "count": 28239
+      "count": 29155
     },
     {
       "name": "ABRUZZO",
-      "count": 28222
+      "count": 28344
+    },
+    {
+      "name": "PUGLIA",
+      "count": 28337
     },
     {
       "name": "TOSCANA",
-      "count": 25929
+      "count": 26029
     },
     {
       "name": "MARCHE",
-      "count": 24656
+      "count": 24755
     }
   ]
 }
