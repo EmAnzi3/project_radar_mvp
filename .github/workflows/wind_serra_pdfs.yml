@@ -1,0 +1,49 @@
+name: Wind Serra MASE priority PDF collection
+on:
+  pull_request:
+    paths:
+      - 'config/wind_serra_mase_priority.json'
+      - '.github/workflows/wind_serra_pdfs.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  documents:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
+            config
+            tests
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - name: Acquire 8 MASE originals and extract page text
+        run: python scripts/harvest_wind_project.py --config config/wind_serra_mase_priority.json --output reports/serra-pdfs
+      - name: Warm offline restart
+        run: python scripts/harvest_wind_project.py --config config/wind_serra_mase_priority.json --output reports/serra-pdfs --offline
+      - name: Verify zero rereads on unchanged local originals
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("reports/serra-pdfs")
+          a=json.loads((root/"harvest-first.json").read_text())
+          b=json.loads((root/"harvest-offline.json").read_text())
+          assert b["network_requests"] == b["bytes_transferred"] == b["text_extractions"] == 0
+          assert a["resource_count"]==8
+          assert a["pdf_resources"]==a["successful"]
+          assert a["all_project_documentation_certified"] is False and a["paid_model_calls"]==0
+          print("acquired",a["pdf_resources"],"of 8, failures",len(a["errors"]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serra-mase-originals-${{ github.run_id }}
+          path: reports/serra-pdfs/
+          retention-days: 14
+          if-no-files-found: warn
