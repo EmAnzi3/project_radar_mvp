@@ -4,6 +4,9 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-10-12 — Serra Giannina: tre indici MASE 276/276, 8 PDF originali acquisiti con SHA; arricchimento source-backed 42 MW/6WTG, RWE/EGM P.IVA e recapiti, BoP relativo e condizione 3 parzialmente ottemperata; gap 268 PDF + ulteriore procedura 15213. Solo Serra, zero API a pagamento.
+
+
 - 2026-10-08 — Tarsia institutional closeout: PAUR/voltura/variant and original technical reports linked with qualified scope; P.IVA verified or explicitly unknown; regional annex availability gap stated. Project-only enrichment, no unrelated radar changes.
 
 ### Tarsia pilot 2026-10-06

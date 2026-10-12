@@ -1,0 +1,43 @@
+name: Wind Serra MASE document inventory
+on:
+  pull_request:
+    paths:
+      - 'scripts/wind_mase_inventory.py'
+      - 'tests/test_wind_mase_inventory.py'
+      - 'config/wind_serra_mase.json'
+      - '.github/workflows/wind_serra_inventory.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5
+      - run: python -m unittest discover -s tests -p 'test_wind_mase_inventory.py' -v
+      - run: python scripts/wind_mase_inventory.py --config config/wind_serra_mase.json --output reports/serra-inventory
+      - run: python scripts/wind_mase_inventory.py --config config/wind_serra_mase.json --output reports/serra-inventory --offline
+      - name: Verify no network and no false document reading
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('reports/serra-inventory')
+          a=json.loads((p/'summary.json').read_text())
+          b=json.loads((p/'summary-offline.json').read_text())
+          assert b['index_pages_fetched']==0
+          assert a['acquired_files']==a['analyzed_files']==0
+          assert not a['complete_project_dossier']
+          print('INDEX:',a['indexed_procedures'],'of',a['known_procedures'],'procedures',a['indexed_references'],'documents')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serra-mase-inventory
+          path: reports/serra-inventory/
+          retention-days: 14
