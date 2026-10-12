@@ -1,212 +1,82 @@
 {
-  "generated_at_utc": "2026-09-08T19:48:51.596724+00:00",
-  "count": 20,
+  "generated_at_utc": "2026-10-12T08:17:19.400534+00:00",
+  "count": 6,
   "by_branch": [
     {
-      "branch": "Bolzano",
+      "branch": "Lecco",
       "anac_added": 1
     },
     {
-      "branch": "Catania",
+      "branch": "Milano Sud",
       "anac_added": 1
     },
     {
-      "branch": "Genova",
-      "anac_added": 11
-    },
-    {
-      "branch": "Napoli",
+      "branch": "Parma",
       "anac_added": 1
-    },
-    {
-      "branch": "Rimini",
-      "anac_added": 5
     },
     {
       "branch": "Treviso",
+      "anac_added": 2
+    },
+    {
+      "branch": "Udine",
       "anac_added": 1
     }
   ],
   "records": [
     {
-      "key": "CUP::E43I24000040003",
-      "branch": "Bolzano",
-      "cup": "E43I24000040003",
-      "cig": "B1BA254D38",
-      "title": "AGENZIA DEMANIO PROVINCIALE, STRUTTURE & EDIFICI DELL'AZIENDA AGRICOLA, AZIENDA FORESTALE E L'AMMINISTRAZIONE IMMOBILI",
-      "contractors": "ELPO SRL (OPERATORE ECONOMICO MONOSOGGETTIVO)",
-      "contractor_tax_codes": "00120730213"
+      "key": "CUP::I59D17000060007",
+      "branch": "Lecco",
+      "cup": "I59D17000060007",
+      "cig": "7711786F1D",
+      "title": "IMMOBILI DI PROPRIETA' COMUNALE",
+      "contractors": "SIRAM S.P.A.",
+      "contractor_tax_codes": "08786190150"
     },
     {
-      "key": "CUP::G48I18000990005",
-      "branch": "Catania",
-      "cup": "G48I18000990005",
-      "cig": "7709449692",
-      "title": "OSPEDALI E DISTRETTI SANITARI DELL'AZIENDA SANITARIA PROVINCIALE DI TRAPANI",
-      "contractors": "TIM S.P.A.",
-      "contractor_tax_codes": "00488410010"
+      "key": "CUP::C18G12000000003",
+      "branch": "Milano Sud",
+      "cup": "C18G12000000003",
+      "cig": "601132919F",
+      "title": "CENTRO ABITATO",
+      "contractors": "MARIETTA - SOCIETA' A RESPONSABILITA' LIMITATA",
+      "contractor_tax_codes": "01582760011"
     },
     {
-      "key": "CUP::C31B20001120002",
-      "branch": "Genova",
-      "cup": "C31B20001120002",
-      "cig": "9461018709",
-      "title": "RISTRUTTURAZIONE SHOCK ROOM PRESSO DEA PIANO TERRA (COD. AZ. 942)",
-      "contractors": "GIVAS - SOCIETA' A RESPONSABILITA' LIMITATA",
-      "contractor_tax_codes": "01498810280"
+      "key": "CUP::H14F23000170005",
+      "branch": "Parma",
+      "cup": "H14F23000170005",
+      "cig": "B0A9E5705F",
+      "title": "DIVERSI FABBRICATI ERP",
+      "contractors": "IDROVELOX DI PETRELLI FRANCO & FIGLI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "02171530757"
     },
     {
-      "key": "CUP::C34E20003050002",
-      "branch": "Genova",
-      "cup": "C34E20003050002",
-      "cig": "8886298517",
-      "title": "COD. 892 - REALIZZAZIONE DI UN NUOVO REPARTO COVID PRESSO IL PAD. MONOBLOCCO 3^ PIANO PONENTE",
-      "contractors": "SIRAM S.P.A. (MANDANTE) | AEC COSTRUZIONI S.R.L. (MANDATARIA)",
-      "contractor_tax_codes": "01412220368 | 08786190150"
-    },
-    {
-      "key": "CUP::C34E22000190006",
-      "branch": "Genova",
-      "cup": "C34E22000190006",
-      "cig": "B341146BBA",
-      "title": "TOMOGRAFO COMPUTERIZZATO (CT SCANS) - 128 STRATI UO RADIOLOGIA",
-      "contractors": "CROCCO EMANUELE SOCIETA' A RESPONSABILITA' LIMITATA (OPERATORE ECONOMICO MONOSOGGETTIVO)",
-      "contractor_tax_codes": "00241830108"
-    },
-    {
-      "key": "CUP::C34E22000200006",
-      "branch": "Genova",
-      "cup": "C34E22000200006",
-      "cig": "A039B52384",
-      "title": "TOMOGRAFO COMPUTERIZZATO (CT SCANS) - 128 STRATI UO RADIOLOGIA PS",
-      "contractors": "SIEMENS HEALTHCARE S.R.L. | C.E.I. S.P.A. - CALORE ENERGIA IMPIANTI",
-      "contractor_tax_codes": "04785851009 | 09183610154"
-    },
-    {
-      "key": "CUP::C34E22000210006",
-      "branch": "Genova",
-      "cup": "C34E22000210006",
-      "cig": "A01C44BF43",
-      "title": "TOMOGRAFI A RISONANZA MAGNETICA (MRI) - 1,5 TESLA IST",
-      "contractors": "Siemens Healthcare Srl (MANDATARIA) | C.E.I. S.P.A. - CALORE ENERGIA IMPIANTI (MANDANTE)",
-      "contractor_tax_codes": "09183610154 | 12268050155"
-    },
-    {
-      "key": "CUP::C34E22000220006",
-      "branch": "Genova",
-      "cup": "C34E22000220006",
-      "cig": "9722226AB1",
-      "title": "GAMMA CAMERA/CT",
-      "contractors": "GE MEDICAL SYSTEMS ITALIA S.P.A",
-      "contractor_tax_codes": "93027710016"
-    },
-    {
-      "key": "CUP::C34E22000230006",
-      "branch": "Genova",
-      "cup": "C34E22000230006",
-      "cig": "9822261232",
-      "title": "PET TC",
-      "contractors": "GE MEDICAL SYSTEMS ITALIA S.P.A",
-      "contractor_tax_codes": "93027710016"
-    },
-    {
-      "key": "CUP::C34E22000240006",
-      "branch": "Genova",
-      "cup": "C34E22000240006",
-      "cig": "95699425F7",
-      "title": "ANGIOGRAFO CARDIOLOGICO COD. 925",
-      "contractors": "CRS IMPIANTI E COSTRUZIONI S.P.A. | PHILIPS S.P.A.",
-      "contractor_tax_codes": "00856750153 | 03398270169"
-    },
-    {
-      "key": "CUP::C34E22000260006",
-      "branch": "Genova",
-      "cup": "C34E22000260006",
-      "cig": "9540331233",
-      "title": "SISTEMA POLIFUNZIONALE PER RADIOLOGIA DIGITALE DIRETTA (DR)",
-      "contractors": "GENERAL MEDICAL MERATE - S.P.A.",
-      "contractor_tax_codes": "00225500164"
-    },
-    {
-      "key": "CUP::C34E22000270006",
-      "branch": "Genova",
-      "cup": "C34E22000270006",
-      "cig": "9540331233",
-      "title": "SISTEMA POLIFUNZIONALE PER RADIOLOGI DIGITALE DIRETTA (DR)",
-      "contractors": "GENERAL MEDICAL MERATE - S.P.A.",
-      "contractor_tax_codes": "00225500164"
-    },
-    {
-      "key": "CUP::C34E22000280006",
-      "branch": "Genova",
-      "cup": "C34E22000280006",
-      "cig": "93153462B4",
-      "title": "SISTEMA POLIFUNZIONALE PER RADIOLOGIA DIGITALE DIRETTA (DR) PER ESAMI DI PRONTO SOCCORSO",
-      "contractors": "SIEMENS HEALTHCARE S.R.L.",
-      "contractor_tax_codes": "04785851009"
-    },
-    {
-      "key": "CUP::E94H17000640006",
-      "branch": "Napoli",
-      "cup": "E94H17000640006",
-      "cig": "842597782E",
-      "title": "SICUREZZA E AMBIENTE NELLA TERRA DEI FUOCHI: INFRASTRUTTURE PER VIDEOSORVEGLIANZA E MONITORAGGIO AMBIENTALI AREE ASI CASERTA",
-      "contractors": "LEONARDO - SOCIETA' PER AZIONI (MANDATARIA) | NOVASISTEMI S.R.L. (MANDANTE)",
-      "contractor_tax_codes": "00401990585 | 03825891215"
-    },
-    {
-      "key": "CUP::B37H23003460001",
-      "branch": "Rimini",
-      "cup": "B37H23003460001",
-      "cig": "B87EAF45C9",
-      "title": "CONSOLIDAMENTO SCARPATA E RIPRISTINO PIANO VIABILE DI VIA MAINARDI",
-      "contractors": "SOCIETA' COOPERATIVA BRACCIANTI RIMINESE (OPERATORE ECONOMICO MONOSOGGETTIVO)",
-      "contractor_tax_codes": "00126420405"
-    },
-    {
-      "key": "CUP::B38H24000600003",
-      "branch": "Rimini",
-      "cup": "B38H24000600003",
-      "cig": "B7A760F4A9",
-      "title": "CONSOLIDAMENTO DEL VERSANTE IN FRANA E RIPRISTINO INFRASTRUTTURA VIARIA VIA DEL MULINO  MALTEMPO MAGGIO 2023",
-      "contractors": "BOSCARINI COSTRUZIONI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
-      "contractor_tax_codes": "00397830415"
-    },
-    {
-      "key": "CUP::B61B20001030002",
-      "branch": "Rimini",
-      "cup": "B61B20001030002",
-      "cig": "B14D7AE60A",
-      "title": "S.P. 94 MONTEROLO DAL KM 3+100 L KM 3+500",
-      "contractors": "EDILSERVICE DI PALANCA MARCO S.A.S. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
-      "contractor_tax_codes": "02400080418"
-    },
-    {
-      "key": "CUP::B76B13000050002",
-      "branch": "Rimini",
-      "cup": "B76B13000050002",
-      "cig": "7993664436",
-      "title": "LICEO PSICO-PEDAGOGICO MORSELLI E LICEO CLASSICO MAMIANI",
-      "contractors": "CO.I.R. CONSORZIO IMPRESE ROMAGNOLE",
-      "contractor_tax_codes": "01615190400"
-    },
-    {
-      "key": "CUP::I54H22000050006",
-      "branch": "Rimini",
-      "cup": "I54H22000050006",
-      "cig": "B87C2CF4F0",
-      "title": "1.3.1 HOUSING FIRST",
-      "contractors": "GIORGIALONGO COSTRUZIONI S.R.L. (OPERATORE ECONOMICO MONOSOGGETTIVO)",
-      "contractor_tax_codes": "01394710774"
-    },
-    {
-      "key": "CUP::D43D22000850002",
+      "key": "CUP::H27H20000630005",
       "branch": "Treviso",
-      "cup": "D43D22000850002",
-      "cig": "B8169FFE7A",
-      "title": "BENI IMMOBILI DI PROPRIETA' DELLE UNIONI MONTANE VAL BELLUNA E BELLUNESE E DEI COMUNI APPARTENENTI ALLE UNIONI",
-      "contractors": "ELISA DE BRIDDA (MANDANTE) | MAZZUCCO MAURIZIO (MANDANTE) | TRINCA RENZO (MANDANTE) | VALLET RUDY (MANDATARIA)",
-      "contractor_tax_codes": "DBRLSE83A47D530D | MZZMRZ66M13A757P | TRNRNZ73P18D530U | VLLRDY82P06A757V"
+      "cup": "H27H20000630005",
+      "cig": "8412880034",
+      "title": "STRADE",
+      "contractors": "LUCCIOLI ASFALTI S.R.L.",
+      "contractor_tax_codes": "03868760244"
+    },
+    {
+      "key": "CUP::J53H19001430002",
+      "branch": "Treviso",
+      "cup": "J53H19001430002",
+      "cig": "876270903A",
+      "title": "INTERVENTI DI RIPRISTINO E DI AUMENTO DELLA RESILIENZA DELLE RETI FOGNARIE - BACINO MONTICANO E LOCALITA' FRATTA - COMUNE DI ODERZO",
+      "contractors": "CO.EDIL COSTRUZIONI S.R.L.",
+      "contractor_tax_codes": "00821640307"
+    },
+    {
+      "key": "CUP::I77J23000020002",
+      "branch": "Udine",
+      "cup": "I77J23000020002",
+      "cig": "B4789031BD",
+      "title": "MANUTENZIONE DELLE OPERE PUBBLICHE DI BONIFICA NELLAMBITO DEL COMPRENSORIO CONSORZIALE",
+      "contractors": "GASPARI SRL (OPERATORE ECONOMICO MONOSOGGETTIVO)",
+      "contractor_tax_codes": "02491000309"
     }
   ]
 }

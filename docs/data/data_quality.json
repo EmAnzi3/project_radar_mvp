@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-10-09T16:44:21.196320+00:00",
+  "generated_at_utc": "2026-10-12T08:17:11.020528+00:00",
   "raw_rows": 550659,
   "total_records": 513689,
-  "with_contractor": 132637,
+  "with_contractor": 132643,
   "contractor_coverage_pct": 25.82,
   "duplicate_cups_count": 15674,
   "duplicate_cups_top": [
@@ -536,7 +536,7 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 4529,
+      "with_contractor": 4530,
       "contractor_coverage_pct": 28.55
     },
     {
@@ -718,8 +718,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2167,
-      "contractor_coverage_pct": 29.74
+      "with_contractor": 2168,
+      "contractor_coverage_pct": 29.76
     },
     {
       "branch": "Roma Aurelia",
@@ -746,8 +746,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 2626,
-      "contractor_coverage_pct": 36.75
+      "with_contractor": 2628,
+      "contractor_coverage_pct": 36.78
     },
     {
       "branch": "Bergamo",
@@ -830,8 +830,8 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 1949,
-      "contractor_coverage_pct": 31.59
+      "with_contractor": 1950,
+      "contractor_coverage_pct": 31.61
     },
     {
       "branch": "Genova",
@@ -928,38 +928,38 @@
       "missing_project_value": 0,
       "missing_source_url": 0,
       "missing_cup": 0,
-      "with_contractor": 816,
-      "contractor_coverage_pct": 29.13
+      "with_contractor": 817,
+      "contractor_coverage_pct": 29.17
     }
   ],
   "shards": [
     {
+      "file": "Bari_part_001.json",
+      "branch": "Bari_part_001",
+      "records": 31755,
+      "mb": 44.97,
+      "status": "ok"
+    },
+    {
       "file": "Catania_part_001.json",
       "branch": "Catania_part_001",
-      "records": 32097,
-      "mb": 45.12,
-      "status": "warning"
+      "records": 31979,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Napoli_part_001.json",
       "branch": "Napoli_part_001",
-      "records": 31930,
-      "mb": 45.07,
-      "status": "warning"
-    },
-    {
-      "file": "Bari_part_001.json",
-      "branch": "Bari_part_001",
-      "records": 31808,
-      "mb": 45.04,
-      "status": "warning"
+      "records": 31850,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Roma_Nomentana_part_001.json",
       "branch": "Roma_Nomentana_part_001",
-      "records": 31723,
-      "mb": 45.03,
-      "status": "warning"
+      "records": 31678,
+      "mb": 44.97,
+      "status": "ok"
     },
     {
       "file": "Rimini.json",
@@ -999,8 +999,8 @@
     {
       "file": "Roma_Nomentana_part_002.json",
       "branch": "Roma_Nomentana_part_002",
-      "records": 20901,
-      "mb": 26.29,
+      "records": 20946,
+      "mb": 26.35,
       "status": "ok"
     },
     {
@@ -1041,8 +1041,8 @@
     {
       "file": "Catania_part_002.json",
       "branch": "Catania_part_002",
-      "records": 14121,
-      "mb": 17.81,
+      "records": 14239,
+      "mb": 17.96,
       "status": "ok"
     },
     {
@@ -1188,8 +1188,8 @@
     {
       "file": "Napoli_part_002.json",
       "branch": "Napoli_part_002",
-      "records": 5487,
-      "mb": 7.07,
+      "records": 5567,
+      "mb": 7.17,
       "status": "ok"
     },
     {
@@ -1209,8 +1209,8 @@
     {
       "file": "Bari_part_002.json",
       "branch": "Bari_part_002",
-      "records": 3868,
-      "mb": 4.8,
+      "records": 3921,
+      "mb": 4.87,
       "status": "ok"
     },
     {
@@ -1231,7 +1231,7 @@
       "file": "Lecco.json",
       "branch": "Lecco",
       "records": 2801,
-      "mb": 3.9,
+      "mb": 3.91,
       "status": "ok"
     }
   ],

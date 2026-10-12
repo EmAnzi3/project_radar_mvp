@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-10-09T16:44:11.381074+00:00",
+  "generated_at_utc": "2026-10-12T08:17:01.213212+00:00",
   "total_records": 513689,
   "total_branches": 39,
-  "total_with_contractor": 145189,
-  "total_without_contractor": 368500,
+  "total_with_contractor": 145195,
+  "total_without_contractor": 368494,
   "national_coverage_pct": 28.3,
   "total_value_eur": 9229778941450.0,
   "avg_project_value_eur": 17967639.84,
@@ -102,9 +102,9 @@
       "branch": "Udine",
       "slug": "Udine",
       "count": 15866,
-      "with_contractor": 4529,
-      "without_contractor": 11337,
-      "coverage_pct": 28.5,
+      "with_contractor": 4530,
+      "without_contractor": 11336,
+      "coverage_pct": 28.6,
       "total_value_eur": 203974900340.0,
       "avg_value_eur": 12856101.12
     },
@@ -273,6 +273,16 @@
       "avg_value_eur": 25922588.64
     },
     {
+      "branch": "Treviso",
+      "slug": "Treviso",
+      "count": 7146,
+      "with_contractor": 2628,
+      "without_contractor": 4518,
+      "coverage_pct": 36.8,
+      "total_value_eur": 96122552850.0,
+      "avg_value_eur": 13451238.85
+    },
+    {
       "branch": "Venezia",
       "slug": "Venezia",
       "count": 4909,
@@ -283,21 +293,11 @@
       "avg_value_eur": 22646928.17
     },
     {
-      "branch": "Treviso",
-      "slug": "Treviso",
-      "count": 7146,
-      "with_contractor": 2626,
-      "without_contractor": 4520,
-      "coverage_pct": 36.7,
-      "total_value_eur": 96122552850.0,
-      "avg_value_eur": 13451238.85
-    },
-    {
       "branch": "Milano Sud",
       "slug": "Milano_Sud",
       "count": 9435,
-      "with_contractor": 3402,
-      "without_contractor": 6033,
+      "with_contractor": 3403,
+      "without_contractor": 6032,
       "coverage_pct": 36.1,
       "total_value_eur": 239853998140.0,
       "avg_value_eur": 25421727.41
@@ -377,8 +377,8 @@
     {
       "area": "Nord-Ovest",
       "count": 105438,
-      "with_contractor": 34186,
-      "without_contractor": 71252,
+      "with_contractor": 34188,
+      "without_contractor": 71250,
       "total_value_eur": 2031930583340.0,
       "coverage_pct": 32.4,
       "avg_value_eur": 19271330.86
@@ -386,8 +386,8 @@
     {
       "area": "Nord-Est",
       "count": 61219,
-      "with_contractor": 19602,
-      "without_contractor": 41617,
+      "with_contractor": 19605,
+      "without_contractor": 41614,
       "total_value_eur": 904155883770.0,
       "coverage_pct": 32.0,
       "avg_value_eur": 14769203.74
@@ -395,8 +395,8 @@
     {
       "area": "Centro",
       "count": 116643,
-      "with_contractor": 31666,
-      "without_contractor": 84977,
+      "with_contractor": 31667,
+      "without_contractor": 84976,
       "total_value_eur": 1608320605500.0,
       "coverage_pct": 27.1,
       "avg_value_eur": 13788402.27
