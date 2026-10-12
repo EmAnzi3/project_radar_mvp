@@ -1,4 +1,8 @@
 # Current State
+### Serra Giannina – documento commerciale 2026-10-12
+
+Il lotto MASE 7112 ha 276 documenti in tre indici completi (29 pagine indice); 8 originali acquisiti e testo estratto, ma il quarto procedimento 15213 non è ancora inventariato e gli altri 268 allegati non sono acquisiti. Analisi mirata: 42 MW/6 WTG attuali distinti dalla vecchia denominazione amministrativa 45 MW/10 WTG; RWE Renewables Italia S.r.l. proponente P.IVA 06400370968, EGM Project S.r.l. progettista P.IVA 02094310766; nessun BoP dedotto. Gantt senza date assolute, RWE prevede generazione dal 2027, MASE 24/09 condizione 3 parzialmente ottemperata. File originali temporanei SHA-256, riuso senza rilettura, nessuna API AI a pagamento. Progetto canonical Serra soltanto, altri 50 intatti, PR9 Draft non mergiata.
+
 ### Tarsia institutional closeout – 2026-10-08
 
 Only Tarsia Ovest: PAUR 3509/2023 (T1 T5 T6 only), voltura 18794/2025 (EPRI VAT), VPA variant 6500/2026 (3 × 4.3 MW), legacy 2020 SIA/electrical plan distinguished from current schedule. Corporate VAT verified for EPRI, historic PLT, PLC System and Idoka; Mammana/Delta unresolved. Public document links source/paged evidence recorded; SUAP 698 CS attachment inventory unavailable and no certain current construction end/COD. Thus dossier NOT complete. All 50 other projects, totals, BAT, and PR9 unaffected. No paid API.

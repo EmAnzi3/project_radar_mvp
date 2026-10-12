@@ -34,6 +34,18 @@ try:
    oid=page.locator('#opportunityRows [data-project-id]').evaluate_all("els=>els.map(e=>e.dataset.projectId).find(x=>x!=='tarsia-ovest')")
    page.locator(f'#opportunityRows [data-project-id="{oid}"]').click()
    assert page.locator('.documentary-summary').count()==0
+   page.locator('#closeDrawer').click()
+   serrarow=page.locator('#opportunityRows [data-project-id="serra-giannina"]')
+   serrarow.wait_for()
+   serrarow.click()
+   sp=page.locator('[data-documentary-project="serra-giannina"]');sp.wait_for()
+   assert '02094310766' in sp.inner_text()
+   assert '06400370968' in sp.inner_text()
+   assert 'Parzialmente' in sp.inner_text() or 'parzialmente' in sp.inner_text()
+   assert sp.locator('a[href="mailto:info@egmproject.it"]').count()==1
+   sp.scroll_into_view_if_needed();page.screenshot(path=str(OUT/f'serra-{width}.png'))
+   assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
+   assert not sp.evaluate('(e)=>e.scrollWidth>e.clientWidth+1')
    assert not errors,errors
    results.append({'viewport':[width,height],'contacts_visible':True,'other_project_unchanged':True,'overflow':False,'javascript_errors':errors})
    page.close()

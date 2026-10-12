@@ -9,7 +9,7 @@ class TarsiaEnrichment(unittest.TestCase):
   cls.p=next(p for p in cls.projects if p['id']=='tarsia-ovest');cls.d=cls.p['documentary']
  def test_counts_power(self):
   self.assertEqual(len(self.projects),51);self.assertAlmostEqual(sum(p['mw'] for p in self.projects),11202.52,2)
- def test_only_target_has_panel(self):self.assertEqual([p['id'] for p in self.projects if p.get('documentary')],['tarsia-ovest'])
+ def test_only_target_has_panel(self):self.assertEqual([p['id'] for p in self.projects if p.get('documentary')],['serra-giannina','tarsia-ovest'])
  def test_eight_requested_areas(self):
   self.assertEqual(len(self.d['fields']),6);self.assertTrue(self.d['contacts']);self.assertTrue(self.d['gaps'])
  def test_power_preserved(self):self.assertEqual(self.p['mw'],12.9);self.assertEqual(self.p['wtg'],3)
