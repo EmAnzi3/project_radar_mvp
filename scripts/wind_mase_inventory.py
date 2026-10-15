@@ -146,4 +146,4 @@ if __name__=="__main__":
     a=ap.parse_args()
     result=run(a.config,a.output,a.offline)
     print(json.dumps(result,ensure_ascii=False,indent=2))
-    if not a.offline and result["indexed_procedures"]==0:raise SystemExit(2)
+    if result["indexed_procedures"] != result["known_procedures"]:raise SystemExit(2)
