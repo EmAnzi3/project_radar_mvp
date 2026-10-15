@@ -1,0 +1,31 @@
+name: Serra Giannina batch tests
+on:
+  pull_request:
+    paths:
+      - 'scripts/wind_serra_batch.py'
+      - 'tests/test_wind_serra_batch.py'
+      - '.github/workflows/wind_serra_batch.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - run: python -m unittest discover -s tests -p test_wind_serra_batch.py -v
+      - name: Small bounded real-source pilot
+        run: |
+          mkdir -p reports/serra-batch
+          python scripts/wind_serra_batch.py --state reports/serra-batch/state.json --report reports/serra-batch/report.json --limit 3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serra-batch-pilot
+          path: reports/serra-batch/
+          retention-days: 7
