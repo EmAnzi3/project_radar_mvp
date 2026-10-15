@@ -1,0 +1,411 @@
+{
+  "id": "serra-giannina",
+  "name": "Serra Giannina",
+  "mw": 42,
+  "bess_mw": 0,
+  "wtg": 6,
+  "type": "Greenfield",
+  "region": "Basilicata",
+  "province": "Potenza",
+  "municipalities": [
+    "Genzano di Lucania",
+    "Banzi"
+  ],
+  "lat": 40.848,
+  "lon": 16.035,
+  "developer": "RWE",
+  "spv": "RWE",
+  "myterna": null,
+  "mase_id": null,
+  "stage": "E7",
+  "stage_label": "Construction",
+  "priority": "A",
+  "score": 90,
+  "status_note": "RWE annuncia l'avvio del cantiere il 21/05/2026. Piano di cantierizzazione EGM 27/02/2026 e cronoprogramma BoP relativo su cinque mesi; produzione prevista nel 2027, senza COD certo. MASE 24/09/2026: prescrizione ambientale 3 parzialmente ottemperata.",
+  "next": {
+    "label": "BoP e verifica prescrizione ambientale n.3; fine lavori non confermata",
+    "date": null,
+    "precision": "unknown",
+    "source_id": "sg-plan"
+  },
+  "timing": [
+    {
+      "phase": "site",
+      "label": "Avvio costruzione annunciato da RWE",
+      "date": "2026-05-21",
+      "precision": "day",
+      "confidence": "A2",
+      "source_id": "sg-rwe"
+    },
+    {
+      "phase": "civil",
+      "label": "BoP: durata relativa circa cinque mesi (nessun ancoraggio al calendario)",
+      "precision": "relative",
+      "confidence": "A1",
+      "source_id": "sg-plan"
+    },
+    {
+      "phase": "cod",
+      "label": "Produzione attesa dal 2027 secondo RWE, non COD documentato",
+      "date": "2027-12-31",
+      "precision": "year",
+      "confidence": "A2",
+      "source_id": "sg-rwe"
+    }
+  ],
+  "relations": [
+    {
+      "company": "EGM Project S.r.l.",
+      "role": "Engineering / site technical presence",
+      "status": "signal",
+      "confidence": "B",
+      "source_id": "sg-egm",
+      "scope": "Presenza tecnica documentata da fonte aziendale; non conferma esecuzione lavori BoP."
+    },
+    {
+      "company": "EGM Project S.r.l.",
+      "role": "Progettista del piano di cantierizzazione / engineering",
+      "status": "confirmed",
+      "confidence": "A1",
+      "source_id": "sg-mase-plan",
+      "scope": "Elaborato esecutivo 42 MW firmato 27/02/2026 con cartiglio PROGETTAZIONE: EGM Project; non prova incarico EPC/BoP"
+    }
+  ],
+  "gaps": [
+    "Civil BoP",
+    "Electrical BoP",
+    "SSE / grid contractor",
+    "Erection contractor",
+    "Logistics / heavy transport",
+    "Foundation contractor",
+    "OEM"
+  ],
+  "configs": [
+    {
+      "date": "2026-05-21",
+      "wind_mw": 42,
+      "bess_mw": 0,
+      "wtg_count": 6,
+      "wtg_mw": 7,
+      "note": "Configurazione RWE: 6 WTG da 7 MW.",
+      "source_id": "sg-rwe"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sg-plan",
+      "title": "Project schedule – Cronoprogramma BoP Wind Farm Serra Giannina (6 WTG)",
+      "publisher": "MASE / cronoprogramma BoP Serra Giannina (6 WTG)",
+      "date": null,
+      "url": "https://va.mite.gov.it/File/Documento/1402816",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-rwe",
+      "title": "RWE starts construction of 42-megawatt onshore wind farm in Italy",
+      "publisher": "RWE",
+      "date": "2026-05-21",
+      "url": "https://www.rwe.com/en/press/rwe-renewables-europe-australia/2026-05-21-rwe-starts-construction-of-42-megawatt-onshore-wind-farm-in-italy/",
+      "grade": "A2"
+    },
+    {
+      "id": "sg-egm",
+      "title": "Dalle fondamenta al vento: come nasce una turbina eolica",
+      "publisher": "EGM Project",
+      "date": "2026-07-01",
+      "url": "https://www.egmproject.it/dalle-fondamenta-al-vento-come-nasce-una-turbina-eolica/",
+      "grade": "B"
+    },
+    {
+      "id": "sg-mase-plan",
+      "title": "Piano di cantierizzazione esecutivo del 27/02/2026 – 42 MW, progetto EGM Project",
+      "publisher": "MASE / RWE Renewables Italia",
+      "date": "2026-02-27",
+      "url": "https://va.mite.gov.it/File/Documento/1375028",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-mase-n1040",
+      "title": "Parere CTVA n.1040 del 07/09/2026 – prescrizione 3",
+      "publisher": "MASE / Commissione VIA-VAS",
+      "date": "2026-09-07",
+      "url": "https://va.mite.gov.it/File/Documento/1433462",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-mase-esito-sept",
+      "title": "Comunicazione esito verifica di ottemperanza MASE 24/09/2026",
+      "publisher": "MASE",
+      "date": "2026-09-24",
+      "url": "https://va.mite.gov.it/File/Documento/1433460",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-mase-esito-jun",
+      "title": "Esito precedente prescrizioni 1 e 3 (documento MASE)",
+      "publisher": "MASE",
+      "date": "2026-06-17",
+      "url": "https://va.mite.gov.it/File/Documento/1406634",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-mase-elenco-jun",
+      "title": "Elenco elaborati aggiornato giugno 2026",
+      "publisher": "MASE / RWE",
+      "date": "2026-06-17",
+      "url": "https://va.mite.gov.it/File/Documento/1406633",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-mase-elenco-original",
+      "title": "Elenco elaborati progetto esecutivo 2026",
+      "publisher": "MASE / RWE",
+      "date": "2026-03-24",
+      "url": "https://va.mite.gov.it/File/Documento/1374966",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-mase-drawing",
+      "title": "Progetto esecutivo – elaborato grafico, 42 MW",
+      "publisher": "MASE / RWE",
+      "date": "2026-03-24",
+      "url": "https://va.mite.gov.it/File/Documento/1374979",
+      "grade": "A1"
+    },
+    {
+      "id": "sg-egm-contacts",
+      "title": "EGM Project – contatti ufficiali e P.IVA",
+      "publisher": "EGM Project S.r.l.",
+      "date": null,
+      "url": "https://www.egmproject.it/contatti/",
+      "grade": "A2"
+    },
+    {
+      "id": "sg-mase-object-info",
+      "title": "MASE 7112 – elenco procedure e stato amministrativo",
+      "publisher": "MASE",
+      "date": "2026-10-12",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Info/7112",
+      "grade": "A1"
+    }
+  ],
+  "gd": "Usare RWE + schedule BoP come baseline canonica.",
+  "documentary": {
+    "reviewed_on": "2026-10-12",
+    "method": "Lettura mirata di documenti MASE scaricati con hash, comunicato RWE e pagina contatti EGM. Non è audit completo dell'intero fascicolo; gli altri allegati non sono dichiarati letti.",
+    "fields": [
+      {
+        "label": "Progetto e tipologia",
+        "value": "Serra Giannina – eolico onshore, RWE Renewables Italia S.r.l. proponente della configurazione esecutiva da 42 MW. La procedura VIA storica è denominata 45 MW/10 turbine: non è l'assetto attuale.",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-mase-object-info",
+          "sg-rwe"
+        ]
+      },
+      {
+        "label": "Localizzazione",
+        "value": "Basilicata, provincia di Potenza, comuni di Genzano di Lucania e Banzi. Marker mappa indicativo, non coordinate dei sei WTG.",
+        "source_ids": [
+          "sg-rwe",
+          "sg-mase-plan"
+        ]
+      },
+      {
+        "label": "Potenza",
+        "value": "42 MW eolici = 6 WTG × 7 MW (comunicato RWE 21/05/2026). Il vecchio fascicolo MASE presenta 45 MW = 10 × 4,5 MW. BESS non citato dalle fonti verificate: non se ne prova l'assenza.",
+        "source_ids": [
+          "sg-rwe",
+          "sg-mase-plan",
+          "sg-mase-object-info"
+        ]
+      },
+      {
+        "label": "Cronoprogramma",
+        "value": "Avvio costruzione annunciato 21/05/2026. Gantt BoP originale: attività per sei WTG su asse relativo di circa cinque mesi, senza data iniziale verificata; RWE prevede produzione dal 2027. Fine effettiva e COD non confermati.",
+        "source_ids": [
+          "sg-rwe",
+          "sg-plan"
+        ]
+      },
+      {
+        "label": "Aziende e ruoli",
+        "value": "RWE Renewables Italia S.r.l.: proponente. EGM Project S.r.l.: progettazione/esecutivi nel cartiglio del piano di cantierizzazione del 27/02/2026. Nessun affidamento di esecuzione EPC/BoP dedotto dalla presenza di EGM o dall'uso di nomi dei fornitori negli elaborati.",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-mase-drawing",
+          "sg-egm"
+        ]
+      },
+      {
+        "label": "Stato autorizzativo",
+        "value": "VIA positiva con prescrizioni nel 2022 (configurazione amministrativa storica). Nella VO 14736 il MASE ha dichiarato il 24/09/2026 la condizione ambientale n.3 parzialmente ottemperata: necessari chiarimenti su delimitazioni cantiere e gestione terre e rocce da scavo. Non si deduce sospensione lavori.",
+        "source_ids": [
+          "sg-mase-object-info",
+          "sg-mase-n1040",
+          "sg-mase-esito-sept"
+        ]
+      },
+      {
+        "label": "Lavorazioni di interesse",
+        "value": "Viabilità di accesso, piazzole, fondazioni e pali per WTG09/WTG10, cavidotti MT, sottostazione e movimentazione di terre; attività previste nel piano e Gantt, non attestazioni di effettiva esecuzione o di un contratto di noleggio.",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-plan"
+        ]
+      }
+    ],
+    "contacts": [
+      {
+        "company": "EGM Project S.r.l.",
+        "role": "Contatto aziendale generale / progettazione",
+        "email": "info@egmproject.it",
+        "phone": "+39 0971 1790116",
+        "scope": "Recapito del progettista pubblicato negli elaborati e sul sito societario; non procurement o responsabile di cantiere attestato",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-egm-contacts"
+        ]
+      },
+      {
+        "company": "RWE Renewables Italia S.r.l.",
+        "role": "PEC societaria",
+        "email": "rwerenewablesitaliasrl@legalmail.it",
+        "phone": null,
+        "scope": "PEC del proponente su piano di cantierizzazione; non contatto commerciale diretto né referente acquisti",
+        "source_ids": [
+          "sg-mase-plan"
+        ]
+      }
+    ],
+    "company_registry": [
+      {
+        "company": "RWE Renewables Italia S.r.l.",
+        "role": "Proponente eolico Serra Giannina",
+        "vat_id": "06400370968",
+        "note": "P.IVA/C.F. pubblicata in copertina, piano 1375028, pagina PDF 1.",
+        "source_ids": [
+          "sg-mase-plan"
+        ]
+      },
+      {
+        "company": "EGM Project S.r.l.",
+        "role": "Progettazione e piano di cantierizzazione",
+        "vat_id": "02094310766",
+        "note": "P.IVA in copertina e piè di pagina del piano 1375028, e nel sito EGM; non EPC.",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-egm-contacts"
+        ]
+      }
+    ],
+    "dossier_coverage": [
+      {
+        "group": "MASE – tre indici noti",
+        "status": "inventariati_e_verificati_276_276",
+        "detail": "Procedure con indici 10237 (158), 18510 (23) e 18807 (95): 276 riferimenti unici, 29 pagine d'indice verificate su 29. Non equivale ad avere acquisito gli originali.",
+        "source_ids": [
+          "sg-mase-object-info"
+        ]
+      },
+      {
+        "group": "MASE – otto PDF prioritari",
+        "status": "8_originali_acquisiti_e_testo_estratto",
+        "detail": "Otto PDF originali per circa 9,9 MB, hash SHA-256 salvati; lettura semantica mirata delle pagine pertinenti. I restanti 268 riferimenti dei tre indici non risultano acquisiti da questo lotto.",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-plan",
+          "sg-mase-n1040",
+          "sg-mase-esito-sept"
+        ]
+      },
+      {
+        "group": "MASE – procedura 15213 (settembre 2026)",
+        "status": "indice_e_allegati_da_censire",
+        "detail": "Quarta verifica di ottemperanza avviata 17/09/2026, in istruttoria tecnica; non inclusa nei 276 del censimento, quindi non dichiarare completo il fascicolo.",
+        "source_ids": [
+          "sg-mase-object-info"
+        ]
+      },
+      {
+        "group": "Ruoli EPC/BoP e cronoprogramma",
+        "status": "lacune_aperte",
+        "detail": "Le relazioni tecniche descrivono lavorazioni, ma non identificano affidatari di fondazioni/erection/logistica con prova project-specific. Il Gantt è relativo; fine lavori e COD non certificati.",
+        "source_ids": [
+          "sg-mase-plan",
+          "sg-plan",
+          "sg-rwe"
+        ]
+      }
+    ],
+    "gaps": [
+      "268 riferimenti censiti ma non ancora acquisiti tra i tre indici MASE; la quarta procedura 15213 va censita separatamente.",
+      "Affidatari EPC, Civil/Electrical BoP, fondazioni, montaggio turbine, trasporti e OEM non confermati da prova specifica.",
+      "Non disponibili date documentate di fine costruzione o COD; Gantt BoP di circa cinque mesi senza data iniziale.",
+      "La prescrizione ambientale n.3 risulta parzialmente ottemperata al 24/09/2026; ricontrollare eventuali atti successivi.",
+      "Il titolo amministrativo originario 45 MW/10 WTG non deve essere scambiato con il progetto esecutivo da 42 MW/6 WTG."
+    ],
+    "evidence": [
+      {
+        "source_id": "sg-mase-plan",
+        "page": 1,
+        "sha256": "11b49234acf1e0e46116c0c362ee2196cb778bc614f24219f276e9c212246d6d",
+        "capture": "mase_original_verified_sha",
+        "reading": "text_and_visual",
+        "scope": "RWE proponente, EGM progettazione, P.IVA e 42 MW"
+      },
+      {
+        "source_id": "sg-mase-plan",
+        "page": 2,
+        "sha256": "11b49234acf1e0e46116c0c362ee2196cb778bc614f24219f276e9c212246d6d",
+        "capture": "mase_original_verified_sha",
+        "reading": "text",
+        "scope": "Recapiti aziendali EGM, 42 MW, sommario"
+      },
+      {
+        "source_id": "sg-plan",
+        "page": 1,
+        "sha256": "84e7a5e2189aa1e0294712ff039806a83afc7f98d723f51cf91b2522594eee34",
+        "capture": "mase_original_equals_user_library",
+        "reading": "text_and_visual",
+        "scope": "Gantt attività e durate relative per sei turbine, non calendario"
+      },
+      {
+        "source_id": "sg-mase-esito-sept",
+        "page": 2,
+        "sha256": "6d1c2c1386921b3eb454a9ebf9f0aac1efc1eaf5e895f2033ba3b3abd575c5e8",
+        "capture": "mase_original_verified_sha",
+        "reading": "text",
+        "scope": "MASE condizione 3 parzialmente ottemperata e richiesta nuova istanza"
+      },
+      {
+        "source_id": "sg-mase-n1040",
+        "page": 7,
+        "sha256": "70762741a8988ca02e41f3c1532727624ebad95b754ed302e355d9433ad1cb9b",
+        "capture": "mase_original_verified_sha",
+        "reading": "text",
+        "scope": "CTVIA motivazioni su delimitazioni aree, movimentazione e terre e rocce"
+      },
+      {
+        "source_id": "sg-mase-esito-jun",
+        "page": 2,
+        "sha256": "e49ff823ab77bc3866f30b52a03ede14478ffa3093b918c3dcb5d44bf646523e",
+        "capture": "mase_original_verified_sha",
+        "reading": "text",
+        "scope": "Esito procedurale precedente su condizioni 1 e 3"
+      }
+    ],
+    "acquired_document_shas": {
+      "sg-mase-plan": "11b49234acf1e0e46116c0c362ee2196cb778bc614f24219f276e9c212246d6d",
+      "sg-plan": "84e7a5e2189aa1e0294712ff039806a83afc7f98d723f51cf91b2522594eee34",
+      "sg-mase-n1040": "70762741a8988ca02e41f3c1532727624ebad95b754ed302e355d9433ad1cb9b",
+      "sg-mase-esito-sept": "6d1c2c1386921b3eb454a9ebf9f0aac1efc1eaf5e895f2033ba3b3abd575c5e8",
+      "sg-mase-esito-jun": "e49ff823ab77bc3866f30b52a03ede14478ffa3093b918c3dcb5d44bf646523e",
+      "sg-mase-elenco-jun": "ce0525ef83d7ebc4cfbdafa41f9239c7223edaa255dc612648ee9db316b4d050",
+      "sg-mase-elenco-original": "c274e051f0d724bbb6c2274bbe4cdf32b8bbab9efd2438257a219f437814c8dd",
+      "sg-mase-drawing": "e39cf23ae7d79380be4fdd1b5d1cb506b7b5ec21c3497255ba9e4b8b84240dd2"
+    },
+    "whole_dossier_complete": false,
+    "paid_model_calls": 0
+  }
+}

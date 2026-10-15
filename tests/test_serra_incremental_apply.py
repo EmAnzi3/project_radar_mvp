@@ -30,4 +30,14 @@ class IncrementalApplyTests(unittest.TestCase):
   self.write();raw=self.data.read_bytes()
   with self.assertRaises(ValueError):apply(self.root)
   self.assertEqual(raw,self.data.read_bytes())
+ def test_published_baseline_regenerates_committed_output(self):
+  self.r=json.loads((ROOT/'config/wind_serra_review.json').read_text())
+  expected=json.loads((ROOT/'docs/wind/data/projects-1.json').read_text())
+  baseline=json.loads((ROOT/'tests/fixtures/serra-published-baseline.json').read_text())
+  records=[baseline if p['id']=='serra-giannina' else p for p in expected]
+  self.config.write_text(json.dumps(self.r));self.data.write_text(json.dumps(records))
+  apply(self.root)
+  self.assertEqual(json.loads(self.data.read_text()),expected)
+  raw=self.data.read_bytes();self.assertTrue(apply(self.root)['reused_without_writes'])
+  self.assertEqual(self.data.read_bytes(),raw)
 if __name__=='__main__':unittest.main()
