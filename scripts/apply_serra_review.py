@@ -32,6 +32,8 @@ def apply(root=ROOT):
         # Retain the Company Network key; legal name stays in company_registry.
         for rel in p['relations']:
             if rel['company']=='EGM Project S.r.l.':rel['company']='EGM Project'
+        p['status_note']=review['status_note']
+        p['next']['label']=review['next_label']
         p['documentary']=review['documentary']
         path.write_text(json.dumps(records,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         return {'project_id':p['id'],'incremental_review':True,'other_projects_changed':0,'paid_model_calls':0}

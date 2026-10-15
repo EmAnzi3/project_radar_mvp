@@ -635,6 +635,527 @@
       "whole_document_read": false,
       "outcome_note": "Confronto piazzole CTR: 42 MW RWE/EGM; altre tavole non dichiarate lette.",
       "findings": []
+    },
+    "d275773840e4ec2d0713cd693c3803e8fc2531ccaac2dbe338ecdb79a41e3654": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1432824",
+      "sha256": "d275773840e4ec2d0713cd693c3803e8fc2531ccaac2dbe338ecdb79a41e3654",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Elenco: rinvio alla relazione condizione 4, non fonte di nuovi contratti.",
+      "findings": []
+    },
+    "12a3254b06593937acb0b5fc2abe40cb72598132dbd582f3fd11daa433a3ade7": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1432823",
+      "sha256": "12a3254b06593937acb0b5fc2abe40cb72598132dbd582f3fd11daa433a3ade7",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        20,
+        21
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Relazione settembre su condizione 4: proposta bande bianche/rosse, sfalci semestrali, IRIDA Bird Protect e pavimentazioni drenanti; proposta proponente, non esito MASE o ordine fornitore.",
+      "findings": [
+        {
+          "page": 9,
+          "excerpt": "IRIDA Bird Protect",
+          "statement": "Tecnologia proposta dal proponente per avifauna, non ordine o installazione attestata."
+        },
+        {
+          "page": 9,
+          "excerpt": "cadenza almeno semestrale",
+          "statement": "Sfalci e pulizia terreni almeno semestrali previsti nella risposta alla condizione4."
+        }
+      ]
+    },
+    "6e457fb112147e46e20e5396a8a3e3bd0d7e763fe2f346bff4bc2b9ef764c48a": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1438094",
+      "sha256": "6e457fb112147e46e20e5396a8a3e3bd0d7e763fe2f346bff4bc2b9ef764c48a",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "reading": "visual",
+      "whole_document_read": false,
+      "outcome_note": "Parere ARPAB 09/10/2026 letto sulle quattro pagine raster: punti i/ii/iii PARZIALMENTE IDONEO; iv IDONEO. Richiesto piano colturale con calendario, tecniche/mezzi e destinazione residui. Giudizio finale al MASE; nessuna prova di ottemperanza finale o sospensione.",
+      "findings": []
+    },
+    "d95b3ead65450b674a910fca6c080809094eb0f2408e747a015db851f992ffa6": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1421284",
+      "sha256": "d95b3ead65450b674a910fca6c080809094eb0f2408e747a015db851f992ffa6",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "RWE nota 29/07/2026: trasmette rev.03 terre/rocce per integrare campionamento lungo cavidotto. Firmataria Ludovica Nigiotti in quella lettera; non nuovo recapito commerciale né ruolo attuale dedotto.",
+      "findings": [
+        {
+          "page": 1,
+          "excerpt": "29.07.2026",
+          "statement": "La nota trasmette integrazione luglio per punti di campionamento lungo il cavidotto."
+        }
+      ]
+    },
+    "7ee2aa178e0a1f08314e9f0554fc3f93045455b49ae5f373ad361f7d77eb9fe2": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1421272",
+      "sha256": "7ee2aa178e0a1f08314e9f0554fc3f93045455b49ae5f373ad361f7d77eb9fe2",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        3,
+        12,
+        31,
+        40,
+        44,
+        48,
+        49
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Rapporto luglio rev.03: laboratori I.R.S.A.Q e Centro analisi chimiche Marconia; deposito TRS inferiore a sei mesi, non durata complessiva lavori. Copertina riporta codice C e 235 fogli, download effettivo 53 pagine: incoerenza conservata.",
+      "findings": [
+        {
+          "page": 44,
+          "excerpt": "laboratorio di anal isi I.R.S.A. Q",
+          "statement": "Rapporto luglio riconferma laboratorio e Centro analisi chimiche di Marconia."
+        },
+        {
+          "page": 49,
+          "excerpt": "inferior e a sei mesi",
+          "statement": "Durata relativa deposito temporaneo TRS, non durata del progetto."
+        }
+      ]
+    },
+    "16ead456aeccbb2d59a7d9fa7e582833df6545a6c1f3524691363f48a1d1e826": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1406635",
+      "sha256": "16ead456aeccbb2d59a7d9fa7e582833df6545a6c1f3524691363f48a1d1e826",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        3,
+        12,
+        28,
+        31,
+        40,
+        43,
+        47
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Revisione giugno terre/rocce, confronto con luglio senza rileggere versioni già in memoria. Stessi laboratori, non affidatari BoP; appendici di laboratorio non lette integralmente.",
+      "findings": []
+    },
+    "fa53f4c160d62fd119aca0aa248d1ea39ccc448cec11d821fc54a44fd5e728f4": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1406636",
+      "sha256": "fa53f4c160d62fd119aca0aa248d1ea39ccc448cec11d821fc54a44fd5e728f4",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        8,
+        24,
+        136
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "DPIA giugno: 42 MW Nordex N163/6.X; richiamo a NDA Committente/Nordex, non ordine OEM. Parco Eolico Banzi e Siemens Gamesa a p.136 appartengono ai progetti circostanti, esclusi dalla supply chain Serra. Le 582 pagine non sono dichiarate lette integralmente.",
+      "findings": [
+        {
+          "page": 24,
+          "excerpt": "Non -Disclosure Agreement",
+          "statement": "NDA Committente/Nordex richiamato dal progettista; non prova di contratto di fornitura."
+        }
+      ]
+    },
+    "1bcfaeff69d558039f73ed08c42b111f1dbb7829df5b677800e913c29563b65d": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1406637",
+      "sha256": "1bcfaeff69d558039f73ed08c42b111f1dbb7829df5b677800e913c29563b65d",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        9,
+        10,
+        11,
+        13,
+        24,
+        27,
+        38
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Piano rifiuti aggiornato: ruoli normativi generici e laboratorio già nominato; nessun trasportatore/smaltitore o appaltatore nominale ricavato dalla selezione.",
+      "findings": []
+    },
+    "9213ba08c7992963e297cbfc4d276a27fc68292ad69f7d687311f4a881c8a333": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1406638",
+      "sha256": "9213ba08c7992963e297cbfc4d276a27fc68292ad69f7d687311f4a881c8a333",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        10,
+        24
+      ],
+      "reading": "text_and_visual",
+      "whole_document_read": false,
+      "outcome_note": "PMA giugno: figura 3.6 p.24, cronoprogramma relativo mesi 1–18 con esercizio al mese 18; comprende progettazione, indagini, permessi, lavori e collaudi. Nessuna data iniziale o COD di calendario; distinto dal BoP relativo di circa 5 mesi già letto.",
+      "findings": [
+        {
+          "page": 24,
+          "excerpt": "Cronoprogramma lavori realizzazione parco eolico",
+          "statement": "Figura3.6 visualizzata: mesi relativi1–18 senza ancoraggio di calendario."
+        }
+      ]
+    },
+    "47e13442651ed54f7c8cb3820a1183a579a8ae489f2a1129d954b28664ebdea7": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375011",
+      "sha256": "47e13442651ed54f7c8cb3820a1183a579a8ae489f2a1129d954b28664ebdea7",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        3,
+        11,
+        13,
+        14,
+        25,
+        26
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Rapporto originario febbraio: I.R.S.A.Q laboratorio e recapiti/P.IVA nei rapporti di prova; Engineering Geology destinatario del certificato, non per questo contractor. Appendici chimiche non lette integralmente.",
+      "findings": [
+        {
+          "page": 14,
+          "excerpt": "laboratorio di analisi I.R.S.A.Q",
+          "statement": "Laboratorio nominato per analisi terre e rocce; non impresa esecutrice."
+        },
+        {
+          "page": 25,
+          "excerpt": "01211000763",
+          "statement": "P.IVA I.R.S.A.Q nel rapporto di prova."
+        },
+        {
+          "page": 25,
+          "excerpt": "irsaqsrl@virgilio.it",
+          "statement": "Email laboratorio."
+        },
+        {
+          "page": 25,
+          "excerpt": "irsaqsrl@pec.it",
+          "statement": "PEC laboratorio."
+        },
+        {
+          "page": 25,
+          "excerpt": "0971/57201",
+          "statement": "Telefono laboratorio."
+        }
+      ]
+    },
+    "346d62103eeb0171bf5ce4468ec54d0a1b76c5f66cab76cfe1fdf9dffa6fd881": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375014",
+      "sha256": "346d62103eeb0171bf5ce4468ec54d0a1b76c5f66cab76cfe1fdf9dffa6fd881",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        9,
+        10,
+        11,
+        13,
+        24,
+        27,
+        38
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Piano rifiuti originario: identità/42MW, laboratorio e attività di gestione; nessuna attribuzione nominale EPC o trasporto rifiuti.",
+      "findings": []
+    },
+    "1c6e37e56de3ea7bc9b02338156794f02d721cfe4a79e6a598ac198c2460b0e4": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375013",
+      "sha256": "1c6e37e56de3ea7bc9b02338156794f02d721cfe4a79e6a598ac198c2460b0e4",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        8,
+        9,
+        17
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Pavimentazioni: carichi convogli e portanza di progetto, non trasportatore nominato o prova di fornitura; nessuna data di costruzione ancorata.",
+      "findings": []
+    },
+    "ad22eb9f0f07de4c5966a5ae0853afa47a57930060001f100f0a7e66be286cbf": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375008",
+      "sha256": "ad22eb9f0f07de4c5966a5ae0853afa47a57930060001f100f0a7e66be286cbf",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        12,
+        37,
+        43
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Relazione idraulica: drenaggi e attraversamenti cavidotti, cartiglio EGM/RWE; nessun nuovo contratto ricavato.",
+      "findings": []
+    },
+    "1bede9b8b0afff8ac1bb24b7b27c7e2c9bd2ec33dbce94d417b931bff5d1af85": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375009",
+      "sha256": "1bede9b8b0afff8ac1bb24b7b27c7e2c9bd2ec33dbce94d417b931bff5d1af85",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        17,
+        18,
+        19
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Dimensionamento cavi area parco: dati di progetto MT e cartiglio EGM; nessun installatore nominato dalla selezione.",
+      "findings": []
+    },
+    "d7d9c2f62a61ea554d335a26ee68d14fd6dcc06383c8289bd831d1d21ab2dd65": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375010",
+      "sha256": "d7d9c2f62a61ea554d335a26ee68d14fd6dcc06383c8289bd831d1d21ab2dd65",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        3
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Tabelle dimensionamento cavi a 30 kV: dati tecnici, non contratto di fornitura.",
+      "findings": []
+    },
+    "a5d4d8450b9fa22ac06490cc5e5d8ba4843f1ebb6247a18517901bd6aeded3d3": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375012",
+      "sha256": "a5d4d8450b9fa22ac06490cc5e5d8ba4843f1ebb6247a18517901bd6aeded3d3",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        4,
+        16,
+        19,
+        24,
+        25,
+        26,
+        27
+      ],
+      "reading": "targeted_text_scan",
+      "whole_document_read": false,
+      "outcome_note": "Relazione generale: separazione impianto utente RWE e stallo Terna, SET 30/150 kV 50/63 MVA. Dicitura STMG45MW non sostituisce configurazione42MW; nessun esecutore assegnato.",
+      "findings": [
+        {
+          "page": 25,
+          "excerpt": "di proprietà di Terna S.p.a.",
+          "statement": "Distinzione opere utente e stallo rete, nessun contratto di esecuzione assegnato."
+        }
+      ]
+    },
+    "8fef1d1521335c30051011fadfabe9615dd7619f14106b838db2e980ac76ec4f": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375031",
+      "sha256": "8fef1d1521335c30051011fadfabe9615dd7619f14106b838db2e980ac76ec4f",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Layout SSE: conferma STE nel cartiglio, SINT progettazione, trasformatore 50/63 MVA; nessun ampliamento di ruolo a EPC.",
+      "findings": []
+    },
+    "70bd82ce763d0925f6ac54ef170b2769ff8b7954dd2bc695fbb8b34ff7e96eca": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375032",
+      "sha256": "70bd82ce763d0925f6ac54ef170b2769ff8b7954dd2bc695fbb8b34ff7e96eca",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Sezioni SSE: STE/SINT e configurazione opere, recapiti già registrati; niente nuovo award.",
+      "findings": []
+    },
+    "6d57dd06e0a9355d7df6189b05b340376b52376db6322e5629304eb912c8c6e5": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375033",
+      "sha256": "6d57dd06e0a9355d7df6189b05b340376b52376db6322e5629304eb912c8c6e5",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Cavidotto AT e attraversamento: stessi STE/SINT; infrastruttura prevista, non esecutore provato.",
+      "findings": []
+    },
+    "cbaf24fd40908a60a035fe57dbfe4b5c3f1cb315fa36b4143b5616a260451e19": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375036",
+      "sha256": "cbaf24fd40908a60a035fe57dbfe4b5c3f1cb315fa36b4143b5616a260451e19",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Copertina relazione idrogeologica EGM/geologo, comuni Banzi/Genzano. Analisi mirata identità/contatti, non audit delle 48 pagine.",
+      "findings": []
+    },
+    "e2df360f8ffea4fb2f74726ffcac101557bf47f1c1631b46b9c333bddcc627ea": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375038",
+      "sha256": "e2df360f8ffea4fb2f74726ffcac101557bf47f1c1631b46b9c333bddcc627ea",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        4
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Materiali plinti diretti PESG03/05/08: Esteyco nel documento e localizzazione coerente p.4; non risolve per deduzione l’errore Serra Palino dell’altro documento né prova incarico esecutivo.",
+      "findings": []
+    },
+    "579fe2b4aa504e6d83fb52483ba39d9d3022745ae5ad313cbc4819d8553afc5d": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1375040",
+      "sha256": "579fe2b4aa504e6d83fb52483ba39d9d3022745ae5ad313cbc4819d8553afc5d",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1,
+        2,
+        4
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Materiali fondazione PESG04bis: Esteyco nel documento, localizzazione coerente; nessun fornitore di getti o fondazioni assegnato.",
+      "findings": []
+    },
+    "183e2d2d1f9dc9a81d25fc07beb60ab8f00c9a48ffee70b095316d680106d8bc": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1374988",
+      "sha256": "183e2d2d1f9dc9a81d25fc07beb60ab8f00c9a48ffee70b095316d680106d8bc",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Tavola campo base: ingombro progettuale 9472,27 m². Non spazio disponibile accertato né affidamento moduli di cantiere.",
+      "findings": [
+        {
+          "page": 1,
+          "excerpt": "9472.27m²",
+          "statement": "Ingombro progettuale campo base 9472,27m²."
+        }
+      ]
+    },
+    "37f123549665a95054cbd4718ad7ad7e0d4e0b38ff8da81538615115c0f868ac": {
+      "project_id": "serra-giannina",
+      "url": "https://va.mite.gov.it/File/Documento/1374983",
+      "sha256": "37f123549665a95054cbd4718ad7ad7e0d4e0b38ff8da81538615115c0f868ac",
+      "analysis_status": "targeted_reviewed",
+      "reviewed_on": "2026-10-15",
+      "pages_reviewed": [
+        1
+      ],
+      "reading": "text",
+      "whole_document_read": false,
+      "outcome_note": "Tavola area trasbordo: ingombro 12500 m². Non sommare senza verifica geometrica con il campo base e non dedurre contratto logistico.",
+      "findings": [
+        {
+          "page": 1,
+          "excerpt": "12500.0 mq",
+          "statement": "Ingombro progettuale area trasbordo12500m²."
+        }
+      ]
     }
   },
   "versions_by_url": {
@@ -733,6 +1254,78 @@
     ],
     "https://va.mite.gov.it/File/Documento/1375019": [
       "7baf3d47bd1d539a7fc19c9d007e78d10827bc64a4e3115cdc0a1247a5facfd7"
+    ],
+    "https://va.mite.gov.it/File/Documento/1432824": [
+      "d275773840e4ec2d0713cd693c3803e8fc2531ccaac2dbe338ecdb79a41e3654"
+    ],
+    "https://va.mite.gov.it/File/Documento/1432823": [
+      "12a3254b06593937acb0b5fc2abe40cb72598132dbd582f3fd11daa433a3ade7"
+    ],
+    "https://va.mite.gov.it/File/Documento/1438094": [
+      "6e457fb112147e46e20e5396a8a3e3bd0d7e763fe2f346bff4bc2b9ef764c48a"
+    ],
+    "https://va.mite.gov.it/File/Documento/1421284": [
+      "d95b3ead65450b674a910fca6c080809094eb0f2408e747a015db851f992ffa6"
+    ],
+    "https://va.mite.gov.it/File/Documento/1421272": [
+      "7ee2aa178e0a1f08314e9f0554fc3f93045455b49ae5f373ad361f7d77eb9fe2"
+    ],
+    "https://va.mite.gov.it/File/Documento/1406635": [
+      "16ead456aeccbb2d59a7d9fa7e582833df6545a6c1f3524691363f48a1d1e826"
+    ],
+    "https://va.mite.gov.it/File/Documento/1406636": [
+      "fa53f4c160d62fd119aca0aa248d1ea39ccc448cec11d821fc54a44fd5e728f4"
+    ],
+    "https://va.mite.gov.it/File/Documento/1406637": [
+      "1bcfaeff69d558039f73ed08c42b111f1dbb7829df5b677800e913c29563b65d"
+    ],
+    "https://va.mite.gov.it/File/Documento/1406638": [
+      "9213ba08c7992963e297cbfc4d276a27fc68292ad69f7d687311f4a881c8a333"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375011": [
+      "47e13442651ed54f7c8cb3820a1183a579a8ae489f2a1129d954b28664ebdea7"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375014": [
+      "346d62103eeb0171bf5ce4468ec54d0a1b76c5f66cab76cfe1fdf9dffa6fd881"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375013": [
+      "1c6e37e56de3ea7bc9b02338156794f02d721cfe4a79e6a598ac198c2460b0e4"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375008": [
+      "ad22eb9f0f07de4c5966a5ae0853afa47a57930060001f100f0a7e66be286cbf"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375009": [
+      "1bede9b8b0afff8ac1bb24b7b27c7e2c9bd2ec33dbce94d417b931bff5d1af85"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375010": [
+      "d7d9c2f62a61ea554d335a26ee68d14fd6dcc06383c8289bd831d1d21ab2dd65"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375012": [
+      "a5d4d8450b9fa22ac06490cc5e5d8ba4843f1ebb6247a18517901bd6aeded3d3"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375031": [
+      "8fef1d1521335c30051011fadfabe9615dd7619f14106b838db2e980ac76ec4f"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375032": [
+      "70bd82ce763d0925f6ac54ef170b2769ff8b7954dd2bc695fbb8b34ff7e96eca"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375033": [
+      "6d57dd06e0a9355d7df6189b05b340376b52376db6322e5629304eb912c8c6e5"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375036": [
+      "cbaf24fd40908a60a035fe57dbfe4b5c3f1cb315fa36b4143b5616a260451e19"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375038": [
+      "e2df360f8ffea4fb2f74726ffcac101557bf47f1c1631b46b9c333bddcc627ea"
+    ],
+    "https://va.mite.gov.it/File/Documento/1375040": [
+      "579fe2b4aa504e6d83fb52483ba39d9d3022745ae5ad313cbc4819d8553afc5d"
+    ],
+    "https://va.mite.gov.it/File/Documento/1374988": [
+      "183e2d2d1f9dc9a81d25fc07beb60ab8f00c9a48ffee70b095316d680106d8bc"
+    ],
+    "https://va.mite.gov.it/File/Documento/1374983": [
+      "37f123549665a95054cbd4718ad7ad7e0d4e0b38ff8da81538615115c0f868ac"
     ]
   }
 }

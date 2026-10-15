@@ -18,6 +18,13 @@ class MemoryTests(unittest.TestCase):
  def test_extraction_never_counts_as_analysis(self):
   q=m.plan(self.man,self.mem,self.root)
   self.assertEqual(len(q['pending']),1);self.assertEqual(q['analyzed_new'],0)
+ def test_new_duplicate_has_one_queue_entry_and_no_second_text_access(self):
+  alias='https://va.mite.gov.it/File/Documento/456'
+  row=copy.deepcopy(self.man['resources'][self.url]);row['text']='must-not-be-read.json'
+  self.man['resources'][alias]=row
+  q=m.plan(self.man,self.mem,self.root)
+  self.assertEqual(len(q['pending']),1)
+  self.assertEqual(q['pending'][0]['alias_urls'],[alias])
  def test_unchanged_skips_text_access(self):
   mem=m.record(self.mem,self.review,self.packet,self.root/'a.pdf')
   (self.root/'text.json').unlink()

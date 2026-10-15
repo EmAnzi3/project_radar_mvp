@@ -46,8 +46,11 @@ try:
    assert sp.locator('a[href="mailto:antonia.raino@rwe.com"]').count()==1
    assert sp.locator('a[href="tel:+393499341765"]').count()==1
    assert sp.locator('a[href$="1433468#page=14"]').count()==1
-   assert '244 riferimenti residui' in sp.inner_text()
-   assert '279' in sp.inner_text() and '30 PDF distinti' in sp.inner_text()
+   assert '223 riferimenti residui' in sp.inner_text()
+   assert '279' in sp.inner_text() and '54 PDF distinti' in sp.inner_text()
+   assert sp.locator('a[href="mailto:irsaqsrl@virgilio.it"]').count()==1
+   assert 'PARZIALMENTE IDONEI' in sp.inner_text()
+   assert sp.locator('a[href$="1438094#page=3"]').count()>=1
    sp.scroll_into_view_if_needed();page.screenshot(path=str(OUT/f'serra-{width}.png'))
    sp.locator('a[href="mailto:antonia.raino@rwe.com"]').scroll_into_view_if_needed()
    page.screenshot(path=str(OUT/f'serra-contacts-{width}.png'))

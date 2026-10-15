@@ -16,6 +16,7 @@ def plan(manifest, memory, root):
     if manifest['project_id'] != memory['project_id']:
         raise ValueError('Wrong project memory')
     queue, skipped, failed = [], [], []
+    queued_by_sha={}
     for url, row in manifest['resources'].items():
         if row.get('status') in ('error', 'offline_missing_source'):
             failed.append({'url':url, 'error':row.get('error'),
@@ -28,11 +29,15 @@ def plan(manifest, memory, root):
         if old and old.get('analysis_status')=='targeted_reviewed':
             skipped.append({'url':url,'sha256':sha,'reason':'same_bytes_reviewed'})
             continue
+        if sha in queued_by_sha:
+            queued_by_sha[sha].setdefault('alias_urls',[]).append(url)
+            continue
         text=json.loads(safe_path(Path(root),row['text']).read_text(encoding='utf-8'))
         # No auto facts: reviewers inspect the project-specific text and drawings.
         queue.append({'url':url,'sha256':sha,'title':row['title'],
                       'page_count':text.get('page_count'),
                       'pages':text.get('pages',[]),'analysis_status':'pending_targeted_review'})
+        queued_by_sha[sha]=queue[-1]
     return {'project_id':manifest['project_id'],'pending':queue,
             'skipped':skipped,'failures':failed,'analyzed_new':0,'paid_model_calls':0}
 

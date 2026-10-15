@@ -1,0 +1,155 @@
+{
+  "project_id": "serra-giannina",
+  "scope_note": "Quarto lotto preparato: allegati di analisi, monitoraggi e opere civili, più parere VIA storico per contesto; nessun contenuto dichiarato acquisito o analizzato.",
+  "allowed_hosts": [
+    "va.mite.gov.it",
+    "va.mase.gov.it"
+  ],
+  "link_depth": 0,
+  "sources": [
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1421273",
+      "title": "Integrazioni del 29/07/2026 - PC3_CertificatidelleAnalisiChimiche.pdf",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395193",
+      "title": "Integrazioni del 30/04/2026 - REPORT MONITORAGGIO PAESAGGIO E STATO FISICO DEI LUOGHI - ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395192",
+      "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DEL RUMORE - ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395190",
+      "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DELLA FAUNA (AVIFAUNA E CHIROTTEROFAUNA)- ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395189",
+      "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DELLA VEGETAZIONE - ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395188",
+      "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DEL SUOLO - ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395187",
+      "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO ACQUE SUPERFICIALI - ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395186",
+      "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO ACQUE SOTTERRANEE- ANTE OPERAM",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1377036",
+      "title": "Integrazioni del 25/03/2026 - Carta dei punti di monitoraggio ambientale escluso PSFL",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1377037",
+      "title": "Integrazioni del 25/03/2026 - Piano di Monitoraggio Ambientale",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1377038",
+      "title": "Integrazioni del 25/03/2026 - Carta dei punti di monitoraggio del paesaggio e stato fisico dei luoghi",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1377039",
+      "title": "Integrazioni del 25/03/2026 - Relazione dimensionamento cavi - Area Parco",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1332029",
+      "title": "Piano di Monitoraggio Ambientale",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1385807",
+      "title": "Integrazioni del 22/04/2026 - Revisione 01 del Rapporto Tecnico di Caratterizzazione delle Terre e Rocce da Scavo",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375030",
+      "title": "Relazione di Ottemperanza - Impianto Eolico Serra Giannina",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375041",
+      "title": "Relazione di Ottemperanza - Impianto Eolico Serra Giannina",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374977",
+      "title": "SEZIONI TIPO CAMPO BASE",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374978",
+      "title": "SEZIONI TIPO AREA TRASBORDO",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374999",
+      "title": "PLANIMETRIA OPERE IDRAULICHE",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375000",
+      "title": "Sezioni Opere Idrauliche - Impianto Eolico nei Comuni di Banzi e Genzano",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374967",
+      "title": "Planimetria e sezioni - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374974",
+      "title": "Piano di Progetto - Impianto di Produzione di Energia Elettrica da Fonte Eolica",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374976",
+      "title": "Sezioni tipo stradale - Impianto eolico",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/642674",
+      "title": "Allegato al Decreto del Ministero della Transizione Ecologica - Parere CTVA del 23/07/2021",
+      "scope": "project_document",
+      "expected": "pdf"
+    }
+  ]
+}

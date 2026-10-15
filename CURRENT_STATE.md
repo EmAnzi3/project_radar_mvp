@@ -1,7 +1,9 @@
 # Current State
-### Serra Giannina — terzo lotto in lavorazione 2026-10-15
+### Serra Giannina — terzo lotto completato 2026-10-15
 
-PR14 ancora aperta: nessun merge/pubblicazione. Avviata acquisizione terzo lotto di 24, inclusi i tre allegati della procedura 15213. Risolti i rilievi di review: validazione ID/URL degli indici offline, alias URL con analisi per hash immutabile, materiali operativi spostati in `docs_admin/wind-research` fuori dalla radice pubblicata. Il report pubblico conserva solo evidenze commerciali e fonti istituzionali. I conteggi certificati restano 32 riferimenti / 30 PDF distinti finché il nuovo lotto non è acquisito e analizzato.
+PR14 aggiornata, ancora senza merge/pubblicazione. Terzo lotto: **24/24 riferimenti acquisiti, 24 nuovi PDF distinti analizzati in modo mirato**, zero errori. Totale **56 riferimenti / 54 contenuti distinti**, su 279 censiti; residuo **223**, quarto lotto di 24 preparato. I tre allegati della procedura 15213 sono acquisiti; ARPAB 09/10 condizione 4: i/ii/iii parzialmente idonei e iv idoneo, giudizio finale MASE da acquisire. Nuovo contatto laboratorio I.R.S.A.Q con P.IVA/recapiti; sfalci, aree logistiche e programma generale relativo di 18 mesi documentati, nessun nuovo EPC/BoP o COD certo.
+
+Risolti i rilievi di review: validazione identità ID/URL degli indici offline; URL alias registrati senza alterare l'analisi per hash; materiali operativi in `docs_admin/wind-research`, fuori dalla radice pubblicata. La coda deduplica anche i nuovi hash identici nello stesso lotto. Memoria: 54 revisioni, riavvio terzo lotto: 24 skip / 0 pending / 0 nuove analisi. Pagine e limiti espliciti; le 1.616 pagine del lotto non sono dichiarate lette integralmente. Dettagli commerciali in `docs/wind/research/serra-third-lot-review.md`; prove operative in `docs_admin/wind-research/serra-third-lot-review.md`.
 
 ### Serra Giannina — secondo lotto 2026-10-15
 
