@@ -1,0 +1,44 @@
+name: Wind Serra Batch 2
+on:
+  pull_request:
+    paths:
+      - 'scripts/select_serra_batch2.py'
+      - '.github/workflows/wind_serra_batch2.yml'
+      - 'config/wind_serra_mase_priority.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  batch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - run: python scripts/wind_mase_inventory.py --config config/wind_serra_mase.json --output reports/serra-index
+      - run: python scripts/select_serra_batch2.py --inventory reports/serra-index/inventory.json --old config/wind_serra_mase_priority.json --output config/serra-batch2.json
+      - run: python scripts/harvest_wind_project.py --config config/serra-batch2.json --output reports/serra-batch2
+      - run: python scripts/harvest_wind_project.py --config config/serra-batch2.json --output reports/serra-batch2 --offline
+      - name: Verify no repeat network or extraction
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('reports/serra-batch2')
+          a=json.loads((p/'harvest-first.json').read_text())
+          b=json.loads((p/'harvest-offline.json').read_text())
+          assert b['network_requests']==0 and b['bytes_transferred']==0 and b['text_extractions']==0
+          assert a['resource_count']==24 and not a['all_project_documentation_certified']
+          print('PDF',a['pdf_resources'],'errors',len(a['errors']))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serra-batch2
+          path: |
+            reports/serra-batch2
+            config/serra-batch2.json
+          retention-days: 14
