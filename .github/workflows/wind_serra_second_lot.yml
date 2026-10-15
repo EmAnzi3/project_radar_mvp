@@ -17,6 +17,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install requests==2.32.5 pypdf==5.9.0
+      - uses: actions/cache@v4
+        with:
+          path: reports/serra-second-lot
+          key: serra-second-lot-v1-${{ hashFiles('config/serra_secondo_lotto_config.json') }}-${{ github.run_id }}
+          restore-keys: serra-second-lot-v1-${{ hashFiles('config/serra_secondo_lotto_config.json') }}-
       - name: Acquire all 24; retain per-document failures
         run: python scripts/harvest_wind_project.py --config config/serra_secondo_lotto_config.json --output reports/serra-second-lot
       - name: Verify warm restart
@@ -28,6 +33,10 @@ jobs:
           r=json.loads(Path('reports/serra-second-lot/harvest-offline.json').read_text())
           assert r['network_requests']==r['bytes_transferred']==r['text_extractions']==0
           PY
+      - name: Build targeted queue from persistent reviewed hashes
+        run: |
+          python -m unittest discover -s tests -v
+          python scripts/wind_document_memory.py --harvest reports/serra-second-lot --memory docs/wind/research/serra-document-memory.json --output reports/serra-second-lot/analysis-queue.json
       - name: Resolve fourth procedure index from official object page
         run: |
           python - <<'PY'
@@ -46,10 +55,12 @@ jobs:
                   p=Parser();p.feed(body.decode('utf-8-sig'))
                   links=sorted({urljoin(root,h) for h in p.links if re.search(r'/Oggetti/Documentazione/7112/\d+',h)})
                   report['index_links']=links
-                  # Procedure ID and documentation index ID are different on MASE.
-                  # Preserve HTML for verification; do not guess index /15213.
                   report['procedure_id']='15213'
-                  report['note']='Resolve new index from object HTML and procedure label before enumerating.'
+                  matches={urljoin(root,h) for cells,hrefs in p.rows if '15213' in cells for h in hrefs if re.search(r'/Oggetti/Documentazione/7112/\d+$',h)}
+                  if len(matches)!=1:raise ValueError('Fourth procedure index not uniquely resolved')
+                  index=matches.pop()
+                  report['inventory']=inventory(s,{'id':index.rsplit('/',1)[-1],'url':index})
+                  report['complete']=report['inventory']['complete']
           except Exception as e:report['error']=str(e)[:400]
           (out/'resolution.json').write_text(json.dumps(report,indent=2))
           PY
@@ -69,4 +80,6 @@ jobs:
           r=json.loads(Path('reports/serra-second-lot/harvest-first.json').read_text())
           assert r['resource_count']==24
           assert r['pdf_resources']==24 and not r['errors'],r
+          fourth=json.loads(Path('reports/serra-fourth/resolution.json').read_text())
+          assert fourth['complete'],fourth
           PY

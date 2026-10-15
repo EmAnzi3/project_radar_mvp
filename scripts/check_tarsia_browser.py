@@ -1,5 +1,5 @@
 """Actual drawer checks at desktop/mobile widths; other projects must stay unchanged."""
-import json,threading,shutil
+import json,threading,shutil,os
 from functools import partial
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from pathlib import Path
@@ -13,7 +13,7 @@ threading.Thread(target=server.serve_forever,daemon=True).start()
 results=[]
 try:
  with sync_playwright() as w:
-  browser=w.chromium.launch(headless=True)
+  browser=w.chromium.launch(headless=True,executable_path=os.environ.get('WIND_BROWSER_EXECUTABLE'))
   for width,height in ((1440,1000),(390,844)):
    page=browser.new_page(viewport={'width':width,'height':height})
    errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -43,7 +43,16 @@ try:
    assert '06400370968' in sp.inner_text()
    assert 'Parzialmente' in sp.inner_text() or 'parzialmente' in sp.inner_text()
    assert sp.locator('a[href="mailto:info@egmproject.it"]').count()==1
+   assert sp.locator('a[href="mailto:antonia.raino@rwe.com"]').count()==1
+   assert sp.locator('a[href="tel:+393499341765"]').count()==1
+   assert sp.locator('a[href$="1433468#page=14"]').count()==1
+   assert '244 riferimenti residui' in sp.inner_text()
+   assert '279' in sp.inner_text() and '30 PDF distinti' in sp.inner_text()
    sp.scroll_into_view_if_needed();page.screenshot(path=str(OUT/f'serra-{width}.png'))
+   sp.locator('a[href="mailto:antonia.raino@rwe.com"]').scroll_into_view_if_needed()
+   page.screenshot(path=str(OUT/f'serra-contacts-{width}.png'))
+   sp.get_by_text('MASE – quattro indici verificati',exact=True).scroll_into_view_if_needed()
+   page.screenshot(path=str(OUT/f'serra-coverage-{width}.png'))
    assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
    assert not sp.evaluate('(e)=>e.scrollWidth>e.clientWidth+1')
    assert not errors,errors

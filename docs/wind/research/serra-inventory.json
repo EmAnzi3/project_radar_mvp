@@ -1,0 +1,2876 @@
+{
+  "project_id": "serra-giannina",
+  "object_id": 7112,
+  "checked_at": "2026-10-15T07:37:48.344466+00:00",
+  "procedures": [
+    {
+      "id": "10237",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/10237",
+      "expected": 158,
+      "pages_declared": 16,
+      "pages_visited": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "rows": [
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356956",
+          "title": "Avviso al pubblico del 17/06/2019",
+          "filename": "15344.pdf",
+          "section": "Avviso al Pubblico",
+          "code": "15344",
+          "published": "17/06/2019",
+          "scale": "-",
+          "size": "344 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/642673",
+          "title": "Decreto del Ministero della Transizione Ecologica - Impianto di produzione di energia elettrica da fonte eolica denominato \"Serra Giannina\" costituito da 10 aerogeneratori, ciascuno di potenza pari a 4,5 MW, per una potenza complessiva di 45 MW, localizzato nei Comuni di Genzano di Lucania (PZ) e Banzi (PZ) e relative opere di connessione elettrica e infrastrutture necessarie.",
+          "filename": "DM_2022-0000210.pdf",
+          "section": "Decreto VIA",
+          "code": "DM-2022-0000210",
+          "published": "03/06/2022",
+          "scale": "-",
+          "size": "1899 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/642674",
+          "title": "Allegato al Decreto del Ministero della Transizione Ecologica - Parere CTVA del 23/07/2021",
+          "filename": "Parere_n_131_Plenaria_del_23_luglio_2021_IDVIP_4707.pdf",
+          "section": "Decreto VIA",
+          "code": "PRR n . 131",
+          "published": "03/06/2022",
+          "scale": "-",
+          "size": "1132 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/642675",
+          "title": "Allegato al Decreto del Ministero della Transizione Ecologica - Delibera del Consiglio dei Ministri del 18/02/2022",
+          "filename": "MiTE_2022-0030091.pdf",
+          "section": "Decreto VIA",
+          "code": "MiTE-2022-0030091",
+          "published": "03/06/2022",
+          "scale": "-",
+          "size": "285 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356695",
+          "title": "QUADRO DI RIFERIMENTO PROGRAMMATICO",
+          "filename": "PESG_A_17_a_Quadro_di_riferimento_programmatico.pdf",
+          "section": "Quadro di Riferimento Programmatico",
+          "code": "PESG-A-17-a-Quadro-di-riferimento-programmatico",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "7890 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/418175",
+          "title": "Integrazioni del 30/07/2020 - Proposta di mitigazione componente paesaggio",
+          "filename": "PESG_PM_Proposta_Mitigazione_Paesaggio.pdf",
+          "section": "Documentazione integrativa/Documentazione integrativa volontaria",
+          "code": "PESG-PM",
+          "published": "30/07/2020",
+          "scale": "-",
+          "size": "12229 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356696",
+          "title": "QUADRO DI RIFERIMENTO PROGETTUALE",
+          "filename": "PESG_A_17_b_Quadro_di_riferimento_progettuale.pdf",
+          "section": "Quadro di Riferimento Progettuale",
+          "code": "PESG-A-17-b-Quadro-di-riferimento-progettuale",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "4669 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356576",
+          "title": "Relazione Generale",
+          "filename": "PESG_A_1-Relazione_Generale.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-1-Relazione-Generale",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "8930 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356577",
+          "title": "Computo metrico estimativo",
+          "filename": "PESG_A_1_a-Computo_metrico_estimativo.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-1-a-Computo-metrico-estimativo",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "584 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356578",
+          "title": "Relazione Geologica",
+          "filename": "PESG_A_2-Relazione_Geologica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-2-Relazione-Geologica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "5382 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356579",
+          "title": "Relazione Idrologica e Idraulica",
+          "filename": "PESG_A_3-Relazione_idrologica_e_idraulica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-3-Relazione-idrologica-e-idraulica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "10229 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356580",
+          "title": "Relazione Archeologica",
+          "filename": "PESG_A_4-Relazione_Archeologica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-4-Relazione-Archeologica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "3662 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356581",
+          "title": "Stralcio cartografico con indicazione dei vincoli archeologici",
+          "filename": "PESG_A_4_1-Stralcio_cartografico_con_indicazione_dei_vincoli_archeologici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-4-1-Stralcio-cartografico-con-indicazione-dei-vincoli-archeologici",
+          "published": "11/06/2019",
+          "scale": "1:25000",
+          "size": "9717 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356582",
+          "title": "Stralcio cartografico con indicazione dei siti noti da bibliografia",
+          "filename": "PESG_A_4_2-Stralcio_cartografico_con_ubicazione_dei_siti_noti_da_bibliografia.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-4-2-Stralcio-cartografico-con-ubicazione-dei-siti-noti-da-bibliografia",
+          "published": "11/06/2019",
+          "scale": "1:10000",
+          "size": "3832 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356583",
+          "title": "Carta del potenziale archeologico",
+          "filename": "PESG_A_4_3-Carta_del_Potenziale_Archeolgico.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-4-3-Carta-del-Potenziale-Archeolgico",
+          "published": "11/06/2019",
+          "scale": "1:10000",
+          "size": "2605 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356584",
+          "title": "Relazione Specialistica - Studio Anemologico",
+          "filename": "PESG_A_5-Studio_Anemologico.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-5-Studio-Anemologico",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "16424 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356585",
+          "title": "Relazione Specialistica - Studio di fattibilità acustica",
+          "filename": "PESG_A_6-Studio_di_fattibilita_Acustica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-6-Studio-di-fattibilita-Acustica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "9883 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356586",
+          "title": "Relazione specialistica - Analisi degli effetti della rottura degli organi rotanti",
+          "filename": "PESG_A_7_Specialistica_Rottura_Organi_Rotanti_pdf.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-7-Specialistica-Rottura-Organi-Rotanti-pdf",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "1961 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356587",
+          "title": "Relazione specialistica - Studi degli effetti di shadow flickering",
+          "filename": "PESG_A_8_Studi_shadow_flickering.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-8-Studi-shadow-flickering",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "2205 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356588",
+          "title": "Relazione tecnica impianto eolico",
+          "filename": "PESG_A_9-Relazione_tecnica_impianto_eolico.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-9-Relazione-tecnica-impianto-eolico",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "5135 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356589",
+          "title": "Relazione tecnica delle opere architettoniche",
+          "filename": "PESG_A_10_-Relazione_tecnica_delle_opere_architettoniche.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-10--Relazione-tecnica-delle-opere-architettoniche",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "1784 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356590",
+          "title": "Relazione preliminare sulle strutture",
+          "filename": "PESG_A_11_-Relazione_preliminare_sulle_strutture.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-11--Relazione-preliminare-sulle-strutture",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "3123 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356591",
+          "title": "Relazione tecnica specialistica sull'impatto elettromagnetico",
+          "filename": "PESG_A_12_Relazione_tecnica_impatto_elettromagnetico.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-12-Relazione-tecnica-impatto-elettromagnetico",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "1221 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356592",
+          "title": "Piano particellare di esproprio descrittivo",
+          "filename": "PESG_A_13_Piano_Particellare_Descrittivo.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-13-Piano-Particellare-Descrittivo",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "4729 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356593",
+          "title": "Cronoprogramma",
+          "filename": "PESG_A_14-Cronoprogramma.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-14-Cronoprogramma",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "563 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356594",
+          "title": "Disciplinare descrittivo e prestazionale degli elementi tecnici",
+          "filename": "PESG_A_15_Disciplinare_descrittivo_e_prestazion.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-15-Disciplinare-descrittivo-e-prestazion",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "3427 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356595",
+          "title": "Corografia di inquadramento dell'area",
+          "filename": "PESG_A_16_a_1-Corografia_di_inquadramento.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-1-Corografia-di-inquadramento",
+          "published": "11/06/2019",
+          "scale": "1:25000",
+          "size": "24264 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356596",
+          "title": "Stralcio degli strumenti urbanistici generali o attuativi",
+          "filename": "PESG_A_16_a_2_Stralcio_strumenti_urbanistici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-2-Stralcio-strumenti-urbanistici",
+          "published": "11/06/2019",
+          "scale": "1:10.000 - 1:25.000",
+          "size": "5327 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356597",
+          "title": "Corografia generale",
+          "filename": "PESG_A_16_a_3_-Corografia_generale.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-3--Corografia-generale",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "8009 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356598",
+          "title": "Corografia generale dei vincoli dell'area vasta (PARCHI, SIC, ZPS, IBA, HABITAT, UNESCO ED OSSERVATORI ASTRONOMICI)",
+          "filename": "PESG_A_16_a_4_a_Corografia_generale_dei_vincoli_dell_area_vasta.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-4-a-Corografia-generale-dei-vincoli-dell-area-vasta",
+          "published": "11/06/2019",
+          "scale": "1:200.000",
+          "size": "4256 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356599",
+          "title": "Carta dei vincoli dell'area - aree non idonee PIEAR",
+          "filename": "PESG_A_16_a_4_b_Carta_vincoli_aree_non_idonee.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-4-b-Carta-vincoli-aree-non-idonee",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "21824 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356600",
+          "title": "Carta dei vincoli dell'area - Aree da sottoporre ad eventuali prescrizioni LR 54/2015 e smi - Beni Culturali",
+          "filename": "PESG_A_16_a_4_c_1_Carta_vincoli_L54_Beni_Culturali.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-4-c-1-Carta-vincoli-L54-Beni-Culturali",
+          "published": "11/06/2019",
+          "scale": "1:10.000 - 1:25.000 - 1:50.000",
+          "size": "3531 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356601",
+          "title": "Carta dei vincoli dell'area - Aree da sottoporre ad eventuali prescrizioni LR 54/2015 e smi - Beni Paesaggistici, Aree comprese nel sistema ecologico funzionale territoriale, Aree Agricole",
+          "filename": "PESG_A_16_a_4_c_2_Carta_vincoli_L54_Beni_Paesagg_territ_li_agricole.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-4-c-2-Carta-vincoli-L54-Beni-Paesagg-territ-li-agricole",
+          "published": "11/06/2019",
+          "scale": "1:20.000 - 1:25.000 - 1:50.000",
+          "size": "5059 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356602",
+          "title": "Carta dei vincoli dell'area - Vincoli PAI e vincolo idrologico di cui al RD 3267/1923",
+          "filename": "PESG_A_16_a_4_d_Carta_vincoli_PAI_e_Idrogeologico.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-4-d-Carta-vincoli-PAI-e-Idrogeologico",
+          "published": "11/06/2019",
+          "scale": "1:15.000",
+          "size": "5730 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356603",
+          "title": "Carta con localizzazione georeferenziata",
+          "filename": "PESG_A_16_a_5_Carta_con_localizzazione_georeferenziata.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-5-Carta-con-localizzazione-georeferenziata",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "20900 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356604",
+          "title": "Planimetria dell'impianto con ubicazione delle centraline di misurazione utilizzate",
+          "filename": "PESG_A_16_a_6_Planimetria_con_indicazione_delle_centraline_di_misura.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-6-Planimetria-con-indicazione-delle-centraline-di-misura",
+          "published": "11/06/2019",
+          "scale": "1:15.000",
+          "size": "8391 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356605",
+          "title": "Planimetria con l'ubicazione delle indagini geologiche",
+          "filename": "PESG_A_16_a_7_Planimetria_indagini_geologiche.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-7-Planimetria-indagini-geologiche",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "3573 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356606",
+          "title": "Carta geologica",
+          "filename": "PESG_A_16_a_8_Carta_Geologica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-8-Carta-Geologica",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "6530 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356607",
+          "title": "Carta geomorfologica",
+          "filename": "PESG_A_16_a_9_Carta_Geomorfologica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-9-Carta-Geomorfologica",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "8741 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356608",
+          "title": "Carta idrogeologica",
+          "filename": "PESG_A_16_a_10_Carta_Idrogeologica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-10-Carta-Idrogeologica",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "29224 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356609",
+          "title": "Profili geologici",
+          "filename": "PESG_A_16_a_11_Profili_Geologici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-11-Profili-Geologici",
+          "published": "11/06/2019",
+          "scale": "1_5.000 - 1:500",
+          "size": "1035 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356610",
+          "title": "Corografia dei Bacini",
+          "filename": "PESG_A_16_a_12_Corografia_dei_bacini.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-12-Corografia-dei-bacini",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "2910 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356611",
+          "title": "Planimetria stradale con indicazione delle curve di livello 1 di 4",
+          "filename": "PESG_A_16_a_13_a_Planimetrie_stradali_1_di_4.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-a-Planimetrie-stradali-1-di-4",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "6641 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356612",
+          "title": "Planimetria stradale con indicazione delle curve di livello 2 di 4",
+          "filename": "PESG_A_16_a_13_b_Planimetrie_stradali_2_di_4.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-b-Planimetrie-stradali-2-di-4",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5689 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356613",
+          "title": "Planimetria stradale con indicazione delle curve di livello 3 di 4",
+          "filename": "PESG_A_16_a_13_c_Planimetrie_stradali_3_di_4.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-c-Planimetrie-stradali-3-di-4",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "6756 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356614",
+          "title": "Planimetria stradale con indicazione delle curve di livello 4 di 4",
+          "filename": "PESG_A_16_a_13_d_Planimetrie_stradali_4_di_4.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-d-Planimetrie-stradali-4-di-4",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "6269 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356615",
+          "title": "Planimetria e profili delle piazzole temporanee di cantiere 1 di 3",
+          "filename": "PESG_A_16_a_13_e_1_Planimetrie_e_profili_temporanei_1_di_3.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-e-1-Planimetrie-e-profili-temporanei-1-di-3",
+          "published": "11/06/2019",
+          "scale": "1:500",
+          "size": "1066 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356616",
+          "title": "Planimetria e profili delle piazzole temporanee di cantiere 2 di 3",
+          "filename": "PESG_A_16_a_13_e_2_Planimetrie_e_profili_temporanei_2_di_3.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-e-2-Planimetrie-e-profili-temporanei-2-di-3",
+          "published": "11/06/2019",
+          "scale": "1:500",
+          "size": "953 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356617",
+          "title": "Planimetria e profili delle piazzole temporanee di cantiere 3 di 3",
+          "filename": "PESG_A_16_a_13_e_3_Planimetrie_e_profili_temporanei_3_di_3.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-e-3-Planimetrie-e-profili-temporanei-3-di-3",
+          "published": "11/06/2019",
+          "scale": "1:500",
+          "size": "845 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356618",
+          "title": "Schema di smaltimento delle acque meteoriche",
+          "filename": "PESG_A_16_a_13_f_Smaltimento_acque_meteoriche.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-13-f-Smaltimento-acque-meteoriche",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "3740 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356619",
+          "title": "Profili longitudinali altimetrici 1 di 3",
+          "filename": "PESG_A_16_a_14_a_Profili_longitudinali_altimetrici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-14-a-Profili-longitudinali-altimetrici",
+          "published": "11/06/2019",
+          "scale": "1:2.000 - 1:200",
+          "size": "506 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356620",
+          "title": "Profili longitudinali altimetrici 2 di 3",
+          "filename": "PESG_A_16_a_14_b_Profili_longitudinali_altimetrici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-14-b-Profili-longitudinali-altimetrici",
+          "published": "11/06/2019",
+          "scale": "1:2.000 - 1:200",
+          "size": "502 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356621",
+          "title": "Profili longitudinali altimetrici 3 di 3",
+          "filename": "PESG_A_16_a_14_c_Profili_longitudinali_altimetrici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-14-c-Profili-longitudinali-altimetrici",
+          "published": "11/06/2019",
+          "scale": "1:2.000 - 1:200",
+          "size": "491 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356622",
+          "title": "Planimetria generale stato di fatto delle aree oggetto di intervento",
+          "filename": "PESG_A_16_a_15_planimetria_generale_stato_di_fatto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-15-planimetria-generale-stato-di-fatto",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "7462 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356623",
+          "title": "Planimetria catastale delle aree oggetto di intervento - Genzano di L. foglio 14",
+          "filename": "PESG_A_16_a_16_a_Planimetria_catastale_Genzano_14.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-16-a-Planimetria-catastale-Genzano-14",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "2691 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356624",
+          "title": "Planimetria catastale delle aree oggetto di intervento - Genzano di L. foglio 15",
+          "filename": "PESG_A_16_a_16_b_Planimetria_catastale_Genzano_15.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-16-b-Planimetria-catastale-Genzano-15",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "2628 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356625",
+          "title": "Planimetria catastale delle aree oggetto di intervento - Genzano di L. foglio 16",
+          "filename": "PESG_A_16_a_16_c_Planimetria_catastale_Genzano_16.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-16-c-Planimetria-catastale-Genzano-16",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "1639 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356626",
+          "title": "Planimetria catastale delle aree oggetto di intervento - Genzano di L. foglio 17",
+          "filename": "PESG_A_16_a_16_d_Planimetria_catastale_Genzano_17.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-16-d-Planimetria-catastale-Genzano-17",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "2739 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356627",
+          "title": "Planimetria catastale delle aree oggetto di intervento - Genzano di L. foglio 26",
+          "filename": "PESG_A_16_a_16_e_Planimetria_catastale_Genzano_26.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-16-e-Planimetria-catastale-Genzano-26",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "1606 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356628",
+          "title": "Planimetria catastale delle aree oggetto di intervento - Banzi foglio 19",
+          "filename": "PESG_A_16_a_16_f_Planimetria_catastale_Banzi_19.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-16-f-Planimetria-catastale-Banzi-19",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "1762 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356629",
+          "title": "Sezioni stradali tipo 1/2",
+          "filename": "PESG_A_16_a_17_a_1_Sezioni_stradali_tipo_1_di_2.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-a-1-Sezioni-stradali-tipo-1-di-2",
+          "published": "11/06/2019",
+          "scale": "1:50 - 1:25",
+          "size": "2185 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356630",
+          "title": "Sezioni stradali tipo 2/2",
+          "filename": "PESG_A_16_a_17_a_2_Sezioni_stradali_tipo_2_di_2.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-a-2-Sezioni-stradali-tipo-2-di-2",
+          "published": "11/06/2019",
+          "scale": "1:50 - 1:25",
+          "size": "1769 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356631",
+          "title": "Sezioni trasversali - quaderno delle sezioni 1 di 6",
+          "filename": "PESG_A_16_a_17_b_1_Quaderno_sezioni_1_di_6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-b-1-Quaderno-sezioni-1-di-6",
+          "published": "11/06/2019",
+          "scale": "1:200 - 1:400",
+          "size": "7089 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356632",
+          "title": "Sezioni trasversali - quaderno delle sezioni 2 di 6",
+          "filename": "PESG_A_16_a_17_b_2_Quaderno_sezioni_2_di_6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-b-2-Quaderno-sezioni-2-di-6",
+          "published": "11/06/2019",
+          "scale": "1:200 - 1:400",
+          "size": "13299 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356633",
+          "title": "Sezioni trasversali - quaderno delle sezioni 3 di 6",
+          "filename": "PESG_A_16_a_17_b_3_Quaderno_sezioni_3_di_6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-b-3-Quaderno-sezioni-3-di-6",
+          "published": "11/06/2019",
+          "scale": "1:200 - 1:400",
+          "size": "9341 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356634",
+          "title": "Sezioni trasversali - quaderno delle sezioni 4 di 6",
+          "filename": "PESG_A_16_a_17_b_4_Quaderno_sezioni_4_di_6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-b-4-Quaderno-sezioni-4-di-6",
+          "published": "11/06/2019",
+          "scale": "1:200 - 1:400",
+          "size": "16648 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356635",
+          "title": "Sezioni trasversali - quaderno delle sezioni 5 di 6",
+          "filename": "PESG_A_16_a_17_b_5_Quaderno_sezioni_5_di_6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-b-5-Quaderno-sezioni-5-di-6",
+          "published": "11/06/2019",
+          "scale": "1:200 - 1:400",
+          "size": "15315 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356636",
+          "title": "Sezioni trasversali - quaderno delle sezioni 6 di 6",
+          "filename": "PESG_A_16_a_17_b_6_Quaderno_sezioni_6_di_6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-17-b-6-Quaderno-sezioni-6-di-6",
+          "published": "11/06/2019",
+          "scale": "1:200 - 1:400",
+          "size": "12220 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356637",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 26",
+          "filename": "PESG_A_16_a_18_a_1-PPE_Genzano_Foglio_26.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-1-PPE-Genzano-Foglio-26",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5720 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356638",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 25",
+          "filename": "PESG_A_16_a_18_a_2-PPE_Genzano_Foglio_25.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-2-PPE-Genzano-Foglio-25",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "1741 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356639",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 14 1 di 2",
+          "filename": "PESG_A_16_a_18_a_3a-PPE_Genzano_Foglio_14_parte_1_di_2.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-3a-PPE-Genzano-Foglio-14-parte-1-di-2",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "14601 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356640",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 14 2 di 2",
+          "filename": "PESG_A_16_a_18_a_3b-PPE_Genzano_Foglio_14_parte_2_di_2.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-3b-PPE-Genzano-Foglio-14-parte-2-di-2",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "6687 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356641",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 24",
+          "filename": "PESG_A_16_a_18_a_4-PPE_Genzano_Foglio_24.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-4-PPE-Genzano-Foglio-24",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "2112 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356642",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 15 1 di 2",
+          "filename": "PESG_A_16_a_18_a_5a-PPE_Genzano_Foglio_15_parte_1_di_2.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-5a-PPE-Genzano-Foglio-15-parte-1-di-2",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5981 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356643",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 15 2 di 2",
+          "filename": "PESG_A_16_a_18_a_5b-PPE_Genzano_Foglio_15_parte_2_di_2.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-5b-PPE-Genzano-Foglio-15-parte-2-di-2",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "11537 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356644",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 16",
+          "filename": "PESG_A_16_a_18_a_6-PPE_Genzano_Foglio_16.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-6-PPE-Genzano-Foglio-16",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5236 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356645",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 17",
+          "filename": "PESG_A_16_a_18_a_7-PPE_Genzano_Foglio_17.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-7-PPE-Genzano-Foglio-17",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "9842 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356646",
+          "title": "Piano particellare di esproprio grafico Banzi foglio 21",
+          "filename": "PESG_A_16_a_18_a_8-PPE_Banzi_Foglio_21.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-8-PPE-Banzi-Foglio-21",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "2063 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356647",
+          "title": "Piano particellare di esproprio grafico Banzi foglio 18",
+          "filename": "PESG_A_16_a_18_a_9-PPE_Banzi_Foglio_18.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-9-PPE-Banzi-Foglio-18",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "2293 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356648",
+          "title": "Piano particellare di esproprio grafico Banzi foglio 19",
+          "filename": "PESG_A_16_a_18_a_10-PPE_Banzi_Foglio_19.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-10-PPE-Banzi-Foglio-19",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5914 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356649",
+          "title": "Piano particellare di esproprio grafico Genzano foglio 18",
+          "filename": "PESG_A_16_a_18_a_11-PPE_Genzano_di_Lucania_Foglio_18.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-11-PPE-Genzano-di-Lucania-Foglio-18",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "1685 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356650",
+          "title": "Piano particellare di esproprio grafico Banzi foglio 13",
+          "filename": "PESG_A_16_a_18_a_12-PPE_Banzi_Foglio_13.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-18-a-12-PPE-Banzi-Foglio-13",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "1516 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356651",
+          "title": "Planimetria del tracciato dell'elettrodotto con indicazione delle curve di livello 1 di 6",
+          "filename": "PESG_A_16_a_19_a_Planimetria_tracciato_elettrodotto_1di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-19-a-Planimetria-tracciato-elettrodotto-1di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4638 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356652",
+          "title": "Planimetria del tracciato dell'elettrodotto con indicazione delle curve di livello 2 di 6",
+          "filename": "PESG_A_16_a_19_b_Planimetria_tracciato_elettrodotto_2di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-19-b-Planimetria-tracciato-elettrodotto-2di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5120 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356653",
+          "title": "Planimetria del tracciato dell'elettrodotto con indicazione delle curve di livello 3 di 6",
+          "filename": "PESG_A_16_a_19_c_Planimetria_tracciato_elettrodotto_3di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-19-c-Planimetria-tracciato-elettrodotto-3di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4205 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356654",
+          "title": "Planimetria del tracciato dell'elettrodotto con indicazione delle curve di livello 4 di 6",
+          "filename": "PESG_A_16_a_19_d_Planimetria_tracciato_elettrodotto_4di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-19-d-Planimetria-tracciato-elettrodotto-4di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "3870 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356655",
+          "title": "Planimetria del tracciato dell'elettrodotto con indicazione delle curve di livello 5 di 6",
+          "filename": "PESG_A_16_a_19_e_Planimetria_tracciato_elettrodotto_5di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-19-e-Planimetria-tracciato-elettrodotto-5di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4413 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356656",
+          "title": "Planimetria del tracciato dell'elettrodotto con indicazione delle curve di livello 6 di 6",
+          "filename": "PESG_A_16_a_19_f_Planimetria_tracciato_elettrodotto_6di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-19-f-Planimetria-tracciato-elettrodotto-6di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5435 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356657",
+          "title": "Planimetria con individuazione delle interferenze - risultato e ricerca delle interferenze 1 di 6",
+          "filename": "PESG_A_16_a_20_a_1_Planimetria_interferenze_1di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-a-1-Planimetria-interferenze-1di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4970 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356658",
+          "title": "Planimetria con individuazione delle interferenze - risultato e ricerca delle interferenze 2 di 6",
+          "filename": "PESG_A_16_a_20_a_2_Planimetria_interferenze_2di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-a-2-Planimetria-interferenze-2di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4684 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356659",
+          "title": "Planimetria con individuazione delle interferenze - risultato e ricerca delle interferenze 3 di 6",
+          "filename": "PESG_A_16_a_20_a_3_Planimetria_interferenze_3di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-a-3-Planimetria-interferenze-3di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5155 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356660",
+          "title": "Planimetria con individuazione delle interferenze - risultato e ricerca delle interferenze 4 di 6",
+          "filename": "PESG_A_16_a_20_a_4_Planimetria_interferenze_4di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-a-4-Planimetria-interferenze-4di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "5400 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356661",
+          "title": "Planimetria con individuazione delle interferenze - risultato e ricerca delle interferenze 5 di 6",
+          "filename": "PESG_A_16_a_20_a_5_Planimetria_interferenze_5di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-a-5-Planimetria-interferenze-5di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4976 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356662",
+          "title": "Planimetria con individuazione delle interferenze - risultato e ricerca delle interferenze 6 di 6",
+          "filename": "PESG_A_16_a_20_a_6_Planimetria_interferenze_6di6.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-a-6-Planimetria-interferenze-6di6",
+          "published": "11/06/2019",
+          "scale": "1:2.000",
+          "size": "4933 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356663",
+          "title": "Verifica delle distanze minime dell'impianto dai centri abitati",
+          "filename": "PESG_A_16_a_20_b_Verifica_distanza_centri_abitati.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-b-Verifica-distanza-centri-abitati",
+          "published": "11/06/2019",
+          "scale": "1:25.000",
+          "size": "25284 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356664",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 1 di 10",
+          "filename": "PESG_A_16_a_20_c_1_Verifica_distanza_fabbricati_1di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-1-Verifica-distanza-fabbricati-1di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "21329 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356665",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 2 di 10",
+          "filename": "PESG_A_16_a_20_c_2_Verifica_distanza_fabbricati_2di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-2-Verifica-distanza-fabbricati-2di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "11915 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356666",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 3 di 10",
+          "filename": "PESG_A_16_a_20_c_3_Verifica_distanza_fabbricati_3di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-3-Verifica-distanza-fabbricati-3di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "12508 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356667",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 4 di 10",
+          "filename": "PESG_A_16_a_20_c_4_Verifica_distanza_fabbricati_4di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-4-Verifica-distanza-fabbricati-4di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "15380 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356668",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 5 di 10",
+          "filename": "PESG_A_16_a_20_c_5_Verifica_distanza_fabbricati_5di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-5-Verifica-distanza-fabbricati-5di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "26349 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356669",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 6 di 10",
+          "filename": "PESG_A_16_a_20_c_6_Verifica_distanza_fabbricati_6di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-6-Verifica-distanza-fabbricati-6di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "12468 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356670",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 7 di 10",
+          "filename": "PESG_A_16_a_20_c_7_Verifica_distanza_fabbricati_7di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-7-Verifica-distanza-fabbricati-7di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "12160 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356671",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 8 di 10",
+          "filename": "PESG_A_16_a_20_c_8_Verifica_distanza_fabbricati_8di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-8-Verifica-distanza-fabbricati-8di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "13225 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356672",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 9 di 10",
+          "filename": "PESG_A_16_a_20_c_9_Verifica_distanza_fabbricati_9di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-9-Verifica-distanza-fabbricati-9di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "16947 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356673",
+          "title": "Verifica delle distanze minime dell'impianto dai fabricati 10 di 10",
+          "filename": "PESG_A_16_a_20_c_10_Verifica_distanza_fabbricati_10di10.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-20-c-10-Verifica-distanza-fabbricati-10di10",
+          "published": "11/06/2019",
+          "scale": "1:5.000 - 1:4.000",
+          "size": "12379 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356674",
+          "title": "Planimetria della sistemazione finale del sito",
+          "filename": "PESG_A_16_a_21_Planimetria_sistemazione_finale.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-a-21-Planimetria-sistemazione-finale",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "3886 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356675",
+          "title": "Planimetria d'impianto",
+          "filename": "PESG_A_16_b_1_a_Planimetria_di_impianto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-1-a-Planimetria-di-impianto",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "3804 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356676",
+          "title": "Verifiche rispetto delle distanze tra aerogeneratori (PIEAR e ss.mm.ii.)",
+          "filename": "PESG_A_16_b_1_b_Verifiche_distanze_aerogeneratori.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-1-b-Verifiche-distanze-aerogeneratori",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "6505 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356677",
+          "title": "Studio degli effetti shadow flickering",
+          "filename": "PESG_A_16_b_1_c_Studio_shadow_flickering.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-1-c-Studio-shadow-flickering",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "21561 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356678",
+          "title": "Analisi degli effetti della rottura degli organi rotanti",
+          "filename": "PESG_A_16_b_1_d_Analisi_degli_effetti_della_rottura_organi_rotanti.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-1-d-Analisi-degli-effetti-della-rottura-organi-rotanti",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "23099 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356679",
+          "title": "Sezione tipo degli aerogeneratori",
+          "filename": "PESG_A_16_b_2_Sezione_tipo_aerogeneratori.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-2-Sezione-tipo-aerogeneratori",
+          "published": "11/06/2019",
+          "scale": "1:500",
+          "size": "674 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356680",
+          "title": "Schemi funzionali dei singoli aerogeneratori",
+          "filename": "PESG_A_16_b_3_Schema_funzionale_aerogeneratore.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-3-Schema-funzionale-aerogeneratore",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "529 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356681",
+          "title": "Schema di collegamento alla rete elettrica di distribuzione e trasmissione",
+          "filename": "PESG_A_16_b_4_Schema_collegamento_rete.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-4-Schema-collegamento-rete",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "912 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356682",
+          "title": "Lay-out impianto",
+          "filename": "PESG_A_16_b_5_Layout_Impianto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-5-Layout-Impianto",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "6568 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356683",
+          "title": "Planimetrie reti elettriche",
+          "filename": "PESG_A_16_b_6_Planimetria_reti_elettriche.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-6-Planimetria-reti-elettriche",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "587 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356684",
+          "title": "Schemi elettrici impianto eolico",
+          "filename": "PESG_A_16_b_7_Schemi_elettrici_impianto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-7-Schemi-elettrici-impianto",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "386 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356685",
+          "title": "Disegni architettonici aerogeneratori e particolari sistemi di ancoraggio",
+          "filename": "PESG_A_16_b_8_Disegni_architettonici_e_particolari_sistemi_ancoraggio.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-8-Disegni-architettonici-e-particolari-sistemi-ancoraggio",
+          "published": "11/06/2019",
+          "scale": "1:1.000 - 1:100 - 1:10",
+          "size": "1128 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356686",
+          "title": "Disegni architettonici 1 di 4 - Pianta sottostazione elettrica di trasformazione",
+          "filename": "PESG_A_16_b_9_a_Pianta_SET.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-9-a-Pianta-SET",
+          "published": "11/06/2019",
+          "scale": "1:100",
+          "size": "781 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356687",
+          "title": "Disegni architettonici 2 di 4 - Edificio di controllo (SET)",
+          "filename": "PESG_A_16_b_9_b_Edificio_di_controllo_SET.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-9-b-Edificio-di-controllo-SET",
+          "published": "11/06/2019",
+          "scale": "1:100",
+          "size": "413 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356688",
+          "title": "Disegni architettonici 3 di 4 - Stallo AT TERNA",
+          "filename": "PESG_A_16_b_9_c_Stallo_TERNA.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-9-c-Stallo-TERNA",
+          "published": "11/06/2019",
+          "scale": "1:100",
+          "size": "526 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356689",
+          "title": "Disegni architettonici 4 di 4 - Apparati AT SET",
+          "filename": "PESG_A_16_b_9_d_Apparati_AT.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-9-d-Apparati-AT",
+          "published": "11/06/2019",
+          "scale": "1:25 - 1:50",
+          "size": "603 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356690",
+          "title": "Sezioni tipo elettrodotto interrato",
+          "filename": "PESG_A_16_b_10_Sezioni_tipo_elettrodotto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-10-Sezioni-tipo-elettrodotto",
+          "published": "11/06/2019",
+          "scale": "1:10",
+          "size": "689 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356691",
+          "title": "Stazione TERNA \"Genzano\" - Ubicazione dello stallo assegnato",
+          "filename": "PESG_A_16_b_11_Stazione_TERNA_GENZANO.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-11-Stazione-TERNA-GENZANO",
+          "published": "11/06/2019",
+          "scale": "1:100",
+          "size": "610 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356692",
+          "title": "Vista apparati stazione di condivisione",
+          "filename": "PESG_A_16_b_12_Apparati_stazione_condivisione.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-b-12-Apparati-stazione-condivisione",
+          "published": "11/06/2019",
+          "scale": "1:50",
+          "size": "575 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356693",
+          "title": "Planimetria generale interventi di ingegneria naturalistica",
+          "filename": "PESG_A_16_d_1-Planimetria_Generale_interventi_IN.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-d-1-Planimetria-Generale-interventi-IN",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "3902 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356694",
+          "title": "Elaborati tipologici degli interventi di ingegneria naturalistica",
+          "filename": "PESG_A_16_d_2-Elementi_tipologici_interventi_IN.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-16-d-2-Elementi-tipologici-interventi-IN",
+          "published": "11/06/2019",
+          "scale": "1:25 - 1:10",
+          "size": "17248 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356697",
+          "title": "QUADRO DI RIFERIMENTO AMBIENTALE",
+          "filename": "PESG_A_17_c_Quadro_di_riferimento_ambientale.pdf",
+          "section": "Quadro di Riferimento Ambientale",
+          "code": "PESG-A-17-c-Quadro-di-riferimento-ambientale",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "16807 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356698",
+          "title": "Caratterizzazione faunistica",
+          "filename": "PESG_A_17_c_1_Caratterizzazione_faunistica.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-c-1-Caratterizzazione-faunistica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "1574 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356699",
+          "title": "PIANO PRELIMINARE DI UTILIZZO DELLE TERRE E ROCCE DI SCAVO",
+          "filename": "PESG_A_17_c_2_Relazione_preliminare_terre_e_rocce_di_scavo.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-c-2-Relazione-preliminare-terre-e-rocce-di-scavo",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "3047 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356701",
+          "title": "Inquadramento generale dell'area di impatto potenziale",
+          "filename": "PESG_A_17_f_1-Corografia_Generale.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-1-Corografia-Generale",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "23234 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356702",
+          "title": "Carta dei beni paesaggistici e ambientali",
+          "filename": "PESG_A_17_f_2-Carta_dei_beni_Paesaggistici_e_Ambientali.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-2-Carta-dei-beni-Paesaggistici-e-Ambientali",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "15671 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356703",
+          "title": "Carta dei beni Monumentali e archeologici",
+          "filename": "PESG_A_17_f_3-Carta_dei_beni_Monumentali_e_Archeologici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-3-Carta-dei-beni-Monumentali-e-Archeologici",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "9807 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356704",
+          "title": "Inquadramento su ortofoto",
+          "filename": "PESG_A_17_f_4-Inquadramento_su_ortofoto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-4-Inquadramento-su-ortofoto",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "19911 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356705",
+          "title": "Carta uso del suolo",
+          "filename": "PESG_A_17_f_5-Carta_uso_del_suolo.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-5-Carta-uso-del-suolo",
+          "published": "11/06/2019",
+          "scale": "1:10.000",
+          "size": "16392 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356706",
+          "title": "Carta di intervisibilità ipotizzando l'intero rotore visibile",
+          "filename": "PESG_A_17_f_6-Carta_di_intervisibilita_ipotizzando_l_intero_rotore_visibile.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-6-Carta-di-intervisibilita-ipotizzando-l-intero-rotore-visibile",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "16866 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356707",
+          "title": "Carta di intervisibilità ipotizzando almeno una lama visibile",
+          "filename": "PESG_A_17_f_7-Carta_di_intervisibilita_ipotizzando_almeno_una_lama_visibile.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-7-Carta-di-intervisibilita-ipotizzando-almeno-una-lama-visibile",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "18022 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356708",
+          "title": "Carta di intervisibilità ipotizzando almeno 1/3 di lama visibile",
+          "filename": "PESG_A_17_f_8-Carta_di_intervisibilita_ipotizzando_almeno_1-3_di_lama_visibile.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-8-Carta-di-intervisibilita-ipotizzando-almeno-1-3-di-lama-visibile",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "18514 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356709",
+          "title": "Studio di intervisibilità",
+          "filename": "PESG_A_17_f_9-Studio_di_Intervisibilita.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-9-Studio-di-Intervisibilita",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "13279 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356710",
+          "title": "Ricognizione degli impianti eolici nell'area di interesse: in esercizio, autorizzati ed in corso di autorizzazione",
+          "filename": "PESG_A_17_f_10-Ricognizione_degli_impianti_Eolici.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-10-Ricognizione-degli-impianti-Eolici",
+          "published": "11/06/2019",
+          "scale": "1:50.000",
+          "size": "9409 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356711",
+          "title": "Simulazioni Fotorendering",
+          "filename": "PESG_A_17_f_11-Simulazioni_fotorendering.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-A-17-f-11-Simulazioni-fotorendering",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "23112 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356712",
+          "title": "PIANO DI MANUTENZIONE E GESTIONE DELL'IMPIANTO",
+          "filename": "PESG_B-Piano_di_Manutenzione_e_Gestione_dell_impiant.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-B-Piano-di-Manutenzione-e-Gestione-dell-impiant",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "2252 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356713",
+          "title": "PROGETTO DI DISMISSIONE DELL'IMPIANTO (Relazione sulle operazioni di dismissione+Computo metrico delle operazioni di dismissione+Cronoprogramma delle fasi attuative di dismissione)",
+          "filename": "PESG_C_Progetto_di_dismissione_dell_impianto.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-C-Progetto-di-dismissione-dell-impianto",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "2264 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356714",
+          "title": "PROGETTO DI SVILUPPO LOCALE",
+          "filename": "PESG_D_Progetto_di_sviluppo_locale.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-D-Progetto-di-sviluppo-locale",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "1356 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356716",
+          "title": "Corografia Generale",
+          "filename": "PESG_E_01_Corografia_generale.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-E-01-Corografia-generale",
+          "published": "11/06/2019",
+          "scale": "1:5.000",
+          "size": "6484 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356717",
+          "title": "Relazione tecnica opere di utenza per la connessione",
+          "filename": "PESG_E_2_Relazione_Tecnica_opere_connessione.pdf",
+          "section": "Elaborati di Progetto",
+          "code": "PESG-E-2-Relazione-Tecnica-opere-connessione",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "1272 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356700",
+          "title": "SINTESI NON TECNICA",
+          "filename": "PESG_A_17_d_Sintesi_non_tecnica.pdf",
+          "section": "Sintesi non Tecnica",
+          "code": "PESG-A-17-d-Sintesi-non-tecnica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "8827 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/356715",
+          "title": "Relazione Paesaggistica",
+          "filename": "PESG_RP-Relazione_Paesaggistica.pdf",
+          "section": "Relazione paesaggistica",
+          "code": "PESG-RP-Relazione-Paesaggistica",
+          "published": "11/06/2019",
+          "scale": "N.A.",
+          "size": "10263 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/369001",
+          "title": "Osservazioni del Comune di Genzano di Lucania in data 09/08/2019",
+          "filename": "DVA-2019-0021115.pdf",
+          "section": "Osservazioni del Pubblico",
+          "code": "DVA-2019-0021115",
+          "published": "06/09/2019",
+          "scale": "-",
+          "size": "246 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/368054",
+          "title": "Osservazioni dell'Ing. Sante CAGNAZZI del 14/08/2019",
+          "filename": "21360.pdf",
+          "section": "Osservazioni del Pubblico",
+          "code": "21360",
+          "published": "02/09/2019",
+          "scale": "-",
+          "size": "2162 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/368053",
+          "title": "Osservazioni dell'Associazione Antigone 2 Oppido Lucano del 13/08/2019",
+          "filename": "21304.pdf",
+          "section": "Osservazioni del Pubblico",
+          "code": "21304",
+          "published": "02/09/2019",
+          "scale": "-",
+          "size": "508 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/366517",
+          "title": "Osservazioni Eusebio Energia del 02/08/2019",
+          "filename": "0020451.pdf",
+          "section": "Osservazioni del Pubblico",
+          "code": "0020451",
+          "published": "12/08/2019",
+          "scale": "-",
+          "size": "2750 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/365355",
+          "title": "Osservazioni della Societa' Agricola Rosa Dei Venti Srl in data 19/07/2019",
+          "filename": "DVA-2019-0018881.pdf",
+          "section": "Osservazioni del Pubblico",
+          "code": "DVA-2019-0018881",
+          "published": "25/07/2019",
+          "scale": "-",
+          "size": "2026 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/418534",
+          "title": "Parere Regione Basilicata",
+          "filename": "VIP_4707_Eolico_Serra_Giannina_Parere_Basilicata.pdf",
+          "section": "Pareri/Osservazioni Enti",
+          "code": "MATTM/2020/58779",
+          "published": "03/08/2020",
+          "scale": "-",
+          "size": "9673 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/490469",
+          "title": "Parere del Ministero della Cultura Direzione Generale Archeologia, Belle Arti e Paesaggio di Roma in data 19/04/2021",
+          "filename": "MATTM-2021-0040592.pdf",
+          "section": "Pareri/Osservazioni Enti",
+          "code": "MATTM-2021-0040592",
+          "published": "12/05/2021",
+          "scale": "-",
+          "size": "11545 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/474818",
+          "title": "Controdeduzioni RWE Renewables Italia S.r.l.",
+          "filename": "0024985.pdf",
+          "section": "Controdeduzioni",
+          "code": "MATTM/2021/0024985",
+          "published": "12/03/2021",
+          "scale": "-",
+          "size": "354 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/474820",
+          "title": "Allegato alle Controdeduzioni RWE Renewables Italia S.r.l.",
+          "filename": "Allegati.pdf",
+          "section": "Controdeduzioni",
+          "code": "All. 1",
+          "published": "12/03/2021",
+          "scale": "-",
+          "size": "43103 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/399997",
+          "title": "Controdeduzioni del 02/03/2020",
+          "filename": "m_amte_MATTM__REGISTRO_UFFICIALE_I_0014868_02-03-2020.pdf",
+          "section": "Controdeduzioni",
+          "code": "MATTM/2020/14868",
+          "published": "09/03/2020",
+          "scale": "-",
+          "size": "342 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/373692",
+          "title": "Controdeduzioni del Proponente alle osservazioni e ai pareri trasmessi",
+          "filename": "DVA_2019-0023000.pdf",
+          "section": "Controdeduzioni",
+          "code": "DVA-2019-0023000",
+          "published": "18/09/2019",
+          "scale": "-",
+          "size": "14456 kB"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "id": "18510",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18510",
+      "expected": 23,
+      "pages_declared": 3,
+      "pages_visited": [
+        1,
+        2,
+        3
+      ],
+      "rows": [
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1402817",
+          "title": "Integrazioni del 12/06/2026 - DOCUMENTO PREVISIONALE DI IMPATTO ACUSTICO",
+          "filename": "ITA-SG-REP-ENV-003-B.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-003-B",
+          "published": "17/06/2026",
+          "scale": "-",
+          "size": "25877 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1402816",
+          "title": "Integrazioni del 12/06/2026 - Cronoprogramma - Serra Giannina",
+          "filename": "Cronoprogramma_-_Serra_Giannina.pdf",
+          "section": "Documentazione integrativa",
+          "code": "Cronoprogramma - Serra Giannina",
+          "published": "17/06/2026",
+          "scale": "-",
+          "size": "329 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395193",
+          "title": "Integrazioni del 30/04/2026 - REPORT MONITORAGGIO PAESAGGIO E STATO FISICO DEI LUOGHI - ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-012-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-012-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "20581 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395192",
+          "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DEL RUMORE - ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-011-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-011-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "13377 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395190",
+          "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DELLA FAUNA (AVIFAUNA E CHIROTTEROFAUNA)- ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-008-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-008-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "5381 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395189",
+          "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DELLA VEGETAZIONE - ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-009-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-009-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "10138 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395188",
+          "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO DEL SUOLO - ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-007-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-007-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "12078 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395187",
+          "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO ACQUE SUPERFICIALI - ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-006-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-006-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "4846 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395186",
+          "title": "Integrazioni del 30/04/2026 - REPORT DI MONITORAGGIO ACQUE SOTTERRANEE- ANTE OPERAM",
+          "filename": "ITA-SG-REP-ENV-005-A.pdf",
+          "section": "Documentazione integrativa",
+          "code": "ITA-SG-REP-ENV-005-A",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "5550 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1414387",
+          "title": "Integrazioni del 20/05/2026 - DOCUMENTO PREVISIONALE DI IMPATTO ELETTROMAGNETICO",
+          "filename": "ITA-SG-REP-ENV-004-B.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "ITA-SG-REP-ENV-004-B",
+          "published": "23/07/2026",
+          "scale": "-",
+          "size": "22476 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1332029",
+          "title": "Piano di Monitoraggio Ambientale",
+          "filename": "PESG_A17_c_3.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "PESG.A.17.c.3",
+          "published": "12/12/2025",
+          "scale": "-",
+          "size": "6204 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1386599",
+          "title": "Parere dell'Agenzia Regionale per la Protezione dell' Ambiente della Basilicata , in data 05/05/2026",
+          "filename": "MASE-2026-0095596.pdf",
+          "section": "Parere di Verifica di ottemperanza",
+          "code": "MASE-2026-0095596",
+          "published": "06/05/2026",
+          "scale": "-",
+          "size": "130 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1413852",
+          "title": "Integrazioni del 20/05/2026 - Riscontro volontario al parere di ARPA B_ PRT.G.0007918/2026 del 05.05.2026",
+          "filename": "Risposte_osservazioni_ARPAB_Prot_7918_2026.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "Risposte-osservazioni-ARPAB-Prot-7918-2026",
+          "published": "23/07/2026",
+          "scale": "-",
+          "size": "1325 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1371207",
+          "title": "Parere ARPA Basilicata, in data 04/03/2026",
+          "filename": "MASE-2026-0048269.pdf",
+          "section": "Parere di Verifica di ottemperanza",
+          "code": "MASE-2026-0048269",
+          "published": "11/03/2026",
+          "scale": "-",
+          "size": "299 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1332030",
+          "title": "Carta dei punti di monitoraggio del paesaggio e stato fisico dei luoghi",
+          "filename": "PESG_A_17_f_12_a.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "PESG.A.17.f.12.a",
+          "published": "12/12/2025",
+          "scale": "-",
+          "size": "3857 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1332031",
+          "title": "Carta dei punti di monitoraggio ambientale esclusa la componente paesaggio e stato fisico dei luoghi",
+          "filename": "PESG_A_17_f_12.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "PESG.A.17.f.12",
+          "published": "12/12/2025",
+          "scale": "-",
+          "size": "15022 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377036",
+          "title": "Integrazioni del 25/03/2026 - Carta dei punti di monitoraggio ambientale escluso PSFL",
+          "filename": "PESG_A_17_f_12_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "PESG.A.17.f.12",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "24761 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377037",
+          "title": "Integrazioni del 25/03/2026 - Piano di Monitoraggio Ambientale",
+          "filename": "PESG_A17_c_3_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "PESG.A17.c.3",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "12885 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377038",
+          "title": "Integrazioni del 25/03/2026 - Carta dei punti di monitoraggio del paesaggio e stato fisico dei luoghi",
+          "filename": "PEVE_A_17_f_12_a_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "PEVE.A.17.f.12.a",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "4198 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377039",
+          "title": "Integrazioni del 25/03/2026 - Relazione dimensionamento cavi - Area Parco",
+          "filename": "ITA-SG-REP-ELE-1_18-A_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "ITA-SG-REP-ELE-1.18-A",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "1805 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377040",
+          "title": "Integrazioni del 25/03/2026 - Dimensionamento Cavo AT",
+          "filename": "SG-CAL-ELE-019_2_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "SG-CAL-ELE-019.2",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "3534 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377041",
+          "title": "Integrazioni del 25/03/2026 - Documento previsionale di impatto acustico",
+          "filename": "ITA-SG-REP-ENV-003-A_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "ITA-SG-REP-ENV-003-A",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "27506 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1377042",
+          "title": "Integrazioni del 25/03/2026 - Documento previsionale di impatto elettromagnetico",
+          "filename": "ITA-SG-REP-ENV-004-A_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "ITA-SG-REP-ENV-004-A",
+          "published": "02/04/2026",
+          "scale": "-",
+          "size": "20760 kB"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "id": "18807",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18807",
+      "expected": 95,
+      "pages_declared": 10,
+      "pages_visited": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rows": [
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374966",
+          "title": "Elenco Elaborati della documentazione tecnica",
+          "filename": "ElencoElaborati_20260317_213239.pdf",
+          "section": "Elenchi Elaborati",
+          "code": "ba184144-fc3d-44be-bf00-c560396c892d",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "120 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406633",
+          "title": "Integrazioni del 17/06/2026 - Elenco Elaborati della documentazione tecnica",
+          "filename": "ElencoElaborati_20260617_213614.pdf",
+          "section": "Documentazione integrativa",
+          "code": "f3720871-e904-4df2-b988-31dc21093d37",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "11 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406634",
+          "title": "Integrazioni del 17/06/2026 - Comunicazione esito istruttoria - Verifica di ottemperanza condizioni ambientali impianto eolico Serra Giannina",
+          "filename": "MASE_2026-0108777-.pdf",
+          "section": "Documentazione integrativa",
+          "code": "f8265230-8272-499e-88bd-7e1364e997bc",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "780 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406635",
+          "title": "Integrazioni del 17/06/2026 - RAPPORTO TECNICO DI CARATTERIZZAZIONE DELLE TERRE E ROCCE DA SCAVO",
+          "filename": "PC3_ITA-SG-REP-ENV-002-C.pdf",
+          "section": "Documentazione integrativa",
+          "code": "3598ab4c-6166-4890-bec4-26b335672679",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "8112 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406636",
+          "title": "Integrazioni del 17/06/2026 - DOCUMENTO PREVISIONALE DI IMPATTO ACUSTICO",
+          "filename": "PC3_ITA-SG-REP-ENV-003-B.pdf",
+          "section": "Documentazione integrativa",
+          "code": "0f67e61f-2b3c-4c9c-a7d9-c771a1815d93",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "25877 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406637",
+          "title": "Integrazioni del 17/06/2026 - Piano di gestione dei rifiuti",
+          "filename": "PC3_ITA-SG-REP-GEN-1.6-B.pdf",
+          "section": "Documentazione integrativa",
+          "code": "0d056195-c83a-4ad2-a348-51832163e8d3",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "1727 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406638",
+          "title": "Integrazioni del 17/06/2026 - PIANO DI MONITORAGGIO AMBIENTALE",
+          "filename": "PC3_PESG.A17.c.3.pdf",
+          "section": "Documentazione integrativa",
+          "code": "96d2709a-6161-42ed-9d9d-8e39f3cb017a",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "13410 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1406639",
+          "title": "Integrazioni del 17/06/2026 - RELAZIONE ALLA CONDIZIONE AMBIENTALE N.3 DEL PARERE DELLA CTVIA N.131 DEL 23/07/2021",
+          "filename": "PC3_RO_REL-OTT-3.pdf",
+          "section": "Documentazione integrativa",
+          "code": "d358f372-d80a-4d3c-9ecd-c94f6de1e262",
+          "published": "06/07/2026",
+          "scale": "-",
+          "size": "636 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1421284",
+          "title": "Integrazioni del 29/07/2026 - Nota di invio integrazioni",
+          "filename": "Notadiinviointegrazioni.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "MASE-2026-0162824",
+          "published": "21/08/2026",
+          "scale": "-",
+          "size": "208 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374967",
+          "title": "Planimetria e sezioni - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-3_4_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "8395a602-29cf-484c-b931-8d051d93a90c",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2449 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1421273",
+          "title": "Integrazioni del 29/07/2026 - PC3_CertificatidelleAnalisiChimiche.pdf",
+          "filename": "PC3_CertificatidelleAnalisiChimiche_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "MASE-2026-0162824",
+          "published": "21/08/2026",
+          "scale": "-",
+          "size": "11271 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1421272",
+          "title": "Integrazioni del 29/07/2026 - PC3_ITA-SG-REP-ENV-002-D.pdf",
+          "filename": "PC3_ITA-SG-REP-ENV-002-D_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "MASE-2026-0162824",
+          "published": "21/08/2026",
+          "scale": "-",
+          "size": "14681 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374968",
+          "title": "Tracciato - PESG_03",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "28e287e0-501e-4ee7-9499-418cc56b7f71",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "7273 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374969",
+          "title": "PIANTA SEZIONI - PESG.04bis",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "e6b40756-f1b0-429f-9051-ade276aceb88",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "8476 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1385807",
+          "title": "Integrazioni del 22/04/2026 - Revisione 01 del Rapporto Tecnico di Caratterizzazione delle Terre e Rocce da Scavo",
+          "filename": "PC3_ITA-SG-REP-ENV-002-B_pdf.pdf",
+          "section": "Documentazione integrativa volontaria",
+          "code": "PC3-ITA-SG-REP-ENV-002-B-pdf",
+          "published": "30/04/2026",
+          "scale": "-",
+          "size": "17841 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374970",
+          "title": "PIANTA - PESG_05",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "95542134-04b4-4b7c-848b-afb5e1c8b4e4",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "7051 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374971",
+          "title": "Tracciato - PESG_08",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "09ae8bfd-4780-4ec9-96d3-a6535a4d8689",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "21847 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374972",
+          "title": "Tracciato - PESG_09",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_5-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "592baed1-2c55-46a4-9ee5-28f31eb4c6b1",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "6019 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374973",
+          "title": "PIANTINA E SEZIONI - FASE CANTIERI PIZZICA - PESG_10",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_6-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "89e2edaa-3f38-4eab-accf-2266a07692e6",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "81256 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374974",
+          "title": "Piano di Progetto - Impianto di Produzione di Energia Elettrica da Fonte Eolica",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_7-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "81854b65-456a-4c98-964f-fb1458de22da",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "10506 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374975",
+          "title": "PIANIMETRIA PIAZZOLA DI MONTAGGIO - PESG.05",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_1_8-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "29bfcd0b-7b61-40df-aecf-ea8c715d962c",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "7595 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374976",
+          "title": "Sezioni tipo stradale - Impianto eolico",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_12-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "28b50f5d-83a3-44bb-bd25-9d582765cda6",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "4001 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374977",
+          "title": "SEZIONI TIPO CAMPO BASE",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_13-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "4bf5848c-9472-4181-a09b-92d94ddc35e8",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "3623 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374978",
+          "title": "SEZIONI TIPO AREA TRASBORDO",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_14-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "c254672b-b0a2-44a7-90f9-d860542b58a9",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2441 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374979",
+          "title": "Progetto Esecutivo - Impianto Eolico da 42 MW a Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_2_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "d8a06f4f-0d2f-4ba7-b8b3-6f7dab88eb55",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "5188 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374980",
+          "title": "Progetto Esecutivo - Impianto Eolico 42 MW nei Comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_2_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "4074e277-c86d-498b-9c22-3fd7e774f642",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "4030 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374981",
+          "title": "Progetto Esecutivo - Impianto Eolico 42 MW nei Comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_2_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "a7e81729-2d83-4e6b-8930-99b8c97c6566",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "27703 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374982",
+          "title": "Progetto Esecutivo - Impianto Eolico e Inquadramento Catastale",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_2_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "1545b2ea-c79d-4a81-a3fe-df40bcc82786",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1990 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374983",
+          "title": "Pianta dell'Area di Trasbordo - Dettagli e Specifiche Tecniche",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "303a2dc5-8ec6-4934-8896-66b0802af3a1",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1832 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374984",
+          "title": "Progetto Esecutivo - Impianto Eolico Serra Giannina",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_3_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "91270f5c-15ed-4cac-a8fc-bd950404618e",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "5991 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374985",
+          "title": "Progetto Esecutivo - Impianto Eolico 42 MW a Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_3_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "d563f392-6fdd-4ba7-84cb-deceeede7ce4",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "4676 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374986",
+          "title": "Progetto Esecutivo - Impianto Eolico da 42 MW a Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_3_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "1d049bd2-fe9a-442d-845e-841b7834bd45",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "21749 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374987",
+          "title": "Progetto Esecutivo - Impianto Eolico Serra Giannina",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_3_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "00f3082d-a1e1-4a48-92a5-8fe7c8d01009",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1714 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374988",
+          "title": "PIANTA - AREA CAMPO BASE",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "51c66534-2cd9-4fe3-9d42-04c56c18367f",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "3658 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374989",
+          "title": "Tracciato - ACCESSO - PESG_04_bis",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_4_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "33ad26eb-b472-422d-ab29-2808c5e02056",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2728 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374990",
+          "title": "PLANIMETRIA SEZIONE - FASE CANTIERI STRADA DI ACCESSO PESG_08",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_4_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "9de1716c-58a3-4945-9071-e72c62c4a7cf",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "14939 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374991",
+          "title": "Tracciato - Avvicinamento PESG_10",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_4_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "fa7e5914-96b1-4e87-af3d-7d90b3d08171",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2535 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374992",
+          "title": "SEZIONE PIAZZOLE - Dettagli delle piazzole in corrispondenza della fondazione",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_1_7-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "3729ce20-9af5-46d4-9d9f-0a1747b4e63f",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "3288 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374993",
+          "title": "PIANTA ESTERNA - PIAZZOLA PESG_03",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_2_1_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "06b26812-6373-48f5-b1b8-404f86852713",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2277 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374994",
+          "title": "PIANTIMETRIA SEZIONI - FASE DI ESECUZIONE PIAZZA PESC_04",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_2_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "e9b65112-d8a2-4d70-86b1-3b48d75edc2a",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "3009 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374995",
+          "title": "PIANTA - PESG_05",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_2_1_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "6a707fd9-690b-4da3-8f94-8594f2c856c0",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "20097 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374996",
+          "title": "Tracciato - PESG_08",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_2_1_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "83e98ebc-82a4-4347-9fdd-cf978c22ff8c",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1776 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374997",
+          "title": "PIANTA DELLA SEZIONE - PESG_09",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_2_1_5-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "1f134fed-d985-4071-a9ab-23f2d98e1c57",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "15718 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374998",
+          "title": "Tracciato - ACCESSO - PESG_04_bis",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_2_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "389459db-6117-4260-8fdb-dc3d00378b44",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "3471 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1374999",
+          "title": "PLANIMETRIA OPERE IDRAULICHE",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_3_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "5a54e7c9-d6f0-4e59-a1ee-7cf0f4685a27",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "42850 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375000",
+          "title": "Sezioni Opere Idrauliche - Impianto Eolico nei Comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-DRW-CIV-4_3_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "aff6b32b-a924-4fdd-88e1-bf07ef6ed1de",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "4513 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375001",
+          "title": "Piano di Progetto - Impianto Eolico 42 MW",
+          "filename": "PC1_ITA-SG-DRW-CIV-5_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "73fdd670-fa5a-4016-8d75-bd7748da22fe",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "11447 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375002",
+          "title": "Progetto Esecutivo - Impianto Eolico su CTR",
+          "filename": "PC1_ITA-SG-DRW-GEN-4_4_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "aa40f0a7-22e8-4d20-b8f4-064031b06934",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "78816 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375003",
+          "title": "Progetto Esecutivo - Impianto Eolico e Cavidotto",
+          "filename": "PC1_ITA-SG-DRW-GEN-4_4_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "a6b22a34-be4b-4fd6-9ee7-fc12db3a814b",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "15374 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375004",
+          "title": "Impianto Eolico - Dettagli su Ortofoto e Cavidotto",
+          "filename": "PC1_ITA-SG-DRW-GEN-4_4_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "fa85ec65-c93c-41c7-babf-ed520afa46cc",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "20280 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375005",
+          "title": "Piano di Progetto - Impianto Eolico 42 MW",
+          "filename": "PC1_ITA-SG-DRW-GEN-4_4_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "a343cf1f-688d-4d54-b296-176178c12a2b",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "25449 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375006",
+          "title": "SEZIONI TIPO DI POSA CAVIDOTTO E SEZIONI TIPO STRADALI",
+          "filename": "PC1_ITA-SG-DRW-GEN-4_4_5-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "9f508d0a-fa11-460e-802e-76d9b64f50c6",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "24416 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375007",
+          "title": "PLANIMETRIA SEZIONE - FASE DI ESECUZIONE PIAZZOLA PESG_10",
+          "filename": "PC1_ITA-SG-DVR-CIV-4_2_1_6-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "1a9241ac-1684-4d00-9394-741e8a5d1adc",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2971 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375008",
+          "title": "Relazione Idrologica e Idrica - Impianto Eolico 42 MW",
+          "filename": "PC1_ITA-SG-REP-CIV-0_6-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "2b73e807-1259-4d62-b76c-3d2c427fe64c",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "3756 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375009",
+          "title": "Relazione sul dimensionamento dei cavi - Impianto eolico 42 MW",
+          "filename": "PC1_ITA-SG-REP-ELE-1_18-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "d1a561d4-cb64-41d4-a0d8-8ed0d0d73b10",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1805 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375010",
+          "title": "Dimensionamento cavi - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-ELE-1_21-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "9dc6fb71-0cc1-41cd-bdd5-17904e713cbc",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1849 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375011",
+          "title": "Rapporto Tecnico - Caratterizzazione delle Terre e Rocce da Scavo per Impianto Eolico",
+          "filename": "PC1_ITA-SG-REP-ENV-002-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "44601d6f-db1a-4d62-8d55-d45b3a7ab66f",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "17008 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375012",
+          "title": "Relazione Tecnica - Impianto Eolico 42 MW nei Comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-GEN-0_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "de917b1c-d32c-4ff4-a339-d2c37ad4a440",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2392 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375013",
+          "title": "Relazione di dimensionamento - Pavimentazioni stradali per impianto eolico",
+          "filename": "PC1_ITA-SG-REP-GEN-1_5-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "304e6a3b-edb3-45cc-9ac6-60fdab880143",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2524 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375014",
+          "title": "Piano di gestione dei rifiuti - Impianto eolico da 42 MW",
+          "filename": "PC1_ITA-SG-REP-GEN-1_6-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "9fad2b8a-a361-4a0f-94f3-1fcd5246941a",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1562 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375015",
+          "title": "Progetto Esecutivo - Impianto Eolico 42 MW Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-GEN-2_1_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "7134f898-a12a-4300-82a0-76d9eade6448",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "12623 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375016",
+          "title": "Confronto tecnico - Piazzole di montaggio e di esercizio per impianto eolico",
+          "filename": "PC1_ITA-SG-REP-GEN-2_1_1_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "07484400-36cd-452d-831e-dd565b5fec4c",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "60894 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375017",
+          "title": "Corografia di inquadramento - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-GEN-2_1_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "0df45f79-614d-4859-9424-6a4832d2fb37",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "91735 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375018",
+          "title": "Layout di progetto - Fase di esercizio impianto eolico 42 MW",
+          "filename": "PC1_ITA-SG-REP-GEN-2_1_2_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "e091e4f0-3075-4951-80e9-7270f961198b",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "18835 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375019",
+          "title": "Confronto tecnico - Piazzole di montaggio e piazzole di esercizio per impianto eolico",
+          "filename": "PC1_ITA-SG-REP-GEN-2_1_2_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "f893d48b-cbbe-4811-8392-bf5bbef292e9",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "44092 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375020",
+          "title": "Layout di progetto - Fase di cantiere per impianto eolico Serra Giannina",
+          "filename": "PC1_ITA-SG-REP-GEN-2_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "28df8f32-3a98-4aef-998d-df1a27dccd58",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "65648 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375021",
+          "title": "Progetto Esecutivo - Impianto Eolico da 42 MW",
+          "filename": "PC1_ITA-SG-REP-GEN-2_2_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "c096d754-4c8c-4fdd-b69b-a194daad519b",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "23492 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375022",
+          "title": "Confronto piazzole di montaggio - Impianto eolico 42 MW in Basilicata",
+          "filename": "PC1_ITA-SG-REP-GEN-2_2_1_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "d2f9ee59-bf29-4395-a365-38bcfe7365f2",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "7466 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375023",
+          "title": "Layout di progetto - Fase di cantiere per impianto eolico",
+          "filename": "PC1_ITA-SG-REP-GEN-2_2_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "10b2f203-8828-4cd4-b746-07bad4b8aa41",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "15995 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375024",
+          "title": "Layout di progetto - Impianto eolico nei comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-GEN-2_3_1_2-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "de9e5bd8-4ff0-4b9b-92d3-79bc5d2fdb3b",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "8549 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375025",
+          "title": "Confronto piazzole di montaggio - Impianto eolico 42 MW",
+          "filename": "PC1_ITA-SG-REP-GEN-2_3_1_3-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "d2e194c5-fff9-4bba-b940-63165fd5feb5",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2518 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375026",
+          "title": "Layout di progetto - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-GEN-2_3_1-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "7c105bd5-bcf2-4f1d-affc-0d22075926b6",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "8946 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375027",
+          "title": "Capitolato Tecnico - Impianto Eolico 42 MW",
+          "filename": "PC1_ITA-SG-REP-GEN-9_4-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "620b7a10-31dd-4073-a1ab-0fe31e3f1de9",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2335 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375028",
+          "title": "Piano di Cantierizzazione - Impianto Eolico 42 MW nei Comuni di Banzi e Genzano",
+          "filename": "PC1_ITA-SG-REP-GEN-9_7-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "8b803f98-4c47-4006-93b8-a26ba01cbcdf",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "2545 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375029",
+          "title": "Schema elettrico unifilare generale parco eolico",
+          "filename": "PC1_ITA-SG-SLD-ELE-4_4_6-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "87b4cc9c-7c21-4a92-8cfa-21ea77c65efb",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "647 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375030",
+          "title": "Relazione di Ottemperanza - Impianto Eolico Serra Giannina",
+          "filename": "PC1_RO_REL-OTT-1_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "4c54f3ec-676f-479b-acce-3e139a799db5",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1667 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375031",
+          "title": "SOTTOSTAZIONE SERRA GIANNINA",
+          "filename": "PC1_SG-DRW-ELE-001-03_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "63741a26-75af-40e5-a6f0-76ec50a87b1e",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "572 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375032",
+          "title": "SOTTOSTAZIONE - SERRE GIANNINA",
+          "filename": "PC1_SG-DRW-ELE-002-03_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "b46aa0f6-f35f-44f2-be75-83acdba95211",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "950 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375033",
+          "title": "SOTTOSTAZIONE SERRA GIANNINA - SG-DRW-ELE-012",
+          "filename": "PC1_SG-DRW-ELE-012-02_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "c7aa6b3b-6941-440d-aee5-46d1d74418a2",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1430 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375034",
+          "title": "COLLEGAMENTO CAVI E SCHERMI - SOTTOSTAZIONE SERRA GIANNINA",
+          "filename": "PC1_SG-DRW-ELE-013-02_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "b447d0ef-f359-46c2-879d-0de6bee29f24",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "7704 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375036",
+          "title": "Relazione Idrogeologica - Impatto di un impianto eolico nei comuni di Banzi e Genzano (PZ)",
+          "filename": "PC3_ITA-SG-REP-ENV-001-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "1854fd50-0ef3-4e89-8d4b-d2cad4b0d115",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "26269 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375037",
+          "title": "Rapporto tecnico - Caratterizzazione delle terre e rocce da scavo per impianto eolico",
+          "filename": "PC3_ITA-SG-REP-ENV-002-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "96854bed-f9a5-4fa5-a58d-b996a964e306",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "17008 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375038",
+          "title": "Relazione sui materiali - Progetto Esecutivo Parco Eolico Serra Giannina",
+          "filename": "PC3_ITA-SG-REP-STR-3_1_14-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "4f8e6680-bdb7-4de7-961d-4b9b0d7ebbac",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "530 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375039",
+          "title": "Relazione sui materiali - Plinti di fondazione Serra Giannina",
+          "filename": "PC3_ITA-SG-REP-STR-3_1_22-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "884d70f3-37d7-4a4a-a80f-cdddeeb03560",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "532 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375040",
+          "title": "Relazione sui materiali - Wind Farm Serra Giannina",
+          "filename": "PC3_ITA-SG-REP-STR-3_1_6-A_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "098de173-4d41-4ed7-bc69-782854105392",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "509 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375041",
+          "title": "Relazione di Ottemperanza - Impianto Eolico Serra Giannina",
+          "filename": "PC3_RO_REL-OTT-3_pdf.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "ac78e9a0-9d11-4615-b599-14fc754ea8f4",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1493 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1420190",
+          "title": "Parere ARPA Basilicata, in data 07/08/2026",
+          "filename": "MASE-2026-0170798.pdf",
+          "section": "Pareri Enti",
+          "code": "MASE-2026-0170798",
+          "published": "13/08/2026",
+          "scale": "-",
+          "size": "1891 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1385044",
+          "title": "Parere ARPA Basilicata, in data 24/04/2026",
+          "filename": "MASE-2026-0088512.pdf",
+          "section": "Pareri Enti",
+          "code": "MASE-2026-0088512",
+          "published": "27/04/2026",
+          "scale": "-",
+          "size": "149 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1375035",
+          "title": "Parere ufficio foreste - Parco Eolico Serra Giannina",
+          "filename": "PC3_8_UfficioForeste_pdf.pdf",
+          "section": "Pareri Enti",
+          "code": "64f5bf28-1734-484e-9428-c11e41d289b1",
+          "published": "24/03/2026",
+          "scale": "-",
+          "size": "1526 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1433460",
+          "title": "Comunicazione VA esito valutazione",
+          "filename": "MASE_2026-0197043.pdf",
+          "section": "Comunicazione esito valutazione",
+          "code": "MASE-2026-0197043",
+          "published": "24/09/2026",
+          "scale": "-",
+          "size": "261 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395170",
+          "title": "Comunicazione VA esito valutazione",
+          "filename": "MASE_2026-0108777.pdf",
+          "section": "Comunicazione esito valutazione",
+          "code": "MASE-2026-0108777",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "259 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395172",
+          "title": "Allegato alla Comunicazione VA esito valutazione - Parere della SCVA del 04/05/2026",
+          "filename": "par_n_865_ID_VIP-14736-VO-REV-VM-30_04_26_signed-PROT.pdf",
+          "section": "Comunicazione esito valutazione",
+          "code": "PRR 865",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "443 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1395173",
+          "title": "Allegato alla Comunicazione VA esito valutazione - Parere Arpa Basilicata",
+          "filename": "Parere_Arpa_MASE_2026-0088512.pdf",
+          "section": "Comunicazione esito valutazione",
+          "code": "MASE-2026-0088512",
+          "published": "28/05/2026",
+          "scale": "-",
+          "size": "149 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1433462",
+          "title": "Allegato alla Comunicazione VA esito valutazione - Parere CTVA del 07/09/2026",
+          "filename": "par_1040_ID_VIP-14736-VO-_PROT.pdf",
+          "section": "Comunicazione esito valutazione",
+          "code": "PRR. 1040",
+          "published": "24/09/2026",
+          "scale": "-",
+          "size": "415 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1433468",
+          "title": "Allegato alla Comunicazione VA esito valutazione - parere ARPA Basilicata del 07/08/2026",
+          "filename": "ARPA_MASE-2026-0170798.pdf",
+          "section": "Comunicazione esito valutazione",
+          "code": "MASE-2026-0170798",
+          "published": "24/09/2026",
+          "scale": "-",
+          "size": "1891 kB"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "id": "19356",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/19356",
+      "expected": 3,
+      "pages_declared": 1,
+      "pages_visited": [
+        1
+      ],
+      "rows": [
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1432824",
+          "title": "Elenco Elaborati della documentazione tecnica",
+          "filename": "ElencoElaborati_20260917_213248.pdf",
+          "section": "Elenchi Elaborati",
+          "code": "96f3103f-c8f1-44a2-8a0b-214f0e02c07c",
+          "published": "22/09/2026",
+          "scale": "-",
+          "size": "4 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1432823",
+          "title": "Relazione di Ottemperanza alla condizione ambientale n.4 Mitigazione del Parere CTVIA n. 131 del 23/07/2021",
+          "filename": "PC4_RO_Mitigazioni.pdf",
+          "section": "Documentazione di ottemperanza",
+          "code": "3beeb551-4446-4f2d-8cfc-8571d733fbe6",
+          "published": "22/09/2026",
+          "scale": "-",
+          "size": "4453 kB"
+        },
+        {
+          "url": "https://va.mite.gov.it/File/Documento/1438094",
+          "title": "Parere dell' Agenzia Regionale per la Protezione dell' Ambiente della Basilicata, in data 09/10/2026",
+          "filename": "MASE-2026-0210356.pdf",
+          "section": "Pareri Enti",
+          "code": "MASE-2026-0210356",
+          "published": "09/10/2026",
+          "scale": "-",
+          "size": "826 kB"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ],
+  "extra_procedures_uninventoried": []
+}

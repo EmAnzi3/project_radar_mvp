@@ -1,0 +1,155 @@
+{
+  "project_id": "serra-giannina",
+  "scope_note": "Terzo lotto da acquisire: prima i 3 riferimenti della procedura 15213/indice 19356, poi integrazioni e opere civili/elettriche; nessun documento del lotto dichiarato scaricato.",
+  "allowed_hosts": [
+    "va.mite.gov.it",
+    "va.mase.gov.it"
+  ],
+  "link_depth": 0,
+  "sources": [
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1432824",
+      "title": "Elenco Elaborati della documentazione tecnica",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1432823",
+      "title": "Relazione di Ottemperanza alla condizione ambientale n.4 Mitigazione del Parere CTVIA n. 131 del 23/07/2021",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1438094",
+      "title": "Parere dell' Agenzia Regionale per la Protezione dell' Ambiente della Basilicata, in data 09/10/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1421284",
+      "title": "Integrazioni del 29/07/2026 - Nota di invio integrazioni",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1421272",
+      "title": "Integrazioni del 29/07/2026 - PC3_ITA-SG-REP-ENV-002-D.pdf",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1406635",
+      "title": "Integrazioni del 17/06/2026 - RAPPORTO TECNICO DI CARATTERIZZAZIONE DELLE TERRE E ROCCE DA SCAVO",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1406636",
+      "title": "Integrazioni del 17/06/2026 - DOCUMENTO PREVISIONALE DI IMPATTO ACUSTICO",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1406637",
+      "title": "Integrazioni del 17/06/2026 - Piano di gestione dei rifiuti",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1406638",
+      "title": "Integrazioni del 17/06/2026 - PIANO DI MONITORAGGIO AMBIENTALE",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375011",
+      "title": "Rapporto Tecnico - Caratterizzazione delle Terre e Rocce da Scavo per Impianto Eolico",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375014",
+      "title": "Piano di gestione dei rifiuti - Impianto eolico da 42 MW",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375013",
+      "title": "Relazione di dimensionamento - Pavimentazioni stradali per impianto eolico",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375008",
+      "title": "Relazione Idrologica e Idrica - Impianto Eolico 42 MW",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375009",
+      "title": "Relazione sul dimensionamento dei cavi - Impianto eolico 42 MW",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375010",
+      "title": "Dimensionamento cavi - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375012",
+      "title": "Relazione Tecnica - Impianto Eolico 42 MW nei Comuni di Banzi e Genzano",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375031",
+      "title": "SOTTOSTAZIONE SERRA GIANNINA",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375032",
+      "title": "SOTTOSTAZIONE - SERRE GIANNINA",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375033",
+      "title": "SOTTOSTAZIONE SERRA GIANNINA - SG-DRW-ELE-012",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375036",
+      "title": "Relazione Idrogeologica - Impatto di un impianto eolico nei comuni di Banzi e Genzano (PZ)",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375038",
+      "title": "Relazione sui materiali - Progetto Esecutivo Parco Eolico Serra Giannina",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375040",
+      "title": "Relazione sui materiali - Wind Farm Serra Giannina",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374988",
+      "title": "PIANTA - AREA CAMPO BASE",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374983",
+      "title": "Pianta dell'Area di Trasbordo - Dettagli e Specifiche Tecniche",
+      "scope": "project_document",
+      "expected": "pdf"
+    }
+  ]
+}
