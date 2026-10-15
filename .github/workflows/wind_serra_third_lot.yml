@@ -1,0 +1,55 @@
+name: Wind Serra third lot
+on:
+  pull_request:
+    paths:
+      - 'config/serra_terzo_lotto_config.json'
+      - '.github/workflows/wind_serra_third_lot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
+            tests
+            config
+            docs/wind
+            docs_admin/wind-research
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - uses: actions/cache@v4
+        with:
+          path: reports/serra-third-lot
+          key: serra-third-lot-v1-${{ hashFiles('config/serra_terzo_lotto_config.json') }}-${{ github.run_id }}
+          restore-keys: serra-third-lot-v1-${{ hashFiles('config/serra_terzo_lotto_config.json') }}-
+      - name: Acquire 24 references independently
+        run: python scripts/harvest_wind_project.py --config config/serra_terzo_lotto_config.json --output reports/serra-third-lot
+      - name: Offline restart and targeted queue
+        run: |
+          python scripts/harvest_wind_project.py --config config/serra_terzo_lotto_config.json --output reports/serra-third-lot --offline
+          python scripts/wind_document_memory.py --harvest reports/serra-third-lot --memory docs_admin/wind-research/serra-document-memory.json --output reports/serra-third-lot/analysis-queue.json
+          python -m unittest discover -s tests -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serra-third-lot-${{ github.run_id }}
+          path: reports/serra-third-lot/
+          retention-days: 30
+      - name: Completeness and zero reread gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('reports/serra-third-lot')
+          a=json.loads((root/'harvest-first.json').read_text())
+          b=json.loads((root/'harvest-offline.json').read_text())
+          assert a['resource_count']==a['pdf_resources']==24 and not a['errors'],a
+          assert b['network_requests']==b['bytes_transferred']==b['text_extractions']==0,b
+          PY

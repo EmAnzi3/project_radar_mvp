@@ -70,12 +70,12 @@ class SerraReviewTest(unittest.TestCase):
   urls=lambda x:{s['url'] for s in x['sources']}
   self.assertEqual((len(urls(a)),len(urls(b)),len(urls(c))),(8,24,24))
   self.assertFalse(urls(a)&urls(b) or urls(c)&(urls(a)|urls(b)))
-  inv=load('docs/wind/research/serra-inventory.json')
+  inv=load('docs_admin/wind-research/serra-inventory.json')
   indexed={r['url'] for p in inv['procedures'] for r in p['rows']}
   self.assertEqual(len(indexed),279)
   self.assertTrue((urls(a)|urls(b)|urls(c))<=indexed)
-  ledger=load('docs/wind/research/serra-acquisition-ledger.json')
-  memory=load('docs/wind/research/serra-document-memory.json')
+  ledger=load('docs_admin/wind-research/serra-acquisition-ledger.json')
+  memory=load('docs_admin/wind-research/serra-document-memory.json')
   self.assertEqual(len(ledger['resources']),32)
   self.assertEqual(len(memory['documents']),30)
   self.assertEqual({r['sha256'] for r in ledger['resources'].values()},set(memory['documents']))

@@ -33,19 +33,3 @@ Nessun nuovo termine certo di fine lavori o COD. Restano il Gantt relativo già 
 ## Incongruenza conservata
 
 [Relazione materiali 1375039](https://va.mite.gov.it/File/Documento/1375039#page=4): titolo Serra Giannina, ma testo a p.4 riferito a Serra Palino (FG). Esteyco Energía compare nel documento tecnico (p.2); non trasferire da questo documento geografia, incarichi o affidamenti del diverso progetto.
-
-## Persistenza e riavvio
-
-- `serra-inventory.json`: inventario ufficiale dei quattro indici; `serra-inventory-baseline.json`: confronto con il precedente inventario.
-- `serra-acquisition-ledger.json`: tutti i 32 URL acquisiti, hash, dimensioni e run di provenienza. Originali nel pacchetto di acquisizione; non nel dataset pubblico.
-- `serra-document-memory.json`: 30 revisioni semantiche per hash, con pagine lette, estratti probatori e limiti. Versioni precedenti conservate.
-- `scripts/wind_document_memory.py`: documento nuovo/modificato in coda mirata; stesso hash già analizzato = salta lettura del testo. Estrazione non conta mai come analisi. Un errore di accesso non sostituisce una precedente revisione valida.
-- `config/serra_terzo_lotto_config.json`: 24 riferimenti ancora non acquisiti, prioritariamente i tre della procedura 15213. Configurazione pronta; nessuna acquisizione del terzo lotto rivendicata.
-
-Fonti di esecuzione: [secondo lotto](https://github.com/EmAnzi3/project_radar_mvp/actions/runs/38699291090), [inventario quattro indici](https://github.com/EmAnzi3/project_radar_mvp/actions/runs/38699828286). I pacchetti di acquisizione hanno scadenza; l'inventario, gli hash, gli estratti e la memoria persistono nel repository. Anche dopo un nuovo download, lo stesso hash non richiede una nuova analisi semantica.
-
-## Perimetro e controlli
-
-Solo la scheda canonica Serra Giannina è aggiornata. Gli altri 50 progetti sono invariati; totale 51 progetti / 11.202,52 MW. PR #9 esclusa, nessun merge o pubblicazione. Chiave EGM riallineata al Company Network, ragione sociale legale mantenuta nel registro P.IVA. Il censimento ora fallisce se anche un solo indice configurato resta incompleto.
-
-Controlli: suite Python e check pre-pubblicazione PowerShell, validator Wind commerciale/canonico/mappa, rigenerazione idempotente, verifica reale schede desktop 1440×1000 e mobile 390×844 con link fonte/pagina, nessun errore JavaScript o overflow. Nessuna API AI a pagamento e nessun OneDrive.

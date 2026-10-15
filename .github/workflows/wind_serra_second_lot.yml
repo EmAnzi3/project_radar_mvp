@@ -36,7 +36,7 @@ jobs:
       - name: Build targeted queue from persistent reviewed hashes
         run: |
           python -m unittest discover -s tests -v
-          python scripts/wind_document_memory.py --harvest reports/serra-second-lot --memory docs/wind/research/serra-document-memory.json --output reports/serra-second-lot/analysis-queue.json
+          python scripts/wind_document_memory.py --harvest reports/serra-second-lot --memory docs_admin/wind-research/serra-document-memory.json --output reports/serra-second-lot/analysis-queue.json
       - name: Resolve fourth procedure index from official object page
         run: |
           python - <<'PY'

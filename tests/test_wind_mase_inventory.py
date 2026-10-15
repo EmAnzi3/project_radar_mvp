@@ -1,4 +1,4 @@
-import importlib.util,unittest
+import importlib.util,unittest,json,tempfile,copy
 from pathlib import Path
 p=Path(__file__).resolve().parents[1]/"scripts/wind_mase_inventory.py"
 spec=importlib.util.spec_from_file_location("wind_mase_inventory",p)
@@ -29,4 +29,15 @@ class TestIndex(unittest.TestCase):
   finally:m.get=old
  def test_reject_non_mase(self):
   with self.assertRaises(ValueError):m.validate("https://localhost/")
+ def test_offline_rejects_changed_procedure_identity(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);config=root/'config.json';out=root/'out';out.mkdir()
+   spec={'id':'19356','url':'https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/19356'}
+   c={'project_id':'serra','mase_object_id':7112,'procedures':[spec],'extra_procedures_uninventoried':[]}
+   report={'project_id':'serra','object_id':7112,'procedures':[{**spec,'complete':True,'rows':[]}],'extra_procedures_uninventoried':[]}
+   (out/'inventory.json').write_text(json.dumps(report));config.write_text(json.dumps(c))
+   self.assertEqual(m.run(config,out,offline=True)['indexed_procedures'],1)
+   for key,value in [('id','other'),('url','https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18807')]:
+    wrong=copy.deepcopy(c);wrong['procedures'][0][key]=value;config.write_text(json.dumps(wrong))
+    with self.assertRaisesRegex(ValueError,'IDs/URLs'):m.run(config,out,offline=True)
 if __name__=="__main__":unittest.main()

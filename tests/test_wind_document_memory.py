@@ -49,4 +49,13 @@ class MemoryTests(unittest.TestCase):
   mem=m.record(self.mem,self.review,self.packet,self.root/'a.pdf')
   r=copy.deepcopy(self.review);r['outcome_note']='replacement'
   with self.assertRaises(ValueError):m.record(mem,r,self.packet,self.root/'a.pdf')
+ def test_alias_registration_preserves_analysis_without_text(self):
+  mem=m.record(self.mem,self.review,self.packet,self.root/'a.pdf')
+  alias=copy.deepcopy(self.review);alias['url']='https://va.mite.gov.it/File/Documento/456'
+  result=m.record(mem,alias,None,self.root/'a.pdf')
+  self.assertEqual(result['documents'],mem['documents'])
+  self.assertEqual(result['versions_by_url'][alias['url']],[self.sha])
+  self.assertEqual(result['versions_by_url'][self.url],[self.sha])
+  self.assertEqual(m.record(result,alias,None,self.root/'a.pdf'),result)
+  self.assertNotIn(alias['url'],mem['versions_by_url'])
 if __name__=='__main__':unittest.main()

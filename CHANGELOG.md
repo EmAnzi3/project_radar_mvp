@@ -4,6 +4,8 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-10-15 — Serra: avvio terzo lotto di 24; corrette identità cache e alias duplicati, materiali di manutenzione spostati fuori dal sito pubblico.
+
 - 2026-10-15 — Serra Giannina: 24 ulteriori URL MASE acquisiti, 22 PDF nuovi analizzati in modo mirato (2 coppie duplicate); totale 32 URL / 30 contenuti distinti, 279 censiti in quattro indici, 247 residui. Referente tecnico RWE, procedura D’Agostino/P.IVA, cartiglio STE/SINT e configurazione Nordex documentati con pagine. Memoria semantica persistente per hash e terzo lotto di 24 pronto; nessun EPC/BoP dedotto. Corretti gate indici incompleti e identità EGM. PR9 esclusa.
 
 - 2026-10-12 — Serra Giannina: tre indici MASE 276/276, 8 PDF originali acquisiti con SHA; arricchimento source-backed 42 MW/6WTG, RWE/EGM P.IVA e recapiti, BoP relativo e condizione 3 parzialmente ottemperata; gap 268 PDF + ulteriore procedura 15213. Solo Serra, zero API a pagamento.

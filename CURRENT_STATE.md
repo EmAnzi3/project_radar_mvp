@@ -1,4 +1,8 @@
 # Current State
+### Serra Giannina — terzo lotto in lavorazione 2026-10-15
+
+PR14 ancora aperta: nessun merge/pubblicazione. Avviata acquisizione terzo lotto di 24, inclusi i tre allegati della procedura 15213. Risolti i rilievi di review: validazione ID/URL degli indici offline, alias URL con analisi per hash immutabile, materiali operativi spostati in `docs_admin/wind-research` fuori dalla radice pubblicata. Il report pubblico conserva solo evidenze commerciali e fonti istituzionali. I conteggi certificati restano 32 riferimenti / 30 PDF distinti finché il nuovo lotto non è acquisito e analizzato.
+
 ### Serra Giannina — secondo lotto 2026-10-15
 
 Quattro indici MASE completi: **279 URL / 30 pagine indice**; procedura 15213 associata all'indice 19356 e censita (3 allegati, ancora non acquisiti). Acquisiti **32 riferimenti = 30 PDF distinti**, con **30 analisi mirate**: 8 riusate e 22 nuove da 24 URL del secondo lotto, zero errori. Duplicati per SHA 1395173/1385044 e 1433468/1420190. Residuo **247 riferimenti**, terzo lotto di 24 preparato. Dettagli e limiti in `docs/wind/research/serra-second-lot-review.md`.

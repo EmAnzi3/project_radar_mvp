@@ -29,6 +29,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           sparse-checkout: |
             docs/wind
+            docs_admin/wind-research
             scripts
             tests
             config
@@ -62,6 +63,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           sparse-checkout: |
             docs/wind
+            docs_admin/wind-research
             scripts
             tests
             config

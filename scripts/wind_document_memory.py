@@ -43,6 +43,18 @@ def record(memory, review, packet, original):
         raise ValueError('Wrong project')
     sha=fingerprint(original)
     if review['sha256']!=sha:raise ValueError('Review is for different bytes')
+    result=copy.deepcopy(memory)
+    existing=result.setdefault('documents',{}).get(sha)
+    if existing and existing.get('analysis_status')=='targeted_reviewed':
+        # A URL alias is provenance, not a new semantic review. Keep the
+        # hash-pinned analysis immutable and do not access extracted pages.
+        semantic=lambda r:{k:v for k,v in r.items() if k not in ('url','alias_urls')}
+        if semantic(existing)!=semantic(review):
+            raise ValueError('Existing review immutable; explicit revision required')
+        if not review.get('url'):raise ValueError('Alias URL required')
+        versions=result.setdefault('versions_by_url',{}).setdefault(review['url'],[])
+        if sha not in versions:versions.append(sha)
+        return result
     pages={p['page']:p['text'] for p in packet['pages']}
     inspected=review.get('pages_reviewed',[])
     if not inspected or any(p not in pages for p in inspected):
@@ -56,11 +68,6 @@ def record(memory, review, packet, original):
         quote=' '.join(fact.get('excerpt','').split())
         if not quote or quote not in ' '.join(pages[fact['page']].split()):
             raise ValueError('Finding excerpt not in pinned page')
-    result=copy.deepcopy(memory)
-    existing=result.setdefault('documents',{}).get(sha)
-    if existing and existing.get('analysis_status')=='targeted_reviewed':
-        if existing!=review:raise ValueError('Existing review immutable; explicit revision required')
-        return result
     if review.get('analysis_status')!='targeted_reviewed':raise ValueError('Not a completed targeted review')
     result['documents'][sha]=review
     result.setdefault('versions_by_url',{}).setdefault(review['url'],[])
