@@ -1,0 +1,525 @@
+{
+  "project_id": "serra-giannina",
+  "checked_on": "2026-10-15",
+  "scope": "MASE references and byte identities; only selected pages reviewed.",
+  "resources": {
+    "https://va.mite.gov.it/File/Documento/1433460": {
+      "title": "Comunicazione MASE 24/09/2026 – esito verifica ottemperanza",
+      "sha256": "6d1c2c1386921b3eb454a9ebf9f0aac1efc1eaf5e895f2033ba3b3abd575c5e8",
+      "bytes": 266319,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1433462": {
+      "title": "Parere CTVA 07/09/2026 su prescrizioni",
+      "sha256": "70762741a8988ca02e41f3c1532727624ebad95b754ed302e355d9433ad1cb9b",
+      "bytes": 424785,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1402816": {
+      "title": "Cronoprogramma BoP Serra Giannina 6 WTG",
+      "sha256": "84e7a5e2189aa1e0294712ff039806a83afc7f98d723f51cf91b2522594eee34",
+      "bytes": 336382,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1375028": {
+      "title": "Piano di cantierizzazione 42 MW",
+      "sha256": "11b49234acf1e0e46116c0c362ee2196cb778bc614f24219f276e9c212246d6d",
+      "bytes": 2605472,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1406633": {
+      "title": "Elenco elaborati aggiornato 17/06/2026",
+      "sha256": "ce0525ef83d7ebc4cfbdafa41f9239c7223edaa255dc612648ee9db316b4d050",
+      "bytes": 11106,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1374966": {
+      "title": "Elenco elaborati originario 2026",
+      "sha256": "c274e051f0d724bbb6c2274bbe4cdf32b8bbab9efd2438257a219f437814c8dd",
+      "bytes": 122164,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1406634": {
+      "title": "Comunicazione esito istruttoria",
+      "sha256": "e49ff823ab77bc3866f30b52a03ede14478ffa3093b918c3dcb5d44bf646523e",
+      "bytes": 798675,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1374979": {
+      "title": "Progetto esecutivo Serra Giannina 42 MW",
+      "sha256": "e39cf23ae7d79380be4fdd1b5d1cb506b7b5ec21c3497255ba9e4b8b84240dd2",
+      "bytes": 5312390,
+      "kind": "pdf",
+      "checked_at": "2026-10-12T07:29:19+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38217987357
+    },
+    "https://va.mite.gov.it/File/Documento/1375004": {
+      "title": "Impianto Eolico - Dettagli su Ortofoto e Cavidotto",
+      "sha256": "69025fd32d661fc6209b7267e3a3b1bf4ee66e1d30548205aca071bfae59b39a",
+      "bytes": 20766434,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375003": {
+      "title": "Progetto Esecutivo - Impianto Eolico e Cavidotto",
+      "sha256": "b7bf2b100e3ec2f6acd77856dc2332aec41e7cdeb984ca4759a381c79c4a650f",
+      "bytes": 15742636,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375006": {
+      "title": "SEZIONI TIPO DI POSA CAVIDOTTO E SEZIONI TIPO STRADALI",
+      "sha256": "ab1881475c27199809412ab98dad34076154c71456b2a2bfa2b7b308e06cb7aa",
+      "bytes": 25001938,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375039": {
+      "title": "Relazione sui materiali - Plinti di fondazione Serra Giannina",
+      "sha256": "26e53366664bbc6c227756cecdcd023683743d061e69ed86a3aab495d32d7d68",
+      "bytes": 543760,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1374992": {
+      "title": "SEZIONE PIAZZOLE - Dettagli delle piazzole in corrispondenza della fondazione",
+      "sha256": "ac750bb26ffbf165541f6f49398b8e56b1ad262174e4dc09cfbcc83ad48c2beb",
+      "bytes": 3366610,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1395173": {
+      "title": "Allegato alla Comunicazione VA esito valutazione - Parere Arpa Basilicata",
+      "sha256": "da03000dc27aada79b67a7cc7f801c77dabce975ab0aae971698c128879c5d16",
+      "bytes": 151733,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1395172": {
+      "title": "Allegato alla Comunicazione VA esito valutazione - Parere della SCVA del 04/05/2026",
+      "sha256": "9dc8d114f57ca2c3f56b3534623823155f7bbdb318a111fea79c395391ef11b5",
+      "bytes": 452881,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1433468": {
+      "title": "Allegato alla Comunicazione VA esito valutazione - parere ARPA Basilicata del 07/08/2026",
+      "sha256": "af46df7461403d724a19bc3d939a55efc99ca4a8eeccc84beebed3b7ff5a975e",
+      "bytes": 1936340,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1406639": {
+      "title": "Integrazioni del 17/06/2026 - RELAZIONE ALLA CONDIZIONE AMBIENTALE N.3 DEL PARERE DELLA CTVIA N.131 DEL 23/07/2021",
+      "sha256": "8526e1a7f0fc3b3848aa127cb34ec64318c4bebfd727b8b3bec611ee4ba95601",
+      "bytes": 650828,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1413852": {
+      "title": "Integrazioni del 20/05/2026 - Riscontro volontario al parere di ARPA B_ PRT.G.0007918/2026 del 05.05.2026",
+      "sha256": "9028b4e75781354e589c53acd7d07aacc3439dc36009a7d038c01cec55a687ba",
+      "bytes": 1356144,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1371207": {
+      "title": "Parere ARPA Basilicata, in data 04/03/2026",
+      "sha256": "86ee6827709b9b7b00ce1b0d9b33b9aa2316d039b0f020ecc2d05f0796515584",
+      "bytes": 305662,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1420190": {
+      "title": "Parere ARPA Basilicata, in data 07/08/2026",
+      "sha256": "af46df7461403d724a19bc3d939a55efc99ca4a8eeccc84beebed3b7ff5a975e",
+      "bytes": 1936340,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1385044": {
+      "title": "Parere ARPA Basilicata, in data 24/04/2026",
+      "sha256": "da03000dc27aada79b67a7cc7f801c77dabce975ab0aae971698c128879c5d16",
+      "bytes": 151733,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1386599": {
+      "title": "Parere dell'Agenzia Regionale per la Protezione dell' Ambiente della Basilicata , in data 05/05/2026",
+      "sha256": "67a2572b03990b04b2b81781dd8e23ab3f4062fc8f83d2267c724f3ac1f9c53f",
+      "bytes": 132565,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375035": {
+      "title": "Parere ufficio foreste - Parco Eolico Serra Giannina",
+      "sha256": "f06430feb76fb4e5ce3aae9222c4dcb01eb06cb23c155f2604f8daa3b5b22cc4",
+      "bytes": 1562375,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375034": {
+      "title": "COLLEGAMENTO CAVI E SCHERMI - SOTTOSTAZIONE SERRA GIANNINA",
+      "sha256": "97be6f83fa1e7c2cfe357908dafadaec1391fef211dabc5225b3501d9e213430",
+      "bytes": 7888739,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375027": {
+      "title": "Capitolato Tecnico - Impianto Eolico 42 MW",
+      "sha256": "32da314a6ed715bd868d102e828f7c45aa049a079fe8a3f78212dbb5cba15f1b",
+      "bytes": 2390363,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1332031": {
+      "title": "Carta dei punti di monitoraggio ambientale esclusa la componente paesaggio e stato fisico dei luoghi",
+      "sha256": "ba59b42bda973ce743ba074269e0dbde2e91823cfa95ad46cbd231faf5ad0855",
+      "bytes": 15382240,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1332030": {
+      "title": "Carta dei punti di monitoraggio del paesaggio e stato fisico dei luoghi",
+      "sha256": "2faeab4dcb294e30aefed9d226ed96e39d7b59f3ee15e030c9a3141d38fd82a9",
+      "bytes": 3948731,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1395170": {
+      "title": "Comunicazione VA esito valutazione",
+      "sha256": "e6374751b7c60bfa994abe28f91f37cb30f5826d5a92eda61124b9868b297bc8",
+      "bytes": 264437,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375025": {
+      "title": "Confronto piazzole di montaggio - Impianto eolico 42 MW",
+      "sha256": "3514b257f28e247f717de5fd58bebc0bdf4966381d2b29ca6b307f19d82924ba",
+      "bytes": 2577827,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375022": {
+      "title": "Confronto piazzole di montaggio - Impianto eolico 42 MW in Basilicata",
+      "sha256": "e8f5a7ed51faab980bb36e7fc5602fee578264e5e4c4bfd0d95072466b0de606",
+      "bytes": 7644469,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375016": {
+      "title": "Confronto tecnico - Piazzole di montaggio e di esercizio per impianto eolico",
+      "sha256": "a9e8d50a512e008ca8580690af5cb2706dfe4381cc29c5e7f1dbee057bf4568a",
+      "bytes": 62355098,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1375019": {
+      "title": "Confronto tecnico - Piazzole di montaggio e piazzole di esercizio per impianto eolico",
+      "sha256": "7baf3d47bd1d539a7fc19c9d007e78d10827bc64a4e3115cdc0a1247a5facfd7",
+      "bytes": 45149506,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T07:33:59+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38699291090
+    },
+    "https://va.mite.gov.it/File/Documento/1432824": {
+      "title": "Elenco Elaborati della documentazione tecnica",
+      "sha256": "d275773840e4ec2d0713cd693c3803e8fc2531ccaac2dbe338ecdb79a41e3654",
+      "bytes": 3821,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1432823": {
+      "title": "Relazione di Ottemperanza alla condizione ambientale n.4 Mitigazione del Parere CTVIA n. 131 del 23/07/2021",
+      "sha256": "12a3254b06593937acb0b5fc2abe40cb72598132dbd582f3fd11daa433a3ade7",
+      "bytes": 4559576,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1438094": {
+      "title": "Parere dell' Agenzia Regionale per la Protezione dell' Ambiente della Basilicata, in data 09/10/2026",
+      "sha256": "6e457fb112147e46e20e5396a8a3e3bd0d7e763fe2f346bff4bc2b9ef764c48a",
+      "bytes": 845733,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1421284": {
+      "title": "Integrazioni del 29/07/2026 - Nota di invio integrazioni",
+      "sha256": "d95b3ead65450b674a910fca6c080809094eb0f2408e747a015db851f992ffa6",
+      "bytes": 212308,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1421272": {
+      "title": "Integrazioni del 29/07/2026 - PC3_ITA-SG-REP-ENV-002-D.pdf",
+      "sha256": "7ee2aa178e0a1f08314e9f0554fc3f93045455b49ae5f373ad361f7d77eb9fe2",
+      "bytes": 15032732,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1406635": {
+      "title": "Integrazioni del 17/06/2026 - RAPPORTO TECNICO DI CARATTERIZZAZIONE DELLE TERRE E ROCCE DA SCAVO",
+      "sha256": "16ead456aeccbb2d59a7d9fa7e582833df6545a6c1f3524691363f48a1d1e826",
+      "bytes": 8305876,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1406636": {
+      "title": "Integrazioni del 17/06/2026 - DOCUMENTO PREVISIONALE DI IMPATTO ACUSTICO",
+      "sha256": "fa53f4c160d62fd119aca0aa248d1ea39ccc448cec11d821fc54a44fd5e728f4",
+      "bytes": 26497189,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1406637": {
+      "title": "Integrazioni del 17/06/2026 - Piano di gestione dei rifiuti",
+      "sha256": "1bcfaeff69d558039f73ed08c42b111f1dbb7829df5b677800e913c29563b65d",
+      "bytes": 1768118,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1406638": {
+      "title": "Integrazioni del 17/06/2026 - PIANO DI MONITORAGGIO AMBIENTALE",
+      "sha256": "9213ba08c7992963e297cbfc4d276a27fc68292ad69f7d687311f4a881c8a333",
+      "bytes": 13731613,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375011": {
+      "title": "Rapporto Tecnico - Caratterizzazione delle Terre e Rocce da Scavo per Impianto Eolico",
+      "sha256": "47e13442651ed54f7c8cb3820a1183a579a8ae489f2a1129d954b28664ebdea7",
+      "bytes": 17415683,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375014": {
+      "title": "Piano di gestione dei rifiuti - Impianto eolico da 42 MW",
+      "sha256": "346d62103eeb0171bf5ce4468ec54d0a1b76c5f66cab76cfe1fdf9dffa6fd881",
+      "bytes": 1599280,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375013": {
+      "title": "Relazione di dimensionamento - Pavimentazioni stradali per impianto eolico",
+      "sha256": "1c6e37e56de3ea7bc9b02338156794f02d721cfe4a79e6a598ac198c2460b0e4",
+      "bytes": 2583724,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375008": {
+      "title": "Relazione Idrologica e Idrica - Impianto Eolico 42 MW",
+      "sha256": "ad22eb9f0f07de4c5966a5ae0853afa47a57930060001f100f0a7e66be286cbf",
+      "bytes": 3845259,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375009": {
+      "title": "Relazione sul dimensionamento dei cavi - Impianto eolico 42 MW",
+      "sha256": "1bede9b8b0afff8ac1bb24b7b27c7e2c9bd2ec33dbce94d417b931bff5d1af85",
+      "bytes": 1847902,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375010": {
+      "title": "Dimensionamento cavi - Impianto eolico 42 MW nei comuni di Banzi e Genzano",
+      "sha256": "d7d9c2f62a61ea554d335a26ee68d14fd6dcc06383c8289bd831d1d21ab2dd65",
+      "bytes": 1892404,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375012": {
+      "title": "Relazione Tecnica - Impianto Eolico 42 MW nei Comuni di Banzi e Genzano",
+      "sha256": "a5d4d8450b9fa22ac06490cc5e5d8ba4843f1ebb6247a18517901bd6aeded3d3",
+      "bytes": 2448676,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375031": {
+      "title": "SOTTOSTAZIONE SERRA GIANNINA",
+      "sha256": "8fef1d1521335c30051011fadfabe9615dd7619f14106b838db2e980ac76ec4f",
+      "bytes": 585120,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375032": {
+      "title": "SOTTOSTAZIONE - SERRE GIANNINA",
+      "sha256": "70bd82ce763d0925f6ac54ef170b2769ff8b7954dd2bc695fbb8b34ff7e96eca",
+      "bytes": 972295,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375033": {
+      "title": "SOTTOSTAZIONE SERRA GIANNINA - SG-DRW-ELE-012",
+      "sha256": "6d57dd06e0a9355d7df6189b05b340376b52376db6322e5629304eb912c8c6e5",
+      "bytes": 1464140,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375036": {
+      "title": "Relazione Idrogeologica - Impatto di un impianto eolico nei comuni di Banzi e Genzano (PZ)",
+      "sha256": "cbaf24fd40908a60a035fe57dbfe4b5c3f1cb315fa36b4143b5616a260451e19",
+      "bytes": 26899283,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375038": {
+      "title": "Relazione sui materiali - Progetto Esecutivo Parco Eolico Serra Giannina",
+      "sha256": "e2df360f8ffea4fb2f74726ffcac101557bf47f1c1631b46b9c333bddcc627ea",
+      "bytes": 542220,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1375040": {
+      "title": "Relazione sui materiali - Wind Farm Serra Giannina",
+      "sha256": "579fe2b4aa504e6d83fb52483ba39d9d3022745ae5ad313cbc4819d8553afc5d",
+      "bytes": 520739,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1374988": {
+      "title": "PIANTA - AREA CAMPO BASE",
+      "sha256": "183e2d2d1f9dc9a81d25fc07beb60ab8f00c9a48ffee70b095316d680106d8bc",
+      "bytes": 3745014,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    },
+    "https://va.mite.gov.it/File/Documento/1374983": {
+      "title": "Pianta dell'Area di Trasbordo - Dettagli e Specifiche Tecniche",
+      "sha256": "37f123549665a95054cbd4718ad7ad7e0d4e0b38ff8da81538615115c0f868ac",
+      "bytes": 1875941,
+      "kind": "pdf",
+      "checked_at": "2026-10-15T09:50:52+00:00",
+      "status": "reused_no_access",
+      "artifact_run_id": 38715550980
+    }
+  },
+  "counts": {
+    "indexed_references": 279,
+    "acquired_references": 56,
+    "acquired_unique_sha256": 54,
+    "targeted_analyzed_unique_sha256": 54,
+    "pending_acquisition_references": 223,
+    "failed_second_lot_references": 0,
+    "second_lot_references": 24,
+    "second_lot_unique_pdf": 22,
+    "whole_dossier_complete": false,
+    "third_lot_references": 24,
+    "third_lot_unique_pdf": 24,
+    "failed_third_lot_references": 0
+  }
+}

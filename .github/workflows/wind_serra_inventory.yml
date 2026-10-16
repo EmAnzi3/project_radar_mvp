@@ -32,6 +32,8 @@ jobs:
           b=json.loads((p/'summary-offline.json').read_text())
           assert b['index_pages_fetched']==0
           assert a['acquired_files']==a['analyzed_files']==0
+          assert a['indexed_procedures']==a['known_procedures']
+          assert a['unique_urls']>=276
           assert not a['complete_project_dossier']
           print('INDEX:',a['indexed_procedures'],'of',a['known_procedures'],'procedures',a['indexed_references'],'documents')
           PY

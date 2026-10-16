@@ -1,0 +1,155 @@
+{
+  "project_id": "serra-giannina",
+  "scope_note": "24 URLs from verified MASE inventory, initial eight excluded; no dossier completion claimed",
+  "allowed_hosts": [
+    "va.mite.gov.it",
+    "va.mase.gov.it"
+  ],
+  "link_depth": 0,
+  "sources": [
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375004",
+      "title": "Impianto Eolico - Dettagli su Ortofoto e Cavidotto",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375003",
+      "title": "Progetto Esecutivo - Impianto Eolico e Cavidotto",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375006",
+      "title": "SEZIONI TIPO DI POSA CAVIDOTTO E SEZIONI TIPO STRADALI",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375039",
+      "title": "Relazione sui materiali - Plinti di fondazione Serra Giannina",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1374992",
+      "title": "SEZIONE PIAZZOLE - Dettagli delle piazzole in corrispondenza della fondazione",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395173",
+      "title": "Allegato alla Comunicazione VA esito valutazione - Parere Arpa Basilicata",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395172",
+      "title": "Allegato alla Comunicazione VA esito valutazione - Parere della SCVA del 04/05/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1433468",
+      "title": "Allegato alla Comunicazione VA esito valutazione - parere ARPA Basilicata del 07/08/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1406639",
+      "title": "Integrazioni del 17/06/2026 - RELAZIONE ALLA CONDIZIONE AMBIENTALE N.3 DEL PARERE DELLA CTVIA N.131 DEL 23/07/2021",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1413852",
+      "title": "Integrazioni del 20/05/2026 - Riscontro volontario al parere di ARPA B_ PRT.G.0007918/2026 del 05.05.2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1371207",
+      "title": "Parere ARPA Basilicata, in data 04/03/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1420190",
+      "title": "Parere ARPA Basilicata, in data 07/08/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1385044",
+      "title": "Parere ARPA Basilicata, in data 24/04/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1386599",
+      "title": "Parere dell'Agenzia Regionale per la Protezione dell' Ambiente della Basilicata , in data 05/05/2026",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375035",
+      "title": "Parere ufficio foreste - Parco Eolico Serra Giannina",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375034",
+      "title": "COLLEGAMENTO CAVI E SCHERMI - SOTTOSTAZIONE SERRA GIANNINA",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375027",
+      "title": "Capitolato Tecnico - Impianto Eolico 42 MW",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1332031",
+      "title": "Carta dei punti di monitoraggio ambientale esclusa la componente paesaggio e stato fisico dei luoghi",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1332030",
+      "title": "Carta dei punti di monitoraggio del paesaggio e stato fisico dei luoghi",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1395170",
+      "title": "Comunicazione VA esito valutazione",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375025",
+      "title": "Confronto piazzole di montaggio - Impianto eolico 42 MW",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375022",
+      "title": "Confronto piazzole di montaggio - Impianto eolico 42 MW in Basilicata",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375016",
+      "title": "Confronto tecnico - Piazzole di montaggio e di esercizio per impianto eolico",
+      "scope": "project_document",
+      "expected": "pdf"
+    },
+    {
+      "url": "https://va.mite.gov.it/File/Documento/1375019",
+      "title": "Confronto tecnico - Piazzole di montaggio e piazzole di esercizio per impianto eolico",
+      "scope": "project_document",
+      "expected": "pdf"
+    }
+  ]
+}

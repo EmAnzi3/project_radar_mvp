@@ -4,6 +4,12 @@ Formato consigliato: voci brevi, orientate a cosa cambia per il progetto.
 
 ## Unreleased
 
+- 2026-10-15 — Serra: guardia incrementale ancorata alla scheda pubblicata alla base della PR; regressione sulla rigenerazione esatta e idempotente dei 51 progetti.
+
+- 2026-10-15 — Serra: terzo lotto 24/24 acquisito e analizzato in modo mirato, totale 56 riferimenti / 54 PDF distinti, 223 residui e quarto lotto di 24 pronto. Parere ARPAB 09/10 condizione 4, laboratorio I.R.S.A.Q e programma relativo di 18 mesi documentati senza nuovi contratti EPC/BoP. Corrette identità cache, alias e coda duplicati; materiali operativi fuori dal sito pubblico.
+
+- 2026-10-15 — Serra Giannina: 24 ulteriori URL MASE acquisiti, 22 PDF nuovi analizzati in modo mirato (2 coppie duplicate); totale 32 URL / 30 contenuti distinti, 279 censiti in quattro indici, 247 residui. Referente tecnico RWE, procedura D’Agostino/P.IVA, cartiglio STE/SINT e configurazione Nordex documentati con pagine. Memoria semantica persistente per hash e terzo lotto di 24 pronto; nessun EPC/BoP dedotto. Corretti gate indici incompleti e identità EGM. PR9 esclusa.
+
 - 2026-10-12 — Serra Giannina: tre indici MASE 276/276, 8 PDF originali acquisiti con SHA; arricchimento source-backed 42 MW/6WTG, RWE/EGM P.IVA e recapiti, BoP relativo e condizione 3 parzialmente ottemperata; gap 268 PDF + ulteriore procedura 15213. Solo Serra, zero API a pagamento.
 
 

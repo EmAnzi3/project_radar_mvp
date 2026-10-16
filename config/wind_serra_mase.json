@@ -13,9 +13,12 @@
     {
       "id": "18807",
       "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18807"
+    },
+    {
+      "id": "19356",
+      "procedure_id": "15213",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/19356"
     }
   ],
-  "extra_procedures_uninventoried": [
-    "MASE Verifica di Ottemperanza 15213, settembre 2026; URL indice non ancora acquisito"
-  ]
+  "extra_procedures_uninventoried": []
 }

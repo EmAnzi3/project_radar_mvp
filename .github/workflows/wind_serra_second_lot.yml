@@ -1,0 +1,85 @@
+name: Wind Serra second lot and fourth procedure
+on:
+  pull_request:
+    paths:
+      - 'config/serra_secondo_lotto_config.json'
+      - '.github/workflows/wind_serra_second_lot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests==2.32.5 pypdf==5.9.0
+      - uses: actions/cache@v4
+        with:
+          path: reports/serra-second-lot
+          key: serra-second-lot-v1-${{ hashFiles('config/serra_secondo_lotto_config.json') }}-${{ github.run_id }}
+          restore-keys: serra-second-lot-v1-${{ hashFiles('config/serra_secondo_lotto_config.json') }}-
+      - name: Acquire all 24; retain per-document failures
+        run: python scripts/harvest_wind_project.py --config config/serra_secondo_lotto_config.json --output reports/serra-second-lot
+      - name: Verify warm restart
+        run: |
+          python scripts/harvest_wind_project.py --config config/serra_secondo_lotto_config.json --output reports/serra-second-lot --offline
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('reports/serra-second-lot/harvest-offline.json').read_text())
+          assert r['network_requests']==r['bytes_transferred']==r['text_extractions']==0
+          PY
+      - name: Build targeted queue from persistent reviewed hashes
+        run: |
+          python -m unittest discover -s tests -v
+          python scripts/wind_document_memory.py --harvest reports/serra-second-lot --memory docs_admin/wind-research/serra-document-memory.json --output reports/serra-second-lot/analysis-queue.json
+      - name: Resolve fourth procedure index from official object page
+        run: |
+          python - <<'PY'
+          import json,re,sys
+          from pathlib import Path
+          from urllib.parse import urljoin
+          sys.path.insert(0,'scripts')
+          from wind_mase_inventory import get,Parser,inventory
+          import requests
+          out=Path('reports/serra-fourth');out.mkdir(parents=True,exist_ok=True)
+          root='https://va.mite.gov.it/it-IT/Oggetti/Info/7112'
+          report={'complete':False,'error':None,'object_url':root}
+          try:
+              with requests.Session() as s:
+                  body=get(s,root);(out/'object.html').write_bytes(body)
+                  p=Parser();p.feed(body.decode('utf-8-sig'))
+                  links=sorted({urljoin(root,h) for h in p.links if re.search(r'/Oggetti/Documentazione/7112/\d+',h)})
+                  report['index_links']=links
+                  report['procedure_id']='15213'
+                  matches={urljoin(root,h) for cells,hrefs in p.rows if '15213' in cells for h in hrefs if re.search(r'/Oggetti/Documentazione/7112/\d+$',h)}
+                  if len(matches)!=1:raise ValueError('Fourth procedure index not uniquely resolved')
+                  index=matches.pop()
+                  report['inventory']=inventory(s,{'id':index.rsplit('/',1)[-1],'url':index})
+                  report['complete']=report['inventory']['complete']
+          except Exception as e:report['error']=str(e)[:400]
+          (out/'resolution.json').write_text(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: serra-second-lot-${{ github.run_id }}
+          path: |
+            reports/serra-second-lot/
+            reports/serra-fourth/
+          retention-days: 30
+      - name: Acquisition completeness gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('reports/serra-second-lot/harvest-first.json').read_text())
+          assert r['resource_count']==24
+          assert r['pdf_resources']==24 and not r['errors'],r
+          fourth=json.loads(Path('reports/serra-fourth/resolution.json').read_text())
+          assert fourth['complete'],fourth
+          PY

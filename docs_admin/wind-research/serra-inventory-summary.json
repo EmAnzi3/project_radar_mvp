@@ -1,0 +1,84 @@
+{
+  "project_id": "serra-giannina",
+  "known_procedures": 4,
+  "indexed_procedures": 4,
+  "indexed_references": 279,
+  "unique_urls": 279,
+  "index_pages_fetched": 30,
+  "acquired_files": 0,
+  "analyzed_files": 0,
+  "complete_project_dossier": false,
+  "extra_procedures_uninventoried": [],
+  "procedures": [
+    {
+      "id": "10237",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/10237",
+      "expected": 158,
+      "pages_declared": 16,
+      "pages_visited": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "id": "18510",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18510",
+      "expected": 23,
+      "pages_declared": 3,
+      "pages_visited": [
+        1,
+        2,
+        3
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "id": "18807",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/18807",
+      "expected": 95,
+      "pages_declared": 10,
+      "pages_visited": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "id": "19356",
+      "url": "https://va.mite.gov.it/it-IT/Oggetti/Documentazione/7112/19356",
+      "expected": 3,
+      "pages_declared": 1,
+      "pages_visited": [
+        1
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}

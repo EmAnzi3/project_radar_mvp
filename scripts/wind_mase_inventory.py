@@ -112,6 +112,12 @@ def run(config,out,offline=False):
         if not f.is_file():raise ValueError("Offline run needs prior inventory")
         report=json.loads(f.read_text(encoding="utf-8"))
         if report["project_id"]!=c["project_id"]:raise ValueError("Wrong project memory")
+        identities=lambda procedures:[(str(p['id']),validate(p['url'])) for p in procedures]
+        configured=identities(c['procedures']);cached=identities(report['procedures'])
+        if len(set(configured))!=len(configured) or sorted(configured)!=sorted(cached):
+            raise ValueError('Cached procedure IDs/URLs differ from configuration')
+        if report.get('object_id')!=c['mase_object_id']:
+            raise ValueError('Wrong cached MASE object')
         fetched=0
     else:
         with requests.Session() as client:
@@ -146,4 +152,4 @@ if __name__=="__main__":
     a=ap.parse_args()
     result=run(a.config,a.output,a.offline)
     print(json.dumps(result,ensure_ascii=False,indent=2))
-    if not a.offline and result["indexed_procedures"]==0:raise SystemExit(2)
+    if result["indexed_procedures"] != result["known_procedures"]:raise SystemExit(2)

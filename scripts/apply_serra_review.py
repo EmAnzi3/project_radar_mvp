@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Materialize verified Serra Giannina documentary enrichment, with no network or publication."""
-import copy, json
+import copy, json, hashlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -18,7 +18,25 @@ def apply(root=ROOT):
         if p[k]!=expected[k]:raise ValueError('Serra baseline changed; manual reconciliation needed')
     if p.get('documentary')==review['documentary']:
         return {'project_id':p['id'],'reused_without_writes':True}
-    if p.get('documentary'):raise ValueError('Newer documentary review exists; do not overwrite')
+    if p.get('documentary'):
+        sha=hashlib.sha256(json.dumps(p['documentary'],sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+        if sha != review.get('previous_documentary_sha256'):
+            raise ValueError('Newer documentary review exists; do not overwrite')
+        # An incremental review may add evidence, never silently replace a source.
+        existing={s['id']:s for s in p['sources']}
+        if len(existing)!=len(p['sources']):raise ValueError('Duplicate existing source ID')
+        for s in review['sources_added']:
+            if s['id'] in existing:
+                if existing[s['id']]!=s:raise ValueError('Existing source changed')
+            else:p['sources'].append(s)
+        # Retain the Company Network key; legal name stays in company_registry.
+        for rel in p['relations']:
+            if rel['company']=='EGM Project S.r.l.':rel['company']='EGM Project'
+        p['status_note']=review['status_note']
+        p['next']['label']=review['next_label']
+        p['documentary']=review['documentary']
+        path.write_text(json.dumps(records,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        return {'project_id':p['id'],'incremental_review':True,'other_projects_changed':0,'paid_model_calls':0}
     gantt=next((s for s in p['sources'] if s['id']=='sg-plan'),None)
     if not gantt or gantt['url']:raise ValueError('Existing BoP schedule has changed')
     gantt['url']=review['changed_source']['sg-plan']

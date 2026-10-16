@@ -1,4 +1,16 @@
 # Current State
+### Serra Giannina — terzo lotto completato 2026-10-15
+
+PR14 aggiornata, ancora senza merge/pubblicazione. Terzo lotto: **24/24 riferimenti acquisiti, 24 nuovi PDF distinti analizzati in modo mirato**, zero errori. Totale **56 riferimenti / 54 contenuti distinti**, su 279 censiti; residuo **223**, quarto lotto di 24 preparato. I tre allegati della procedura 15213 sono acquisiti; ARPAB 09/10 condizione 4: i/ii/iii parzialmente idonei e iv idoneo, giudizio finale MASE da acquisire. Nuovo contatto laboratorio I.R.S.A.Q con P.IVA/recapiti; sfalci, aree logistiche e programma generale relativo di 18 mesi documentati, nessun nuovo EPC/BoP o COD certo.
+
+Risolti i rilievi di review: validazione identità ID/URL degli indici offline; URL alias registrati senza alterare l'analisi per hash; materiali operativi in `docs_admin/wind-research`, fuori dalla radice pubblicata. La coda deduplica anche i nuovi hash identici nello stesso lotto. Memoria: 54 revisioni, riavvio terzo lotto: 24 skip / 0 pending / 0 nuove analisi. Pagine e limiti espliciti; le 1.616 pagine del lotto non sono dichiarate lette integralmente. Dettagli commerciali in `docs/wind/research/serra-third-lot-review.md`; prove operative in `docs_admin/wind-research/serra-third-lot-review.md`.
+
+### Serra Giannina — secondo lotto 2026-10-15
+
+Quattro indici MASE completi: **279 URL / 30 pagine indice**; procedura 15213 associata all'indice 19356 e censita (3 allegati, ancora non acquisiti). Acquisiti **32 riferimenti = 30 PDF distinti**, con **30 analisi mirate**: 8 riusate e 22 nuove da 24 URL del secondo lotto, zero errori. Duplicati per SHA 1395173/1385044 e 1433468/1420190. Residuo **247 riferimenti**, terzo lotto di 24 preparato. Dettagli e limiti in `docs/wind/research/serra-second-lot-review.md`.
+
+Nuovi elementi: referente tecnico RWE Antonia Rianò e recapiti; D’Agostino procedura calce con P.IVA; STE/SINT nel cartiglio SSE; Nordex N163/6.X nel capitolato, non ordine OEM. Nessun nuovo EPC/BoP attribuito. Persistono inventario, registro acquisizioni e analisi per hash: nuove versioni in coda mirata, invariati già letti saltati. Estratti e pagine verificati prima dell'arricchimento. Originali nella cache/pacchetto di acquisizione; memoria e prove testuali nel repository. Nessun altro progetto modificato, nessun merge/pubblicazione, PR9 intatta.
+
 ### Serra Giannina – documento commerciale 2026-10-12
 
 Il lotto MASE 7112 ha 276 documenti in tre indici completi (29 pagine indice); 8 originali acquisiti e testo estratto, ma il quarto procedimento 15213 non è ancora inventariato e gli altri 268 allegati non sono acquisiti. Analisi mirata: 42 MW/6 WTG attuali distinti dalla vecchia denominazione amministrativa 45 MW/10 WTG; RWE Renewables Italia S.r.l. proponente P.IVA 06400370968, EGM Project S.r.l. progettista P.IVA 02094310766; nessun BoP dedotto. Gantt senza date assolute, RWE prevede generazione dal 2027, MASE 24/09 condizione 3 parzialmente ottemperata. File originali temporanei SHA-256, riuso senza rilettura, nessuna API AI a pagamento. Progetto canonical Serra soltanto, altri 50 intatti, PR9 Draft non mergiata.
