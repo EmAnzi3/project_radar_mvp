@@ -15,13 +15,13 @@ from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 from crawl4ai.processors.pdf import PDFCrawlerStrategy, PDFContentScrapingStrategy
 
 FIELDS = {
-    "power_mw": r"\\b\\d{1,4}(?:[.,]\\d+)?\\s*MW\\b",
-    "turbines": r"\\b(?:aerogeneratori|turbine|WTG)\\b",
-    "developers": r"\\b(?:proponente|societ[aà] proponente|committente)\\b",
-    "engineering": r"\\b(?:progettist[ao]|progettazione|direzione lavori)\\b",
-    "contractors": r"\\b(?:appaltator[ei]|affidatari[ao]|EPC|BoP|fornitore|aggiudicatari[ao])\\b",
-    "schedule": r"\\b(?:cronoprogramma|inizio lavori|fine lavori|entrata in esercizio|commissioning|mesi)\\b",
-    "authorization": r"\\b(?:VIA|PAUR|autorizzazione unica|ottemperanza|decreto)\\b",
+    "power_mw": r"\b\d{1,4}(?:[.,]\d+)?\s*MW\b",
+    "turbines": r"\b(?:aerogeneratori|turbine|WTG)\b",
+    "developers": r"\b(?:proponente|societ[aà] proponente|committente)\b",
+    "engineering": r"\b(?:progettist[ao]|progettazione|direzione lavori)\b",
+    "contractors": r"\b(?:appaltator[ei]|affidatari[ao]|EPC|BoP|fornitore|aggiudicatari[ao])\b",
+    "schedule": r"\b(?:cronoprogramma|inizio lavori|fine lavori|entrata in esercizio|commissioning|mesi)\b",
+    "authorization": r"\b(?:VIA|PAUR|autorizzazione unica|ottemperanza|decreto)\b",
 }
 PATTERNS = {key: re.compile(pattern, re.I) for key, pattern in FIELDS.items()}
 
