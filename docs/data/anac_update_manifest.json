@@ -1,29 +1,29 @@
 {
   "run_id": "anac-only",
-  "generated_at_utc": "2026-10-12T08:17:11.151298+00:00",
-  "anac_added_records": 6,
-  "new_company_match_projects": 6,
-  "unique_company_match_delta": 6,
-  "previous_with_contractor": 132637,
-  "current_with_contractor": 132643,
-  "previous_home_total_with_contractor": 145189,
-  "current_home_total_with_contractor": 145195,
-  "home_total_with_contractor_delta": 6,
-  "previous_technical_match_projects": 239520,
-  "current_technical_match_projects": 239520,
-  "new_technical_match_projects": 0,
-  "previous_enriched_projects": 166220,
-  "current_enriched_projects": 166220,
-  "new_enriched_projects": 0,
-  "previous_confirmed_projects": 132653,
-  "current_confirmed_projects": 132659,
-  "new_confirmed_projects": 6,
+  "generated_at_utc": "2026-11-11T08:07:56.667957+00:00",
+  "anac_added_records": 92,
+  "new_company_match_projects": 92,
+  "unique_company_match_delta": 88,
+  "previous_with_contractor": 132643,
+  "current_with_contractor": 132731,
+  "previous_home_total_with_contractor": 145195,
+  "current_home_total_with_contractor": 145305,
+  "home_total_with_contractor_delta": 110,
+  "previous_technical_match_projects": 239408,
+  "current_technical_match_projects": 243855,
+  "new_technical_match_projects": 4447,
+  "previous_enriched_projects": 166171,
+  "current_enriched_projects": 166303,
+  "new_enriched_projects": 132,
+  "previous_confirmed_projects": 132659,
+  "current_confirmed_projects": 132747,
+  "new_confirmed_projects": 88,
   "by_branch": [
     {
       "branch": "AMBIGUA",
-      "anac_added": 0,
+      "anac_added": 10,
       "previous_with_contractor": 4967,
-      "current_with_contractor": 4967
+      "current_with_contractor": 4976
     },
     {
       "branch": "Albenga",
@@ -33,33 +33,33 @@
     },
     {
       "branch": "Bari",
-      "anac_added": 0,
+      "anac_added": 4,
       "previous_with_contractor": 10914,
-      "current_with_contractor": 10914
+      "current_with_contractor": 10918
     },
     {
       "branch": "Bergamo",
-      "anac_added": 0,
+      "anac_added": 4,
       "previous_with_contractor": 2099,
-      "current_with_contractor": 2099
+      "current_with_contractor": 2103
     },
     {
       "branch": "Bologna",
-      "anac_added": 0,
+      "anac_added": 5,
       "previous_with_contractor": 2889,
-      "current_with_contractor": 2889
+      "current_with_contractor": 2893
     },
     {
       "branch": "Bolzano",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 2560,
-      "current_with_contractor": 2560
+      "current_with_contractor": 2562
     },
     {
       "branch": "Brescia",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 2833,
-      "current_with_contractor": 2833
+      "current_with_contractor": 2836
     },
     {
       "branch": "Cagliari",
@@ -69,21 +69,21 @@
     },
     {
       "branch": "Catania",
-      "anac_added": 0,
+      "anac_added": 4,
       "previous_with_contractor": 8702,
-      "current_with_contractor": 8702
+      "current_with_contractor": 8706
     },
     {
       "branch": "Cosenza",
-      "anac_added": 0,
+      "anac_added": 1,
       "previous_with_contractor": 6364,
-      "current_with_contractor": 6364
+      "current_with_contractor": 6365
     },
     {
       "branch": "Cuneo",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 1559,
-      "current_with_contractor": 1559
+      "current_with_contractor": 1560
     },
     {
       "branch": "Firenze",
@@ -93,33 +93,33 @@
     },
     {
       "branch": "Frosinone",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 2315,
-      "current_with_contractor": 2315
+      "current_with_contractor": 2317
     },
     {
       "branch": "Genova",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 1906,
-      "current_with_contractor": 1906
+      "current_with_contractor": 1908
     },
     {
       "branch": "Lecco",
-      "anac_added": 1,
-      "previous_with_contractor": 816,
+      "anac_added": 0,
+      "previous_with_contractor": 817,
       "current_with_contractor": 817
     },
     {
       "branch": "Livorno",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 2379,
-      "current_with_contractor": 2379
+      "current_with_contractor": 2382
     },
     {
       "branch": "Lucca",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 2210,
-      "current_with_contractor": 2210
+      "current_with_contractor": 2213
     },
     {
       "branch": "Milano Est",
@@ -129,69 +129,69 @@
     },
     {
       "branch": "Milano Nord",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 2201,
-      "current_with_contractor": 2201
+      "current_with_contractor": 2204
     },
     {
       "branch": "Milano Ovest",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 2997,
-      "current_with_contractor": 2997
+      "current_with_contractor": 3000
     },
     {
       "branch": "Milano Sud",
       "anac_added": 1,
-      "previous_with_contractor": 1949,
-      "current_with_contractor": 1950
+      "previous_with_contractor": 1950,
+      "current_with_contractor": 1951
     },
     {
       "branch": "NON ASSEGNATA",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 371,
-      "current_with_contractor": 371
+      "current_with_contractor": 373
     },
     {
       "branch": "Napoli",
-      "anac_added": 0,
+      "anac_added": 8,
       "previous_with_contractor": 6840,
-      "current_with_contractor": 6840
+      "current_with_contractor": 6848
     },
     {
       "branch": "Padova",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 4235,
-      "current_with_contractor": 4235
+      "current_with_contractor": 4238
     },
     {
       "branch": "Parma",
-      "anac_added": 1,
-      "previous_with_contractor": 2167,
+      "anac_added": 0,
+      "previous_with_contractor": 2168,
       "current_with_contractor": 2168
     },
     {
       "branch": "Perugia",
-      "anac_added": 0,
+      "anac_added": 1,
       "previous_with_contractor": 2676,
-      "current_with_contractor": 2676
+      "current_with_contractor": 2677
     },
     {
       "branch": "Rimini",
-      "anac_added": 0,
+      "anac_added": 5,
       "previous_with_contractor": 8076,
-      "current_with_contractor": 8076
+      "current_with_contractor": 8081
     },
     {
       "branch": "Roma Aurelia",
-      "anac_added": 0,
+      "anac_added": 4,
       "previous_with_contractor": 1788,
-      "current_with_contractor": 1788
+      "current_with_contractor": 1792
     },
     {
       "branch": "Roma Nomentana",
-      "anac_added": 0,
+      "anac_added": 4,
       "previous_with_contractor": 7436,
-      "current_with_contractor": 7436
+      "current_with_contractor": 7439
     },
     {
       "branch": "SALERNO",
@@ -201,15 +201,15 @@
     },
     {
       "branch": "Sassari",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 2870,
-      "current_with_contractor": 2870
+      "current_with_contractor": 2873
     },
     {
       "branch": "Sassuolo",
-      "anac_added": 0,
+      "anac_added": 1,
       "previous_with_contractor": 1437,
-      "current_with_contractor": 1437
+      "current_with_contractor": 1438
     },
     {
       "branch": "Sondrio",
@@ -219,9 +219,9 @@
     },
     {
       "branch": "Torino",
-      "anac_added": 0,
+      "anac_added": 3,
       "previous_with_contractor": 5646,
-      "current_with_contractor": 5646
+      "current_with_contractor": 5649
     },
     {
       "branch": "Trento",
@@ -232,26 +232,26 @@
     {
       "branch": "Treviso",
       "anac_added": 2,
-      "previous_with_contractor": 2626,
-      "current_with_contractor": 2628
+      "previous_with_contractor": 2628,
+      "current_with_contractor": 2630
     },
     {
       "branch": "Udine",
-      "anac_added": 1,
-      "previous_with_contractor": 4529,
+      "anac_added": 0,
+      "previous_with_contractor": 4530,
       "current_with_contractor": 4530
     },
     {
       "branch": "Venezia",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 1807,
-      "current_with_contractor": 1807
+      "current_with_contractor": 1809
     },
     {
       "branch": "Verona",
-      "anac_added": 0,
+      "anac_added": 2,
       "previous_with_contractor": 2483,
-      "current_with_contractor": 2483
+      "current_with_contractor": 2485
     }
   ],
   "note": "Conteggio esatto dei record passati da senza contractor a con contractor nell'ultimo refresh ANAC."
